@@ -1,3 +1,7 @@
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
+
 .PHONY: Rpackage_install_nodep krakenator_push_hook krakenator_deploy Rpackage_install krakenator_R fin_de_journee
 
 
@@ -35,6 +39,10 @@ kimsufi_deploy:
 
 # End of day
 fin_de_journee:
+	echo "${green}===== git status ======${reset}"
 	git status
+	echo "${green}===== git commit and push ======${reset}"
 	git commit -am --allow-empty -am "Fin de journee"
 	git push
+	echo "${green}===== git status ======${reset}"
+	git status
