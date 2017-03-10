@@ -42,7 +42,7 @@ fin_de_journee:
 	echo "${green}===== git status ======${reset}"
 	git status
 	echo "${green}===== git commit and push ======${reset}"
-	git commit -am --allow-empty -am "Fin de journee"
+	git commit --allow-empty -am "Fin de journee"
 	git push
 	echo "${green}===== git status ======${reset}"
 	git status
