@@ -16,7 +16,7 @@ Rpackage_install:
 # krakenator 
 
 krakenator_push_hook:
-	scp ./hooks/post-receive.sh cayek@krakenator:~/GitRepo/Article3.git/hooks/post-receive
+	scp ./hooks/post-receive.sh cayek@krakenator:/home/cayek/Gits/2017/Thesis.git/hooks/post-receive
 
 krakenator_deploy:
 	git status
@@ -24,7 +24,7 @@ krakenator_deploy:
 	git push krakenator_deploy master
 
 krakenator_R: 
-	ssh -X -t cayek@krakenator "cd ~/Projects/Article3/Article3Package; screen R"
+	ssh -X -t cayek@krakenator "cd ~/Projects/Thesis/Rpackage; screen R"
 
 # kimsufi
 
@@ -39,13 +39,12 @@ kimsufi_deploy:
 # Biblio
 biblio_sync:
 	echo "${green}=====BIBLIO SYNC=====${reset}"
-	cd Biblio/
-	git add -A
-	git commit --allow-empty -am "Sync"
-	git pull
-	git push
+	cd Biblio; git add -A
+	cd Biblio; git commit --allow-empty -am "Sync"
+	cd Biblio; git pull
+	cd Biblio; git push
 	echo "${green}=====BIBLIO STATUS=====${reset}"
-	git status
+	cd Biblio; git status
 
 # End of day
 fin_de_journee: biblio_sync

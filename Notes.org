@@ -21,3 +21,8 @@
    - [ ] rm sur mes poste
    - [ ] rm les gits et les liens vers ceux ci (mon site)
    - [X] les backup
+*** 2017-03-13 lundi
+**** TODO Data dir 
+   Entered on [2017-03-13 lun. 13:49]
+
+   For git annex see [[https://git-annex.branchable.com/direct_mode/][direct mode]]
