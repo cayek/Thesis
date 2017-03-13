@@ -40,7 +40,7 @@ kimsufi_deploy:
 biblio_sync:
 	echo "${green}=====BIBLIO SYNC=====${reset}"
 	cd Biblio/
-	git add -A .
+	git add -A
 	git commit --allow-empty -am "Sync"
 	git pull
 	git push
