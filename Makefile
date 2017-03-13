@@ -44,7 +44,8 @@ biblio_sync:
 	git commit --allow-empty -am "Sync"
 	git pull
 	git push
-
+	echo "${green}=====BIBLIO STATUS=====${reset}"
+	git status
 
 # End of day
 fin_de_journee: biblio_sync
