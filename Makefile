@@ -21,7 +21,7 @@ krakenator_push_hook:
 krakenator_deploy:
 	git status
 	git commit --allow-empty -am "deploy on krakenator"
-	git push krakenator_deploy master
+	git push krakenator master
 
 krakenator_R: 
 	ssh -X -t cayek@krakenator "cd ~/Projects/Thesis/Rpackage; screen R"
