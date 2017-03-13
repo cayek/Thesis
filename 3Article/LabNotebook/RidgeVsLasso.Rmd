@@ -1,0 +1,173 @@
+---
+title: "Ridge Vs Lasso !!!"
+author: "kevin caye"
+date: "9 janvier 2017"
+output: 
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+# Ridge Vs Lasso !!! (`r Sys.Date()`)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+## We know K
+
+###  20% association
+
+#### Gaussian
+
+```{r}
+K <- 5
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+RidgeVsLasso(s,
+             method.K = K, exp.rep = 1)
+```
+
+#### Logistic
+
+```{r}
+K <- 3
+## data
+s <- LogisticSampler(n = 100,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = 0.2,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5)
+RidgeVsLasso(s,
+             method.K = K, exp.rep = 1)
+```
+
+
+###  2% association
+
+#### Gaussian
+
+```{r}
+K <- 7
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.02,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+RidgeVsLasso(s,
+             method.K = K, exp.rep = 1)
+```
+
+#### Logistic
+
+```{r}
+K <- 4
+## data
+s <- LogisticSampler(n = 100,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = 0.02,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5)
+RidgeVsLasso(s,
+             method.K = K, exp.rep = 1)
+```
+
+
+## We do not know K
+
+###  20% association
+
+#### Gaussian
+
+```{r}
+K <- 5
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+RidgeVsLasso(s,
+             method.K = K + 2, exp.rep = 1)
+```
+
+
+#### Logistic
+
+```{r}
+K <- 5
+## data
+s <- LogisticSampler(n = 100,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = 0.2,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5)
+RidgeVsLasso(s,
+             method.K = K + 2, exp.rep = 1)
+```
+
+###  2% association
+
+#### Gaussian
+
+```{r}
+K <- 5
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.02,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+RidgeVsLasso(s,
+             method.K = K + 2, exp.rep = 1)
+```

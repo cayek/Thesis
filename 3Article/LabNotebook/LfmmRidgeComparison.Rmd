@@ -1,0 +1,147 @@
+---
+title: "Comp"
+author: "kevin caye"
+output: html_document
+---
+
+# Comparison of lm, lm+pca and lfmmRidge (`r Sys.Date()`)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+```{r lib, message=FALSE}
+library(Article3Package)
+library(tidyverse)
+```
+
+We compare lm, lm+PCA and lfmmRidge.
+
+## Run on normal model 
+
+$$G = mu + U V^T + X B + E$$
+
+```{r normal}
+K <- 4
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.20,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+dat <- sampl(s)
+plot(dat)
+
+```
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+KnitrExpandBuild(file = "../LabNotebook/LfmmRidgeComparisonMacro.Rmd",
+                 sigma2.functor = "AnalyticSigma2Functor",
+                 K = K,
+                 nb.rep = 1,
+                 label.name = "normal.Asigma")
+```
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+KnitrExpandBuild(file = "../LabNotebook/LfmmRidgeComparisonMacro.Rmd",
+                 sigma2.functor = "MadBSigma2Functor",
+                 K = K,
+                 nb.rep = 1,
+                 label.name = "normal.Msigma")
+```
+
+## Run on SSMPG 2016 Case3
+
+```{r ssmpg.Case3}
+K <- 3
+s <- TrueSampler(G.file = "../../Data2016_2017/SSMPG2015/Case3/Case3.lfmm",
+                 X.file = "../../Data2016_2017/SSMPG2015/Case3/Case3.env",
+                 outlier.file = "../../Data2016_2017/SSMPG2015/Case3/Case3.outlier")
+dat <- sampl(s)
+plot(dat)
+```
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+KnitrExpandBuild(file = "../LabNotebook/LfmmRidgeComparisonMacro.Rmd",
+                 sigma2.functor = "AnalyticSigma2Functor",
+                 K = K,
+                 nb.rep = 1,
+                 label.name = "cas3.Asigma")
+```
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+KnitrExpandBuild(file = "../LabNotebook/LfmmRidgeComparisonMacro.Rmd",
+                 sigma2.functor = "MadBSigma2Functor",
+                 K = K,
+                 nb.rep = 1,
+                 label.name = "cas3.Msigma")
+```
+
+
+## Run on SSMPG 2016 Case2
+
+```{r ssmpg.Case2}
+K <- 2
+s <- TrueSampler(G.file = "../../Data2016_2017/SSMPG2015/Case2/Case2.lfmm",
+                 X.file = "../../Data2016_2017/SSMPG2015/Case2/Case2.env",
+                 outlier.file = "../../Data2016_2017/SSMPG2015/Case2/Case2.outlier")
+dat <- sampl(s)
+plot(dat)
+```
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+KnitrExpandBuild(file = "../LabNotebook/LfmmRidgeComparisonMacro.Rmd",
+                 sigma2.functor = "AnalyticSigma2Functor",
+                 K = K,
+                 nb.rep = 1,
+                 label.name = "cas2.Asigma")
+```
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+KnitrExpandBuild(file = "../LabNotebook/LfmmRidgeComparisonMacro.Rmd",
+                 sigma2.functor = "MadBSigma2Functor",
+                 K = K,
+                 nb.rep = 1,
+                 label.name = "cas2.Msigma")
+```
+
+## Run on SSMPG 2016 Case1
+
+
+```{r ssmpg.Case1}
+K <- 3
+s <- TrueSampler(G.file = "../../Data2016_2017/SSMPG2015/Case1/Case1.lfmm",
+                 X.file = "../../Data2016_2017/SSMPG2015/Case1/Case1.env",
+                 outlier.file = "../../Data2016_2017/SSMPG2015/Case1/Case1.outlier")
+dat <- sampl(s)
+plot(dat)
+```
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+KnitrExpandBuild(file = "../LabNotebook/LfmmRidgeComparisonMacro.Rmd",
+                 sigma2.functor = "AnalyticSigma2Functor",
+                 K = K,
+                 nb.rep = 1,
+                 label.name = "cas1.Asigma")
+```
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+KnitrExpandBuild(file = "../LabNotebook/LfmmRidgeComparisonMacro.Rmd",
+                 sigma2.functor = "MadBSigma2Functor",
+                 K = K,
+                 nb.rep = 1,
+                 label.name = "cas1.Msigma")
+```
+
+
+

@@ -1,0 +1,148 @@
+---
+title: "Lambda choice"
+author: "kevin caye"
+date: "19 janvier 2017"
+output: 
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 10, fig.height = 13,
+                      message = FALSE, warning = FALSE,
+                      results = "hide")
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+options(Article3Package.debug = NULL)
+```
+
+# Very simple gaussian data
+
+```{r cache = TRUE}
+K <- 1
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   c = 0.9,
+                   sigma = 0.0)
+dat <- sampl(s)
+
+set.seed(0)
+LambdaChoice(s = s,
+             method.K = K,
+             lambda.lasso = 1e-2,
+             lambda.ridge = 1e-2)
+
+
+set.seed(0)
+LambdaChoice(s = s,
+             method.K = K,
+             lambda.lasso = 1e-2,
+             lambda.ridge = 1e2)
+
+
+```
+
+
+#  simple gaussian data
+
+```{r cache = TRUE}
+K <- 2
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   c = 0.5,
+                   sigma = 0.2)
+dat <- sampl(s)
+
+set.seed(0)
+LambdaChoice(s = s,
+             method.K = K,
+             lambda.lasso = 0.5e-1,
+             lambda.ridge = 0.5e-2)
+
+set.seed(0)
+LambdaChoice(s = s,
+             method.K = K,
+             lambda.lasso = 0.5e-1,
+             lambda.ridge = 0.5e-1)
+
+
+set.seed(0)
+LambdaChoice(s = s,
+             method.K = K,
+             lambda.lasso = 1e-2,
+             lambda.ridge = 1e2)
+
+
+```
+
+#  X très correlé a U
+
+```{r cache = TRUE}
+K <- 1
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   c = 0.999,
+                   sigma = 0.2)
+dat <- sampl(s)
+
+set.seed(20)
+LambdaChoice(s = s,
+             method.K = K,
+             lambda.lasso = 1e0,
+             lambda.ridge = 1e-50)
+
+set.seed(20)
+LambdaChoice(s = s,
+             method.K = K,
+             lambda.lasso = 1e0,
+             lambda.ridge = 1e-2)
+
+set.seed(20)
+LambdaChoice(s = s,
+             method.K = K,
+             lambda.lasso = 1e0,
+             lambda.ridge = 1e1)
+
+
+```
+
+Ce cas est très dur car X et U sont très corrélé, donc quand on 
+cherche la variance sur l'hortogonal à X on trouve que le bruit :D
+
+# Ccl
+
+## Comparaison modèle
+
+$$
+G = UV^T + X B^T + E
+$$
+
+- *lm* : $B_{lm}$ capte la variance neutre
+- *PCA+lm* : l'acp capte un peut de la variance généré par le terme $X B^T$ et
+donc $B_{PCA+lm}$ se plante un peut moins mais il capte une parti de la variance 
+latente car la correction n'est pas juste (c'est peu du lattent et un peu du XB).
+- *LFMM* arrive bien a capter les deux source de variance latente et causé par
+$X$
+
+## Sur le choix de lambda
+Il existe bien un lambda optimal, ici il est très petit.
+L'idée est que :
+- si le lambda est trop petit on ne peut pas inverser P et il n'y
+a pas une bonne séparation entre la variance latente et expliqué par X
+- Si il est trop grand il y a un shrinkage des $B$.
+
+

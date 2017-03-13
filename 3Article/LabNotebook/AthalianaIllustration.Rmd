@@ -1,0 +1,267 @@
+---
+title: "Allustration for slide with Athaliana"
+author: "kevin caye"
+date: "17 fevrier 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+
+# retrieve map of TESS3 article
+```{r}
+dir <- getwd()
+setwd("~/KrakenatorHomeDir/Projects/TESS3Article/Figure5/")
+source("./Figures/map.R")
+setwd(dir)
+
+```
+
+```{r}
+p <- mappl + 
+  geom_segment(aes(x = -15, y = 40, xend = -15, yend = 60), arrow = arrow(length = unit(1, "cm"))) + 
+  annotate("text", x = -13.5, y = 50, label = "X", size = 10)
+print(p)
+```
+
+
+# PCA
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 16, bench.dir = "../Article3Package/BenchmarkDump/")
+plot(exp) +
+    scale_x_continuous(limits = c(1,300))
+```
+
+
+# create a X (a North-South axe) variable and run lm lfmm
+
+## without gif and K = 6
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 11, bench.dir = "../Article3Package/BenchmarkDump/")
+```
+
+```{r}
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "B1")
+ggplot(toplot, aes(x = index, y = estimate, color = 1)) +
+  geom_point() + 
+  facet_grid(method.name ~ variable.name, scales = "free")
+```
+
+
+
+
+```{r}
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "pvalue1")
+ggplot(toplot, aes(x = index, y = -log10(estimate), color = 1)) +
+  geom_point() + 
+  facet_grid(method.name ~ variable.name, scales = "free")
+
+```
+
+
+
+```{r}
+ggplot(toplot, aes(x = estimate, color = 1)) +
+  geom_histogram() + 
+  facet_grid(method.name ~ variable.name, scales = "free")
+```
+
+```{r}
+ggplot(toplot, aes(sample = -log10(estimate), color = method.name)) +
+  stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) + 
+  geom_abline(slope = 1, intercept = 0)
+```
+
+
+### try localfdr
+
+```{r}
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "score1")
+ggplot(toplot, aes(x = estimate, color = 1)) +
+  geom_histogram(aes(y = ..density..)) + 
+  facet_grid(method.name ~ variable.name, scales = "free") +
+  stat_function(fun = dnorm)
+```
+
+```{r}
+library(locfdr)
+
+## lm
+z.lm <- toplot$estimate[toplot$method.name == "lm"]
+z.lm <- z.lm[!is.na(z.lm)]
+locfdr.lm <- locfdr(z.lm, df = 8)
+mean(locfdr.lm$fdr < 0.05)
+
+## lfmm
+z.lfmm <- toplot$estimate[toplot$method.name == "RidgeLfmm"]
+z.lfmm <- z.lfmm[!is.na(z.lfmm)]
+locfdr.lfmm <- locfdr(z.lfmm, df = 8)
+mean(locfdr.lfmm$fdr < 0.05)
+```
+
+
+## with gif and K = 6
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 13, bench.dir = "../Article3Package/BenchmarkDump/")
+```
+
+```{r}
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "pvalue1")
+ggplot(toplot, aes(x = index, y = -log10(estimate), color = 1)) +
+  geom_point() + 
+  facet_grid(method.name ~ variable.name) +
+    scale_y_continuous(limits = c(1,5))
+
+```
+
+
+```{r}
+ggplot(toplot, aes(x = estimate, color = 1)) +
+  geom_histogram() + 
+  facet_grid(method.name ~ variable.name, scales = "free")
+```
+
+```{r}
+ggplot(toplot, aes(sample = -log10(estimate), color = method.name)) +
+  stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) + 
+  geom_abline(slope = 1, intercept = 0)
+```
+
+
+```{r}
+ggplot(toplot, aes(sample = estimate, color = method.name)) +
+  stat_qq(distribution = stats::qunif) + 
+  geom_abline(slope = 1, intercept = 0)
+```
+
+### try to give a significant list
+
+```{r}
+
+pvalue.lm <- toplot$estimate[toplot$method.name == "lm"]
+mean(pvalue.lm < 1e-2, na.rm = TRUE)
+pvalue.lfmm <- toplot$estimate[toplot$method.name == "RidgeLfmm"]
+mean(pvalue.lfmm < 1e-2, na.rm = TRUE)
+
+```
+
+
+
+
+## with gif and K = (5,6, 7, 10)
+
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 14, bench.dir = "../Article3Package/BenchmarkDump/")
+```
+
+```{r}
+method.names <- unique(exp$df.res$method.name)
+method.names
+```
+
+```{r}
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "B1")
+ggplot(toplot, aes(x = index, y = estimate, color = 1)) +
+  geom_point() + 
+  facet_grid(method.name ~ variable.name, scales = "free")
+```
+
+## without gif and K = (5,6, 7,10)
+
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 15, bench.dir = "../Article3Package/BenchmarkDump/")
+```
+
+```{r}
+method.names <- unique(exp$df.res$method.name)
+method.names
+```
+
+```{r}
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "score1")
+ggplot(toplot, aes(x = index, y = estimate, color = 1)) +
+  geom_point() + 
+  facet_grid(method.name ~ variable.name)
+```
+
+```{r}
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "pvalue1")
+ggplot(toplot, aes(estimate, color = 1)) +
+  geom_histogram() + 
+  facet_grid(method.name ~ variable.name)
+```
+
+### controle fdr with locfdr and plot
+
+```{r, warning = TRUE, message = TRUE, error = TRUE}
+
+## remove RidgeLfmm|lambda=0.1|K=10|gif=0, loc fdr raise error ...
+exp$df.res <- exp$df.res %>%
+  dplyr::filter(method.name != method.names[4])
+unique(exp$df.res$method.name)
+
+Athaliana_runs_plot(exp, fdr.threshold = 0.05, df = 8)
+```
+
+## without gif and K = (20, 50, 100)
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 17, bench.dir = "../Article3Package/BenchmarkDump/")
+exp$description
+```
+
+```{r}
+method.names <- unique(exp$df.res$method.name)
+method.names
+```
+
+
+
+```{r}
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "pvalue1")
+ggplot(toplot, aes(estimate, color = 1)) +
+  geom_histogram() + 
+  facet_grid(method.name ~ variable.name)
+```
+### controle fdr with locfdr and plot
+
+```{r, warning = TRUE, message = TRUE, error = TRUE}
+
+Athaliana_runs_plot(exp, fdr.threshold = 0.05, df = 5)
+```

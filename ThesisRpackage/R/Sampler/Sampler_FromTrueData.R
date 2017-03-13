@@ -1,0 +1,109 @@
+################################################################################
+# FromTrueSampler
+
+#' see my notebook (18/01/2017), sample a generative model from
+#' true dataset.
+#'
+#' @param rho must be between 0 and 1. the proportion of variance explained by X.
+#' If NULL just a sum between UV^T and XB
+#'
+#' @export
+FromTrueSampler <- function(G.file,
+                            n, L, K,
+                            prop.outlier,
+                            rho = NULL,
+                            cs = NULL,
+                            round = FALSE,
+                            B.outlier.sampler = function(n, mean, sd) rnorm(n, mean, sd)) {
+  structure(list(G.file = G.file,
+                 n = n,
+                 L = L,
+                 K = K,
+                 prop.outlier = prop.outlier,
+                 rho = rho,
+                 cs = cs,
+                 round = round,
+                 B.outlier.sampler = B.outlier.sampler),
+            class = c("FromTrueSampler","Sampler"))
+}
+
+#' Sample data from true dataset
+#'
+#'
+#' @export
+sampl.FromTrueSampler <- function(s) {
+
+  # read file
+  G <- read_G(s$G.file)
+  n <- nrow(G)
+  L <- ncol(G)
+
+  # sample row an col
+  if (!is.null(s$n) && s$n <= n) {
+    G <- G[sample(n, s$n),]
+    n <- s$n
+  }
+  if (!is.null(s$L) && s$L <= L) {
+    G <- G[,sample(L, s$L)]
+    L <- s$L
+  }
+
+  # center
+  one <- matrix(1, n, 1)
+  mu <- matrix(G %>% purrr::array_branch(2) %>%
+                   purrr::map_dbl(mean, na.rm = TRUE),
+                 1, L)
+  G_ <- G - one %*% mu
+
+  # compute svd: G = C + E (C = U Sigma V^T)
+  svd.res <- svd(G_, nu = s$K, nv = s$K)
+  U <- svd.res$u %*% diag(svd.res$d[1:s$K])
+  V <- svd.res$v
+  E <- G_ - tcrossprod(U,
+                       V)
+
+  # compute X
+  if (is.null(s$cs)) {
+    s$cs <- runif(s$K)
+  }
+  X <- sample_X_sum_correlated_U(U = U, cs = s$cs)
+
+  # outlier
+  nb.outlier <- s$prop.outlier * L
+  outlier <- sample(L, nb.outlier)
+  sd.V <- sd(as.vector(V))
+  ## compute a B
+  B = matrix(0, 1, L)
+  B[1, outlier] = s$B.outlier.sampler(nb.outlier, 0, sd.V)
+
+  # variance balancing between structure and co-variable X
+  if (!is.null(s$rho)) {
+    a <- (1 - s$rho)
+    b <- s$rho
+  } else {
+    a <- 1
+    b <- 1
+  }
+  V[outlier,] <- a * V[outlier,]
+  B[,outlier] <- b * B[,outlier]
+
+  # synthese
+  G[,outlier] <- one %*% mu[, outlier] +
+    tcrossprod(U, V[outlier,]) +
+    X %*% B[,outlier] +
+    E[,outlier]
+
+  if (s$round) {
+    G[,outlier] <- round(G[,outlier])
+  }
+
+  # return
+  GenerativeDataSet(G = G,
+                    X = X,
+                    U = U,
+                    V = V,
+                    B = B,
+                    epsilon = E,
+                    outlier = outlier,
+                    mu = mu[1,, drop = FALSE])
+}

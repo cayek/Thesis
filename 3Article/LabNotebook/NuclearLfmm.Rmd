@@ -1,0 +1,59 @@
+---
+title: "Lasso Ridge et lambda"
+author: "kevin caye"
+date: "24 janvier 2017"
+output:
+  html_notebook:
+  toc: true
+toc_float:
+  collapsed: false
+smooth_scroll: false
+theme: journal
+highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# On data simulated from 1000 genome
+
+
+```{r}
+K = 4
+L = 5000
+n = NULL
+cs <- list()
+cs[[3]] <- 0.6
+# sample data
+G.file <- "~/Projects/Data2016_2017/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
+s <-  FromTrueSampler(G.file = G.file,
+                       n = n,
+                       L = L,
+                       K = K,
+                       prop.outlier = 0.30,
+                       rho = NULL,
+                       cs = cs,
+                       round = FALSE)
+seed <- sample.int(.Machine$integer.max, 1)
+
+
+set.seed(seed)
+NuclearLfmm(s = s, 
+            method.K = 4, 
+            lambda.lfmmridge = 1e4,
+            lambda.lfmmnuclear = 0.01,
+            gamma = NULL,
+            exp.rep = 1,
+            lasso = FALSE, 
+            soft = FALSE)
+```
+

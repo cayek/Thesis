@@ -1,0 +1,20 @@
+---
+title: "TITLE"
+author: "kevin caye"
+date: "DATE"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```

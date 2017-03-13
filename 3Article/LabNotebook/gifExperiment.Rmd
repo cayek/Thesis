@@ -1,0 +1,75 @@
+---
+title: "calibration with boostrap"
+author: "kevin caye"
+date: "14 fevrier 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# On gaussian dataset
+
+```{r}
+cs <- c(0.6, 0.3, 0.0)
+K <- 3
+s <- NormalSampler2(n = 100,
+                    L = 1000,
+                    K = 3,
+                    prop.outlier = 0.2,
+                    cs = cs)
+expPCA <- PCAExperiment(s)
+expPCA <- runExperiment(expPCA)
+plot(expPCA) + 
+      scale_x_continuous(limits = c(1,60))
+```
+
+
+```{r}
+LfmmRidge <- RidgeLFMMMethod(K = 3,
+                             lambda = 1e-5,
+                             nickname = "lfmm ridge",
+                             hypothesis.testing.method = lm_zscore(gif = FALSE,
+                                                                   sigma.computation = "lm+df"))
+dat <- sampl(s)
+LfmmRidge <- run(LfmmRidge, dat)
+
+# some plots
+RSS_sigma2 <- sweep(LfmmRidge$epsilon ^ 2, 2, LfmmRidge$epsilon.sigma2, FUN = "/")
+hist(RSS_sigma2)
+mean(RSS_sigma2)
+```
+
+# bootstrap B
+
+```{r}
+LfmmRidge <- fit(LfmmRidge, dat)
+B.boot <- bootstrapIt(dat = dat, 
+                      m = LfmmRidge, 
+                      bootstrap.func = PairedBoostrap, 
+                      bootstrap.rep = 30)
+score <- (LfmmRidge$B - B.boot$B.mean) / sqrt(B.boot$B.sigma2)
+gif(score)
+hist(score, probability = TRUE)
+curve(dnorm(x), add = T)
+```
+
+
+
+

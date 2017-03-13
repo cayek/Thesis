@@ -1,0 +1,119 @@
+---
+title: "Comparison on generative model"
+author: "kevin caye"
+date: "9 janvier 2017"
+output: html_document
+---
+
+# Comparison on normal generative model (`r Sys.Date()`)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+$$G = mu + U V^T + X B + E$$
+
+Methods: 
+
+- LeaLfmm
+- LfmmRidgeBootstrap
+- LfmmRidgeAnalyticSigma
+- PCA+lm
+- lm
+- lm+V
+- FAMT
+
+## Assuming K
+
+### No association
+
+```{r}
+K <- 3
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5) %>%
+  RandomXSampler()
+CompGenerativeModel(s,
+                    method.K = K, 
+                    boot.rep = 50, exp.rep = 1)
+```
+
+### 20% association
+
+```{r}
+K <- 5
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+CompGenerativeModel(s,
+                    method.K = K, 
+                    boot.rep = 50, exp.rep = 1)
+```
+
+## K in under estimated
+
+### 20% association
+
+```{r}
+K <- 5
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+CompGenerativeModel(s,
+                    method.K = K - 2, 
+                    boot.rep = 50, exp.rep = 1)
+```
+
+
+## K is over estimated
+
+### 20% association
+
+```{r}
+K <- 5
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.2,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+CompGenerativeModel(s,
+                    method.K = K + 2, 
+                    boot.rep = 50, exp.rep = 1)
+```
+
+
+

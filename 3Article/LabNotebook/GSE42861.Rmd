@@ -1,0 +1,184 @@
+---
+title: "Validation de la méthode sur des dataset créer a partir du 1000 genomes"
+author: "kevin caye"
+date: "24 janvier 2017"
+output:
+  html_notebook:
+  toc: true
+toc_float:
+  collapsed: false
+smooth_scroll: false
+theme: journal
+highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# PCA and correlation with X_case/control
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 8, bench.dir = "../Article3Package/BenchmarkDump/")
+plot(exp) +
+    scale_x_continuous(limits = c(1,60))
+  
+```
+
+# lfmm run
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 10, bench.dir = "../Article3Package/BenchmarkDump/")
+# Rahmani.table <- GSE42861_get_RahmaniLoci()
+
+G.file <- "~/Projects/Data2016_2017/GSE42861/betanormalized_metylationlvl.filtered.rds"
+X.file <- "~/Projects/Data2016_2017/GSE42861/X.rds"
+s <- TrueSampler(G.file = G.file,
+                 X.file = X.file,
+                 outlier.file = NULL,
+                 n = NULL,
+                 L = NULL)
+dat <- sampl(s)
+loci.found <- c("cg05428452", "cg07839457", "cg16411857")
+index.loci.found <- c(36714, 51546, 101455)
+color <- colnames(dat$G) %in% loci.found
+toplot <- exp$df.res %>%
+  dplyr::filter(method.name == "RidgeLfmm|lambda=1e-10|K=8|gif=1") %>%
+  dplyr::filter(variable.name == "pvalue1")
+
+ggplot2::ggplot(toplot, aes(x = index, y = -log10(estimate), color = color, size = color)) +
+  geom_point() +
+  facet_grid(method.name~.)
+
+ggplot(toplot) +
+  stat_qq(aes(sample = -log10(estimate)),
+          distribution = stats::qexp, dparams = list(rate = log(10))) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(method.name~.) +
+  ggtitle("-log10(pvalue) qqplot")
+```
+
+# lfmm cross val
+
+On Krak
+```{r, eval=FALSE}
+library(Article3Package)
+exp <- long_GSE42861_CrossVal(rep = 2, cluster.nb = 4, save = FALSE)
+
+```
+
+
+# lfmm glm
+
+## K = 6 and lambda = 1e1
+
+On Krak
+```{r, eval=FALSE}
+library(Article3Package)
+exp <- long_GSE42861_lfmm_glm(K.lfmm = 6,
+                              K.refactor = 6,
+                              lambda = 1e1,
+                              save = FALSE)
+
+## qqplot
+ggplot(exp$df.res %>% dplyr::filter(variable.name == "pvalue")) +
+  stat_qq(aes(sample = -log10(estimate)),
+          distribution = stats::qexp, dparams = list(rate = log(10))) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(method.name~.) +
+  ggtitle("-log10(pvalue) qqplot")
+
+## save
+dumpExperiment(exp)
+```
+
+Retrieve experiment
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 18, bench.dir = "../Article3Package/BenchmarkDump/")
+
+```
+
+### no calibration
+
+```{r}
+ggplot(exp$df.res %>% dplyr::filter(variable.name == "pvalue")) +
+  stat_qq(aes(sample = -log10(estimate)),
+          distribution = stats::qexp, dparams = list(rate = log(10))) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(method.name~.) +
+  ggtitle("-log10(pvalue) qqplot")
+```
+
+
+### mad calibration
+```{r}
+## mad calibration
+mad.func <- MadCalibratedZscore()$fun
+
+toplot <- exp$df.res %>%
+  dplyr::filter(variable.name == "score") %>% 
+  group_by(method.name) %>%
+  mutate(variable.name = "adj.pvalue", 
+         estimate = mad.func(matrix(estimate,1,length(estimate)))) %>%
+  ungroup()
+
+## qqplot
+ggplot(toplot) +
+  stat_qq(aes(sample = -log10(estimate)),
+          distribution = stats::qexp, dparams = list(rate = log(10))) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(method.name~.) +
+  ggtitle("-log10(pvalue) qqplot")
+
+```
+
+# lfmm glm
+
+## K = 2 and lambda = 1e-2
+
+On Krak
+```{r, eval=FALSE}
+library(Article3Package)
+exp <- long_GSE42861_lfmm_glm(K.lfmm = 2,
+                              K.refactor = 1,
+                              lambda = 1e-2,
+                              save = TRUE)
+
+## qqplot
+ggplot(exp$df.res %>% dplyr::filter(variable.name == "pvalue")) +
+  stat_qq(aes(sample = -log10(estimate)),
+          distribution = stats::qexp, dparams = list(rate = log(10))) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(method.name~.) +
+  ggtitle("-log10(pvalue) qqplot")
+
+```
+
+Retrieve experiment
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 18, bench.dir = "../Article3Package/BenchmarkDump/")
+
+```
+
+### no calibration
+
+```{r}
+ggplot(exp$df.res %>% dplyr::filter(variable.name == "pvalue")) +
+  stat_qq(aes(sample = -log10(estimate)),
+          distribution = stats::qexp, dparams = list(rate = log(10))) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(method.name~.) +
+  ggtitle("-log10(pvalue) qqplot")
+```

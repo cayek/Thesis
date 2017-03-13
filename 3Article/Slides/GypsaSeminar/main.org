@@ -1,0 +1,425 @@
+# Local Variables:
+# org-confirm-babel-evaluate: nil
+# End:
+
+#+startup: beamer
+#+TITLE: Testing for Associations Using Latent Factor Mixed Models
+#+AUTHOR:    Kevin Caye$^{1}$, Olivier Michel$^{2}$, Olivier Francois$^{1}$
+#+EMAIL:     kevin.caye@imag.fr
+#+DATE:      2017-03-01  
+#+OPTIONS: H:2 toc:t num:t
+#+LATEX_CLASS: beamer
+#+BEAMER_THEME: default
+#+BEAMER_FRAME_LEVEL: 2
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+LATEX_HEADER: \input{header}
+
+* Introduction
+** Genotypic Data 
+
+   - single nucleotide polymorphism (SNP): single nucleotide variation occurring
+     commonly within a population.
+   - Data are matrix of size $L$ loci for $n$ individuals ($L \sim 10^6$ and $n
+     \sim 10^3$)
+
+
+   #+BEGIN_EXPORT latex
+   \begin{table}
+   \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+   \begin{tabular}[t]{l|r|r|r}
+   \hline
+     & chr: 1 pos: 657 & chr: 1 pos: 3102 & chr: 1 pos: 4268\\
+   \hline
+   02B6 & 0 & 1 & 1\\
+   \hline
+   DraIV 1-16 & 1 & 1 & 1\\
+   \hline
+   UllA 2 & 1 & 0 & 1\\
+   \hline
+   Zdr-1 & 1 & 1 & 1\\
+   \hline
+   \end{tabular}
+   \caption{Sample of a Arabidopsis Thaliana SNP matrix of size $n = 1095$ individual and $L = 214~051$ loci.}
+   \end{table}
+   #+END_EXPORT
+
+*** COMMENT 
+    - introduire le type de données
+    - montrer que c'est une matrice de 0/1 voir 2 si diploid.
+      
+** Environmental Association Study
+   
+   *Data* 
+   - G the genotype matrix of size $n$ individuals and $L$ loci.
+   
+   - X the covariable: environmental information (temperature, location, ...)
+   
+   *We want* to detect signs of natural selection and loci involved in local
+    adaptation. These loci should be correlated with $X$.
+
+*** COMMENT
+    - introduire le problème : trouver les genes significativement associés avec
+      une covariable représentant l'environnement.
+
+** Example: Arabidopsis Thaliana Dataset
+   
+   #+BEGIN_SRC R :exports none  :eval no-export :results nonex
+   Article3Package::Athaliana_map(output.name = "AT_map.png" ,
+   ratio.width = 0.8, 
+   ratio.height = 0.7, 
+   point.size = 0.4,
+   color = FALSE)
+   #+END_SRC
+
+   #+RESULTS:
+
+   #+CAPTION: Spatial coordinates for each Arabidopsis Thaliana individual.
+   #+ATTR_LATEX: :width .8\paperwidth :center
+   [[./Images/AT_map.png]]
+
+** Multiple Hypothesis Testing: Simple Linear Regression
+      
+   Linear model for each locus $j$ 
+     $$G_{.j} =  X B_j + E_j$$
+   where
+      - $B_j$ is the unknown regression coefficient
+      - $E_j$ is the residual error
+   
+   We want to detect loci where we can reject the hypothesis 
+   
+   $$ H_0: B_j = 0$$.
+
+   We compute z-score for each locus $j$: 
+   
+   $$ z_j = \frac{\hat{B_j}}{\hat{\sigma_j}} $$
+
+   where $\hat{B_j}$ is an estimation of $B_j$ and $\hat{\sigma_j}$ the
+   estimation its standard deviation.
+
+  
+*** COMMENT
+    - on pose la méthodologie  
+** Example: Arabidopsis Thaliana Dataset
+   
+   #+BEGIN_SRC R :exports none  :eval no-export :results nonex
+   Article3Package::Athaliana_plotB(output.name = "AT_lm_B.png" ,ratio.width = 0.8, ratio.height = 0.6)
+   #+END_SRC
+
+   #+RESULTS:
+ 
+   #+CAPTION: $B$ regression coefficient computed with a simple linear model $G_{.j} \sim X$.
+   #+ATTR_LATEX: :width .8\paperwidth :center
+   [[./Images/AT_lm_B.png]]
+
+** False Discovery Rate Control
+   We want to identify a small percentage of interesting cases that deserve
+   further investigation.
+   
+   *False Discovery Rate Control:*
+
+   We search a list $\Gamma = \{1,..,J\}$ such that
+
+   $$p( B_j = 0 | j \in \Gamma) = T$$
+   
+   where $T$ is the expected FDR threshold.
+   
+   Such list can be computed using pvalue and the Benjamini-Hochberg procedure
+   citep:benjamini1995controlling
+
+*** COMMENT 
+    - On voit le problème : ca marche pas 
+    - On a la pipeline complète: données-model-test d'hypothèse
+    - C'est la méthodologie dans laquelle travail !
+
+** Example: Arabidopsis Thaliana Dataset
+   #+BEGIN_SRC R :exports none  :eval no-export :results none
+   Article3Package::Athaliana_plotB(output.name = "AT_lm_B_hist.png", 
+   ratio.width = 0.9, 
+   ratio.height = 0.8, 
+   plot.type = "lmB+hist")
+   #+END_SRC
+
+   #+CAPTION: Zscore computed with a simple linear model $G_{.j} \sim X$ and its theorical $H_0$ distribution function $N(0,1)$. 
+   #+ATTR_LATEX: :width .8\paperwidth :center
+   [[./Images/AT_lm_B_hist.png]]
+
+** Multiple Hypothesis Testing Adjustment
+   
+   *Problems*
+
+   - Scores are not statistically independent
+   - model misspecification (individual are not independent)
+
+   *Literature*
+
+   One can change hypothesis testing: 
+   - genomic inflation factor citep:Devlin_1999
+   - empirical null estimation citep:Efron_2009
+   - empirical-Bayes adjustments citep:stephens16_false_discov_rates,Efron_2007
+   - ...
+
+*** COMMENT 
+    - La litérature donne 2 raisons a ce problème...
+    - On introduit les problèmes
+
+** Example: Arabidopsis Thaliana Dataset
+   #+BEGIN_SRC R :exports none  :eval no-export :results none
+   Article3Package::Athaliana_plotB(output.name = "AT_lm_B_fdr.png", 
+   ratio.width = 0.9, 
+   ratio.height = 0.8, 
+   plot.type = "lmB+locfdr")
+   #+END_SRC
+
+   #+CAPTION: Simple linear model zscore and the empirical null distribution (locfdr). In yellow, significant correlated loci with a  FDR threshold of 0.05.
+   #+ATTR_LATEX: :width .75\paperwidth :center
+   [[./Images/AT_lm_B_fdr.png]]
+
+
+*** COMMENT
+    - On montre ici une solution avec locfdr
+    - mais nous on ne fait pas comme ca il y a aussi un problème de variable
+      lattentes ! 
+
+** Latent Confounding Factors
+   
+   *Problem*
+
+   - there are latent variables correlated with $X$ which induce spurious
+     discovery.
+
+   *Literature*
+    
+   One can add latent variables to the model: 
+   - principal component analysis 
+   - Surrogate Variable Analysis citep:article_Leek_Storey_2007
+   - Latent Variable Mixed Model citep:frichot13_testin_assoc_between_loci_envir
+   - ...
+** Latent Confounding Factors
+   
+   Latent variables correlated with $X$ can induce spurious association.
+     
+   #+BEGIN_SRC R :exports none  :eval no-export :results nonex
+   Article3Package::Athaliana_map(output.name = "AT_map_color.png" ,
+   ratio.width = 0.8, 
+   ratio.height = 0.7, 
+   point.size = 0.4,
+   color = TRUE)
+   #+END_SRC
+
+   #+RESULTS:
+
+   #+CAPTION: Each color stands for a population.
+   #+ATTR_LATEX: :width .8\paperwidth :center
+   [[./Images/AT_map_color.png]]
+
+
+*** COMMENT
+    On montre que dans notre exemple il y a surement des variable lattente qui
+    fausse notre analyse ! 
+** Example: Arabidopsis Thaliana Dataset
+   #+BEGIN_SRC R :exports none  :eval no-export :results none
+   Article3Package::Athaliana_plotB(output.name = "AT_lm_lfmm.png", 
+   ratio.width = 0.9, 
+   ratio.height = 0.8, 
+   plot.type = "lmB+lfmmB")
+   #+END_SRC
+
+   #+CAPTION: In yellow, significant correlated loci with a fdr threshold of 0.05.
+   #+ATTR_LATEX: :width .8\paperwidth :center
+   [[./Images/AT_lm_lfmm.png]]
+
+* Latent Factor In Multiple Hypothesis Testing
+** Our Method: Latent Factor Mixed Model (LFMM) citep:frichot13_testin_assoc_between_loci_envir
+   We assume that 
+    
+   $$G = U V^T + X B^T + E$$
+   
+   where 
+   - $U$ is a $n \times K$ matrix of latent factor scores
+   - $V$ is $L \times K$ matrix of latent factor loadings
+   - $B$ is the unknown regression coefficient
+   - $E$ is the error matrix 
+     
+   We want to find $j$ such that $B_j \neq 0$
+   
+** LFMM Estimation 
+   
+   *optimization problem*
+   
+   $$ min_{rk(U V^T) \leq K} \frac{1}{2} ||G - U V^T - X B^T||_{F}^2 + \lambda ||B||_2^2
+   $$
+   
+   *Analytic solutions* 
+   
+   we compute 
+   - $P = Id - (X^T X + \lambda Id)^{-1} X^T X$
+   - $P = \sqrt{P}^2$
+     
+   then 
+   
+   - $\hat{U} \hat{V}^T = \sqrt{P}^{-1} svd_K(\sqrt{P} G)$
+   - $\hat{B} = (X^T X + \lambda Id)^{-1} X^T (G - \hat{U} \hat{V}^T)$
+
+** LFMM Algorithm With Missing Values
+   When there is missing value in the dataset we use an alternated algorithm
+   (inspired from EM algorithm for PCA cite:josse2009gestion)
+
+   *Algorithm steps*
+
+   1. impute at random missing values in G
+   2. compute $\hat{U}$, $\hat{V}$ and $\hat{B}$
+   3. impute missing value with $\hat{U} \hat{V}^T + X \hat{B}^T$
+   4. go to set 2 if no convergence   
+
+** Hypothesis Testing
+
+   Latent factor scores $U$ can be used as covariable of regression model: 
+   - linear model 
+   - generalized linear model
+   - ...
+
+   If the hypothesis testing is not well calibrated we can use empirical bayes
+   FDR estimation method to adjuste for finite sample, model mispicification or score
+   correlation.
+   
+
+   In practice, we use $U$ in a simple linear regression model.
+   
+   
+** Model Selection
+   
+   There are two parameters for LFMM method, the number of latent factor K and
+   the regularization parameter $\lambda$.
+
+   *$K$ number of latent factor*
+   - PCA to visualize latent variable structure
+   - population structure analysis
+   - cross-validation with LFMM algorithm with missing values
+
+   *$\lambda$ regularization parameter*
+   - cross-validation with LFMM algorithm with missing values
+   
+
+   LFMM method run are very fast when there are no missing value. The user can
+   run with several parameters to explore different hypothesis.
+
+*** COMMENT
+    - parler de l'ACP pour estimer le nombre de variable lattente.
+    - pour les test d'hypothèse avec trop de variable lattente pas grave.
+    - choix de lambda plus important -> monte-carlo cross validation
+
+** Validation On Simulation
+   Simulated data was generated from of the 1000 genomes dataset
+   cite:1000Genome_2015. 
+   
+   Only European individuals and the loci from the chromosome 22 was keep.
+
+   A new genotype matrix is genererated as follow : 
+
+   $$ G = U  V^T +  X B ^ T + E$$ 
+
+   Where 
+   - U and V are loading and score matrix retrun by PCA with $K = 4$ (5
+     populations in the dataset)
+   - X is generated such that $cor(X, U_i) = c_i$
+   - B is such that $B_j = 0$ for neutral loci and $B_j \sim N(0,sd)$ for
+     selected loci
+   - E is the residual matrice of the PCA
+** Comparison With Other Method
+   
+   Methods similar to LFMM: 
+   - SVA citep:article_Leek_Storey_2007
+   - FAMT citep:friguet09_factor_model_approac_to_multip
+   - LEA-LFMM citep:frichot13_testin_assoc_between_loci_envir
+   - refactor citep:Rahmani_2016
+  
+   Classic methods: 
+   - simple linear regression
+   - simple linear regression with PCA score
+     
+   Oracle method
+   - simple linear regression knowing lattent factor scores
+ 
+* Results
+  
+** Simulation with $5 \%$ of outlier
+   [[./Images/plot_gypsa_simulation05_pvalue.png]]
+** Simulation with $5 \%$ of outlier
+   [[./Images/plot_gypsa_simulation05_precision.png]]
+*** COMMENT
+    - tous le monde fait pareil
+    - 
+
+** Simulation with $15 \%$ of outlier
+   [[./Images/plot_gypsa_simulation15_pvalue.png]]
+** Simulation with $15 \%$ of outlier
+   [[./Images/plot_gypsa_simulation15_precision.png]]
+
+*** COMMENT 
+    - PCA est out
+
+** COMMENT Simulation with $5 \%$ of outlier and $20\%$ of missing value
+   
+   
+*** COMMENT
+    - avec missing value c'est mieux ! 
+** COMMENT Environmental association analysis: HGDP dataset
+*** Data 
+** COMMENT Model selection
+   [[./Images/plot_gypsa_pca_HGDP.png]]
+   crossvalidation 
+*** Result
+** Epigenome-Wide Association Study: GSE42861 Dataset citep:Liu_2013
+   
+   Association study of DNA methylation with rheumatoid arthritis.
+
+   - G: contains observed beta-normalized methylation levels for 686 individuals
+     and 103 638 loci
+   - X: 354 cases and 332 controls for rheumatoid arthritis 
+
+** GSE42861 Dataset: Model selection
+   [[./Images/plot_gypsa_pca_GSE42861.png]]
+   
+   Cross-validation was too slow...(still running)
+ 
+** Result
+   #+CAPTION: todo
+   #+ATTR_LATEX: :width .9\paperwidth :center
+   [[./Images/plot_gypsa_GSE42861_res.png]]
+   
+* Work In Progress
+** TODO Work In progress
+   
+   - Cross validation to slow
+   - Testing statistic not well calibrated on generative dataset
+
+* COMMENT debrief
+  
+** Pk pas du non linéaire
+   - il faut des algos efficaces
+   - la non linéarité c'est pas une propriété !! On prend quoi comme model ?
+   - On ratisse large ! c'est de la fouille de données, on donne une liste de
+     candidats !!
+   - Model linéaire c'est un dev de taylor a l'ordre 1 ;D, on est dans une
+     approximation qui va deja capter de la variance ! On gagnerais peut être un
+     petit peu avec un non liéaire !!
+   - Ma méthodo s'inscrit dans une grande pipeline ! faut voir que c'est blindé
+     d'approximation avant et après ! On ratisse large ! mais je l'ai deja dit ! 
+
+ bibliography:biblio.bib
+ bibliographystyle:apalike
+
+** Expliquer plus les mecanismes d'ataptation
+   - il faut mieux expliquer les phénomène d'adaptation a l'env surtout a un
+     publique non expert !
+** Variance inter est plus forte que la variance intra ! 
+   - c'est pas pour ca que on peut pas faire d'analyse factorielle !
+   - C'est un peut comme si on avait beacoups de bruit ... mouais a reflechir !
+   - Il a peut etre plus de variance entra que inter Mais l'acp capte les axe de
+     plus forte variance du coup quand on met des Europeen avec des Africains ba
+     PC1 ce met dans le sens qui cluster les 2 pops car le reste c'est du bruit
+     !!! Les variances intra peuvent etre très très grande c'est pas ce qui
+     structure les données dans sa totalité ! A voir !! 
+ #  LocalWords:  Genotypic

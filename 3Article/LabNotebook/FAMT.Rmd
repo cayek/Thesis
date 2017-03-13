@@ -1,0 +1,68 @@
+---
+title: "FAMT"
+author: "kevin caye"
+date: "9 janvier 2017"
+output: html_notebook
+---
+
+# Test of FAMT package (`r Sys.Date()`)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, results="hide"}
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("impute")
+# install.packages("FAMT")
+library(FAMT)
+library(tidyverse)
+library(Article3Package)
+```
+
+## Doc example
+
+```{r}
+## Reading 'FAMTdata'
+data(expression)
+data(covariates)
+data(annotations)
+chicken <- as.FAMTdata(expression,covariates,annotations,idcovar = 2)
+# Classical method with modelFAMT
+## Not run: modelpval=modelFAMT(chicken,x=c(3,6),test=6,nbf=0)
+## Not run: summaryFAMT(modelpval)
+# FAMT complete multiple testing procedure
+# when the optimal number of factors is unknown
+## Not run: model = modelFAMT(chicken,x=c(3,6),test=6)
+# when the optimal number of factors has already been estimated
+model <- modelFAMT(chicken,x = c(3,6),test = 6,nbf = 3)
+summaryFAMT(model)
+hist(model$adjpval)
+## End(Not run)
+```
+
+## On a simulation
+
+```{r}
+n <- 100
+s <- NormalSampler(n = n,
+                   L = 1000,
+                   K = 3,
+                   prop.outlier = 0.2,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+dat <- sampl(s)
+expresssion <- as.data.frame(t(dat$G))
+covariates <- data.frame(array.id = 1:n %>% map_chr(function(i) paste0("V",i)), 
+                         x = dat$X[,1])
+dat.FAMT = as.FAMTdata(expression = expresssion, 
+                       covariates = covariates)
+
+model <- modelFAMT(dat.FAMT, x = 2, nbf = 3)
+plot(-log(model$adjpval))
+```
+

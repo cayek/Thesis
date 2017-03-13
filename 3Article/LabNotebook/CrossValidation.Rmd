@@ -1,0 +1,76 @@
+---
+title: "Cross validation"
+author: "kevin caye"
+date: "1 fevrier 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+    smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+
+# On logistic dataset correlation with the first PC
+
+## cross validation
+
+```{r}
+K = 3
+L = 2000
+n = 400
+# sample data
+s <- LogisticSampler(n = n,
+                     L = L,
+                     K = K,
+                     prop.outlier = 0.2,
+                     c = 0.8)
+seed <- sample.int(.Machine$integer.max, 1)
+set.seed(seed)
+dat <- sampl(s)
+
+
+mLfmm <-  RidgeLFMMMethod(K = K,
+                      lambda = 1e1,
+                      nickname = "lfmm ridge")
+mPCA <- PCAClassicLinearMethod(K = K,nickname = "lm+PCA")
+
+# cross validation
+crossvalid.res <- crossvalidation_kfold(mLfmm, dat,
+                                        kfold = 4,
+                                        lambdas = c(1e-5,1e0, 1e2,1e3, 1e4, 1e5, 1e6, 1e34))
+plot(crossvalid.res)
+plot(crossvalid.res, "sumUXabscor")
+
+
+
+```
+
+
+## experiment
+
+```{r}
+# exp
+mLfmm$lambda <- 1e-1
+exp <- FDRControlExperiment(nb.rep = 1, s = s,
+                            seed = seed,
+                            mLfmm,
+                            mPCA)
+exp <- runExperiment(exp)
+plot(exp, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+
+```

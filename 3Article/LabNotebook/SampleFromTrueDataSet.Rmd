@@ -1,0 +1,49 @@
+---
+title: "Sample from True data set"
+author: "kevin caye"
+date: "23 janvier 2017"
+output: 
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# from At reg lines
+
+```{r}
+G.file <- "~/Projects/Data2016_2017/AthalianaGegMapLines/call_method_75/call_method_75_TAIR9.G.rds"
+skip_if_not(file.exists(G.file))
+
+s <- FromTrueSampler(G.file = G.file,
+                     n = 100,
+                     L = 1000,
+                     K = 2,
+                     prop.outlier = 0.1,
+                     rho = 0.9,
+                     cs = c(0.5, 0),
+                     round = FALSE)
+dat <- sampl(s)
+# plot
+plot(dat)
+hist(dat$X)
+hist(dat$G)
+```
+
+## Comparison
+
+

@@ -1,0 +1,231 @@
+---
+title: "Calibration"
+author: "kevin caye"
+date: "1 fevrier 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# On gaussian dataset
+
+
+```{r}
+cs <- c(0.6, 0.3, 0.0)
+K <- 3
+s <- NormalSampler2(n = 100,
+                    L = 1000,
+                    K = 3,
+                    prop.outlier = 0.05,
+                    cs = cs)
+```
+
+
+```{r}
+calibration(s = s, 
+            method.K = K + 3, 
+            lambda.lfmmridge = 1e-5,
+            gif = FALSE,
+            exp.rep = 5)
+```
+
+# On logistic dataset
+
+
+```{r}
+c <- 0.6
+K <- 6
+s <- LogisticSampler(n = 100,
+                    L = 1000,
+                    K = K,
+                    prop.outlier = 0.05,
+                    c = c)
+```
+
+
+```{r}
+calibration(s = s, 
+            method.K = K + 3, 
+            lambda.lfmmridge = 1e-3,
+            gif = FALSE,
+            exp.rep = 5)
+```
+
+
+# SSMPG 2015
+
+## Case 1
+
+```{r}
+n <- NULL
+L <- NULL
+s <- TrueSampler(G.file = "~/Projects/Data2016_2017/SSMPG2015/Case1/Case1.lfmm",
+                 X.file = "~/Projects/Data2016_2017/SSMPG2015/Case1/Case1.env",
+                 outlier.file = "~/Projects/Data2016_2017/SSMPG2015/Case1/Case1.outlier",
+                 n = n,
+                 L = L)
+expPCA <- PCAExperiment(s)
+expPCA <- runExperiment(expPCA)
+plot(expPCA) + 
+      scale_x_continuous(limits = c(1,60))
+```
+
+
+```{r}
+calibration(s = s, 
+            method.K = 10, 
+            lambda.lfmmridge = 1e-1,
+            gif = TRUE,
+            exp.rep = 1)
+```
+
+## Case 2
+
+```{r}
+n <- NULL
+L <- NULL
+s <- TrueSampler(G.file = "~/Projects/Data2016_2017/SSMPG2015/Case2/Case2.lfmm",
+                 X.file = "~/Projects/Data2016_2017/SSMPG2015/Case2/Case2.env",
+                 outlier.file = "~/Projects/Data2016_2017/SSMPG2015/Case2/Case2.outlier",
+                 n = n,
+                 L = L)
+expPCA <- PCAExperiment(s)
+expPCA <- runExperiment(expPCA)
+plot(expPCA) + 
+      scale_x_continuous(limits = c(1,60))
+```
+
+
+```{r}
+  calibration(s = s, 
+              method.K = 3, 
+              lambda.lfmmridge = 1e-10,
+              gif = TRUE,
+              exp.rep = 1)
+```
+
+
+## Case 3
+
+```{r}
+n <- NULL
+L <- NULL
+s <- TrueSampler(G.file = "~/Projects/Data2016_2017/SSMPG2015/Case3/Case3.lfmm",
+                 X.file = "~/Projects/Data2016_2017/SSMPG2015/Case3/Case3.env",
+                 outlier.file = "~/Projects/Data2016_2017/SSMPG2015/Case3/Case3.outlier",
+                 n = n,
+                 L = L)
+expPCA <- PCAExperiment(s)
+expPCA <- runExperiment(expPCA)
+plot(expPCA) + 
+      scale_x_continuous(limits = c(1,60))
+```
+
+
+```{r}
+calibration(s = s, 
+            method.K = 20, 
+            lambda.lfmmridge = 1e-5,
+            gif = FALSE,
+            exp.rep = 1)
+```
+
+
+# from true dataset
+## AT
+
+```{r}
+G.file <- "~/Projects/Data2016_2017/AthalianaGegMapLines/call_method_75/call_method_75_TAIR9.G.rds"
+
+cs <- c(0.0, 0.6, 0.2)
+s <- FromTrueSampler(G.file = G.file,
+                     n = NULL,
+                     L = 5000,
+                     K = 3,
+                     prop.outlier = 0.1,
+                     rho = NULL,
+                     cs = cs,
+                     round = FALSE)
+dat <- sampl(s)
+expPCA <- PCAExperiment(s)
+expPCA <- runExperiment(expPCA)
+plot(expPCA) + 
+      scale_x_continuous(limits = c(1,60))
+```
+
+### without gif
+```{r}
+calibration(s = s, 
+            method.K = 6, 
+            lambda.lfmmridge = 1e-5,
+            gif = FALSE,
+            exp.rep = 3)
+```
+
+### with gif
+
+```{r}
+calibration(s = s, 
+            method.K = 6, 
+            lambda.lfmmridge = 1e-5,
+            gif = TRUE,
+            exp.rep = 3)
+```
+
+It appears that gif do not well calibrate test when there is too much outlier.
+
+## 1000 genome
+
+```{r}
+G.file <- "~/Projects/Data2016_2017/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
+
+cs <- c(0.1, 0.6, 0.2)
+s <- FromTrueSampler(G.file = G.file,
+                     n = NULL,
+                     L = 5000,
+                     K = 6,
+                     prop.outlier = 0.1,
+                     rho = NULL,
+                     cs = cs,
+                     round = FALSE)
+dat <- sampl(s)
+expPCA <- PCAExperiment(s)
+expPCA <- runExperiment(expPCA)
+plot(expPCA) + 
+      scale_x_continuous(limits = c(1,100))
+```
+
+
+```{r}
+calibration(s = s, 
+            method.K = 10, 
+            lambda.lfmmridge = 1e-5,
+            gif = FALSE,
+            exp.rep = 3)
+```
+
+
+Ici on dit trop de connerie (trop de fausse decouvertes par rapport à l'attendu).
+Donc on sous estime la variance des estimateur, on sous estime l'impressision.
+PK ?
+Par ce que les individues sont corrélé entre eux ! On a l'impression d'observé n 
+var iid alors que en faite il y a beaucoups moins de liberté !
+
+

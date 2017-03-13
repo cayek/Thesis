@@ -1,0 +1,308 @@
+---
+title: "Data generated from 1000 genome"
+author: "kevin caye"
+date: "24 janvier 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# K = 4 and correlation with 3ieme PC = 60 % and 30 % of outlier
+
+```{r}
+K = 4
+L = 5000
+n = NULL
+cs <- list()
+cs[[3]] <- 0.6
+# sample data
+G.file <- "~/Projects/Data2016_2017/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
+s <-  FromTrueSampler(G.file = G.file,
+                       n = n,
+                       L = L,
+                       K = K,
+                       prop.outlier = 0.30,
+                       rho = NULL,
+                       cs = cs,
+                       round = FALSE)
+seed <- sample.int(.Machine$integer.max, 1)
+set.seed(seed)
+dat <- sampl(s)
+
+# with PCA
+mPCA <- PCAClassicLinearMethod(K = K,nickname = "lm+PCA")
+mPCA <- run(mPCA, dat)
+print_cor(mPCA$U, dat$X[,1])
+gplot_confunding(dat, mPCA, i = 2, j = 3, d = 1)
+
+LfmmRidge <- RidgeLFMMMethod(K = K,
+                             hypothesis.testing.method = lm_zscore(gif = TRUE),
+                             lambda = 9e3,
+                             nickname = "lfmm ridge")
+LfmmRidge <- run(LfmmRidge, dat)
+print_cor(LfmmRidge$U, dat$X[,1])
+gplot_confunding(dat, LfmmRidge, i = 1, j = 2, d = 1)
+
+set.seed(seed)
+exp <- FDRControlExperiment(nb.rep = 1, s = s,
+                            LfmmRidge,
+                            mPCA)
+exp <- runExperiment(exp)
+p <- plot(exp, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+print(p)
+
+```
+
+Il y a un lambda optimal !!!!!!!!!!!!!
+
+On va essayer de le trouver avec de la cross validation
+
+
+```{r}
+crossvalid.res <- crossvalidation_kfold(LfmmRidge, dat,
+                                        kfold = 4,
+                                        lambdas = c(1e-5, 1e2,1e3, 1e4, 1e5, 1e34))
+plot(crossvalid.res)
+plot(crossvalid.res, "sumUXabscor")
+```
+
+C'est assez sensible ... dure de trouver le lambda avec ces graphes...
+
+# K = 4 and correlation with 3ieme PC = 60 % and 15 % of outlier
+
+```{r}
+K = 4
+L = 5000
+n = NULL
+cs <- list()
+cs[[3]] <- 0.7
+# sample data
+G.file <- "~/Projects/Data2016_2017/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
+s <-  FromTrueSampler(G.file = G.file,
+                       n = n,
+                       L = L,
+                       K = K,
+                       prop.outlier = 0.15,
+                       rho = NULL,
+                       cs = cs,
+                       round = FALSE)
+seed <- sample.int(.Machine$integer.max, 1)
+set.seed(seed)
+dat <- sampl(s)
+
+# with PCA
+mPCA <- PCAClassicLinearMethod(K = K,nickname = "lm+PCA")
+mPCA <- run(mPCA, dat)
+print_cor(mPCA$U, dat$X[,1])
+gplot_confunding(dat, mPCA, i = 2, j = 3, d = 1)
+
+LfmmRidge <- RidgeLFMMMethod(K = K,
+                             hypothesis.testing.method = lm_zscore(gif = TRUE),
+                             lambda = 2e4,
+                             nickname = "lfmm ridge")
+LfmmRidge <- run(LfmmRidge, dat)
+print_cor(LfmmRidge$U, dat$X[,1])
+gplot_confunding(dat, LfmmRidge, i = 3, j = 4, d = 1)
+
+set.seed(seed)
+exp <- FDRControlExperiment(nb.rep = 1, s = s,
+                            LfmmRidge,
+                            mPCA)
+exp <- runExperiment(exp)
+p <- plot(exp, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+print(p)
+
+```
+
+Il y a des valeurs seuils ! pour `1e4` ca va pas pour `2e4` ca va!
+
+
+
+# K = 4 and correlation with 2 3 ieme PC = 30 % and 15 % of outlier
+
+```{r}
+K = 4
+L = 5000
+n = NULL
+cs <- list()
+cs[[2]] <- 0.8
+cs[[3]] <- 0.8
+# sample data
+G.file <- "~/Projects/Data2016_2017/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
+s <-  FromTrueSampler(G.file = G.file,
+                       n = n,
+                       L = L,
+                       K = K,
+                       prop.outlier = 0.15,
+                       rho = NULL,
+                       cs = cs,
+                       round = FALSE)
+seed <- sample.int(.Machine$integer.max, 1)
+set.seed(seed)
+dat <- sampl(s)
+
+# with PCA
+mPCA <- PCAClassicLinearMethod(K = K,nickname = "lm+PCA")
+mPCA <- run(mPCA, dat)
+print_cor(mPCA$U, dat$X[,1])
+gplot_confunding(dat, mPCA, i = 2, j = 3, d = 1)
+
+LfmmRidge <- RidgeLFMMMethod(K = K,
+                             hypothesis.testing.method = lm_zscore(gif = TRUE),
+                             lambda = 7e4,
+                             nickname = "lfmm ridge")
+LfmmRidge <- run(LfmmRidge, dat)
+print_cor(LfmmRidge$U, dat$X[,1])
+gplot_confunding(dat, LfmmRidge, i = 3, j = 4, d = 1)
+
+set.seed(seed)
+exp <- FDRControlExperiment(nb.rep = 1, s = s,
+                            LfmmRidge,
+                            mPCA)
+exp <- runExperiment(exp)
+p <- plot(exp, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+print(p)
+
+```
+
+## crossvalidation
+
+
+```{r}
+crossvalid.res <- crossvalidation_kfold(LfmmRidge, dat,
+                                        kfold = 4,
+                                        lambdas = c(1e-5, 1e2,1e3, 1e4, 1e5, 1e34))
+plot(crossvalid.res)
+plot(crossvalid.res, "sumUXabscor")
+```
+
+
+# try to run lfmm ridge with high K
+
+
+```{r}
+K = 4
+L = 5000
+n = NULL
+cs <- list()
+cs[[3]] <- 0.6
+# sample data
+G.file <- "~/Projects/Data2016_2017/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
+s <-  FromTrueSampler(G.file = G.file,
+                       n = n,
+                       L = L,
+                       K = K,
+                       prop.outlier = 0.30,
+                       rho = NULL,
+                       cs = cs,
+                       round = FALSE)
+seed <- sample.int(.Machine$integer.max, 1)
+set.seed(seed)
+dat <- sampl(s)
+
+# with PCA
+mPCA <- PCAClassicLinearMethod(K = K,nickname = "lm+PCA")
+mPCA <- run(mPCA, dat)
+print_cor(mPCA$U, dat$X[,1])
+gplot_confunding(dat, mPCA, i = 2, j = 3, d = 1)
+
+LfmmRidge <- RidgeLFMMMethod(K = K ,
+                             hypothesis.testing.method = lm_zscore(gif = TRUE),
+                             lambda = 1e-2,
+                             nickname = "lfmm ridge")
+LfmmRidge <- run(LfmmRidge, dat)
+print_cor(LfmmRidge$U, dat$X[,1])
+gplot_confunding(dat, LfmmRidge, i = 1, j = 2, d = 1)
+
+
+exp <- FDRControlExperiment(nb.rep = 1, s = s,
+                            seed = seed,
+                            LfmmRidge,
+                            mPCA)
+exp <- runExperiment(exp)
+p <- plot(exp, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+print(p)
+
+```
+
+No true changes...
+
+
+
+# Simpler simulations
+
+```{r}
+K = 4
+L = 5000
+n = NULL
+cs <- list()
+cs[[3]] <- 0.6
+cs[[2]] <- 0.2
+cs[[1]] <- 0.1
+# sample data
+G.file <- "~/Projects/Data2016_2017/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
+s <-  FromTrueSampler(G.file = G.file,
+                       n = n,
+                       L = L,
+                       K = K,
+                       prop.outlier = 0.20,
+                       rho = NULL,
+                       cs = cs,
+                       round = FALSE)
+seed <- sample.int(.Machine$integer.max, 1)
+set.seed(seed)
+dat <- sampl(s)
+
+# with PCA
+mPCA <- PCAClassicLinearMethod(K = K,nickname = "lm+PCA")
+mPCA <- run(mPCA, dat)
+print_cor(mPCA$U, dat$X[,1])
+gplot_confunding(dat, mPCA, i = 2, j = 3, d = 1)
+
+LfmmRidge <- RidgeLFMMMethod(K = K ,
+                             hypothesis.testing.method = lm_zscore(gif = TRUE),
+                             lambda = 1e-3,
+                             nickname = "lfmm ridge")
+LfmmRidge <- run(LfmmRidge, dat)
+print_cor(LfmmRidge$U, dat$X[,1])
+gplot_confunding(dat, LfmmRidge, i = 1, j = 2, d = 1)
+
+
+exp <- FDRControlExperiment(nb.rep = 1, s = s,
+                            seed = seed,
+                            LfmmRidge,
+                            mPCA)
+exp <- runExperiment(exp)
+p <- plot(exp, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+print(p)
+
+```
+
+## PCA on this data
+
+```{r}
+
+expPCA <- PCAExperiment(s = s, seed = seed)
+expPCA <- runExperiment(expPCA)
+plot(expPCA) + 
+   scale_x_continuous(limits = c(1,60))
+```
+
+

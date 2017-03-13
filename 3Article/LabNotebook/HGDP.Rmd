@@ -1,0 +1,89 @@
+---
+title: "GWAS du dataset HGDP_Li"
+author: "kevin caye"
+date: "1 fevrier 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# PCA and correlation with X_prec
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 2, bench.dir = "../Article3Package/BenchmarkDump/")
+plot(exp) +
+    scale_x_continuous(limits = c(1,60))
+  
+```
+
+We will take `K = 5` and `K = 20`. 
+We see that U4 and X are correlated
+
+
+# PCA and correlation with X_tmp
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 3, bench.dir = "../Article3Package/BenchmarkDump/")
+plot(exp) +
+    scale_x_continuous(limits = c(1,60))
+  
+```
+
+`K = 20` looks good.
+
+# Cross validation with X_tmp and K = 5
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+crossvalid.res <- retrieveExperiment(id = 4, bench.dir = "../Article3Package/BenchmarkDump/")
+plot(crossvalid.res, stat = "loss")
+plot(crossvalid.res, "sumUXabscor")
+  
+```
+
+We observe same pattern that in regression.
+
+# Cross validation with X_tmp and K = 20
+
+```{r}
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+crossvalid.res <- retrieveExperiment(id = 5, bench.dir = "../Article3Package/BenchmarkDump/")
+plot(crossvalid.res, stat = "loss")
+plot(crossvalid.res, "sumUXabscor")
+  
+```
+
+Still the same pattern.
+
+
+# Run of lfmm ridges alternated with X_tmp and K = 5 and 20
+
+On krak
+```{r}
+library(Article3Package)
+exp <- long_HGDB_lfmm()
+
+## retrieve exp
+getBenchmarkDb(bench.dir = "../Article3Package/BenchmarkDump/")[c("name", "date", "description")]
+res <- retrieveExperiment(id = 6, bench.dir = "../Article3Package/BenchmarkDump/")
+
+```

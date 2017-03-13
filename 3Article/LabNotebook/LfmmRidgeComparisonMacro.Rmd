@@ -1,0 +1,45 @@
+### Significant Test: zscore with {{sigma2.functor}} functor to compute `B` variance
+
+
+```{r {{label.name}}1 }
+
+m1 <- {{sigma2.functor}}() %>%
+  Zscore(B.sigma2.functor = .) %>%
+  ClassicLinearMethod(hypothesis.testing.method = .,
+                      nickname = "lm")
+m2 <- {{sigma2.functor}}() %>%
+  Zscore(B.sigma2.functor = .) %>%
+  RidgeLFMMMethod(K = {{K}},
+                  lambda = 10,
+                  hypothesis.testing.method = .,
+                  nickname = "lfmmRidge")
+m3 <- {{sigma2.functor}}() %>%
+  Zscore(B.sigma2.functor = .) %>%
+  PCAClassicLinearMethod(K = {{K}},
+                         hypothesis.testing.method = .,
+                         nickname = "PCA+lm")
+```
+
+
+#### Estimated comparison 
+```{r {{label.name}}2}
+ # comp
+  exp <- ComparisonExperiment(s = s, m1, m2, m3)
+  exp <- runExperiment(exp)
+  p <- plot(exp, variable.name.regexp = "score|B") + 
+    facet_grid(variable.name~method.name, scales = "free")
+  print(p)
+```
+
+#### Hypothesis testing comparison 
+```{r {{label.name}}3}
+# Exp fdr
+  exp <- FDRControlExperiment(nb.rep = {{nb.rep}}, s = s,  m1, m2, m3)
+  exp <- runExperiment(exp)
+  p <- plot(exp, plot.type = "pvalue.grid", summary_bin = TRUE)
+  print(p)
+  p <- plot(exp, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+  print(p)
+  p <- plot(exp, plot.type = "qqplot")
+  print(p)
+```

@@ -21,8 +21,45 @@
    - [ ] rm sur mes poste
    - [ ] rm les gits et les liens vers ceux ci (mon site)
    - [X] les backup
+     
+     On va migrer tous ca au fure et à masure :D
+
 *** 2017-03-13 lundi
-**** TODO Data dir 
+**** DONE Data dir 
+     CLOSED: [2017-03-13 lun. 16:11]
    Entered on [2017-03-13 lun. 13:49]
 
    For git annex see [[https://git-annex.branchable.com/direct_mode/][direct mode]]
+   #+BEGIN_SRC bash
+   git annex unannex
+   #+END_SRC
+**** GWAS RIZ
+     Entered on [2017-03-13 lun. 16:08]
+
+     [[file:Rnotebook/gwas_riz/gwas_riz.nb.html]]
+
+***** TODO climate
+      - K = 1 2 3
+      - lambda différente values
+      - avec X = tmaxPC2
+      - on recalibre
+      - lancer avec un genotype aléatoires 
+        
+      J'en sui a ecrire la fonction long_...
+
+***** TODO flowering
+      - K  1 2 3 4
+      - lambda plusieurs valeurs ...
+      - gerer les missing values dans X
+**** Fin de journee
+   Entered on [2017-03-13 lun. 18:01]
+
+   Petit a petit je met en place le repo et bosse en même temps. Je vais migrer
+   3Article au fur et a mesure.
+***** TODO Questions
+      - Comment on gere les images (git annex ? NON, ca bouge trop souvent)
+      - Comment on gere les notebook ? (git annex ?NON idem)
+
+        Faudrait pas faire grossir pour rien le repo...
+
+   

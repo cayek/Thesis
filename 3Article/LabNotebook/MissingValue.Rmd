@@ -1,0 +1,432 @@
+---
+title: "LFMM with missing value"
+author: "kevin caye"
+date: "16 janvier 2017"
+output: 
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 10, fig.height = 13, 
+                      message = FALSE, warning = FALSE,
+                      results = "hide")
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+
+# 2% outlier and 2 % of uniform missing values
+
+```{r}
+missing.prop <- 0.02
+```
+
+
+## We know K
+
+### Gaussian data
+
+```{r}
+K <- 6
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.02,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5) %>% 
+  MissingValueSampler(missing.prop = missing.prop)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+### Logistic data
+
+```{r}
+K <- 3
+## data
+s <- LogisticSampler(n = 100,
+                     ploidy = 2,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = 0.02,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5) %>% 
+  MissingValueSampler(missing.prop = missing.prop)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+
+
+## We do not know K
+
+### Gaussian data
+
+```{r}
+K <- 3
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.02,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5) %>% 
+  MissingValueSampler(missing.prop = missing.prop)
+
+WithMissingValue(s,
+                 method.K = K + 1,
+                 exp.rep = 3)
+
+```
+
+### Logistic data
+
+```{r}
+K <- 3
+## data
+s <- LogisticSampler(n = 100,
+                     ploidy = 2,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = 0.02,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5) %>% 
+  MissingValueSampler(missing.prop = missing.prop)
+
+WithMissingValue(s,
+                 method.K = K + 1,
+                 exp.rep = 3)
+
+```
+
+
+
+
+
+
+# 2% outlier and 2 % of sparse missing values
+
+```{r}
+missing.prop <- 0.02
+missing.prop.by.loci <- 0.5
+```
+
+
+## We know K
+
+### Gaussian data
+
+```{r}
+K <- 6
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.02,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5) %>% 
+  SparseMissingValueSampler(missing.prop = missing.prop, 
+                            missing.prop.by.loci = missing.prop.by.loci)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+### Logistic data
+
+```{r}
+K <- 3
+## data
+s <- LogisticSampler(n = 100,
+                     ploidy = 2,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = 0.02,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5) %>% 
+  SparseMissingValueSampler(missing.prop = missing.prop, 
+                            missing.prop.by.loci = missing.prop.by.loci)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+
+
+## We do not know K
+
+### Gaussian data
+
+```{r}
+K <- 3
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = 0.02,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5) %>% 
+  SparseMissingValueSampler(missing.prop = missing.prop, 
+                            missing.prop.by.loci = missing.prop.by.loci)
+
+WithMissingValue(s,
+                 method.K = K + 1,
+                 exp.rep = 3)
+
+```
+
+### Logistic data
+
+```{r}
+K <- 3
+## data
+s <- LogisticSampler(n = 100,
+                     ploidy = 2,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = 0.02,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5) %>% 
+  SparseMissingValueSampler(missing.prop = missing.prop, 
+                            missing.prop.by.loci = missing.prop.by.loci)
+
+WithMissingValue(s,
+                 method.K = K + 1,
+                 exp.rep = 3)
+
+```
+
+# 20% outlier and 2 % of sparse missing values
+
+```{r}
+missing.prop <- 0.02
+missing.prop.by.loci <- 0.5
+prop.outlier <- 0.2
+```
+
+## We know K
+
+### Logistic data
+
+```{r}
+K <- 3
+## data
+s <- LogisticSampler(n = 100,
+                     ploidy = 2,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = prop.outlier,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5) %>% 
+  SparseMissingValueSampler(missing.prop = missing.prop, 
+                            missing.prop.by.loci = missing.prop.by.loci)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+
+
+### Gaussian data
+
+```{r}
+K <- 3
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = prop.outlier,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5) %>% 
+  SparseMissingValueSampler(missing.prop = missing.prop, 
+                            missing.prop.by.loci = missing.prop.by.loci)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+
+
+# 20% outlier and 10 % of sparse missing values
+
+```{r}
+missing.prop <- 0.1
+missing.prop.by.loci <- 0.5
+prop.outlier <- 0.2
+```
+
+## We know K
+
+### Logistic data
+
+```{r}
+K <- 3
+## data
+s <- LogisticSampler(n = 100,
+                     ploidy = 2,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = prop.outlier,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5) %>% 
+  SparseMissingValueSampler(missing.prop = missing.prop, 
+                            missing.prop.by.loci = missing.prop.by.loci)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+
+### Gaussian data
+
+```{r}
+K <- 3
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = prop.outlier,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5) %>% 
+  SparseMissingValueSampler(missing.prop = missing.prop, 
+                            missing.prop.by.loci = missing.prop.by.loci)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+
+# 20% outlier and 20 % of uniform missing values
+
+```{r}
+missing.prop <- 0.20
+prop.outlier <- 0.2
+```
+
+## We know K
+
+### Gaussian data
+
+```{r}
+K <- 3
+## data
+s <- NormalSampler(n = 100,
+                   L = 1000,
+                   K = K,
+                   prop.outlier = prop.outlier,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5) %>% 
+  MissingValueSampler(missing.prop = missing.prop)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+
+
+### Logistic data
+
+```{r}
+K <- 3
+## data
+s <- LogisticSampler(n = 100,
+                     ploidy = 2,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = prop.outlier,
+                     sigma = 0.2,
+                     c = 0.6,
+                     mean.B = 0.0,
+                     sd.B = 1.0,
+                     sd.mu = 1.0,
+                     mean.mu = 0.5) %>% 
+  MissingValueSampler(missing.prop = missing.prop)
+
+WithMissingValue(s,
+                 method.K = K,
+                 exp.rep = 3)
+
+```
+

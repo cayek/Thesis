@@ -1,0 +1,91 @@
+---
+title: "SVA"
+author: "kevin caye"
+date: "9 janvier 2017"
+output: html_notebook
+---
+
+# Test of SVA package (`r Sys.Date()`)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 20, fig.height = 20)
+```
+
+```{r, results="hide"}
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("sva")
+# biocLite("bladderbatch")
+library(sva)
+library(bladderbatch)
+library(tidyverse)
+library(Article3Package)
+```
+
+## Doc example
+
+```{r}
+data(bladderdata)
+pheno <- pData(bladderEset)
+edata <- exprs(bladderEset)
+
+mod <- model.matrix(~as.factor(cancer), data = pheno)
+mod0 <- model.matrix(~1,data = pheno) # other co-variable, here only intercept
+
+# We confounding structure
+n.sv <- num.sv(edata,mod,method = "leek")
+svobj <- sva(edata,mod,mod0,n.sv = n.sv)
+str(svobj)
+
+# We perform association with confounding correction
+modSv = cbind(mod,svobj$sv)
+mod0Sv = cbind(mod0,svobj$sv)
+pValuesSv = f.pvalue(edata,modSv,mod0Sv)
+hist(pValuesSv)
+```
+
+## On a simulation
+
+
+```{r}
+n <- 100
+s <- NormalSampler(n = n,
+                   L = 1000,
+                   K = 3,
+                   prop.outlier = 0.2,
+                   sigma = 0.2,
+                   c = 0.6,
+                   mean.B = 0.0,
+                   sd.B = 1.0,
+                   sd.mu = 1.0,
+                   mean.mu = 0.5)
+dat <- sampl(s)
+
+# sva
+
+edata <- t(dat$G)
+one <- matrix(1, n, 1)
+mod <- cbind(one, dat$X)
+mod0 <- one # other co-variable, here only intercept
+
+## We confounding structure
+n.sv <- num.sv(edata,mod,method = "leek")
+n.sv # find 3
+svobj <- sva(edata, mod, mod0, n.sv = n.sv)
+str(svobj)
+
+## We perform association with confounding correction
+modSv = cbind(mod,svobj$sv)
+mod0Sv = cbind(mod0,svobj$sv)
+pValuesSv = f.pvalue(edata, modSv, mod0Sv)
+qValuesSv = p.adjust(pValuesSv, method = "BH")
+
+# plot
+hist(pValuesSv)
+plot(-log(pValuesSv))
+
+hist(qValuesSv)
+plot(-log(qValuesSv))
+
+```
+
+Ca marche pas du tout... pk ?

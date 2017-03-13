@@ -1,0 +1,94 @@
+---
+title: "Alternated ridge lfmm vs analytic ridge lfmm"
+author: "kevin caye"
+date: "19 janvier 2017"
+output: 
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 10, fig.height = 13, 
+                      message = FALSE, warning = FALSE,
+                      results = "hide")
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# On Sample from AT data set
+
+```{r}
+G.file <- "~/Projects/Data2016_2017/AthalianaGegMapLines/call_method_75/call_method_75_TAIR9.G.rds"
+K <- 3
+s <- FromTrueSampler(G.file = G.file,
+                     n = 200,
+                     L = 1000,
+                     K = K,
+                     prop.outlier = 0.1,
+                     rho = 0.9,
+                     cs = c(0.9,0,0),
+                     round = FALSE) 
+  set.seed(0)
+  AlternatedVsAnalyticRidge(s = s,
+                            method.K = K,
+                            exp.rep = 1,
+                            lambda = 10)
+  
+```
+
+# On Gaussian dataset
+
+```{r}
+
+K <- 3
+s <- NormalSampler(100, 1000, 
+                   K,
+                   prop.outlier = 0.2,
+                   c = 0.0)
+  
+  set.seed(0)
+  AlternatedVsAnalyticRidge(s = s,
+                            method.K = K,
+                            exp.rep = 1,
+                            lambda = 1e-3)
+
+  set.seed(0)
+  AlternatedVsAnalyticRidge(s = s,
+                            method.K = K,
+                            exp.rep = 1,
+                            lambda = 10)
+  
+    set.seed(0)
+  AlternatedVsAnalyticRidge(s = s,
+                            method.K = K,
+                            exp.rep = 1,
+                            lambda = 100000)
+  
+```
+
+# On Logistic dataset
+
+```{r}
+
+K <- 3
+s <- LogisticSampler(100, 1000, 
+                   K,
+                   prop.outlier = 0.2,
+                   c = 0.9)
+  
+  AlternatedVsAnalyticRidge(s = s,
+                            method.K = K,
+                            exp.rep = 1,
+                            lambda = 10)
+  
+```
+
+

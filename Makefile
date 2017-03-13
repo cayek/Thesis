@@ -2,19 +2,19 @@ red=`tput setaf 1`
 green=`tput setaf 2`
 reset=`tput sgr0`
 
+HOSTNAME=`hostname`
+
 .PHONY: Rpackage_install_nodep krakenator_push_hook krakenator_deploy Rpackage_install krakenator_R fin_de_journee
 
 
 # Rpackage
-
 Rpackage_install_nodep:
-	R --vanilla -e 'devtools::install(pkg = "./Rpackage/", dependencies = FALSE)'
+	R --vanilla -e 'devtools::install(pkg = "./ThesisRpackage/", dependencies = FALSE)'
 
 Rpackage_install:
-	R --vanilla -e 'devtools::install(pkg = "./Rpackage/")'
+	R --vanilla -e 'devtools::install(pkg = "./ThesisRpackage/")'
 
 # krakenator 
-
 krakenator_push_hook:
 	scp ./hooks/post-receive.sh cayek@krakenator:/home/cayek/Gits/2017/Thesis.git/hooks/post-receive
 
@@ -26,8 +26,33 @@ krakenator_deploy:
 krakenator_R: 
 	ssh -X -t cayek@krakenator "cd ~/Projects/Thesis/Rpackage; screen R"
 
-# kimsufi
+## Data/
+krakenator_mount_data:
+	echo "${green}=====Mount Data/=====${reset}"
+	if [ $(HOSTNAME) == "timc-bcm-15.imag.fr" ] ; then \
+		sshfs cayek@krakenator.imag.fr:/home/cayek/Projects/Thesis/Data Data -o allow_other; \
+	fi
 
+krakenator_umount_data:
+	echo "${green}=====Umount Data/=====${reset}"
+	if [ $(HOSTNAME) == "timc-bcm-15.imag.fr" ] ; then \
+		sudo umount Data/; \
+	fi
+
+## OUTPUT
+krakenator_mount_OUTPUT:
+	echo "${green}=====Mount OUTPUT/=====${reset}"
+	if [ $(HOSTNAME) == "timc-bcm-15.imag.fr" ] ; then \
+		sshfs cayek@krakenator.imag.fr:/home/cayek/Projects/Thesis/OUTPUT OUTPUT -o allow_other; \
+	fi
+
+krakenator_umount_OUTPUT:
+	echo "${green}=====Umount OUTPUT/=====${reset}"
+	if [ $(HOSTNAME) == "timc-bcm-15.imag.fr" ] ; then \
+		sudo umount OUTPUT; \
+	fi
+
+# kimsufi
 kimsufi_push_hook:
 	scp ./hooks/post-receive.sh cayek@176.31.253.205:/home/cayek/Gits/2017/Thesis.git/hooks/post-receive
 
@@ -57,7 +82,7 @@ fin_de_journee: biblio_sync
 	git status
 
 # Go
-GO: biblio_sync
+GO: biblio_sync krakenator_mount_OUTPUT krakenator_mount_data
 	echo "${green}===== git status ======${reset}"
 	git status
 	echo "${green}===== git pull ======${reset}"

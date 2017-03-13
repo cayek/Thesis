@@ -1,0 +1,35 @@
+---
+title: "GWAS RIZ"
+author: "kevin caye"
+date: "13 mars 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+# Climate
+
+## Run on krakenator
+
+```{r}
+library(ThesisRpackage)
+long_gwas_riz(n = NULL,
+              L = NULL,
+              K = c(1, 2, 3),
+              lambdas = c(1e-10, 1e-1, 1e10),
+              cluster.nb = NULL,
+              save = TRUE, bypass = FALSE)
+```
+

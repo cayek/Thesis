@@ -1,0 +1,209 @@
+---
+title: "Refractor code"
+author: "kevin caye"
+date: "26 janvier 2017"
+output: 
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+Code found here: https://github.com/cozygene/refactor/tree/master/R
+
+```{r}
+
+refactor <- function(data_file, k, covarfile = NULL, t = 500, numcomp = NULL, stdth = 0.02, out = "refactor") {
+
+    ranked_filename = paste(out, ".out.rankedlist.txt", sep="")
+    components_filename = paste(out, ".out.components.txt", sep="")
+
+    print('Starting ReFACTor v1.0...');
+
+    print('Reading input files...');
+
+    O = as.matrix(read.table(data_file))
+    sample_id <- O[1, -1] # extract samples ID
+    O <- O[-1,] # remove sample ID from matrix
+    cpgnames <- O[, 1] ## set rownames
+    O <- O[, -1] 
+    O = matrix(as.numeric(O),nrow=nrow(O),ncol=ncol(O))
+
+    print(paste("Excluding sites with low variance (std < ", stdth, ")..."), sep="")
+    sds = apply(t(O), 2, sd)
+    m_before = length(sds)
+    include = which(sds >= stdth)
+    O = O[include,]
+    cpgnames = cpgnames[include]
+    print(paste((m_before - length(which(sds >= stdth))), " sites were excluded due to low variance...", sep=""))
+
+    if (is.null(numcomp) || is.na(numcomp)) 
+    {
+        numcomp = k
+    }
+
+    # Adjust the data for the covariates
+    if (!is.null(covarfile))
+    {
+        covs = as.matrix(read.table(covarfile))
+        sample_id2 <- covs[, 1]
+        if (!all(sample_id == sample_id2)){
+            print("ERROR: The order of the samples in the covariates file must be the same as the order in the data file")
+            quit()
+        }
+        covs <- covs[,-1]
+        if (length(covs) > dim(O)[2])
+        {
+            covs = matrix(as.numeric(covs),nrow=nrow(covs),ncol=ncol(covs))
+        }else{
+            covs = as.numeric(covs)
+        }    
+        O_adj = O
+        for (site in 1:nrow(O))
+        {
+            model <- lm(O[site,] ~  covs)
+            O_adj[site,] = residuals(model)
+        }
+        O = O_adj
+    }
+
+    print('Running a standard PCA...')
+    pcs = prcomp(scale(t(O)));
+
+    coeff = pcs$rotation
+    score = pcs$x
+
+    print('Compute a low rank approximation of input data and rank sites...')
+    x = score[,1:k]%*%t(coeff[,1:k]);
+    An = scale(t(O),center=T,scale=F)
+    Bn = scale(x,center=T,scale=F)
+    An = t(t(An)*(1/sqrt(apply(An^2,2,sum))))
+    Bn = t(t(Bn)*(1/sqrt(apply(Bn^2,2,sum))))
+
+
+    # Find the distance of each site from its low rank approximation.
+    distances = apply((An-Bn)^2,2,sum)^0.5 ;
+    dsort = sort(distances,index.return=T);
+    ranked_list = dsort$ix
+
+    print('Compute ReFACTor components...')
+    sites = ranked_list[1:t];
+    pcs = prcomp(scale(t(O[sites,])));
+    first_score <- score[,1:k];
+    score = pcs$x
+
+    #print('Saving a ranked list of the data features...');
+    #write(t(cpgnames[ranked_list]),file=ranked_filename,ncol=1)
+    #write(t(cbind(ranked_list,cpgnames[ranked_list])),file=ranked_filename,ncol=2)
+
+    #print('Saving the ReFACTor components...');
+    #write(t(score[,1:numcomp]), file=components_filename, ncol=numcomp)
+    
+    print('ReFACTor is Done');
+    result <- list(refactor_components=score[,1:numcomp], ranked_list=ranked_list, standard_pca=first_score) 
+    return(result)
+
+}
+
+```
+
+```{r}
+associations_test <- function(O, y, model_append)
+{
+    observed_pvalues <- c()
+    for (site in 1:ncol(O))
+    {
+        model <- lm(y ~ O[,site] + model_append)
+        
+        pvalue <- coef(summary(model))[2,4]
+        observed_pvalues[site] = as.numeric(pvalue)
+    }
+
+    return(observed_pvalues) 
+}
+
+draw_qqplot <- function(y, title, xtitle, ytitle, style='.')
+{
+    #x <- runif(length(y))
+    x <- seq(1/length(y),1,by = 1/length(y))
+    x <- sort(-log10(x))
+    y <- sort(-log10(y)) 
+    plot(x, y, main=title, xlab=xtitle, ylab=ytitle, pch=style, xlim=c(0,ceiling(max(x))),  ylim=c(0,ceiling(max(y))))
+    
+    # add y=x trend
+    xasix<-0:10
+    yasix<-0:10
+    abline(lm(xasix~yasix),col=2,lty=1)
+}
+
+K = 5                                                     # the number of assumed cell types
+# Simulated data:
+DATA_FILE = '~/Projects/Data2016_2017/refractorDemo/demo_files/demo_datafile.txt'             # methylation levels file path
+PHENO_FILE = '~/Projects/Data2016_2017/refractorDemo/demo_files/demo_phenotype.txt'           # phenotype file path
+CELL_COMP_FILE = '~/Projects/Data2016_2017/refractorDemo/demo_files/demo_cellproportions.txt' # cell composition file path
+
+
+print("Reading methylation data...")
+O = as.matrix(read.table(DATA_FILE))    
+sample_id_O <- O[1, -1] # extract samples ID
+O <- O[-1,] # remove sample ID from matrix
+cpgnames <- O[, 1] ## set rownames
+O <- O[, -1] 
+O = t(matrix(as.numeric(O),nrow=nrow(O),ncol=ncol(O)))
+
+print("Reading phenotype data...")
+phenotype_matrix = as.matrix(read.table(PHENO_FILE))
+y <-  matrix(as.numeric(as.matrix(phenotype_matrix[, -1]) ))
+
+
+# run refactor
+output <- refactor(DATA_FILE, K, out = "demo_refactor")
+
+# run expirements
+# init plot
+#filename <- 'demo_results.png'
+#png(filename)
+#par(mfrow=c(2,2))
+
+# exp1
+print("Unadjusted analysis...")
+observed_pvalues <- associations_test(O,y, matrix(0, nrow = nrow(O), ncol = 1))
+draw_qqplot(observed_pvalues, title='Unadjusted analysis', xtitle='-log10(expected)', ytitle='-log10(observed)')
+
+# exp2
+print("Adjusted analysis using cell proportions...")
+observed_pvalues <- associations_test(O, y, as.matrix(read.table(CELL_COMP_FILE)))
+draw_qqplot(observed_pvalues, title='Adjusted analysis using cell proportions', xtitle='-log10(expected)', ytitle='-log10(observed)')
+
+# exp3
+print("Adjusted analysis using ReFACTor...")
+observed_pvalues <- associations_test(O, y, output$refactor_components[,1:K])
+draw_qqplot(observed_pvalues, title='Adjusted analysis using ReFACTor', xtitle='-log10(expected)', ytitle='-log10(observed)')
+
+# exp4
+print("Adjusted analysis using PCA...")
+observed_pvalues <- associations_test(O, y, output$standard_pca);
+draw_qqplot(observed_pvalues, title='Adjusted analysis using PCA', xtitle='-log10(expected)', ytitle='-log10(observed)')
+
+#dev.off()
+#print(paste("plot saved to", filename))
+
+#system(paste("open", filename))
+
+```
+
