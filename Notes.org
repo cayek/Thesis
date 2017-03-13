@@ -1,15 +1,20 @@
-* Journal
 * 2017
 ** 2017-03 mars
 *** 2017-03-10 Vendredi
-**** TODO Changement de git pour la Biblio
+**** DONE Changement de git pour la Biblio
+     CLOSED: [2017-03-13 lun. 13:38]
    Entered on [2017-03-10 Ven 16:30]
 
-   - [ ] je backup sur le server kimsufy
-   - [ ] rm sur mon pc de bureau et cp dans ici :D
-   - [ ] mettre biblio.bib a la racode de Thesis
-   - [ ] le reste est private on fait un Gits sur kimsuffy et ce qui faut dans le
+   - [X] je backup sur le server kimsufy
+   - [X] rm sur mon pc de bureau et cp dans ici :D
+   - [X] mettre biblio.bib a la racode de Thesis
+   - [X] le reste est private on fait un Gits sur kimsuffy et ce qui faut dans le
      makefile !!
+
+     #+BEGIN_SRC bash
+     git remote add origin cayek@176.31.253.205:/home/cayek/Gits/2017/Biblio.git
+     #+END_SRC
+
 **** TODO Migration des git article
    Entered on [2017-03-10 Ven 16:44]
 

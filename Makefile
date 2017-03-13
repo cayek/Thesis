@@ -36,9 +36,18 @@ kimsufi_deploy:
 	git commit --allow-empty -am "deploy on kimsufi"
 	git push kimsufi master
 
+# Biblio
+biblio_sync:
+	echo "${green}=====BIBLIO SYNC=====${reset}"
+	cd Biblio/
+	git add -A .
+	git commit --allow-empty -am "Sync"
+	git pull
+	git push
+
 
 # End of day
-fin_de_journee:
+fin_de_journee: biblio_sync
 	echo "${green}===== git status ======${reset}"
 	git status
 	echo "${green}===== git commit and push ======${reset}"
@@ -46,3 +55,10 @@ fin_de_journee:
 	git push
 	echo "${green}===== git status ======${reset}"
 	git status
+
+# Go
+GO: biblio_sync
+	echo "${green}===== git status ======${reset}"
+	git status
+	echo "${green}===== git pull ======${reset}"
+	git pull
