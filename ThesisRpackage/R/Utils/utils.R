@@ -9,7 +9,6 @@
 new_file <- function(dir, name) {
 
   assertthat::assert_that(getwd() == path.expand("~/Projects/Thesis/ThesisRpackage"))
-  assertthat::assert_that(dir.exists(paste0("R/",dir)))
 
   aux <- function(dir.base, name) {
     dd <- paste0(dir.base, dir,"/")

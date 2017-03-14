@@ -15,7 +15,7 @@
      git remote add origin cayek@176.31.253.205:/home/cayek/Gits/2017/Biblio.git
      #+END_SRC
 
-**** TODO Migration des git article
+**** TODO Migration des git articles
    Entered on [2017-03-10 Ven 16:44]
 
    - [ ] rm sur mes poste
@@ -61,5 +61,52 @@
       - Comment on gere les notebook ? (git annex ?NON idem)
 
         Faudrait pas faire grossir pour rien le repo...
-
+*** 2017-03-14 Mardi
+**** DONE Cross-validation
+     CLOSED: [2017-03-14 Mar 13:51]
+   Entered on [2017-03-14 Mar 07:21]
    
+   Je vais supprimer tout ce que j'avais fait sur la crossvalidation et qui ne
+   marche pas ! 
+
+   - [X] implementer predict_row
+   - [X] implementer left.out func
+   - [X] implementer CrossValidation_rowwise: 
+***** TODO test avec tess3r 
+      Il va falloir implementer mes samplers. Je vais recuperer tous le code de
+      tess3r ! C'est le plus simple
+***** TODO test avec lfmm
+      Ca donne quoi sur les vrais dataset que je veux mettre dans le papier !
+   
+**** Writting tools
+   Entered on [2017-03-14 Mar 08:03]
+
+   - [[https://joelkuiper.eu/spellcheck_emacs][un blog sur les outils emacs]]
+   - [[http://www.cs.umd.edu/~nspring/software/style-check-readme.html][un style checker]]
+   - [[https://github.com/mhayashi1120/Emacs-langtool][language tools in emacs]]
+   - [[http://www.techrepublic.com/blog/linux-and-open-source/automatically-analyze-text-with-these-simple-command-line-tools/][diction and style]]
+   - [[http://www.afterthedeadline.com/][afterthedeadline]]
+   - [[https://www.quora.com/What-is-the-best-free-spell-style-and-grammar-checker-for-English][quora: best style and grammar checker]]
+**** Biblio
+   Entered on [2017-03-14 Mar 11:10]
+
+   #+BEGIN_SRC bash 
+   git clone cayek@176.31.253.205:/home/cayek/Gits/2017/Biblio.git
+   #+END_SRC
+**** TODO Migration du code de l'article 2
+   Entered on [2017-03-14 Mar 14:29]
+
+   Pour le moment je ne fait pas de fork de tess3r, ca va trop compliquer mon
+   package. Je vais récuperer tous le code et le mettre dans
+   R/2Article/2Article_ et dans un environment !
+
+   Reste toutes les images a migrer ...
+**** TODO Reunir tous les notebook
+   Entered on [2017-03-14 Mar 15:02]
+
+   Tout est dans le titre faudrait que je puisse visualiser tous mes notes book
+   :D
+**** ms
+   Entered on [2017-03-14 Mar 15:30]
+   
+   On peut le ddl [[http://home.uchicago.edu/rhudson1/source/mksamples.html][ici]]. C'est ouf que j'ai utilisé un soft aussi vieux...

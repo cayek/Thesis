@@ -15,7 +15,7 @@ TestRequiredPkg <- function(pkg) {
 #'
 #' @param msg The message
 DebugMessage <- function(msg) {
-  if (!is.null(getOption("Article3Package.debug"))) {
+  if (!is.null(getOption("ThesisRpackage.debug"))) {
     message("= ", msg)
   }
 }

@@ -4,7 +4,8 @@
 \alias{ComparisonExperiment_GridRun}
 \title{run ComparisonExperiment on a grid}
 \usage{
-ComparisonExperiment_GridRun(method.constructor, s, ms, Ks, lambdas, gif, save)
+ComparisonExperiment_GridRun(method.constructor, s, ms, Ks, lambdas, calibrate,
+  save)
 }
 \description{
 run ComparisonExperiment on a grid
