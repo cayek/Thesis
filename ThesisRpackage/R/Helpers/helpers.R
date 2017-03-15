@@ -49,3 +49,13 @@ long_init <- function(cluster.nb,
   }
 }
 
+#' make a description string
+make_description <- function(desc, ...) {
+  params <- list(...)
+  ns <- names(params)
+  desc <- paste0(desc, " with ")
+  for (n in ns) {
+    desc <- paste0(desc, n,"=", paste0(params[[n]], collapse = "|")," ")
+  }
+  desc
+}

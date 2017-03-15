@@ -115,6 +115,10 @@
    Entered on [2017-03-15 Mer 08:14]
    
    On va tous mettre dans ./Notes.org avec des tags pour les 3 articles.
+**** tess3r                                                        :2Article:
+   Entered on [2017-03-15 Mer 08:50]
+   
+   Je vais copy-paste un parti du code que j'utilise dans l'env tess3r.env
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -456,10 +460,17 @@
        cross validation.
 
 ** Rnotebook
-*** TODO Cross validation
+*** TODO Cross validation                                         :Rnotebook:
     On va voir si la cross validation marche
    
     j'en suis a implémenter tess3_wrapper.R
+*** Tess3r avec des coordonnées bruitées                          :Rnotebook:
+    [[file:2Article/Rnotebook/Revisions/tess3NoisyCoord.nb.html]]
+    
+    On voit bien la perte de précision avec la bruit sur les coordonnées. On
+    voit aussi que le variogramme permet d'évaluer l'autocorélation spatiale des
+    données génétiques.
+    
 
 * 3Article                                                         :3Article:
 ** 2017
@@ -478,7 +489,7 @@
    
     Only Rnotebook and I git =.nb.html= to capture results !!
 **** 2017-01-17 mardi
-***** Data with missing value                                    :LaNotebook:
+***** Data with missing value                                    :Rnotebook:
       Entered on [2017-01-17 mar. 09:50]
     Le but est de montrer qu'on est meilleur avec la technique alterné !!
     file:./LabNotebook/MissingValue.nb.html
@@ -518,7 +529,7 @@
        - faire des simulation a la facon de OF, voir mon cahier 
       A demain :D
 **** 2017-01-19 jeudi
-***** Comparison of analytic and alternated lfmm                 :LaNotebook:
+***** Comparison of analytic and alternated lfmm                 :Rnotebook:
     Entered on [2017-01-19 jeu. 10:54]
     file:./LabNotebook/AlternatedVsAnaliticRidge.nb.html
     Je veux voir si ont a bien les mêmes solutions !! 
@@ -530,7 +541,7 @@
       GIF ne marche plus !!
     - il s'emblerais finalement que lambda est un effet !!
     On va le mêtre en évidence et essayer de trouver comment le choisir !
-***** Choix du lambda dans lfmm ridge                            :LaNotebook:
+***** Choix du lambda dans lfmm ridge                            :Rnotebook:
     Entered on [2017-01-19 jeu. 15:39]
     file:./LabNotebook/Lambda.nb.html
 
@@ -560,7 +571,7 @@
       ajouter le test d'hypothèse avec le lasso. 
       A la semaine prochaine !!!
 **** 2017-01-23 lundi
-***** Sample from true data set                                  :LaNotebook:
+***** Sample from true data set                                  :Rnotebook:
     Entered on [2017-01-23 lun. 12:44]
     file:./LabNotebook/SampleFromTrueDataSet.nb.html
 
@@ -590,7 +601,7 @@
     En gros ca fait la même chose que lfmm ridge... 
     see file:./Article3Package/tests/testthat/test_lm_zscore.R
     Il faudrait trouver un exemple ou c'est mieux :D
-***** Comparaison des méthodes sur une simu de 1000 genome       :LaNotebook:
+***** Comparaison des méthodes sur une simu de 1000 genome       :Rnotebook:
     Entered on [2017-01-24 mar. 11:17]
    
     C'est parti c'est un résultat de validation pour le papier !!
@@ -662,7 +673,7 @@
 
     En faite c'est finalement pas différent de mon lm a la fin !! sauf que c'est
     dans l'autre sens !!! 
-***** ReFACTor demo                                              :LaNotebook:
+***** ReFACTor demo                                              :Rnotebook:
     Entered on [2017-01-26 jeu. 15:25]
    
     file:./LabNotebook/refractor.nb.html j'ai juste récupéré le code du [[https://github.com/cozygene/refactor/tree/master/R][github]].
@@ -711,7 +722,7 @@
 
     A Lundi !!
 **** 2017-01-30 lundi
-***** Lasso, ridge et lambda                                     :LaNotebook:
+***** Lasso, ridge et lambda                                     :Rnotebook:
     Entered on [2017-01-30 lun. 14:24]
    
     Objectif: touver des simulations où
@@ -723,7 +734,7 @@
     jeux de données simulé depuis le 1000 génome ! Voir les résultats :
     file:./LabNotebook/LassoRidgeEtLambda.nb.html .
 **** 2017-01-31 mardi
-***** Données simulé from le 1000 genomes                        :LaNotebook:
+***** Données simulé from le 1000 genomes                        :Rnotebook:
     Entered on [2017-01-31 mar. 13:56]
 ****** Objectif:
      reponds: Quelles sont les spécificités des dataset simulé from le
@@ -766,7 +777,7 @@
          empecher que la corrélation expliqué par X ne soit aprise par l'ACP.
          Voir file:./Article3Package/tests/testthat/test_NormalSAmpler2.R.
 
-***** Nuclear norm LFMM                                          :LaNotebook:
+***** Nuclear norm LFMM                                          :Rnotebook:
     Entered on [2017-01-31 mar. 15:54]
 ****** Objectif: 
        on va faire une vrai evualuation de cette méthode pas seulement sur des
@@ -781,7 +792,7 @@
        lfmm + ridge dans le cas d'une alternance de pca normal et lm ridge.
 *** 2017-02 février
 **** 2017-02-01 mercredi
-***** HGDP experiment                                            :LaNotebook:
+***** HGDP experiment                                            :Rnotebook:
     Entered on [2017-02-01 mer. 15:34]
 ****** TODO Objectifs
        - [X] lancer l'acp
@@ -848,7 +859,7 @@
        - Il faudrait que je me compare au GWAS plygénique aussi a locasion ! Voir
          les papier de stephens !
 **** 2017-02-02 jeudi
-***** lfmmRidge cross validation                                 :LaNotebook:
+***** lfmmRidge cross validation                                 :Rnotebook:
     Entered on [2017-02-02 jeu. 09:17]
 ****** Objectifs
        Montrer les resultats de crossvalidation sur des simulations
@@ -866,7 +877,7 @@
        Au final il n'y qu'un seul exemple qui m'enmerde ! Et si cétait un cas
        très particulier ! Dans les vrais dataset les variables X est corrélé avec
        plusieurs axes ! C'est deja ce que je fais en sommant plusieurs X.
-***** Calibration du test d'hypothèse                            :LaNotebook:
+***** Calibration du test d'hypothèse                            :Rnotebook:
     Entered on [2017-02-02 jeu. 16:12]
 
     Bon on est en gros d'accord sur la méthode !! On va explorer la calibration.
@@ -934,7 +945,7 @@
 ****** Bonne vacance
        On progresse !!!!!
 **** 2017-02-14 mardi
-***** Calibration des tests avec boostrap                        :LaNotebook:
+***** Calibration des tests avec boostrap                        :Rnotebook:
     Entered on [2017-02-14 mar. 10:50]
 ****** Objectif
        On va ajouter une option boostrap au test en fin de chaine.
@@ -976,7 +987,7 @@
        moins de puissance ! Mais on dit la vérité ! 
 
        Go calibrarion ! 
-***** Quelques experience pour la calibration des tests          :LaNotebook:
+***** Quelques experience pour la calibration des tests          :Rnotebook:
     Entered on [2017-02-15 mer. 11:47]
 
     On va essayer de calculer l'équivalent du gif mais sur le residue !
@@ -1056,7 +1067,7 @@
       DEADLINE: <2017-03-03 Ven>
       Entered on [2017-02-17 Ven 09:59]
 ****** Les resultats
-******* Validation sur simulation                                :LaNotebook:
+******* Validation sur simulation                                :Rnotebook:
         [[file:LabNotebook/simuValidation.nb.html]]
 ******** TODO Simulations
          From le 1000 genomes. 2 cas : 
@@ -1087,7 +1098,7 @@
          CLOSED: [2017-02-17 Ven 16:22]
          Comparaison sur simulated data set function.
          J'implemente ca cette aprem !
-******* TODO Missing values                                      :LaNotebook:
+******* TODO Missing values                                      :Rnotebook:
         Même experience que [[*Validation sur simulation][Validation sur simulation]] mais avec une strategie
         d'imputation des missing values
        
@@ -1104,7 +1115,7 @@
          - [X] lm with missing value (on met des zeros, et on divise par le vrai
            nombre de données :D)
          - [ ] le notebook
-******* Critere de reproductibilité                              :LaNotebook:
+******* Critere de reproductibilité                              :Rnotebook:
         J'espere que ca va marcher...Ok
         cite:crossValidated_PCACrossValidation_2017 m'a fait changer d'avis. On
         va essayer des missing values. 
@@ -1133,14 +1144,14 @@
            pattern plus franch. J'ai mis 0.5
          - C'est un critère de cross validation qui dit ce qui est mieux si on
            veut fitter les données... C'est pas forcément ce que l'on veut faire.
-******* TODO GWAS                                                :LaNotebook:
+******* TODO GWAS                                                :Rnotebook:
         Le HGDP. Et on compare se qui sort par rapport aux autres papiers.
 ******** Résultats
          [[file:LabNotebook/HGDP.nb.html]]
 ******** Le message
          - On fait comme dans cite:frichot13_testin_assoc_between_loci_envir.   
         
-******* EWAS                                                     :LaNotebook:
+******* EWAS                                                     :Rnotebook:
         On lance lfmm dessus et on compare se qui sort.
        
         [[file:LabNotebook/GSE42861.nb.html]]
@@ -1164,11 +1175,11 @@
           Bref, avec la recalibration ca marche ! 
 ******* TODO Robustesse au choix des parametres
         A voir comment on peut faire.
-***** FAMT test                                                  :LaNotebook:
+***** FAMT test                                                  :Rnotebook:
     Entered on [2017-02-17 Ven 13:10]
  
     Test of the [[http://famt.free.fr/][famt package]] [[file:LabNotebook/FAMT.nb.html]]
-***** SVA test                                                   :LaNotebook:
+***** SVA test                                                   :Rnotebook:
     Entered on [2017-02-17 Ven 14:32]
    
     Test of [[http://www.bioconductor.org/packages/release/bioc/html/sva.html][SVA R package]] : [[file:LabNotebook/SVA.nb.html]]
@@ -1237,7 +1248,7 @@
     - [[file:hooks/post-receive.sh][post-receive hook]]
     - add a remote krakenator_deploy
 **** 2017-03-02 jeudi
-***** Illustration avec Arabidopsis Athaliana                    :LaNotebook:
+***** Illustration avec Arabidopsis Athaliana                    :Rnotebook:
     Entered on [2017-03-02 jeu. 08:49]
 
     Je veux faire un exemple pour illustrer les facteur de confusion, en

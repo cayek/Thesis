@@ -1,0 +1,51 @@
+---
+title: "Tess3 with noisy coordinates"
+author: "kevin caye"
+date: "15 mars 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+
+```{r}
+library(tess3r)
+library(ThesisRpackage)
+```
+
+
+# Perte de precision quand on bruite les coordonnées
+```{r}
+exp <- long_tess3_noisyCoord(n = 200,
+                             cluster.nb = NULL,
+                             nb.rep = 5,
+                             noise.signal = c(0.0, 1.0, 3.0),
+                             save = FALSE, bypass = TRUE)
+plot_tess3_noisyCoord(exp)
+```
+
+# Le garde fou : le variogram
+
+```{r}
+exp <- long_tess3_noisyCoord(n = 200,
+                             cluster.nb = NULL,
+                             nb.rep = 1,
+                             noise.signal = c(0.0, 1.0, 3.0),
+                             compute.vario = TRUE,
+                             save = FALSE, bypass = TRUE)
+plot_tess3_noisyCoord(exp)
+```
+
+
