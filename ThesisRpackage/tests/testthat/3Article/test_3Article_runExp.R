@@ -17,7 +17,6 @@ test_that("Article3_runExp", {
                   m = finalLfmmRdigeMethod(K = NULL,
                                            lambda = NULL,
                                            calibrate = TRUE),
-                  m.name = m$nickname,
                   cluster.nb = NULL,
                   save = FALSE, bypass = TRUE)
   expect_equal(exp$name, "Article3_runExp")

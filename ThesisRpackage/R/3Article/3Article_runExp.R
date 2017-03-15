@@ -43,7 +43,6 @@ Article3_runExp <- function(s,
                             m = finalLfmmRdigeMethod(K = NULL,
                                                      lambda = NULL,
                                                      calibrate = TRUE),
-                            m.name = "finalLfmmRdigeMethod",
                             cluster.nb = NULL,
                             save = TRUE, bypass = FALSE) {
 
@@ -53,7 +52,7 @@ Article3_runExp <- function(s,
   ## exp
   exp <- Experiment(name = "Article3_runExp",
                     description = make_description("Article3_runExp",
-                                                   m.name = m.name,
+                                                   m.name = m$nickname,
                                                    s.name = s.name,
                                                    lambdas = lambdas,
                                                    Ks = Ks))
