@@ -9,10 +9,16 @@ plot.CrossValidation <- function(cv, color = c("lambda", "K")) {
     ungroup()
 
   if (color[1] == "K") {
-    g <- ggplot(toplot, aes(x = K, y = PRESS.mean, color = as.factor(lambda)))
+    toplot <- toplot %>%
+      mutate(lambda = as.factor(lambda))
+    g <- ggplot(toplot, aes(x = K, y = PRESS.mean, color = lambda)) +
+      facet_grid(lambda~., scales = "free")
   } else if (color[1] == "lambda") {
-    g <- ggplot(toplot, aes(x = lambda, y = PRESS.mean, color = as.factor(K))) +
-      scale_x_log10()
+    toplot <- toplot %>%
+      mutate(K = as.factor(K))
+    g <- ggplot(toplot, aes(x = lambda, y = PRESS.mean, color = K)) +
+      scale_x_log10() +
+      facet_grid(K~., scales = "free")
   }
 
   g +

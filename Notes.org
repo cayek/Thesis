@@ -45,8 +45,6 @@
       - on recalibre
       - lancer avec un genotype aléatoires 
         
-      J'en sui a ecrire la fonction long_...
-
 ***** TODO flowering
       - K  1 2 3 4
       - lambda plusieurs valeurs ...
@@ -56,11 +54,14 @@
 
    Petit a petit je met en place le repo et bosse en même temps. Je vais migrer
    3Article au fur et a mesure.
-***** TODO Questions
+***** DONE Questions
+      CLOSED: [2017-03-15 Mer 13:41]
       - Comment on gere les images (git annex ? NON, ca bouge trop souvent)
       - Comment on gere les notebook ? (git annex ?NON idem)
 
         Faudrait pas faire grossir pour rien le repo...
+
+        Je m'en balek, je vais tous mettre dans le repo ! 
 *** 2017-03-14 Mardi
 **** DONE Cross-validation
      CLOSED: [2017-03-14 Mar 13:51]
@@ -72,9 +73,13 @@
    - [X] implementer predict_row
    - [X] implementer left.out func
    - [X] implementer CrossValidation_rowwise: 
-***** TODO test avec tess3r 
+***** DONE test avec tess3r 
+      CLOSED: [2017-03-15 Mer 13:44]
       Il va falloir implementer mes samplers. Je vais recuperer tous le code de
-      tess3r ! C'est le plus simple
+      tess3r ! C'est le plus simple.
+
+      Finalement, c'est pas la priorité. On vera la cross validation pour la
+      these mais pour les reviews ils ne reclamaient pas ca.
 ***** TODO test avec lfmm
       Ca donne quoi sur les vrais dataset que je veux mettre dans le papier !
    
@@ -119,6 +124,25 @@
    Entered on [2017-03-15 Mer 08:50]
    
    Je vais copy-paste un parti du code que j'utilise dans l'env tess3r.env
+**** Point sur 3Article                                            :3Article:
+   Entered on [2017-03-15 Mer 14:53]
+***** Que falta ?
+      - HGDP PCA+cv+run
+      - GSE42861 PCA+cv+run
+      - (interet de l'algo avec missing value (rmse(U,U_true)))
+***** TODO Plan d'attaque 
+      On va generer les figures pour l'article !!!
+      CAD:
+      - [ ] comp de méthode sur simul (pcesision-recall et fdr control)
+      - [ ] rmse de l'algo with missing value
+      - [ ] HGDP (pca cv et result)
+      - [ ] Refactor (pca cv et result)
+      Après on envoie à olovier et on ecrit l'article ! 
+**** Fin de journée                                                :3Article:
+   Entered on [2017-03-15 Mer 17:11]
+
+   Bon j'ai impementé les trois functions utile pour l'analyse des true dataset.
+   DEMAIN je lance pour faire l'analyse d'olivier, HGDP et refactor.
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions

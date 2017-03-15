@@ -24,8 +24,12 @@ runExperiment.PCAExperiment <- function(exp) {
   dat <- sampl(exp$s)
 
   # We remove snip with na
-  locus.na <- apply(dat$G, 2, anyNA)
-  G_ <- dat$G[,!locus.na]
+  if (anyNA(dat$G)) {
+    DebugMessage("Missing values detected")
+    locus.na <- apply(dat$G, 2, anyNA)
+    message("== Removing ", mean(locus.na), "% col")
+    G_ <- dat$G[,!locus.na]
+  }
 
   # index
   exp$res.df <- tibble(index = 1:nrow(G_))
