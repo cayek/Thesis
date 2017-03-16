@@ -33,6 +33,14 @@ fit <- function(m, dat, reuse = FALSE, ...){
   UseMethod("fit")
 }
 
+#' name
+#'
+#' @export
+name <- function(m){
+  UseMethod("name")
+}
+
+
 #' Run the association scan method
 #'
 #' @export
