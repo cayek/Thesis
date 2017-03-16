@@ -2,6 +2,7 @@
 # helpers
 
 fit.final <- function(m, dat, reuse = FALSE) {
+  ## impute
   if (anyNA(dat$G)) {
     DebugMessage("Missing values detected")
     m$missing.index <- which(is.na(dat$G))
@@ -177,16 +178,10 @@ finalPcaLm <- function(K, calibrate = FALSE) {
 
 #' @export
 finalOracle <- function(K, calibrate = FALSE) {
-  if (calibrate) {
-    hypothesis.testing.method <- Zscore(zscorepvalue.functor = FdrtoolsCalibratedZscore() ,
-                                        B.sigma2.functor = AnalyticSigma2Functor())
-  } else {
-    hypothesis.testing.method <- Zscore(zscorepvalue.functor = NormalZscore() ,
-                                        B.sigma2.functor = AnalyticSigma2Functor())
-  }
   m <- PCAClassicLinearMethod(K = K,
                               nickname = "Oracle",
-                              hypothesis.testing.method = hypothesis.testing.method,
+                              hypothesis.testing.method = lm_zscore(calibrate = calibrate,
+                                                                    correctionByC = FALSE),
                               assumingStructure = TRUE)
   class(m) <- c("final", "finalOracle", class(m))
   m

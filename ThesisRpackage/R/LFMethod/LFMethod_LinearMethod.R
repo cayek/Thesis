@@ -135,7 +135,7 @@ fit.ClassicLinearMethod <- function(m, dat, reuse = FALSE) {
   m <- classicLm(G_, dat$X, center = m$center, res = m)
 
   if (anyNA(G_)) {
-    DebugMessage("Missing values detected")
+    DebugMessage("lm : Missing values detected")
     #   G_ <- m$impute.genotype.method$fun(G_)
     m$missing.index <- which(is.na(G_))
     m$imputed.values <- (one %*% m$mu +  dat$X %*% m$B)[m$missing.index]

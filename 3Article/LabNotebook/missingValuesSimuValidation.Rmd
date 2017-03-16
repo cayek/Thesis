@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALS
 
 ```{r}
 library(tidyverse)
-library(Article3Package)
+library(ThesisRpackage)
 ```
 
 # On gaussian dataset
@@ -40,7 +40,7 @@ finalSimuValiation(s,
                    method.K = K,
                    lambda.lfmmridge = 1e0,
                    exp.rep = 2,
-                   gif = FALSE,
+                   calibrate = FALSE,
                    comp.exp = FALSE,
                    fast.only = TRUE,
                    with.missing = TRUE)

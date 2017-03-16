@@ -844,10 +844,10 @@ bootstrapCalibration <- function(s, method.K, lambda.lfmmridge, exp.rep, comp.ex
 }
 
 #' @export
-finalSimuValiation <- function(s, method.K, lambda.lfmmridge, exp.rep, gif, comp.exp = FALSE, with.missing = FALSE, fast.only = FALSE) {
+finalSimuValiation <- function(s, method.K, lambda.lfmmridge, exp.rep, calibrate, comp.exp = FALSE, with.missing = FALSE, fast.only = FALSE) {
 
   # Method
-  bench <- finalBench(K = method.K, lambda = lambda.lfmmridge, gif = gif, with.missing = with.missing, fast.only = fast.only)
+  bench <- finalBench(K = method.K, lambda = lambda.lfmmridge, calibrate = calibrate, with.missing = with.missing, fast.only = fast.only)
 
   if (with.missing) {
     bench <- bench[c("lfmmRidge",

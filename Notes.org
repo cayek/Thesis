@@ -33,7 +33,7 @@
    #+BEGIN_SRC bash
    git annex unannex
    #+END_SRC
-**** GWAS RIZ
+**** GWAS RIZ                                                     :Rnotebook:
      Entered on [2017-03-13 lun. 16:08]
 
      [[file:Rnotebook/gwas_riz/gwas_riz.nb.html]]
@@ -138,11 +138,27 @@
       - [ ] HGDP (pca cv et result)
       - [ ] Refactor (pca cv et result)
       Après on envoie à olovier et on ecrit l'article ! 
+****** Figures
+       - [ ] precision- recall
+       - [ ] fdr control (comme dans cite:Song_2015)
+       - [ ] more power with missing value algo
+       - [ ] cross validation sur GSE42861 et HGDP on verra comment on met en
+         formes
 **** Fin de journée                                                :3Article:
    Entered on [2017-03-15 Mer 17:11]
 
    Bon j'ai impementé les trois functions utile pour l'analyse des true dataset.
    DEMAIN je lance pour faire l'analyse d'olivier, HGDP et refactor.
+*** 2017-03-16 Jeudi
+**** GSE42861 analyse                                             :Rnotebook:
+   Entered on [2017-03-16 Jeu 10:04]
+
+   Deuxieme tour :D cette fois on fait ca propre:
+   [[file:Rnotebook/GSE42861/GSE42861.nb.html]]
+**** HGDP analyse                                                 :Rnotebook:
+   Entered on [2017-03-16 Jeu 10:07]
+   
+   [[file:Rnotebook/HGDP/HGDP.nb.html]]
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -516,7 +532,7 @@
 ***** Data with missing value                                    :Rnotebook:
       Entered on [2017-01-17 mar. 09:50]
     Le but est de montrer qu'on est meilleur avec la technique alterné !!
-    file:./LabNotebook/MissingValue.nb.html
+    file:./3Article/LabNotebook/MissingValue.nb.html
     En gros ca montre bien ce que je veux. Après il y a des cas ou ca merde
     surtout avec les missing values pas uniformément réparti... Je sais pas
     pourquoi j'ai pensé que ca serait plus dure dans ce cas.
@@ -555,7 +571,7 @@
 **** 2017-01-19 jeudi
 ***** Comparison of analytic and alternated lfmm                 :Rnotebook:
     Entered on [2017-01-19 jeu. 10:54]
-    file:./LabNotebook/AlternatedVsAnaliticRidge.nb.html
+    file:./3Article/LabNotebook/AlternatedVsAnaliticRidge.nb.html
     Je veux voir si ont a bien les mêmes solutions !! 
     et percer le mystere du lambda :D
     J'ai plusieurs problèmes:
@@ -567,7 +583,7 @@
     On va le mêtre en évidence et essayer de trouver comment le choisir !
 ***** Choix du lambda dans lfmm ridge                            :Rnotebook:
     Entered on [2017-01-19 jeu. 15:39]
-    file:./LabNotebook/Lambda.nb.html
+    file:./3Article/LabNotebook/Lambda.nb.html
 
     Ca doit pouvoir se cross valider !
    
@@ -597,7 +613,7 @@
 **** 2017-01-23 lundi
 ***** Sample from true data set                                  :Rnotebook:
     Entered on [2017-01-23 lun. 12:44]
-    file:./LabNotebook/SampleFromTrueDataSet.nb.html
+    file:./3Article/LabNotebook/SampleFromTrueDataSet.nb.html
 
     On va voir comment les méthodes réagisses en fonction de rho (la proportion
     de variance expliquée par X) et la correlation avec la structure. Je vais en
@@ -629,7 +645,7 @@
     Entered on [2017-01-24 mar. 11:17]
    
     C'est parti c'est un résultat de validation pour le papier !!
-    file:./LabNotebook/Validation_1000Genome.nb.html . Ca marche bien :D On
+    file:./3Article/LabNotebook/Validation_1000Genome.nb.html . Ca marche bien :D On
     arrive bin a montrer que : 
     - c'est robuste au choix de K
     - c'est conservatif mais c'est mieux que liberal
@@ -700,7 +716,7 @@
 ***** ReFACTor demo                                              :Rnotebook:
     Entered on [2017-01-26 jeu. 15:25]
    
-    file:./LabNotebook/refractor.nb.html j'ai juste récupéré le code du [[https://github.com/cozygene/refactor/tree/master/R][github]].
+    file:./3Article/LabNotebook/refractor.nb.html j'ai juste récupéré le code du [[https://github.com/cozygene/refactor/tree/master/R][github]].
    
 ****** TODO Comment ce jeux de données demo a été simulé ?
        Il plot le qqplot mais ca montre juste qu'il n'y a pas d'outlier en faite
@@ -756,7 +772,7 @@
    
     J'ai trouver des simulation ou le choix de lambda influe vraiment !! Sur les
     jeux de données simulé depuis le 1000 génome ! Voir les résultats :
-    file:./LabNotebook/LassoRidgeEtLambda.nb.html .
+    file:./3Article/LabNotebook/LassoRidgeEtLambda.nb.html .
 **** 2017-01-31 mardi
 ***** Données simulé from le 1000 genomes                        :Rnotebook:
     Entered on [2017-01-31 mar. 13:56]
@@ -765,10 +781,10 @@
      1000 genomes et qui fait que lfmm echoue pour certaines valeurs de lambda ?
 ****** Résultats:
        de l'acp sur le chrm 22 du 1000 genomes :
-       file:./LabNotebook/Validation_1000Genome.nb.html
+       file:./3Article/LabNotebook/Validation_1000Genome.nb.html
       
        Les résultats montre qu'il y a un choix de lambda optimal : 
-       file:./LabNotebook/DataFrom1000Genome.nb.html
+       file:./3Article/LabNotebook/DataFrom1000Genome.nb.html
 ****** Conlusion 
        Il y a un lambda optimal qui controle bien la corrélation avec la
        structure de fond ! 
@@ -807,7 +823,7 @@
        on va faire une vrai evualuation de cette méthode pas seulement sur des
        belle simulations toutes propres !!
 ****** Resultats:
-       file:./LabNotebook/NuclearLfmm.nb.html
+       file:./3Article/LabNotebook/NuclearLfmm.nb.html
 ****** Conclusion
        Je ne sais pas pk mais c'est moins bon avec la nuclear norme ... J'ai même
        essayer de corrigé avec le U trouvé par lfmm nuclear norme en co variable
@@ -853,7 +869,7 @@
        
         C'est juste que je me suis pas lancé dans le bon dossier !!! ./Article3Package/
 ****** Resultats
-       file:./LabNotebook/HGDP.nb.html
+       file:./3Article/LabNotebook/HGDP.nb.html
 ***** Bilan de cette journée
     Entered on [2017-02-01 mer. 16:55]
 
@@ -861,8 +877,8 @@
     de converger vers uniquement lfmmRidge. Mon critère de comme de la
     correlation entre U et X sur le HGDP donne le même paterne que sur mes
     simulations, voir: 
-    - file:./LabNotebook/HGDP.nb.html
-    - file:./LabNotebook/DataFrom1000Genome.nb.html
+    - file:./3Article/LabNotebook/HGDP.nb.html
+    - file:./3Article/LabNotebook/DataFrom1000Genome.nb.html
     C'est bizare !!! Il y a aurait pas un moyen automatique de choisir ce lambda.
    
     :( Ce qui est triste c'est que au final mes simulations sur les vrai jeux de
@@ -891,9 +907,9 @@
        :PROPERTIES:
        :CUSTOM_ID: cross_validation_exp
        :END:
-       file:./LabNotebook/CrossValidation.nb.html
+       file:./3Article/LabNotebook/CrossValidation.nb.html
        On observe les mêmes paterns que avec les simultations from a true
-       dataset : file:./LabNotebook/DataFrom1000Genome.nb.html. 
+       dataset : file:./3Article/LabNotebook/DataFrom1000Genome.nb.html. 
 ****** Conclusion
        C'est pas gagné pour trouver un critère pour choisir le lambda... Ce
        pattern est juste typique des données binaire...
@@ -911,7 +927,7 @@
 ****** Objectifs
        Montrer que la méthode est bien calibré sur tous mon panel de test !! 
 ****** Resultats
-       file:./LabNotebook/calibration.nb.html
+       file:./3Article/LabNotebook/calibration.nb.html
       
        J'avais fait une erreur dans ma fonction calibration... 
 
@@ -960,7 +976,7 @@
        - L'algo d'alternance de lfmmRidge converge-t-il en théorie ? Je pense que
          oui mais il faudra faire un peut de biblio. Voir cite:josse2009gestion.
        - Cette algo est-il vraiment utile ? Je pense que oui aussi, les resultats
-         de file:./LabNotebook/MissingValue.nb.html son bizare mais je pense
+         de file:./3Article/LabNotebook/MissingValue.nb.html son bizare mais je pense
          qu'on va reussir trouver des simulations ou c'est mieux :D. Le top
          serais de montrer que on en viens a dire n'importe quoi quand
          l'imputation est faite a l'arrache. Mais si je recalibre mes tests pour
@@ -1093,7 +1109,8 @@
 ****** Les resultats
 ******* Validation sur simulation                                :Rnotebook:
         [[file:LabNotebook/simuValidation.nb.html]]
-******** TODO Simulations
+******** DONE Simulations
+         CLOSED: [2017-03-16 Jeu 12:41]
          From le 1000 genomes. 2 cas : 
          - peu d'outlier
          - beaucoups d'oulier
@@ -1122,7 +1139,8 @@
          CLOSED: [2017-02-17 Ven 16:22]
          Comparaison sur simulated data set function.
          J'implemente ca cette aprem !
-******* TODO Missing values                                      :Rnotebook:
+******* DONE Missing values                                       :Rnotebook:
+        CLOSED: [2017-03-16 Jeu 12:41]
         Même experience que [[*Validation sur simulation][Validation sur simulation]] mais avec une strategie
         d'imputation des missing values
        
@@ -1132,7 +1150,8 @@
          - je pense que je vais mettre juste deux lfmm avec imputation par la
            mean et lfmm alterner. Pour avoir un message clair.
           
-******** TODO Implementation
+******** DONE Implementation
+         CLOSED: [2017-03-16 Jeu 12:41]
          - [X] LEA with missing value 
          - [X] FAMT with missing value 
          - [X] lfmmRidge with missing value
@@ -1380,7 +1399,7 @@
     - [X] Reussir a mettre lasso dans les graphes precision-recall
     - [X] Visualiser l'évolution de la precision en function du lambda dans le
       ridge !!
-    - [X] Pk dans file:./LabNotebook/AlternatedVsAnaliticRidge.nb.html lfmm ridge
+    - [X] Pk dans file:./3Article/LabNotebook/AlternatedVsAnaliticRidge.nb.html lfmm ridge
       et lfmm analytics ne donne pas le même resultat sur le premier exemple ! Je
       pense que c'est parce que je ne laisse pas l'algo aller a assez loin ! Pour
       le papier il faut que les deux donnent la même chose ! Sinon j'ai aucun
