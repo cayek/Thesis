@@ -138,6 +138,12 @@
       - [ ] HGDP (pca cv et result)
       - [ ] Refactor (pca cv et result)
       Après on envoie à olovier et on ecrit l'article ! 
+****** Figures
+       - [ ] precision- recall
+       - [ ] fdr control (comme dans cite:Song_2015)
+       - [ ] more power with missing value algo
+       - [ ] cross validation sur GSE42861 et HGDP on verra comment on met en
+         formes
 **** Fin de journée                                                :3Article:
    Entered on [2017-03-15 Mer 17:11]
 
@@ -1103,7 +1109,8 @@
 ****** Les resultats
 ******* Validation sur simulation                                :Rnotebook:
         [[file:LabNotebook/simuValidation.nb.html]]
-******** TODO Simulations
+******** DONE Simulations
+         CLOSED: [2017-03-16 Jeu 12:41]
          From le 1000 genomes. 2 cas : 
          - peu d'outlier
          - beaucoups d'oulier
@@ -1132,7 +1139,8 @@
          CLOSED: [2017-02-17 Ven 16:22]
          Comparaison sur simulated data set function.
          J'implemente ca cette aprem !
-******* TODO Missing values                                      :Rnotebook:
+******* DONE Missing values                                       :Rnotebook:
+        CLOSED: [2017-03-16 Jeu 12:41]
         Même experience que [[*Validation sur simulation][Validation sur simulation]] mais avec une strategie
         d'imputation des missing values
        
@@ -1142,7 +1150,8 @@
          - je pense que je vais mettre juste deux lfmm avec imputation par la
            mean et lfmm alterner. Pour avoir un message clair.
           
-******** TODO Implementation
+******** DONE Implementation
+         CLOSED: [2017-03-16 Jeu 12:41]
          - [X] LEA with missing value 
          - [X] FAMT with missing value 
          - [X] lfmmRidge with missing value

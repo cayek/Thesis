@@ -63,7 +63,7 @@ plot.FDRControlExperiment <- function(exp,
   if (plot.type[1] == "pvalue.grid") {
     p <- ggplot(exp$result$df.pvalue ,
                 aes(x = expected.fd, y = true.fd  - expected.fd )) +
-      facet_grid(method ~ pvalue.index) +
+      facet_grid(method ~ pvalue.index, scale = "free") +
       layer(geom = geom, mapping = aes(group = as.factor(rep)), params = list(color = "grey", size = 0.1),
             stat = "identity", position = "identity")
     if (summary_bin) {
