@@ -1,1 +1,0 @@
-gwas_riz/long_gwas_riz.R

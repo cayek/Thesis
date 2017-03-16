@@ -20,16 +20,61 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALS
 ```
 
 # Climate
-
-## Run on krakenator
+## PCA
+### Run on krakenator
 
 ```{r}
 library(ThesisRpackage)
-long_gwas_riz(n = NULL,
-              L = NULL,
-              K = c(1, 2, 3),
-              lambdas = c(1e-10, 1e-1, 1e10),
-              cluster.nb = NULL,
-              save = TRUE, bypass = FALSE)
+s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.rds",
+                 X.file = "../Data/gwas_riz/climate/tmaxPC2.rds",
+                 outlier.file = NULL,
+                 n = NULL,
+                 L = NULL)
+exp <- Article3_pcaExp(s = s,
+                       s.name = "climate gwas_riz",
+                       cluster.nb = NULL,
+                       save = TRUE, bypass = FALSE)
 ```
 
+
+## CV
+### Run on krakenator
+
+```{r}
+library(ThesisRpackage)
+s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.rds",
+                 X.file = "../Data/gwas_riz/climate/tmaxPC2.rds",
+                 outlier.file = NULL,
+                 n = NULL,
+                 L = NULL)
+exp <- Article3_cvExp(s = s,
+                      s.name = "climate gwas_riz",
+                      Ks = c(1,2,3),
+                      lambdas = c(1e-10, 1e0, 1e10),
+                      row.left.out.func = left.out.kfold(5),
+                      col.left.out.func = left.out.sample(5, 0.2),
+                      cluster.nb = NULL,
+                      save = TRUE, bypass = FALSE)
+```
+
+## LFMM runs
+### Run on krakenator
+
+```{r}
+library(ThesisRpackage)
+s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.rds",
+                 X.file = "../Data/gwas_riz/climate/tmaxPC2.rds",
+                 outlier.file = NULL,
+                 n = NULL,
+                 L = NULL)
+exp <- Article3_runExp(s = s,
+                       s.name = "climate gwas_riz",
+                       Ks = c(1,2,3),
+                       lambdas = c(1e-10, 1e0, 1e10),
+                       nb.rep = 1,
+                       m = finalLfmmRdigeMethod(K = NULL,
+                                                lambda = NULL,
+                                                calibrate = TRUE),
+                       cluster.nb = NULL,
+                       save = TRUE, bypass = FALSE)
+```

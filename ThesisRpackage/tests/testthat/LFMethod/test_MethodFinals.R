@@ -56,6 +56,7 @@ test_that("famt", {
 })
 
 test_that("sva", {
+  skip_if_not_installed("sva")
   m <- finalSVAMethod(1)
   test(m, "SVA", "finalSVAMethod")
 })

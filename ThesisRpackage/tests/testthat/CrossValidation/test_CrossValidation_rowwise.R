@@ -33,7 +33,7 @@ test_that("CrossValidation_rowwise", {
 test_that("left.out.kfold", {
   folds <- left.out.kfold(5)(20)
   expect_equal(length(folds), 5) # kfolds folds
-  expect_equal(sort(simplify(folds)), 1:20) # all indices
+  expect_equal(sort(purrr::simplify(folds)), 1:20) # all indices
 })
 
 test_that("left.out.kfold", {

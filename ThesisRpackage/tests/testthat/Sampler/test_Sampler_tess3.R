@@ -2,7 +2,7 @@ library(testthat)
 context("test_Sampler")
 
 test_that("Tess3Sampler", {
-
+  options(tess3.ms = "~/BiocompSoftware/msdir/ms")
   s <- Tess3Sampler(n = 100,
                     nsites.neutral = 1000,
                     min.maf = 0.0)
@@ -16,6 +16,7 @@ test_that("Tess3Sampler", {
 test_that("Tess3Sampler with selected loci", {
 
   skip("Too long")
+  options(tess3.ms = "~/BiocompSoftware/msdir/ms")
   s <- Tess3Sampler(n = 100,
                     nsites.neutral = 1 * 1e5,
                     nsites.selected = 1 * 1e2,

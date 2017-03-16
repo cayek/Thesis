@@ -3,6 +3,7 @@ context("tess3_noisyCoord")
 
 test_that("long_tess3_noisyCoord", {
 
+  options(tess3.ms = "~/BiocompSoftware/msdir/ms")
   exp <- long_tess3_noisyCoord(n = 10,
                         cluster.nb = NULL,
                         nb.rep = 1,
