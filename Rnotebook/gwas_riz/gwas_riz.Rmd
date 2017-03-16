@@ -34,6 +34,7 @@ exp <- Article3_pcaExp(s = s,
                        s.name = "climate gwas_riz",
                        cluster.nb = NULL,
                        save = TRUE, bypass = FALSE)
+
 ```
 
 
@@ -53,7 +54,7 @@ exp <- Article3_cvExp(s = s,
                       lambdas = c(1e-10, 1e0, 1e10),
                       row.left.out.func = left.out.kfold(5),
                       col.left.out.func = left.out.sample(5, 0.2),
-                      cluster.nb = NULL,
+                      cluster.nb = 4,
                       save = TRUE, bypass = FALSE)
 ```
 

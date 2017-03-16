@@ -24,7 +24,7 @@ krakenator_deploy:
 	git push krakenator master
 
 krakenator_R: 
-	ssh -X -t cayek@krakenator "cd ~/Projects/Thesis/Rpackage; screen R"
+	ssh -X -t cayek@krakenator "cd ~/Projects/Thesis/ThesisRpackage; screen R"
 
 ## Data/
 krakenator_mount_data:

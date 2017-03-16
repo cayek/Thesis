@@ -1,0 +1,211 @@
+---
+title: "Validation and comparison on simulations"
+author: "kevin caye"
+date: "17 fevrier 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+bench.dir <- "~/Projects/Article3/Article3Package/BenchmarkDump/"
+```
+
+```{r}
+library(tidyverse)
+library(Article3Package)
+```
+
+# Simulation with $5%$ of outlier
+
+## cross val
+```{r}
+library(Article3Package)
+exp <- long_gypsa_simulation_crossvalidation(outlier.prop = 0.05,
+                             lambdas = c(1e-10, 1e0, 1e2, 1e10),
+                             cluster.nb = 4)
+```
+
+## exp
+
+On krak
+```{r}
+library(Article3Package)
+exp <- long_gypsa_simulation(outlier.prop = 0.05,)
+```
+retrieve exp res
+```{r}
+getBenchmarkDb(bench.dir = bench.dir)[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 22, bench.dir = bench.dir)
+
+```
+
+plot
+```{r}
+plot_gypsa_simulation(exp,
+                      ratio.width = 1.5,
+                      ratio.height = 1.7,
+                      output.name = "plot_gypsa_simulation05_pvalue.png",
+                      plot.type = c("pvalue.grid", "precision.recall"))
+```
+
+```{r}
+plot_gypsa_simulation(exp,
+                      ratio.width = 1.5,
+                      ratio.height = 1.7,
+                      output.name = "plot_gypsa_simulation05_precision.png",
+                      plot.type = c("precision.recall"))
+```
+
+# Simulation with $15%$ of outlier
+
+## cross val
+```{r}
+library(Article3Package)
+exp <- long_gypsa_simulation_crossvalidation(outlier.prop = 0.15,
+                             lambdas = c(1e-10, 1e0, 1e2, 1e10),
+                             cluster.nb = 4)
+```
+
+## exp
+```{r}
+library(Article3Package)
+exp <- long_gypsa_simulation(outlier.prop = 0.15)
+```
+
+retrieve exp res
+```{r}
+getBenchmarkDb(bench.dir = bench.dir)[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 23, bench.dir = bench.dir)
+
+```
+
+plot
+```{r}
+plot_gypsa_simulation(exp,
+                      ratio.width = 1.5,
+                      ratio.height = 1.7,
+                      output.name = "plot_gypsa_simulation15_pvalue.png",
+                      plot.type = c("pvalue.grid", "precision.recall"))
+```
+
+```{r}
+plot_gypsa_simulation(exp,
+                      ratio.width = 1.5,
+                      ratio.height = 1.7,
+                      output.name = "plot_gypsa_simulation15_precision.png",
+                      plot.type = c("precision.recall"))
+```
+
+# Simulation with $10%$ of outlier and missing value
+
+On krak
+```{r}
+library(Article3Package)
+exp <- long_gypsa_simulation(outlier.prop = 0.10,
+                             missing.prop = 0.2,
+                             exp.rep = 5,
+                             fast.only = FALSE,
+                             n = NULL, L = 10000,
+                             cluster.nb = NULL,
+                             save = TRUE, bypass = FALSE)
+```
+
+
+retrieve exp res
+```{r}
+getBenchmarkDb(bench.dir = bench.dir)[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 24, bench.dir = bench.dir)
+
+```
+
+plot
+```{r}
+plot_gypsa_simulation(exp,
+                      ratio.width = 1.5,
+                      ratio.height = 1.7,
+                      output.name = "plot_gypsa_simulation10_20missing_pvalue.png",
+                      plot.type = c("pvalue.grid", "precision.recall"))
+```
+
+```{r}
+plot_gypsa_simulation(exp,
+                      ratio.width = 1.5,
+                      ratio.height = 1.7,
+                      output.name = "plot_gypsa_simulation10_20missing_precision.png",
+                      plot.type = c("precision.recall"))
+```
+
+# HGDP
+
+## PCA
+```{r}
+getBenchmarkDb(bench.dir = bench.dir)[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 3, bench.dir = bench.dir)
+
+plot_gypsa_pca(exp,
+               output.name = "plot_gypsa_pca_HGDP.png",
+               dir = "~/Projects/Article3/Slides/GypsaSeminar/Images/",
+               save = TRUE)
+
+```
+
+
+## res
+
+on krak 
+```{r}
+library(Article3Package)
+long_HGDB_lfmm(bypass = FALSE,
+               lambdas = c(1e-2),
+               Ks = c(20))
+```
+
+
+```{r}
+getBenchmarkDb(bench.dir = bench.dir)[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 25, bench.dir = bench.dir)
+```
+
+```{r}
+plot_gypsa_HGDP_res(exp, output.name = "HGDP_manhattanplot.png")
+```
+
+
+# GSE42861
+## PCA
+```{r}
+getBenchmarkDb(bench.dir = bench.dir)[c("name", "date", "description")]
+exp <- retrieveExperiment(id = 8, bench.dir = bench.dir)
+
+plot_gypsa_pca(exp,
+               output.name = "plot_gypsa_pca_GSE42861.png",
+               dir = "~/Projects/Article3/Slides/GypsaSeminar/Images/",
+               save = TRUE)
+
+```
+
+
+## res
+
+```{r}
+exp <- retrieveExperiment(id = 18, bench.dir = "../Article3Package/BenchmarkDump/")
+plot_gypsa_GSE42861_res(exp = exp,
+                        output.name = "plot_gypsa_GSE42861_res.png",
+                        fdr.threshold = 0.05,
+                        ratio.width = 0.9,
+                        ratio.height = 0.8,
+                        dir = "~/Projects/Article3/Slides/GypsaSeminar/Images/",
+                        save = TRUE,
+                        dpi = 600)
+```
+Rmk : 3 loci detected in refactor are loci detected in the paper.
