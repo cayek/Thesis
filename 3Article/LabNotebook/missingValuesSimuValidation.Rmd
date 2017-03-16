@@ -78,19 +78,19 @@ K <- 4
 G.file <- "~/Projects/Data2016_2017/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
 s <- FromTrueSampler(G.file = G.file,
                      n = NULL,
-                     L = 10000,
+                     L = 1000,
                      K = K,
-                     prop.outlier = 0.15,
+                     prop.outlier = 0.10,
                      rho = NULL,
                      cs = cs,
                      round = FALSE) %>%
-  MissingValueSampler(missing.prop = 0.51)
+  SparseMissingValueSampler(missing.prop = 0.10, missing.prop.by.loci = 0.5)
 
 finalSimuValiation(s,
                    method.K = K,
                    lambda.lfmmridge = 1e0,
                    exp.rep = 3,
-                   gif = FALSE,
+                   calibrate = FALSE,
                    comp.exp = FALSE,
                    with.missing = TRUE,
                    fast.only = TRUE)

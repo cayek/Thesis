@@ -20,12 +20,13 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALS
 ```
 
 # Climate
+
 ## PCA
 ### Run on krakenator
 
 ```{r}
 library(ThesisRpackage)
-s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.rds",
+s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.filtered.rds",
                  X.file = "../Data/gwas_riz/climate/tmaxPC2.rds",
                  outlier.file = NULL,
                  n = NULL,
@@ -37,45 +38,60 @@ exp <- Article3_pcaExp(s = s,
 
 ```
 
+### plot
+```{r}
+getBenchmarkDb()
+plot(exp)
+```
+
 
 ## CV
 ### Run on krakenator
 
 ```{r}
 library(ThesisRpackage)
-s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.rds",
+s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.filtered.rds",
                  X.file = "../Data/gwas_riz/climate/tmaxPC2.rds",
                  outlier.file = NULL,
                  n = NULL,
                  L = NULL)
 exp <- Article3_cvExp(s = s,
                       s.name = "climate gwas_riz",
-                      Ks = c(1,2,3),
-                      lambdas = c(1e-10, 1e0, 1e10),
+                      Ks = c(1,2,3,4, 5),
+                      lambdas = c(1e-10, 1e0, 1e10, 1e30),
                       row.left.out.func = left.out.kfold(5),
                       col.left.out.func = left.out.sample(5, 0.2),
                       cluster.nb = 4,
                       save = TRUE, bypass = FALSE)
+
 ```
+
+### Plot
+```{r}
+plot(exp$cv, color = "K")
+plot(exp$cv, color = "lambda")
+```
+
 
 ## LFMM runs
 ### Run on krakenator
 
 ```{r}
 library(ThesisRpackage)
-s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.rds",
+s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.filtered.rds",
                  X.file = "../Data/gwas_riz/climate/tmaxPC2.rds",
                  outlier.file = NULL,
                  n = NULL,
                  L = NULL)
 exp <- Article3_runExp(s = s,
                        s.name = "climate gwas_riz",
-                       Ks = c(1,2,3),
-                       lambdas = c(1e-10, 1e0, 1e10),
+                       Ks = c(2,3,4),
+                       lambdas = c(1e-10, 1e-1, 1e10),
                        nb.rep = 1,
                        m = finalLfmmRdigeMethod(K = NULL,
                                                 lambda = NULL,
-                                                calibrate = TRUE),
+                                                calibrate = FALSE),
                        cluster.nb = NULL,
                        save = TRUE, bypass = FALSE)
+
 ```

@@ -159,6 +159,10 @@
    Entered on [2017-03-16 Jeu 10:07]
    
    [[file:Rnotebook/HGDP/HGDP.nb.html]]
+**** Bilan de la journée
+   Entered on [2017-03-16 jeu. 17:37]
+
+   Demain on fait les plots pour le papier !!!!!!
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -1197,7 +1201,7 @@
 ******* EWAS                                                     :Rnotebook:
         On lance lfmm dessus et on compare se qui sort.
        
-        [[file:LabNotebook/GSE42861.nb.html]]
+        [[file:3Article/LabNotebook/GSE42861.nb.html]]
 ******** DONE pas encore fait
          CLOSED: [2017-03-08 mer. 08:50]
          On retrouve bien les locus du papier cite:Rahmani_2016, mais les qqplot

@@ -321,9 +321,9 @@ div.tocify {
 <h3>Run on krakenator</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShUaGVzaXNScGFja2FnZSlcbnMgPC0gVHJ1ZVNhbXBsZXIoRy5maWxlID0gXCIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvZ2Vub3R5cGUucmRzXCIsXG4gICAgICAgICAgICAgICAgIFguZmlsZSA9IFwiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL3RtYXhQQzIucmRzXCIsXG4gICAgICAgICAgICAgICAgIG91dGxpZXIuZmlsZSA9IE5VTEwsXG4gICAgICAgICAgICAgICAgIG4gPSBOVUxMLFxuICAgICAgICAgICAgICAgICBMID0gTlVMTClcbmV4cCA8LSBBcnRpY2xlM19wY2FFeHAocyA9IHMsXG4gICAgICAgICAgICAgICAgICAgICAgIHMubmFtZSA9IFwiY2xpbWF0ZSBnd2FzX3JpelwiLFxuICAgICAgICAgICAgICAgICAgICAgICBjbHVzdGVyLm5iID0gTlVMTCxcbiAgICAgICAgICAgICAgICAgICAgICAgc2F2ZSA9IFRSVUUsIGJ5cGFzcyA9IEZBTFNFKVxuXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShUaGVzaXNScGFja2FnZSlcbnMgPC0gVHJ1ZVNhbXBsZXIoRy5maWxlID0gXCIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvZ2Vub3R5cGUuZmlsdGVyZWQucmRzXCIsXG4gICAgICAgICAgICAgICAgIFguZmlsZSA9IFwiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL3RtYXhQQzIucmRzXCIsXG4gICAgICAgICAgICAgICAgIG91dGxpZXIuZmlsZSA9IE5VTEwsXG4gICAgICAgICAgICAgICAgIG4gPSBOVUxMLFxuICAgICAgICAgICAgICAgICBMID0gTlVMTClcbmV4cCA8LSBBcnRpY2xlM19wY2FFeHAocyA9IHMsXG4gICAgICAgICAgICAgICAgICAgICAgIHMubmFtZSA9IFwiY2xpbWF0ZSBnd2FzX3JpelwiLFxuICAgICAgICAgICAgICAgICAgICAgICBjbHVzdGVyLm5iID0gTlVMTCxcbiAgICAgICAgICAgICAgICAgICAgICAgc2F2ZSA9IFRSVUUsIGJ5cGFzcyA9IEZBTFNFKVxuXG5gYGAifQ== -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ThesisRpackage)
-s &lt;-<span class="st"> </span><span class="kw">TrueSampler</span>(<span class="dt">G.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/genotype.rds&quot;</span>,
+s &lt;-<span class="st"> </span><span class="kw">TrueSampler</span>(<span class="dt">G.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/genotype.filtered.rds&quot;</span>,
                  <span class="dt">X.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/tmaxPC2.rds&quot;</span>,
                  <span class="dt">outlier.file =</span> <span class="ot">NULL</span>,
                  <span class="dt">n =</span> <span class="ot">NULL</span>,
@@ -336,6 +336,21 @@ exp &lt;-<span class="st"> </span><span class="kw">Article3_pcaExp</span>(<span 
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
+<div id="plot" class="section level3">
+<h3>plot</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2V0QmVuY2htYXJrRGIoKVxuXG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getBenchmarkDb</span>()</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gcnNxbGl0ZV9jb25uZWN0KGRibmFtZSwgbG9hZGFibGUuZXh0ZW5zaW9ucywgZmxhZ3MsIHZmcykgOiBcbiAgQ291bGQgbm90IGNvbm5lY3QgdG8gZGF0YWJhc2U6XG51bmFibGUgdG8gb3BlbiBkYXRhYmFzZSBmaWxlXG4ifQ== -->
+<pre><code>Error in rsqlite_connect(dbname, loadable.extensions, flags, vfs) : 
+  Could not connect to database:
+unable to open database file</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
 </div>
 <div id="cv" class="section level2">
 <h2>CV</h2>
@@ -343,21 +358,32 @@ exp &lt;-<span class="st"> </span><span class="kw">Article3_pcaExp</span>(<span 
 <h3>Run on krakenator</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShUaGVzaXNScGFja2FnZSlcbnMgPC0gVHJ1ZVNhbXBsZXIoRy5maWxlID0gXCIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvZ2Vub3R5cGUucmRzXCIsXG4gICAgICAgICAgICAgICAgIFguZmlsZSA9IFwiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL3RtYXhQQzIucmRzXCIsXG4gICAgICAgICAgICAgICAgIG91dGxpZXIuZmlsZSA9IE5VTEwsXG4gICAgICAgICAgICAgICAgIG4gPSBOVUxMLFxuICAgICAgICAgICAgICAgICBMID0gTlVMTClcbmV4cCA8LSBBcnRpY2xlM19jdkV4cChzID0gcyxcbiAgICAgICAgICAgICAgICAgICAgICBzLm5hbWUgPSBcImNsaW1hdGUgZ3dhc19yaXpcIixcbiAgICAgICAgICAgICAgICAgICAgICBLcyA9IGMoMSwyLDMpLFxuICAgICAgICAgICAgICAgICAgICAgIGxhbWJkYXMgPSBjKDFlLTEwLCAxZTAsIDFlMTApLFxuICAgICAgICAgICAgICAgICAgICAgIHJvdy5sZWZ0Lm91dC5mdW5jID0gbGVmdC5vdXQua2ZvbGQoNSksXG4gICAgICAgICAgICAgICAgICAgICAgY29sLmxlZnQub3V0LmZ1bmMgPSBsZWZ0Lm91dC5zYW1wbGUoNSwgMC4yKSxcbiAgICAgICAgICAgICAgICAgICAgICBjbHVzdGVyLm5iID0gNCxcbiAgICAgICAgICAgICAgICAgICAgICBzYXZlID0gVFJVRSwgYnlwYXNzID0gRkFMU0UpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShUaGVzaXNScGFja2FnZSlcbnMgPC0gVHJ1ZVNhbXBsZXIoRy5maWxlID0gXCIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvZ2Vub3R5cGUuZmlsdGVyZWQucmRzXCIsXG4gICAgICAgICAgICAgICAgIFguZmlsZSA9IFwiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL3RtYXhQQzIucmRzXCIsXG4gICAgICAgICAgICAgICAgIG91dGxpZXIuZmlsZSA9IE5VTEwsXG4gICAgICAgICAgICAgICAgIG4gPSBOVUxMLFxuICAgICAgICAgICAgICAgICBMID0gTlVMTClcbmV4cCA8LSBBcnRpY2xlM19jdkV4cChzID0gcyxcbiAgICAgICAgICAgICAgICAgICAgICBzLm5hbWUgPSBcImNsaW1hdGUgZ3dhc19yaXpcIixcbiAgICAgICAgICAgICAgICAgICAgICBLcyA9IGMoMSwyLDMsNCwgNSksXG4gICAgICAgICAgICAgICAgICAgICAgbGFtYmRhcyA9IGMoMWUtMTAsIDFlMCwgMWUxMCwgMWUzMCksXG4gICAgICAgICAgICAgICAgICAgICAgcm93LmxlZnQub3V0LmZ1bmMgPSBsZWZ0Lm91dC5rZm9sZCg1KSxcbiAgICAgICAgICAgICAgICAgICAgICBjb2wubGVmdC5vdXQuZnVuYyA9IGxlZnQub3V0LnNhbXBsZSg1LCAwLjIpLFxuICAgICAgICAgICAgICAgICAgICAgIGNsdXN0ZXIubmIgPSA0LFxuICAgICAgICAgICAgICAgICAgICAgIHNhdmUgPSBUUlVFLCBieXBhc3MgPSBGQUxTRSlcblxuYGBgIn0= -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ThesisRpackage)
-s &lt;-<span class="st"> </span><span class="kw">TrueSampler</span>(<span class="dt">G.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/genotype.rds&quot;</span>,
+s &lt;-<span class="st"> </span><span class="kw">TrueSampler</span>(<span class="dt">G.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/genotype.filtered.rds&quot;</span>,
                  <span class="dt">X.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/tmaxPC2.rds&quot;</span>,
                  <span class="dt">outlier.file =</span> <span class="ot">NULL</span>,
                  <span class="dt">n =</span> <span class="ot">NULL</span>,
                  <span class="dt">L =</span> <span class="ot">NULL</span>)
 exp &lt;-<span class="st"> </span><span class="kw">Article3_cvExp</span>(<span class="dt">s =</span> s,
                       <span class="dt">s.name =</span> <span class="st">&quot;climate gwas_riz&quot;</span>,
-                      <span class="dt">Ks =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),
-                      <span class="dt">lambdas =</span> <span class="kw">c</span>(<span class="fl">1e-10</span>, <span class="fl">1e0</span>, <span class="fl">1e10</span>),
+                      <span class="dt">Ks =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>, <span class="dv">5</span>),
+                      <span class="dt">lambdas =</span> <span class="kw">c</span>(<span class="fl">1e-10</span>, <span class="fl">1e0</span>, <span class="fl">1e10</span>, <span class="fl">1e30</span>),
                       <span class="dt">row.left.out.func =</span> <span class="kw">left.out.kfold</span>(<span class="dv">5</span>),
                       <span class="dt">col.left.out.func =</span> <span class="kw">left.out.sample</span>(<span class="dv">5</span>, <span class="fl">0.2</span>),
                       <span class="dt">cluster.nb =</span> <span class="dv">4</span>,
                       <span class="dt">save =</span> <span class="ot">TRUE</span>, <span class="dt">bypass =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="plot-1" class="section level3">
+<h3>Plot</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdChleHAkY3YsIGNvbG9yID0gXCJLXCIpXG5wbG90KGV4cCRjdiwgY29sb3IgPSBcImxhbWJkYVwiKVxuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(exp$cv, <span class="dt">color =</span> <span class="st">&quot;K&quot;</span>)
+<span class="kw">plot</span>(exp$cv, <span class="dt">color =</span> <span class="st">&quot;lambda&quot;</span>)</code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -369,21 +395,21 @@ exp &lt;-<span class="st"> </span><span class="kw">Article3_cvExp</span>(<span c
 <h3>Run on krakenator</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShUaGVzaXNScGFja2FnZSlcbnMgPC0gVHJ1ZVNhbXBsZXIoRy5maWxlID0gXCIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvZ2Vub3R5cGUucmRzXCIsXG4gICAgICAgICAgICAgICAgIFguZmlsZSA9IFwiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL3RtYXhQQzIucmRzXCIsXG4gICAgICAgICAgICAgICAgIG91dGxpZXIuZmlsZSA9IE5VTEwsXG4gICAgICAgICAgICAgICAgIG4gPSBOVUxMLFxuICAgICAgICAgICAgICAgICBMID0gTlVMTClcbmV4cCA8LSBBcnRpY2xlM19ydW5FeHAocyA9IHMsXG4gICAgICAgICAgICAgICAgICAgICAgIHMubmFtZSA9IFwiY2xpbWF0ZSBnd2FzX3JpelwiLFxuICAgICAgICAgICAgICAgICAgICAgICBLcyA9IGMoMSwyLDMpLFxuICAgICAgICAgICAgICAgICAgICAgICBsYW1iZGFzID0gYygxZS0xMCwgMWUwLCAxZTEwKSxcbiAgICAgICAgICAgICAgICAgICAgICAgbmIucmVwID0gMSxcbiAgICAgICAgICAgICAgICAgICAgICAgbSA9IGZpbmFsTGZtbVJkaWdlTWV0aG9kKEsgPSBOVUxMLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFtYmRhID0gTlVMTCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGlicmF0ZSA9IFRSVUUpLFxuICAgICAgICAgICAgICAgICAgICAgICBjbHVzdGVyLm5iID0gTlVMTCxcbiAgICAgICAgICAgICAgICAgICAgICAgc2F2ZSA9IFRSVUUsIGJ5cGFzcyA9IEZBTFNFKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShUaGVzaXNScGFja2FnZSlcbnMgPC0gVHJ1ZVNhbXBsZXIoRy5maWxlID0gXCIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvZ2Vub3R5cGUuZmlsdGVyZWQucmRzXCIsXG4gICAgICAgICAgICAgICAgIFguZmlsZSA9IFwiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL3RtYXhQQzIucmRzXCIsXG4gICAgICAgICAgICAgICAgIG91dGxpZXIuZmlsZSA9IE5VTEwsXG4gICAgICAgICAgICAgICAgIG4gPSBOVUxMLFxuICAgICAgICAgICAgICAgICBMID0gTlVMTClcbmV4cCA8LSBBcnRpY2xlM19ydW5FeHAocyA9IHMsXG4gICAgICAgICAgICAgICAgICAgICAgIHMubmFtZSA9IFwiY2xpbWF0ZSBnd2FzX3JpelwiLFxuICAgICAgICAgICAgICAgICAgICAgICBLcyA9IGMoMiwzLDQpLFxuICAgICAgICAgICAgICAgICAgICAgICBsYW1iZGFzID0gYygxZS0xMCwgMWUtMSwgMWUxMCksXG4gICAgICAgICAgICAgICAgICAgICAgIG5iLnJlcCA9IDEsXG4gICAgICAgICAgICAgICAgICAgICAgIG0gPSBmaW5hbExmbW1SZGlnZU1ldGhvZChLID0gTlVMTCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhbWJkYSA9IE5VTEwsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxpYnJhdGUgPSBGQUxTRSksXG4gICAgICAgICAgICAgICAgICAgICAgIGNsdXN0ZXIubmIgPSBOVUxMLFxuICAgICAgICAgICAgICAgICAgICAgICBzYXZlID0gVFJVRSwgYnlwYXNzID0gRkFMU0UpXG5cbmBgYCJ9 -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ThesisRpackage)
-s &lt;-<span class="st"> </span><span class="kw">TrueSampler</span>(<span class="dt">G.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/genotype.rds&quot;</span>,
+s &lt;-<span class="st"> </span><span class="kw">TrueSampler</span>(<span class="dt">G.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/genotype.filtered.rds&quot;</span>,
                  <span class="dt">X.file =</span> <span class="st">&quot;../Data/gwas_riz/climate/tmaxPC2.rds&quot;</span>,
                  <span class="dt">outlier.file =</span> <span class="ot">NULL</span>,
                  <span class="dt">n =</span> <span class="ot">NULL</span>,
                  <span class="dt">L =</span> <span class="ot">NULL</span>)
 exp &lt;-<span class="st"> </span><span class="kw">Article3_runExp</span>(<span class="dt">s =</span> s,
                        <span class="dt">s.name =</span> <span class="st">&quot;climate gwas_riz&quot;</span>,
-                       <span class="dt">Ks =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),
-                       <span class="dt">lambdas =</span> <span class="kw">c</span>(<span class="fl">1e-10</span>, <span class="fl">1e0</span>, <span class="fl">1e10</span>),
+                       <span class="dt">Ks =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),
+                       <span class="dt">lambdas =</span> <span class="kw">c</span>(<span class="fl">1e-10</span>, <span class="fl">1e-1</span>, <span class="fl">1e10</span>),
                        <span class="dt">nb.rep =</span> <span class="dv">1</span>,
                        <span class="dt">m =</span> <span class="kw">finalLfmmRdigeMethod</span>(<span class="dt">K =</span> <span class="ot">NULL</span>,
                                                 <span class="dt">lambda =</span> <span class="ot">NULL</span>,
-                                                <span class="dt">calibrate =</span> <span class="ot">TRUE</span>),
+                                                <span class="dt">calibrate =</span> <span class="ot">FALSE</span>),
                        <span class="dt">cluster.nb =</span> <span class="ot">NULL</span>,
                        <span class="dt">save =</span> <span class="ot">TRUE</span>, <span class="dt">bypass =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <!-- rnb-source-end -->
@@ -392,7 +418,7 @@ exp &lt;-<span class="st"> </span><span class="kw">Article3_runExp</span>(<span 
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiR1dBUyBSSVoiCmF1dGhvcjogImtldmluIGNheWUiCmRhdGU6ICIxMyBtYXJzIDIwMTciCm91dHB1dDoKICBodG1sX25vdGVib29rOgogICAgdG9jOiB0cnVlCiAgICB0b2NfZmxvYXQ6CiAgICAgIGNvbGxhcHNlZDogZmFsc2UKICAgICAgc21vb3RoX3Njcm9sbDogZmFsc2UKICAgIHRoZW1lOiBqb3VybmFsCiAgICBoaWdobGlnaHQ6IHRhbmdvCi0tLQoKCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFLCBjYWNoZSA9IFRSVUUsIG1lc3NhZ2UgPSBGQUxTRSwgd2FybmluZyA9IEZBTFNFLAogICAgICAgICAgICAgICAgICAgICAgcmVzdWx0cyA9ICJoaWRlIiwgZXJyb3IgPSBGQUxTRSwgZmlnLndpZHRoID0gMTAsIGZpZy53aWR0aCA9IDEwKQpgYGAKCiMgQ2xpbWF0ZQojIyBQQ0EKIyMjIFJ1biBvbiBrcmFrZW5hdG9yCgpgYGB7cn0KbGlicmFyeShUaGVzaXNScGFja2FnZSkKcyA8LSBUcnVlU2FtcGxlcihHLmZpbGUgPSAiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL2dlbm90eXBlLnJkcyIsCiAgICAgICAgICAgICAgICAgWC5maWxlID0gIi4uL0RhdGEvZ3dhc19yaXovY2xpbWF0ZS90bWF4UEMyLnJkcyIsCiAgICAgICAgICAgICAgICAgb3V0bGllci5maWxlID0gTlVMTCwKICAgICAgICAgICAgICAgICBuID0gTlVMTCwKICAgICAgICAgICAgICAgICBMID0gTlVMTCkKZXhwIDwtIEFydGljbGUzX3BjYUV4cChzID0gcywKICAgICAgICAgICAgICAgICAgICAgICBzLm5hbWUgPSAiY2xpbWF0ZSBnd2FzX3JpeiIsCiAgICAgICAgICAgICAgICAgICAgICAgY2x1c3Rlci5uYiA9IE5VTEwsCiAgICAgICAgICAgICAgICAgICAgICAgc2F2ZSA9IFRSVUUsIGJ5cGFzcyA9IEZBTFNFKQoKYGBgCgoKIyMgQ1YKIyMjIFJ1biBvbiBrcmFrZW5hdG9yCgpgYGB7cn0KbGlicmFyeShUaGVzaXNScGFja2FnZSkKcyA8LSBUcnVlU2FtcGxlcihHLmZpbGUgPSAiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL2dlbm90eXBlLnJkcyIsCiAgICAgICAgICAgICAgICAgWC5maWxlID0gIi4uL0RhdGEvZ3dhc19yaXovY2xpbWF0ZS90bWF4UEMyLnJkcyIsCiAgICAgICAgICAgICAgICAgb3V0bGllci5maWxlID0gTlVMTCwKICAgICAgICAgICAgICAgICBuID0gTlVMTCwKICAgICAgICAgICAgICAgICBMID0gTlVMTCkKZXhwIDwtIEFydGljbGUzX2N2RXhwKHMgPSBzLAogICAgICAgICAgICAgICAgICAgICAgcy5uYW1lID0gImNsaW1hdGUgZ3dhc19yaXoiLAogICAgICAgICAgICAgICAgICAgICAgS3MgPSBjKDEsMiwzKSwKICAgICAgICAgICAgICAgICAgICAgIGxhbWJkYXMgPSBjKDFlLTEwLCAxZTAsIDFlMTApLAogICAgICAgICAgICAgICAgICAgICAgcm93LmxlZnQub3V0LmZ1bmMgPSBsZWZ0Lm91dC5rZm9sZCg1KSwKICAgICAgICAgICAgICAgICAgICAgIGNvbC5sZWZ0Lm91dC5mdW5jID0gbGVmdC5vdXQuc2FtcGxlKDUsIDAuMiksCiAgICAgICAgICAgICAgICAgICAgICBjbHVzdGVyLm5iID0gNCwKICAgICAgICAgICAgICAgICAgICAgIHNhdmUgPSBUUlVFLCBieXBhc3MgPSBGQUxTRSkKYGBgCgojIyBMRk1NIHJ1bnMKIyMjIFJ1biBvbiBrcmFrZW5hdG9yCgpgYGB7cn0KbGlicmFyeShUaGVzaXNScGFja2FnZSkKcyA8LSBUcnVlU2FtcGxlcihHLmZpbGUgPSAiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL2dlbm90eXBlLnJkcyIsCiAgICAgICAgICAgICAgICAgWC5maWxlID0gIi4uL0RhdGEvZ3dhc19yaXovY2xpbWF0ZS90bWF4UEMyLnJkcyIsCiAgICAgICAgICAgICAgICAgb3V0bGllci5maWxlID0gTlVMTCwKICAgICAgICAgICAgICAgICBuID0gTlVMTCwKICAgICAgICAgICAgICAgICBMID0gTlVMTCkKZXhwIDwtIEFydGljbGUzX3J1bkV4cChzID0gcywKICAgICAgICAgICAgICAgICAgICAgICBzLm5hbWUgPSAiY2xpbWF0ZSBnd2FzX3JpeiIsCiAgICAgICAgICAgICAgICAgICAgICAgS3MgPSBjKDEsMiwzKSwKICAgICAgICAgICAgICAgICAgICAgICBsYW1iZGFzID0gYygxZS0xMCwgMWUwLCAxZTEwKSwKICAgICAgICAgICAgICAgICAgICAgICBuYi5yZXAgPSAxLAogICAgICAgICAgICAgICAgICAgICAgIG0gPSBmaW5hbExmbW1SZGlnZU1ldGhvZChLID0gTlVMTCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFtYmRhID0gTlVMTCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsaWJyYXRlID0gVFJVRSksCiAgICAgICAgICAgICAgICAgICAgICAgY2x1c3Rlci5uYiA9IE5VTEwsCiAgICAgICAgICAgICAgICAgICAgICAgc2F2ZSA9IFRSVUUsIGJ5cGFzcyA9IEZBTFNFKQpgYGAK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiR1dBUyBSSVoiCmF1dGhvcjogImtldmluIGNheWUiCmRhdGU6ICIxMyBtYXJzIDIwMTciCm91dHB1dDoKICBodG1sX25vdGVib29rOgogICAgdG9jOiB0cnVlCiAgICB0b2NfZmxvYXQ6CiAgICAgIGNvbGxhcHNlZDogZmFsc2UKICAgICAgc21vb3RoX3Njcm9sbDogZmFsc2UKICAgIHRoZW1lOiBqb3VybmFsCiAgICBoaWdobGlnaHQ6IHRhbmdvCi0tLQoKCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFLCBjYWNoZSA9IFRSVUUsIG1lc3NhZ2UgPSBGQUxTRSwgd2FybmluZyA9IEZBTFNFLAogICAgICAgICAgICAgICAgICAgICAgcmVzdWx0cyA9ICJoaWRlIiwgZXJyb3IgPSBGQUxTRSwgZmlnLndpZHRoID0gMTAsIGZpZy53aWR0aCA9IDEwKQpgYGAKCiMgQ2xpbWF0ZQoKIyMgUENBCiMjIyBSdW4gb24ga3Jha2VuYXRvcgoKYGBge3J9CmxpYnJhcnkoVGhlc2lzUnBhY2thZ2UpCnMgPC0gVHJ1ZVNhbXBsZXIoRy5maWxlID0gIi4uL0RhdGEvZ3dhc19yaXovY2xpbWF0ZS9nZW5vdHlwZS5maWx0ZXJlZC5yZHMiLAogICAgICAgICAgICAgICAgIFguZmlsZSA9ICIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvdG1heFBDMi5yZHMiLAogICAgICAgICAgICAgICAgIG91dGxpZXIuZmlsZSA9IE5VTEwsCiAgICAgICAgICAgICAgICAgbiA9IE5VTEwsCiAgICAgICAgICAgICAgICAgTCA9IE5VTEwpCmV4cCA8LSBBcnRpY2xlM19wY2FFeHAocyA9IHMsCiAgICAgICAgICAgICAgICAgICAgICAgcy5uYW1lID0gImNsaW1hdGUgZ3dhc19yaXoiLAogICAgICAgICAgICAgICAgICAgICAgIGNsdXN0ZXIubmIgPSBOVUxMLAogICAgICAgICAgICAgICAgICAgICAgIHNhdmUgPSBUUlVFLCBieXBhc3MgPSBGQUxTRSkKCmBgYAoKIyMjIHBsb3QKYGBge3J9CmdldEJlbmNobWFya0RiKCkKcGxvdChleHApCmBgYAoKCiMjIENWCiMjIyBSdW4gb24ga3Jha2VuYXRvcgoKYGBge3J9CmxpYnJhcnkoVGhlc2lzUnBhY2thZ2UpCnMgPC0gVHJ1ZVNhbXBsZXIoRy5maWxlID0gIi4uL0RhdGEvZ3dhc19yaXovY2xpbWF0ZS9nZW5vdHlwZS5maWx0ZXJlZC5yZHMiLAogICAgICAgICAgICAgICAgIFguZmlsZSA9ICIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvdG1heFBDMi5yZHMiLAogICAgICAgICAgICAgICAgIG91dGxpZXIuZmlsZSA9IE5VTEwsCiAgICAgICAgICAgICAgICAgbiA9IE5VTEwsCiAgICAgICAgICAgICAgICAgTCA9IE5VTEwpCmV4cCA8LSBBcnRpY2xlM19jdkV4cChzID0gcywKICAgICAgICAgICAgICAgICAgICAgIHMubmFtZSA9ICJjbGltYXRlIGd3YXNfcml6IiwKICAgICAgICAgICAgICAgICAgICAgIEtzID0gYygxLDIsMyw0LCA1KSwKICAgICAgICAgICAgICAgICAgICAgIGxhbWJkYXMgPSBjKDFlLTEwLCAxZTAsIDFlMTAsIDFlMzApLAogICAgICAgICAgICAgICAgICAgICAgcm93LmxlZnQub3V0LmZ1bmMgPSBsZWZ0Lm91dC5rZm9sZCg1KSwKICAgICAgICAgICAgICAgICAgICAgIGNvbC5sZWZ0Lm91dC5mdW5jID0gbGVmdC5vdXQuc2FtcGxlKDUsIDAuMiksCiAgICAgICAgICAgICAgICAgICAgICBjbHVzdGVyLm5iID0gNCwKICAgICAgICAgICAgICAgICAgICAgIHNhdmUgPSBUUlVFLCBieXBhc3MgPSBGQUxTRSkKCmBgYAoKIyMjIFBsb3QKYGBge3J9CnBsb3QoZXhwJGN2LCBjb2xvciA9ICJLIikKcGxvdChleHAkY3YsIGNvbG9yID0gImxhbWJkYSIpCmBgYAoKCiMjIExGTU0gcnVucwojIyMgUnVuIG9uIGtyYWtlbmF0b3IKCmBgYHtyfQpsaWJyYXJ5KFRoZXNpc1JwYWNrYWdlKQpzIDwtIFRydWVTYW1wbGVyKEcuZmlsZSA9ICIuLi9EYXRhL2d3YXNfcml6L2NsaW1hdGUvZ2Vub3R5cGUuZmlsdGVyZWQucmRzIiwKICAgICAgICAgICAgICAgICBYLmZpbGUgPSAiLi4vRGF0YS9nd2FzX3Jpei9jbGltYXRlL3RtYXhQQzIucmRzIiwKICAgICAgICAgICAgICAgICBvdXRsaWVyLmZpbGUgPSBOVUxMLAogICAgICAgICAgICAgICAgIG4gPSBOVUxMLAogICAgICAgICAgICAgICAgIEwgPSBOVUxMKQpleHAgPC0gQXJ0aWNsZTNfcnVuRXhwKHMgPSBzLAogICAgICAgICAgICAgICAgICAgICAgIHMubmFtZSA9ICJjbGltYXRlIGd3YXNfcml6IiwKICAgICAgICAgICAgICAgICAgICAgICBLcyA9IGMoMiwzLDQpLAogICAgICAgICAgICAgICAgICAgICAgIGxhbWJkYXMgPSBjKDFlLTEwLCAxZS0xLCAxZTEwKSwKICAgICAgICAgICAgICAgICAgICAgICBuYi5yZXAgPSAxLAogICAgICAgICAgICAgICAgICAgICAgIG0gPSBmaW5hbExmbW1SZGlnZU1ldGhvZChLID0gTlVMTCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFtYmRhID0gTlVMTCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsaWJyYXRlID0gRkFMU0UpLAogICAgICAgICAgICAgICAgICAgICAgIGNsdXN0ZXIubmIgPSBOVUxMLAogICAgICAgICAgICAgICAgICAgICAgIHNhdmUgPSBUUlVFLCBieXBhc3MgPSBGQUxTRSkKCmBgYAo=</div>
 
 
 </div>
