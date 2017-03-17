@@ -40,9 +40,8 @@ exp <- Article3_pcaExp(s = s,
 ### Plot
 ```{r}
 getBenchmarkDb()
-exp <- retrieveExperiment(36, bench.dir = bench.dir)
-getwd()
-
+exp <- retrieveExperiment(36)
+plot(exp) 
 ```
 
 
