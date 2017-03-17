@@ -25,15 +25,16 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALS
 
 ```{r}
 library(ThesisRpackage)
-s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.rds",
-                 X.file = "../Data/gwas_riz/climate/tmaxPC2.rds",
+s <- TrueSampler(G.file = "../Data/Hgdp_Li/Hgdp_Li.rds",
+                 X.file = "../Data/Hgdp_Li/X_tmp.rds",
                  outlier.file = NULL,
                  n = NULL,
                  L = NULL)
 exp <- Article3_pcaExp(s = s,
-                       s.name = "climate gwas_riz",
+                       s.name = "Hgdp_Li X_tmp",
                        cluster.nb = NULL,
                        save = TRUE, bypass = FALSE)
+
 ```
 
 
@@ -42,18 +43,18 @@ exp <- Article3_pcaExp(s = s,
 
 ```{r}
 library(ThesisRpackage)
-s <- TrueSampler(G.file = "../Data/gwas_riz/climate/genotype.rds",
-                 X.file = "../Data/gwas_riz/climate/tmaxPC2.rds",
+s <- TrueSampler(G.file = "../Data/Hgdp_Li/Hgdp_Li.rds",
+                 X.file = "../Data/Hgdp_Li/X_tmp.rds",
                  outlier.file = NULL,
                  n = NULL,
                  L = NULL)
 exp <- Article3_cvExp(s = s,
                       s.name = "climate gwas_riz",
-                      Ks = c(1,2,3),
+                      Ks = c(1,5,10,15, 20),
                       lambdas = c(1e-10, 1e0, 1e10),
                       row.left.out.func = left.out.kfold(5),
                       col.left.out.func = left.out.sample(5, 0.2),
-                      cluster.nb = NULL,
+                      cluster.nb = 4,
                       save = TRUE, bypass = FALSE)
 ```
 
