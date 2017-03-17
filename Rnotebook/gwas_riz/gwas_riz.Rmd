@@ -108,11 +108,20 @@ plot(exp, threshold = 0.05, plot.type = "manhattan")
 
 ```{r}
 toplot <- exp$df.res %>% 
-  dplyr::filter(lambda == 1e10, K == 3, rep == 1) %>%
+  dplyr::filter(lambda == 1e10, K == 2, rep == 1) %>%
   mutate(chr = sub("_.*", "", col.name))
 ggplot(toplot, aes(x = index, y = -log10(pvalue), color = chr)) +
   geom_point() +
   facet_grid(lambda ~ K, scales = "free")
+
+
+
+
 ```
 
+```{r}
+fdr.loc = fdrtool::fdrtool(toplot$score)
+
+fdr.loc$pval
+```
 

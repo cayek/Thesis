@@ -48,7 +48,8 @@
 ***** TODO flowering
       - K  1 2 3 4
       - lambda plusieurs valeurs ...
-      - gerer les missing values dans X
+      - gerer les missing values dans X (on va les enlever)
+      - juste avec la variable 1
 **** Fin de journee
    Entered on [2017-03-13 lun. 18:01]
 
@@ -163,6 +164,16 @@
    Entered on [2017-03-16 jeu. 17:37]
 
    Demain on fait les plots pour le papier !!!!!!
+*** 2017-03-17 vendredi
+**** Bilan de la journée 
+   Entered on [2017-03-17 ven. 16:27]
+
+   - GSE42861 et HGDP CV tourne
+   - j'ai recuperer le 1000genome il reste a le filtrer et le sauv dans un bon
+     format ! BigMemery, rds etc. Je vais peut etre déjç tous passer en RDSa
+     vant de filtrer
+   - Le 1001 Genome, il a falloir trouver un moyen de passer ce truc enorme de
+     python à R :D
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -509,10 +520,17 @@
       deplacement humains sont trops complexe. Pour les plantes c'est adapté, on
       a de la dispertion.
 
-      On va juste les télécharger pour voir.
+      On va juste les télécharger pour voir. 
 **** TODO implémentation
      - [ ] un fonction prédict sur un indiv pas vu ! Qui pourrait servir pour la
        cross validation.
+*** TODO Figures
+    - style de ligne par method -> plus visble pour meilleurs methodes
+    - visible en noir et blanc
+    - point trop gros
+    - AT : 2 fig 1 couleur et 1 noir et blanc
+    - ManhattanPlot : le tasser + alternance de gris + taille des points
+
 
 ** Rnotebook
 *** TODO Cross validation                                         :Rnotebook:
