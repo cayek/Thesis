@@ -77,8 +77,15 @@ Article3_runExp <- function(s,
 
 
 #' @export
-plot.Article3_runExp <- function(exp, threshold) {
+plot.Article3_runExp <- function(exp, threshold, plot.type = c("B", "manhattan")) {
+
+  if (plot.type == "B") {
   ggplot(exp$df.res, aes(x = index, y = B, color = qvalue < threshold)) +
     geom_point() +
     facet_grid(lambda ~ K, scales = "free")
+  } else if (plot.type == "manhattan") {
+    ggplot(exp$df.res, aes(x = index, y = -log10(pvalue), color = qvalue < threshold)) +
+      geom_point() +
+      facet_grid(lambda ~ K, scales = "free")
+  }
 }

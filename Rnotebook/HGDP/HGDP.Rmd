@@ -56,14 +56,23 @@ s <- TrueSampler(G.file = "../Data/Hgdp_Li/Hgdp_Li.rds",
                  n = NULL,
                  L = NULL)
 exp <- Article3_cvExp(s = s,
-                      s.name = "climate gwas_riz",
-                      Ks = c(1,5,10,15, 20),
-                      lambdas = c(1e-10, 1e0, 1e10),
+                      s.name = "Hgdp_Li X_tmp",
+                      Ks = c(1,5,10, 20, 30, 40, 50, 60),
+                      lambdas = c(1e-10, 1e0, 1e10, 1e30),
                       row.left.out.func = left.out.kfold(5),
                       col.left.out.func = left.out.sample(5, 0.2),
-                      cluster.nb = 4,
+                      cluster.nb = 2,
                       save = TRUE, bypass = FALSE)
 ```
+
+### plot
+
+```{r}
+exp <- retrieveExperiment(37)
+plot(exp$cv, color = "K")
+plot(exp$cv, color = "lambda")
+```
+
 
 ## LFMM runs
 ### Run on krakenator

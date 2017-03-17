@@ -105,9 +105,23 @@ getBenchmarkDb <- function(bench.dir = getOption("thesis.dump.file")) {
 }
 
 #' @export
+printBenchmarkDb <- function(bench.dir = getOption("thesis.dump.file")) {
+  bench.file <- paste0(bench.dir,"/benchmark.sqlite3")
+  con <- RSQLite::dbConnect( RSQLite::SQLite() , dbname = bench.file )
+  data <- RSQLite::dbReadTable(conn = con,name = "experiment")
+  RSQLite::dbDisconnect(con)
+  df <- as_tibble(data)
+  n <- nrow(df)
+  df %>%
+    dplyr::mutate(n.row = 1:n) %>%
+    dplyr::select(n.row, name) %>%
+    print(n = n)
+}
+
+#' @export
 retrieveExperiment <- function(id, bench.dir = getOption("thesis.dump.file")) {
   bench.tbl <- getBenchmarkDb(bench.dir = bench.dir)
-  readRDS(bench.tbl$dumpfile[id])
+  readRDS(paste0(bench.dir,"/",basename(bench.tbl$dumpfile[id])))
 }
 
 ################################################################################

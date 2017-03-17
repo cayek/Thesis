@@ -40,7 +40,7 @@ exp <- Article3_pcaExp(s = s,
 
 ### plot
 ```{r}
-getBenchmarkDb()
+exp <- retrieveExperiment(28)
 plot(exp)
 ```
 
@@ -68,6 +68,7 @@ exp <- Article3_cvExp(s = s,
 
 ### Plot
 ```{r}
+exp <- retrieveExperiment(38)
 plot(exp$cv, color = "K")
 plot(exp$cv, color = "lambda")
 ```
@@ -91,7 +92,27 @@ exp <- Article3_runExp(s = s,
                        m = finalLfmmRdigeMethod(K = NULL,
                                                 lambda = NULL,
                                                 calibrate = FALSE),
-                       cluster.nb = NULL,
+                       cluster.nb = 6,
                        save = TRUE, bypass = FALSE)
 
 ```
+
+### Plot
+```{r}
+exp <- retrieveExperiment(39)
+plot(exp, threshold = 0.05, plot.type = "B")
+plot(exp, threshold = 0.05, plot.type = "manhattan")
+```
+
+#### K = 3 and lambda = 1e-10
+
+```{r}
+toplot <- exp$df.res %>% 
+  dplyr::filter(lambda == 1e10, K == 3, rep == 1) %>%
+  mutate(chr = sub("_.*", "", col.name))
+ggplot(toplot, aes(x = index, y = -log10(pvalue), color = chr)) +
+  geom_point() +
+  facet_grid(lambda ~ K, scales = "free")
+```
+
+
