@@ -29,6 +29,8 @@ runExperiment.PCAExperiment <- function(exp) {
     locus.na <- apply(dat$G, 2, anyNA)
     message("== Removing ", mean(locus.na), "% col")
     G_ <- dat$G[,!locus.na]
+  } else {
+    G_ <- dat$G
   }
 
   # index
