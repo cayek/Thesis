@@ -111,11 +111,12 @@ printBenchmarkDb <- function(bench.dir = getOption("thesis.dump.file")) {
   data <- RSQLite::dbReadTable(conn = con,name = "experiment")
   RSQLite::dbDisconnect(con)
   df <- as_tibble(data)
-  n <- nrow(df)
-  df %>%
-    dplyr::mutate(n.row = 1:n) %>%
-    dplyr::select(n.row, name) %>%
-    print(n = n)
+  # n <- nrow(df)
+  # df %>%
+  #   dplyr::mutate(n.row = 1:n) %>%
+  #   dplyr::select(n.row, name) %>%
+  #   print(n = n)
+  getBenchmarkDb()$description
 }
 
 #' @export
