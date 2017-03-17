@@ -488,13 +488,24 @@
    supplementary technical reference.
 *** On résume à faire
 **** TODO experiments
-     - [ ] on reprend les simulations et on bruite les coords. graph RMSE(Q) x
-       sigma(bruit) x regularization param 
-     - [ ] CV si ca marche ! 
-     - [ ] simu 1000 genome (European Africain et Afro americain). Que donne snmf et
-       tess3r. Le fichier est énorme, on va faire un LD prunning et un filtrage
-       par la maf ! Prendre données ecric ?
-     - [ ] simons avec la maf 5%
+***** [ ] on reprend les simulations et on bruite les coords. graph RMSE(Q) x sigma(bruit) x regularization param 
+      Ok ca marche il reste à mettre en forme.
+***** [ ] CV si ca marche ! Je le ferai pour la thèse.  
+      On va juste citer laliterature.
+***** [ ] simu 1000 genome (European Africain et Afro americain). 
+      Que donne snmf et tess3r. Le fichier est énorme, on va faire un LD
+      prunning et un filtrage par la maf ! 
+
+      Prendre données ecric ? 
+
+      On va regarder dans le variogram (3 classes) il ne devrait pas y avoir
+      d'autocorélation spatial. On devrait trouver comme sNMF
+***** [ ] simons avec la maf 5%
+      pas pertinant sur des données humaines, trop de facteur non spatiaux, les
+      deplacement humains sont trops complexe. Pour les plantes c'est adapté, on
+      a de la dispertion.
+
+      On va juste les télécharger pour voir.
 **** TODO implémentation
      - [ ] un fonction prédict sur un indiv pas vu ! Qui pourrait servir pour la
        cross validation.
