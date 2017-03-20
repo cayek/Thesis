@@ -174,6 +174,21 @@
      vant de filtrer
    - Le 1001 Genome, il a falloir trouver un moyen de passer ce truc enorme de
      python à R :D
+*** 2017-03-20 lundi
+**** Fin de journée
+   Entered on [2017-03-20 lun. 16:43]
+   
+   - j'ai lancé le script pour lire le 1000 genome on verra de main si il a pas
+     planté !
+   - [[file:ThesisRpackage/R/tess3/tess3_noisyCoord.R]] : le variogram ne marche plus....
+
+   DEMAIN: 
+   + faire marcher le plot du variogram
+   + changer la parralélisation sans
+     file:ThesisRpackage/R/tess3/tess3_noisyCoord.R (c'est le sampling qui est
+     long ! )
+   + 1000 genome ! Peut-etre utiliser autre chose pour lire les vcf ! 
+
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -543,7 +558,8 @@
     On voit bien la perte de précision avec la bruit sur les coordonnées. On
     voit aussi que le variogramme permet d'évaluer l'autocorélation spatiale des
     données génétiques.
-    
+**** TODO Experience sur toutes les simu de l'article 
+     
 
 * 3Article                                                         :3Article:
 ** 2017
@@ -910,8 +926,8 @@
     de converger vers uniquement lfmmRidge. Mon critère de comme de la
     correlation entre U et X sur le HGDP donne le même paterne que sur mes
     simulations, voir: 
-    - file:./3Article/LabNotebook/HGDP.nb.html
     - file:./3Article/LabNotebook/DataFrom1000Genome.nb.html
+    - file:./3Article/LabNotebook/HGDP.nb.html
     C'est bizare !!! Il y a aurait pas un moyen automatique de choisir ce lambda.
    
     :( Ce qui est triste c'est que au final mes simulations sur les vrai jeux de

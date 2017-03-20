@@ -63,5 +63,12 @@ exp <- Article3_cvExp(s = s,
                       save = TRUE, bypass = FALSE)
 ```
 
+```{r}
+exp <- retrieveExperiment(41)
+plot(exp$cv, color = "K")
+plot(exp$cv, color = "lambda")
+```
+
+
 ## LFMM runs
 ### Run on krakenator

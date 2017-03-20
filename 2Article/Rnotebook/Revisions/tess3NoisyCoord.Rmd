@@ -28,11 +28,18 @@ library(ThesisRpackage)
 
 # Perte de precision quand on bruite les coordonnées
 ```{r}
-exp <- long_tess3_noisyCoord(n = 200,
-                             cluster.nb = NULL,
-                             nb.rep = 5,
-                             noise.signal = c(0.0, 1.0, 3.0),
-                             save = FALSE, bypass = TRUE)
+exp <- long_tess3_noisyCoord(ns = c(200),
+                                  nsites.neutral = c(1.5 * 1e4),
+                                  m.neutral =  c(0.25 * 0.05 * 1e-6,
+                                                 0.25 * 1 * 1e-6,
+                                                 0.25 * 1.5 * 1e-6,
+                                                 0.25 * 2.5 * 1e-6,
+                                                 0.25 * 5 * 1e-6),
+                                  noise.signal = c(0.0, 1.0, 2.0, 3.0),
+                                  nb.rep = 5,
+                                  compute.vario = FALSE,
+                                  cluster.nb = NULL,
+                                  save = FALSE, bypass = TRUE)
 plot_tess3_noisyCoord(exp)
 ```
 

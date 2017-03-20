@@ -29,5 +29,6 @@ Tess3Sampler <- function(n = 100,
 sampl.Tess3Sampler <- function(s) {
   dat <- Article2.env$sample.data(s)
   dat$G <- dat$admixed.genotype
+  dat$Fst.theorical <- 1 / (1 + 4 * dat$N0 * dat$m.neutral)
   dat
 }

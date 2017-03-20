@@ -68,7 +68,7 @@ exp <- Article3_cvExp(s = s,
 ### plot
 
 ```{r}
-exp <- retrieveExperiment(37)
+exp <- retrieveExperiment(42)
 plot(exp$cv, color = "K")
 plot(exp$cv, color = "lambda")
 ```
