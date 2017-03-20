@@ -1,0 +1,150 @@
+% \section{Approximation of the variogram}\label{app:approx}
+% For a data matrix ${\bf Y}$ in its disjunctive form, we have ${\bf Y}_{i,j} = 0,1$ for all $l = 1,..,(p+1)L$.
+% We give here arguments to justify that the function defined as
+
+% $$
+% \gamma(h) = \frac{1}{2 |N(h)|} \sum_{i,j \in N(h)} \frac{1}{L} \sum_{l = 1}^{(p+1)L} |Y_{i,l} - Y_{j,l}|
+% $$
+% can be approximated by the function 
+
+% $$\hat{\gamma}(h) = {C}_0 \frac{1}{2 |N(h)|} \sum_{i,j \in N(h)} \| {\bf Q}_{i,.} - {\bf Q}_{i,.}\|^2 + {C}_1. 
+% $$
+% First, note that the sum 
+
+% $$
+% S = \frac{1}{L} \sum_{l = 1}^{(p+1)L} |{\bf Y}_{i,l} - {\bf Y}_{j,l}|
+% $$
+% can be approximated by its expected value
+
+% $$
+% E[S] = \frac{1}{L} \sum_{l = 1}^{(p+1)L} P(|{\bf Y}_{i,l} - {\bf Y}_{j,l}| = 1)
+% $$
+% because 
+
+% $$
+% Var(S) = \frac{1}{L^2} \sum_{l = 1}^{(p+1)L} P(|{\bf Y}_{i,l} - {\bf Y}_{j,l}| = 1) 
+% ( 1 - P(|{\bf Y}_{i,l} - {\bf Y}_{j,l}| = 1)) \xrightarrow[L \rightarrow \infty]{} 0.
+% $$
+% Then, we have
+
+% $$
+% P(|{\bf Y}_{i,l} - {\bf Y}_{j,l}| = 1) = ({\bf P}_{i,l} - {\bf P}_{j,l})^2 + {\bf P}_{i,l} (1 - {\bf P}_{i,l}) + {\bf P}_{j,l} (1 - {\bf P}_{j,l}),
+% $$
+% \noindent where ${\bf P}$ is the matrix of probability, for which entries ${\bf P} = P({\bf Y}_{i,l} = 1)$. Since ${\bf P} = {\bf Q} {\bf G}^T$, we have
+% $$
+% \sum_{i,j \in N(h)} \frac{1}{L} \sum_{l = 1}^{(p+1)L} ({\bf P}_{i,l} - {\bf P}_{j,l})^2 = {C}_0 \sum_{i,j \in N(h)} \| {\bf Q}_{i,.} - {\bf Q}_{j,.}\|^2
+% $$
+% where ${C}_0 = \frac{1}{L} \sum_{l = 1}^{(p+1)L} \sum_{k=1}^K {\bf G}_{k,l}^2$.
+% Finally, assuming
+% $$
+% {C}_1 = \frac{1}{|N(h)|} \sum_{i,j \in N(h)} \frac{1}{L} \sum_l  {\bf P}_{i,l} (1 - {\bf P}_{i,l})
+% $$
+% is constant $\forall h$ we can approximate $\gamma(h)$ by $\hat{\gamma}(h)$. 
+
+
+\section{Algorithms}\label{app:algo}
+
+\begin{algo}
+	AQP algorithm pseudo code. To solve optimization problem~\eqref{eq:LS}.
+    
+\begin{algorithm}[H]
+ \KwIn{ the data matrix ${\bf Y} \in \{0,1\}^{n \times (p+1) L}$, the Laplacian matrix  ${\bf \Lambda} \in \mathbb{R}^{n \times n}$, the number of ancestral populations $K$, the regularization coefficient  $\alpha$, the maximum number of iteration $itMax$}
+ 
+ \KwOut{the admixture coefficients matrix ${\bf Q} \in \mathbb{R}^{n \times K}$, the ancestral genotype frequencies matrix ${\bf G} \in \mathbb{R}^{K \times (p+1) L}$ }
+ 
+ \BlankLine
+  
+ Initialize ${\bf Q}$ at random \;
+	
+ \For{$it = 1..itMax$}{
+	 \BlankLine
+	 // G optimization step
+	
+      \For{$l = 1..L$}{
+			$Y^l \leftarrow {\bf Y}_{., (p+1)l..(p+1)l + d}$ \;
+		    $ {\bf D}_Q \leftarrow {\bf I}_{p+1} \otimes {\bf Q}^T {\bf Q}$\;
+	
+			$ v_Q \leftarrow Vec({\bf Q}^T Y^l)$\;
+	
+	      $g^\star \in \argmin_{
+			       \substack{
+	          g \in \Delta_G
+	       }
+	     } 
+              - 2 v_Q^T g + g^T {\bf D}_Q g$ \;
+	
+	$Vec({\bf G}_{(p+1)l..(p+1)l + d,.}) \leftarrow g^\star$ \;
+	 }
+	 \BlankLine
+	// Q optimization step
+	
+	$ {\bf D}_G \leftarrow Id_{n} \otimes {\bf G}^T {\bf G} + \alpha {\bf \Lambda} \otimes {\bf I}_{K}$ \;
+	
+	 $ v_G \leftarrow Vec({\bf G}^T {\bf Y}^T)$ \;
+	
+      $Vec({\bf Q}^T) \in \argmin_{%
+	       \substack{%
+	          q \in \Delta_Q
+	       }
+	     } 
+	     - 2 v_G^T q + q^T {\bf D}_G q$\;
+	 }
+\end{algorithm}
+\label{algo:aqp}
+\end{algo}
+
+\begin{algo}
+APLS algorithm pseudo code. To solve the optimization problem~\eqref{eq:LS}.
+
+\begin{algorithm}[H]
+\KwIn{ the data matrix ${\bf Y} \in \{0,1\}^{n \times (d+1) L}$, the eigen values and vectors matrices ${\bf U}$ and ${\bf \Delta}$ such that ${\bf \Lambda} = {\bf U}^T {\bf \Delta} {\bf U}$, the number of ancestral populations $K$, the regularization coefficient  $\alpha$, the maximum number of iteration $itMax$}
+
+\KwOut{the admixture coefficients matrix ${\bf Q} \in \mathbb{R}^{n \times K}$, the ancestral genotype frequencies matrix ${\bf G} \in \mathbb{R}^{K \times (d+1) L}$ }
+
+ \BlankLine
+ 
+ Initialize ${\bf Q}$ at random \;
+
+ $proj({\bf Y}) \leftarrow {\bf R} {\bf Y}$ \;
+
+ \For{$it = 1..itMax$}{	 
+ 	\BlankLine
+	 // G optimization step
+
+	\For{$j = 1..(p+1)L$}{
+
+	$g^\star \in \argmin_{%
+	       \substack{%
+	          g \in \mathbb{R}^{K}
+	       }
+	       }
+	     || {\bf Y}_{., j} - {\bf Q} g||^2$\;
+
+ ${\bf G}_{j,.} \leftarrow g^\star $\;
+ }
+
+ Project ${\bf G}$ such that ${\bf G} \in \Delta_G$ \;
+ 	\BlankLine
+	 // Q optimization step
+
+ \For{$i = 1..n$}{
+ $g^\star_i \in \argmin_{%
+       \substack{%
+          q \in \mathbb{R}^{K}
+       }
+       }
+     || proj({\bf Y})_{i,.} - {\bf G}^T q ||^2 + \alpha {\bf \Delta}_{i,i} ||q||^2$\;
+
+ $proj({\bf Q})_{i, .} \leftarrow g^\star_i $\;
+ }
+
+ ${\bf Q} \leftarrow {\bf U}^T proj({\bf Q})$\;
+
+Project ${\bf Q}$ such that ${\bf Q} \in \Delta_Q$ \;
+ }
+
+
+ \end{algorithm}
+\label{algo:apls}
+\end{algo}
+

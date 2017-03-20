@@ -1,0 +1,56 @@
+\clearpage
+\newpage
+
+
+
+\section{Discussion}
+Including geographic information on sample locations in the inference of
+ancestral relationships among organisms is a major objective of population
+genetic studies~\citep{Malecot1948, Cavalli-Sforza1994, Epperson2003}. Assuming
+that geographically close individuals are more likely to share ancestry than
+individuals at distant sites, we introduced two new algorithms for estimating
+ancestry proportions using geographic information. Based on least-squares
+problems, the new algorithms combine matrix factorization approaches and spatial
+statistics to provide accurate estimates of individual ancestry coefficients and
+ancestral genotype frequencies. The two methods share many similarities, but
+they differ in the approximations they make in order to decrease algorithmic
+complexity. More specifically, the AQP algorithm was based on quadratic
+programming, whereas the APLS algorithm was based on the spectral decomposition
+of the Laplacian matrix. The algorithmic complexity of APLS algorithm grows
+linearly with the number of individuals in the sample while the method has the
+same statistical accuracy as more complex algorithms.
+
+
+To measure the benefit of using spatial algorithms, we compared the statistical
+errors observed for spatial algorithms with those observed for non-spatial
+algorithms. The errors of spatial methods were lower than those observed with
+non-spatial methods, and spatial algorithms allowed the detection of more subtle
+population structure. In addition, we implemented neutrality tests based on the
+spatial estimates of the $Q$ and $G$-matrices~\citep{Martins2016}, and we
+observed that those tests had higher power to reject neutrality than those based
+on non-spatial approaches. Thus spatial information helped improving the
+detection of signatures of selective sweeps having occurred in ancestral
+populations prior to admixture events. We applied the neutrality tests to
+perform a genome scan for selection in European ecotypes of the plant species
+{\it A. thaliana}. The genome scan confirmed the evidence for selection at
+flowering-related genes {\it CIP4.1}, {\it FRI} and {\it DOG1} differentiating
+Fennoscandia from North-West Europe~\citep{Horton2012}.
+
+Estimation of ancestry coefficients using fast algorithms that extend
+non-spatial approaches -- such as {\tt structure} -- has been intensively
+discussed during the last years~\citep{Wollstein2015}. In these improvements,
+spatial approaches have received less attention than non-spatial approaches. In
+this study, we have proposed a conceptual framework for developing fast spatial
+ancestry estimation methods, and a suite of computer programs implements this
+framework in the {\tt R} program {\tt tess3r}. Our package provides an
+integrated pipeline for estimating and visualizing population genetic structure,
+and for scanning genomes for signature of local adaptation. The algorithmic
+complexity of our algorithms allow their users to analyze samples including
+hundreds to thousands of individuals. For example, analyzing more than one
+thousand {\it A. thaliana} genotypes, each including more than 210k SNPs, took
+only a few minutes using a single CPU. In addition, the algorithms have
+multithreaded versions that run on parallel computers by using multiple CPUs.
+The multithreaded algorithm, which is available from the {\tt R} program, allows
+using our programs in large-scale genomic sequencing projects.
+
+
