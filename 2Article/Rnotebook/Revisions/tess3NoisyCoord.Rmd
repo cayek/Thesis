@@ -41,12 +41,20 @@ exp <- long_tess3_noisyCoord(ns = c(50, 500),
                                             0.25 * 3 * 1e-6,
                                             0.25 * 5 * 1e-6),
                              noise.signal = c(0.0, 0.2, 0.5,0.8, 1.0, 2.0, 3.0, 10.0),
-                             nb.rep = 5,
+                             nb.rep = 10,
                              compute.vario = FALSE,
                              cluster.nb = 5,
                              save = TRUE, bypass = FALSE)
+```
+
+## plot 
+```{r}
+exp <- retrieveExperiment(53)
+exp$df.res <- exp$df.res %>%
+  dplyr::filter(Fst.theorical < 0.7)
 plot_tess3_noisyCoord(exp)
 ```
+
 
 # Le garde fou : le variogram
 

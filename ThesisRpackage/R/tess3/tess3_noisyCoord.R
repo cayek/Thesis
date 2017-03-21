@@ -151,32 +151,63 @@ long_tess3_noisyCoord <- function(ns = c(50, 500),
 }
 
 #' @export
-plot_tess3_noisyCoord <- function(exp) {
+plot_tess3_noisyCoord <- function(exp, mean.before = TRUE) {
 
   assertthat::assert_that(class(exp)[1] == "long_tess3_noisyCoord")
 
 
-  ## compute rel.diff.rmse = rmse_snmf - rmse_tess3 / rmse_snmf
-  toplot.aux <- exp$df.res %>%
-    group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
-    dplyr::mutate(## Q
-      rel.diff.rmse.Q = (rmse.Q.snmf - rmse.Q.tess3) / rmse.Q.snmf,
-
-      ## G
-      rel.diff.rmse.G = (rmse.G.snmf - rmse.G.tess3) / rmse.Q.snmf
-    ) %>%
-    ungroup()
+  if (mean.before) {
 
 
-  toplot <- toplot.aux %>%
-    group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
-    summarise(rel.diff.rmse.Q.mean = mean(rel.diff.rmse.Q),
-              rel.diff.rmse.Q.mean.se = sd(rel.diff.rmse.Q) / sqrt(length(rel.diff.rmse.Q)),
+    toplot.aux <- exp$df.res %>%
+      group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
+      summarise(rmse.Q.tess3.mean = mean(rmse.Q.tess3),
+                rmse.Q.tess3.mean.se = sd(rmse.Q.tess3) / sqrt(length(rmse.Q.tess3)),
+                rmse.Q.snmf.mean = mean(rmse.Q.snmf),
+                rmse.Q.snmf.mean.se = sd(rmse.Q.snmf) / sqrt(length(rmse.Q.snmf)),
 
-              rel.diff.rmse.G.mean = mean(rel.diff.rmse.G),
-              rel.diff.rmse.G.mean.se = sd(rel.diff.rmse.G) / sqrt(length(rel.diff.rmse.G))
-    )  %>%
-    ungroup()
+                rmse.G.tess3.mean = mean(rmse.G.tess3),
+                rmse.G.tess3.mean.se = sd(rmse.G.tess3) / sqrt(length(rmse.G.tess3)),
+                rmse.G.snmf.mean = mean(rmse.G.snmf),
+                rmse.G.snmf.mean.se = sd(rmse.G.snmf) / sqrt(length(rmse.G.snmf))) %>%
+      ungroup()
+
+    ## compute rel.diff.rmse = rmse_snmf - rmse_tess3 / rmse_snmf
+    toplot <- toplot.aux %>%
+      group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
+      dplyr::mutate(## Q
+        rel.diff.rmse.Q.mean = (rmse.Q.snmf.mean - rmse.Q.tess3.mean) / rmse.Q.snmf.mean,
+
+        ## G
+        rel.diff.rmse.G.mean = (rmse.G.snmf.mean - rmse.G.tess3.mean) / rmse.G.snmf.mean
+      ) %>%
+      ungroup()
+
+
+  } else {
+    ## compute rel.diff.rmse = rmse_snmf - rmse_tess3 / rmse_snmf
+    toplot.aux <- exp$df.res %>%
+      group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
+      dplyr::mutate(## Q
+        rel.diff.rmse.Q = (rmse.Q.snmf - rmse.Q.tess3) / rmse.Q.snmf,
+
+        ## G
+        rel.diff.rmse.G = (rmse.G.snmf - rmse.G.tess3) / rmse.Q.snmf
+      ) %>%
+      ungroup()
+
+
+    toplot <- toplot.aux %>%
+      group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
+      summarise(rel.diff.rmse.Q.mean = mean(rel.diff.rmse.Q),
+                rel.diff.rmse.Q.mean.se = sd(rel.diff.rmse.Q) / sqrt(length(rel.diff.rmse.Q)),
+
+                rel.diff.rmse.G.mean = mean(rel.diff.rmse.G),
+                rel.diff.rmse.G.mean.se = sd(rel.diff.rmse.G) / sqrt(length(rel.diff.rmse.G))
+      )  %>%
+      ungroup()
+  }
+
 
   ## main plot
   pl <- ggplot(toplot, aes(x = noise.signal, y = rel.diff.rmse.Q.mean,
