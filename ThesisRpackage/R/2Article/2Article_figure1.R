@@ -1,0 +1,74 @@
+
+#' @export
+Article2_figure1 <- function() {
+
+  ## test
+  TestRequiredPkg(c("reshape2", "cowplot"))
+
+  ## retrieve results
+  exp <- retrieveExperiment(54)
+
+
+  ## plot
+
+  toplot <- exp$df.n  %>%
+    reshape2::melt(id = c("n", "rep", "L", "method"), value.name = "rmse") %>%
+    group_by(n, method, variable) %>%
+    mutate(rmse.mean = mean(rmse), N = length(rmse), sd = sd(rmse), se = sd / sqrt(N)) %>%
+    mutate(Methods = method)
+
+  pl.n.A <- ggplot(toplot %>% dplyr::filter(variable == "rmseG"),aes(x = n, y = rmse.mean, col = Methods, linetype = Methods, shape = Methods)) +
+    geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = .1) +
+    geom_line() +
+    geom_point() +
+    xlab("Number of individuals ($n$)") +
+    ylab("RMSE") +
+    Article2.env$gtheme +
+    theme(legend.position = "none") +
+    Article2.env$scale.linetype +
+    Article2.env$scale.color
+
+  pl.n.B <- ggplot(toplot %>% dplyr::filter(variable == "rmseQ"),
+                   aes(x = n, y = rmse.mean, col = Methods, linetype = Methods, shape = Methods)) +
+    geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = .1) +
+    geom_line() +
+    geom_point() +
+    xlab("Number of individuals ($n$)") +
+    ylab("") +
+    Article2.env$gtheme +
+    theme(legend.position = c(0.75,0.70)) +
+    Article2.env$scale.linetype +
+    Article2.env$scale.color
+
+  toplot <- exp$df.L  %>%
+    reshape2::melt(id = c("nsites.neutral", "rep", "L", "method"), value.name = "rmse") %>%
+    group_by(nsites.neutral, method, variable) %>%
+    mutate(rmse.mean = mean(rmse), N = length(rmse), sd = sd(rmse), se = sd / sqrt(N), L = mean(L))
+
+  pl.L.C <- ggplot(toplot %>% dplyr::filter(variable == "rmseG"), aes(x = L, y = rmse.mean, col = method, linetype = method, shape = method)) +
+    geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = .1) +
+    geom_line() +
+    geom_point() +
+    xlab("Number of loci ($L$)") +
+    ylab("RMSE") +
+    Article2.env$gtheme +
+    theme(legend.position = "none") +
+    Article2.env$scale.linetype +
+    Article2.env$scale.color
+
+  pl.L.D <- ggplot(toplot %>% dplyr::filter(variable == "rmseQ"), aes(x = L, y = rmse.mean, col = method, linetype = method, shape = method)) +
+    geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = .1) +
+    geom_line() +
+    geom_point() +
+    xlab("Number of loci ($L$)") +
+    ylab("") +
+    Article2.env$gtheme +
+    theme(legend.position = "none") +
+    Article2.env$scale.linetype +
+    Article2.env$scale.color
+
+
+  pl <- cowplot::plot_grid(pl.n.A, pl.n.B, pl.L.C, pl.L.D, ncol = 2, labels = c("A", "B", "C", "D"))
+
+  pl
+}
