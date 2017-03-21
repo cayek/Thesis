@@ -49,7 +49,6 @@ read_X <- function(X.file) {
 #' @export
 read_vcf <- function(file.pattern, maf.threshold = NULL, subsample.rate = NULL) {
   ## assert
-  stop("TODO")
 
   TestRequiredPkg("LEA")
 

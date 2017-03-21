@@ -48,7 +48,7 @@ test_that("Article3_runExp with missing", {
                          save = FALSE, bypass = TRUE)
   expect_equal(exp$name, "Article3_runExp")
   expect_equal(exp$description,
-               "Article3_runExp with m.name=RidgeLfmm s.name=NormalSampler2 lambdas=1e-05|1|1e+05 Ks=2|3|4 ")
+               "Article3_runExp with m.name=RidgeLfmm s.name=NormalSampler2 lambdas=1e+05 Ks=4 ")
 
 
   plot(exp, threshold = 0.05)

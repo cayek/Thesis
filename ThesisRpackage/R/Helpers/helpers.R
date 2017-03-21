@@ -16,7 +16,7 @@ TestRequiredPkg <- function(pkg) {
 #' @param msg The message
 DebugMessage <- function(msg) {
   if (!is.null(getOption("ThesisRpackage.debug"))) {
-    message("= ", msg)
+    cat(crayon::bgGreen(paste0("= ", msg,"\n")))
   }
 }
 
@@ -44,7 +44,7 @@ long_init <- function(cluster.nb,
   KrakTest(bypass)
 
   if (!is.null(cluster.nb)) {
-    cl <- parallel::makeCluster(cluster.nb)
+    cl <- parallel::makeCluster(cluster.nb, makeCluster = "")
     doParallel::registerDoParallel(cl)
   }
 }

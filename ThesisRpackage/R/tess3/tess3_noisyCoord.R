@@ -1,26 +1,28 @@
 main_tess3_noisyCoord <- function(exp,
-                                  n, nsites.neutral, m.neutral,
-                                  noise.signal, r, compute.vario) {
+                                  ns, nsites.neutral, m.neutral,
+                                  noise.signal, nb.rep, compute.vario) {
   ## helpers
-  vario <- function(dat, label) {
+  vario <- function(dat, label, r) {
     if (compute.vario) {
       vario.gen <- tess3r::CalculateEmpiricalGenSemivariogram(dat$G,
                                                               dat$ploidy,
                                                               dat$coord)
       vario.gen %>%
-        dplyr::mutate(label = label, rep = r,
-                      n = dat$n,
-                      L = dat$L,
-                      m.neutral = dat$m.neutral,
-                      Fst = mean(dat$Fst),
-                      Fst.theorical = dat$Fst.theorical,
-                      nsites.neutral = dat$nsites.neutral)
+        dplyr::mutate(label = label, rep = r)
+      ## BUG ??
+      # ,
+      #                 L = dat$L,
+      #                 m.neutral = dat$m.neutral,
+      #                 Fst = mean(dat$Fst),
+      #                 Fst.theorical = dat$Fst.theorical,
+      #                 nsites.neutral = dat$nsites.neutral,
+      #                 n = as.numeric(dat$n)) ## a BUG ??)
     } else {
       tibble()
     }
 
   }
-  res <- function(m, dat, method, noise.signal, rmse.Q.snmf, rmse.G.snmf) {
+  res <- function(m, dat, r, noise.signal, rmse.Q.snmf, rmse.G.snmf) {
     tibble(rmse.Q.snmf = rmse.Q.snmf,
            rmse.G.snmf = rmse.G.snmf,
            rmse.Q.tess3 = tess3r::ComputeRmseWithBestPermutation(m$Q,
@@ -29,7 +31,7 @@ main_tess3_noisyCoord <- function(exp,
                                                            dat$Freq),
            noise.signal = noise.signal,
            rep = r,
-           n = dat$n,
+           n = as.numeric(dat$n), ## BUG ??
            L = dat$L,
            m.neutral = dat$m.neutral,
            Fst = mean(dat$Fst),
@@ -37,63 +39,61 @@ main_tess3_noisyCoord <- function(exp,
            nsites.neutral = dat$nsites.neutral)
   }
 
-  ## simulation
-  s <- Tess3Sampler(n = n,
-                    nsites.neutral = nsites.neutral,
-                    nsites.selected = 0,
-                    crossover.proba = 0.25 * 1e-8,
-                    m.neutral = m.neutral,
-                    m.selected = NULL,
-                    mutation.rate.per.site = 0.25 * 1e-7,
-                    N0 = 1e6,
-                    k = 0.5,
-                    min.maf = 0.05)
-  dat <- sampl(s)
-  sd.long <- sd(dat$coord[,1]) # only longitude is important
-
   ## method
   m.snmf <- sNMFMethod(K = 2)
   m.tess3 <- tess3Method(K = 2)
 
-  ## run of snmf
-  m.snmf <- fit(m.snmf, dat)
-  rmse.Q.snmf = tess3r::ComputeRmseWithBestPermutation(m.snmf$Q,
-                                                  dat$Q)
-  rmse.G.snmf = tess3r::ComputeRmseWithBestPermutation(tess3r::GtoFreq(m.snmf$G, dat$ploidy),
-                                                  dat$Freq)
-
-  ## run of tess3 with random coord
-  # dat.noisy <- dat
-  # dat.noisy$coord[,1] <- rnorm(n, mean = 0.0, sd = sd.long)
-  # exp$vario.gen <- vario(dat.noisy, label = "random coord") %>%
-  #   rbind(exp$vario.gen)
-  #
-  # tess3.res <- fit(m.tess3, dat.noisy)
-  #
-  # exp$df.res <- res(m = tess3.res,
-  #                   dat = dat.noisy,
-  #                   method = "tess3+random coord", noise.signal = 0.0) %>%
-  #   rbind(exp$df.res)
-
-
   ## run of tess3 with noisy coord
-  exp$df.res <- foreach(ns = noise.signal, .combine = 'rbind') %dopar%
-  {
-    dat.noisy <- dat
-    dat.noisy$coord[,1] <- dat.noisy$coord[,1] +
-      rnorm(n, mean = 0.0, sd = ns * sd.long)
-    exp$vario.gen <- vario(dat.noisy, label = paste0("ns=",ns)) %>%
-      rbind(exp$vario.gen)
+  exp$df.res <- foreach(r = 1:nb.rep, .combine = 'rbind') %:%
+    foreach(n = ns, .combine = 'rbind') %:%
+    foreach(n.n = nsites.neutral, .combine = 'rbind') %:%
+    foreach(m.n = m.neutral, .combine = 'rbind') %dopar%
+    {
 
-    tess3.res <- fit(m.tess3, dat.noisy)
+      DebugMessage(paste0("run r=",r, " n=", n, "n.n=",n.n, "m.n=",m.n))
 
-    res(m = tess3.res,
-        dat = dat.noisy,
-        noise.signal = ns,
-        rmse.Q.snmf = rmse.Q.snmf,
-        rmse.G.snmf = rmse.G.snmf)
-  } %>%
-    rbind(exp$df.res)
+      ## simulation
+      s <- Tess3Sampler(n = n,
+                        nsites.neutral = n.n,
+                        nsites.selected = 0,
+                        crossover.proba = 0.25 * 1e-8,
+                        m.neutral = m.n,
+                        m.selected = NULL,
+                        mutation.rate.per.site = 0.25 * 1e-7,
+                        N0 = 1e6,
+                        k = 0.5,
+                        min.maf = 0.05)
+      dat <- sampl(s)
+      sd.long <- sd(dat$coord[,1]) # only longitude is important
+
+
+      ## run of snmf
+      m.snmf <- fit(m.snmf, dat)
+      rmse.Q.snmf = tess3r::ComputeRmseWithBestPermutation(m.snmf$Q,
+                                                           dat$Q)
+      rmse.G.snmf = tess3r::ComputeRmseWithBestPermutation(tess3r::GtoFreq(m.snmf$G, dat$ploidy),
+                                                           dat$Freq)
+      toReturn <- tibble()
+      ## noise data
+      for (noise in noise.signal) {
+        dat.noisy <- dat
+        dat.noisy$coord[,1] <- dat.noisy$coord[,1] +
+          rnorm(n, mean = 0.0, sd = noise * sd.long)
+        exp$vario.gen <- vario(dat.noisy, label = paste0("ns=",noise), r) %>%
+          rbind(exp$vario.gen)
+
+        tess3.res <- fit(m.tess3, dat.noisy)
+
+        toReturn <- res(m = tess3.res,
+                        dat = dat.noisy,
+                        r = r,
+                        noise.signal = noise,
+                        rmse.Q.snmf = rmse.Q.snmf,
+                        rmse.G.snmf = rmse.G.snmf) %>%
+          rbind(toReturn)
+      }
+      toReturn
+    }
   exp
 }
 
@@ -133,20 +133,14 @@ long_tess3_noisyCoord <- function(ns = c(50, 500),
   exp$vario.gen <- tibble()
 
   ## main
-  for (r in 1:nb.rep) {
-    for (n in ns) {
-      for (n.n in nsites.neutral) {
-        for (m.n in m.neutral) {
-          DebugMessage(paste0("run r=",r, " n=", n, "n.n=",n.n, "m.n=",m.n))
-          exp <- main_tess3_noisyCoord(exp, n = n,
-                                       nsites.neutral = n.n,
-                                       m.neutral = m.n,
-                                       noise.signal, r, compute.vario)
-        }
-      }
-    }
+  exp <- main_tess3_noisyCoord(exp, ns = ns,
+                               nsites.neutral = nsites.neutral,
+                               m.neutral = m.neutral,
+                               noise.signal = noise.signal,
+                               nb.rep = nb.rep,
+                               compute.vario = compute.vario)
 
-  }
+
 
   ## return
   # save exp
@@ -200,10 +194,7 @@ plot_tess3_noisyCoord_vario <- function(exp, n, nsites.neutral, m.neutral) {
 
   assertthat::assert_that(class(exp)[1] == "long_tess3_noisyCoord")
 
-  stop("TODO")
 
-  ## variogram
-  if (nrow(exp$vario.gen) != 0) {
     variogram.pl <- ggplot(exp$vario.gen, aes(x = h, y = semi.variance, size = size)) +
       geom_point()  +
       labs(y = "Semivariance",
@@ -212,18 +203,6 @@ plot_tess3_noisyCoord_vario <- function(exp, n, nsites.neutral, m.neutral) {
       scale_size_continuous(range = c(1,3)) +
       guides(size = guide_legend(title = "Bin size")) +
       facet_grid(label~.)
-    print(variogram.pl)
-  }
+    variogram.pl
 
-  ## main plot
-  snmf.rmse.Q <- mean(exp$df.res$rmse.Q[exp$df.res$method == "snmf"])
-  tess3.random.rmse.Q <- mean(exp$df.res$rmse.Q[exp$df.res$method == "tess3+random coord"])
-  toplot <- exp$df.res %>%
-    dplyr::filter(method == "tess3")
-  pl <- ggplot(toplot, aes(x = noise.signal, y = rmse.Q)) +
-    geom_point() +
-    geom_smooth() +
-    geom_hline(yintercept = snmf.rmse.Q, colour = "red") +
-    geom_hline(yintercept = tess3.random.rmse.Q, colour = "green")
-  print(pl)
 }

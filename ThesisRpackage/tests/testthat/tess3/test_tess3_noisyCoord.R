@@ -18,7 +18,7 @@ test_that("long_tess3_noisyCoord", {
   ## plot
   plot_tess3_noisyCoord(exp)
 
-})
+}) p
 
 test_that("long_tess3_noisyCoord variogram", {
 
@@ -26,14 +26,13 @@ test_that("long_tess3_noisyCoord variogram", {
   exp <- long_tess3_noisyCoord(ns = c(50),
                                nsites.neutral = c(1.5 * 1e4),
                                m.neutral =  c(0.25 * 1 * 1e-6),
-                               noise.signal = c(0.0, 1.0),
+                               noise.signal = c(0.0, 1.0, 10.0),
                                nb.rep = 1,
                                compute.vario = TRUE,
                                cluster.nb = NULL,
                                save = FALSE, bypass = TRUE)
-  expect_equal(dim(exp$vario.gen), c(8, 12))
 
   ## plot
-  plot_tess3_noisyCoord(exp)
+  plot_tess3_noisyCoord_vario(exp)
 
 })

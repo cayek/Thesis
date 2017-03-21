@@ -29,4 +29,5 @@ Imports: ggplot2,
     parallel,
     FAMT,
     assertthat,
-    fdrtool
+    fdrtool,
+    crayon
