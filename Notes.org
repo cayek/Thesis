@@ -187,8 +187,16 @@
    + changer la parralélisation sans
      file:ThesisRpackage/R/tess3/tess3_noisyCoord.R (c'est le sampling qui est
      long ! )
-   + 1000 genome ! Peut-etre utiliser autre chose pour lire les vcf ! 
-
+   + 1000 genome ! Peut-etre utiliser autre chose pour lire les vcf !
+*** 2017-03-21 mardi
+**** bug sur krakenator
+   Entered on [2017-03-21 mar. 17:23]
+   
+   Le message : Fatal error: impossible de créer 'R_TempDir'
+   
+   Je pense que rochei à cassé un truc :D ... 
+   
+   Pour le resoudre j'ai set le TMP dir dans .Renviron
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
