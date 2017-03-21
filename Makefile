@@ -9,10 +9,10 @@ HOSTNAME=`hostname`
 
 # Rpackage
 Rpackage_install_nodep:
-	R --vanilla -e 'devtools::install(pkg = "./ThesisRpackage/", dependencies = FALSE)'
+	R -e 'devtools::install(pkg = "./ThesisRpackage/", dependencies = FALSE)'
 
 Rpackage_install:
-	R --vanilla -e 'devtools::install(pkg = "./ThesisRpackage/")'
+	R -e 'devtools::install(pkg = "./ThesisRpackage/")'
 
 # krakenator 
 krakenator_push_hook:
