@@ -44,7 +44,7 @@ long_init <- function(cluster.nb,
   KrakTest(bypass)
 
   if (!is.null(cluster.nb)) {
-    cl <- parallel::makeCluster(cluster.nb, makeCluster = "")
+    cl <- parallel::makeCluster(cluster.nb, outfile = "")
     doParallel::registerDoParallel(cl)
   }
 }
