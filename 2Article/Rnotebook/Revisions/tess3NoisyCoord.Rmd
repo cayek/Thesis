@@ -32,8 +32,7 @@ library(ThesisRpackage)
 exp <- long_tess3_noisyCoord(ns = c(50, 500),
                              nsites.neutral = c(1.5 * 1e4,
                                                 1.2 * 1e5),
-                             m.neutral =  c(0.25 * 0.05 * 1e-6,
-                                            0.25 * 0.5 * 1e-6,
+                             m.neutral =  c(0.25 * 0.5 * 1e-6,
                                             0.25 * 1 * 1e-6,
                                             0.25 * 1.5 * 1e-6,
                                             0.25 * 2 * 1e-6,
@@ -43,7 +42,7 @@ exp <- long_tess3_noisyCoord(ns = c(50, 500),
                              noise.signal = c(0.0, 0.2, 0.5,0.8, 1.0, 2.0, 3.0, 10.0),
                              nb.rep = 10,
                              compute.vario = FALSE,
-                             cluster.nb = 5,
+                             cluster.nb = 2,
                              save = TRUE, bypass = FALSE)
 ```
 

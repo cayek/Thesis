@@ -125,6 +125,19 @@ retrieveExperiment <- function(id, bench.dir = getOption("thesis.dump.file")) {
   readRDS(paste0(bench.dir,"/",basename(bench.tbl$dumpfile[id])))
 }
 
+#' @export
+removeExperiment <- function(id, bench.dir = getOption("thesis.dump.file")) {
+
+  bench.tbl <- getBenchmarkDb(bench.dir = bench.dir)
+  bench.file <- paste0(bench.dir,"/benchmark.sqlite3")
+  ## remove file
+  dumpfile <- bench.tbl$dumpfile[id]
+  file.remove(paste0(bench.dir,"/",basename(dumpfile)))
+  ## remove from db
+  remove_from_table(db.file = bench.file,
+                    condition = paste0("dumpfile = ","\'",dumpfile,"'"))
+}
+
 ################################################################################
 # helpers
 
@@ -136,4 +149,13 @@ add_to_table <- function(db.file, rows, tablename = "experiment") {
   RSQLite::dbDisconnect(con)
 }
 
+
+remove_from_table <- function(db.file, condition, tablename = "experiment") {
+  con <- RSQLite::dbConnect( RSQLite::SQLite() , dbname = db.file )
+  res <- RSQLite::dbSendQuery(conn = con, "PRAGMA foreign_keys = ON")
+  RSQLite::dbClearResult(res)
+  res <- RSQLite::dbSendQuery(conn = con, paste("DELETE FROM", tablename, "WHERE", condition))
+  RSQLite::dbClearResult(res)
+  RSQLite::dbDisconnect(con)
+}
 
