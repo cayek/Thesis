@@ -40,17 +40,15 @@ read_X <- function(X.file) {
 
 #' read vcf files
 #'
-#' Rmk: it uses LEA::vcf2geno
+#' Rmk: it uses readr::read_delim
 #'
-#' @param keep.indiv keep only this indiv
 #' @param maf.threshold filter with this maf threshold
-#' @param subsample.rate subsample with this rate
 #'
 #' @export
-read_vcf <- function(file.pattern, maf.threshold = NULL, subsample.rate = NULL) {
+read_vcf_files <- function(file.pattern, maf.threshold = NULL,
+                           save.rds = FALSE, block.size = 100000) {
   ## assert
 
-  TestRequiredPkg("LEA")
 
   files <- list.files()
   files <- grep(file.pattern, files, value = TRUE)
@@ -59,22 +57,90 @@ read_vcf <- function(file.pattern, maf.threshold = NULL, subsample.rate = NULL) 
   res$G <- NULL
   res$snps.info <- tibble()
   for (f in files) {
-    output.tmp <- tempfile(tmpdir = ".", fileext = ".geno")
-    LEA::vcf2geno(f, output.file = output.tmp, force = TRUE)
-    geno <- LEA::read.geno(output.tmp)
-    snps.info <- readr::read_delim(sub(pattern = "\\.geno$", "\\.vcfsnp", output.tmp),
-                                   delim = " ",
-                                   col_names = FALSE,
-                                   progress = FALSE)
-    colnames(geno) <- snps.info$X3
+    DebugMessage(paste0("== reading ",f,"\n"))
 
-    ## filter maf
-    if (!is.null(maf.threshold)) {
-      maf <- apply(geno, 2, function(locus) {p <- mean(locus); min(p, 1 - p)})
-      cat("== Removing", mean(maf < maf.threshold),"% loci")
-      geno <- geno[,maf >= maf.threshold]
-    }
-    res$G <- cbind(geno, res$G)
+
   }
+
 }
 
+
+#' read vcf
+#'
+#'
+#' @param maf.threshold filter with this maf threshold
+#'
+#' @export
+read_vcf <- function(f, maf.threshold = NULL,
+                     n_max = -1,
+                     block.size = 100000) {
+
+  ## read col_names
+  header <- readr::read_delim(file = f,
+                    delim = "\t", comment = "##",col_names = TRUE, n_max = 1,
+                    col_types = readr::cols(`#CHROM` = readr::col_integer(),POS = readr::col_integer(), .default = readr::col_character()))
+  DebugMessage(paste0("FORMAT = ", header$FORMAT))
+
+
+  ## read data
+  geno <- NULL
+  snps.info <- header[-1,1:9]
+
+  EOF = FALSE
+  skip = 0
+  red.line = 0
+  while (!EOF) {
+    DebugMessage(paste0("red.line = ",red.line))
+    ## read vcf
+    vcf <- readr::read_delim(file = f,
+                      delim = "\t", comment = "#",col_names = FALSE, n_max = block.size,
+                      skip = skip,
+                      col_types = readr::cols(X1 = readr::col_integer(),
+                                              X2 = readr::col_integer(),
+                                              .default = readr::col_character()))
+    names(vcf) <- names(header)
+
+    ## update skip
+    skip <- skip + block.size
+    red.line <- red.line + nrow(vcf)
+    if ((red.line >= n_max) || (nrow(vcf) < block.size)) {
+      EOF = TRUE
+    }
+
+    ## filter line which are not snps
+    variant.allow <- c("0|0", "0|1","1|0", "1|1", ".")
+    remove <- apply(vcf[,-(1:9)], 1, function(l) mean(l %in% variant.allow) == 1)
+    vcf <- vcf[remove,]
+
+    ## extract snps matrix
+    geno.aux <- as.matrix(vcf[,-(1:9)])
+    geno.aux[geno.aux == "0|0"] <- 0
+    geno.aux[geno.aux == "0|1"] <- 1
+    geno.aux[geno.aux == "1|0"] <- 1
+    geno.aux[geno.aux == "1|1"] <- 2
+    geno.aux[geno.aux == "."] <- NA
+    geno.aux <- t(matrix(as.integer(geno.aux), nrow(geno.aux), ncol(geno.aux)))
+
+    ## maf filterring
+    maf <- apply(geno.aux, 2, function(locus) {p <- mean(locus); min(p, 1 - p)})
+    DebugMessage(paste0("Removing ", mean(maf <= maf.threshold),"% loci\n"))
+    geno.aux <- geno.aux[,maf > maf.threshold, drop = FALSE]
+
+
+    ## colnames
+    colnames(geno.aux) <- vcf$ID[maf > maf.threshold]
+
+    ## cbind
+    snps.info <- rbind(snps.info,
+                       vcf[maf > maf.threshold, 1:9])
+    geno <- cbind(geno,geno.aux)
+  }
+
+
+  ## rownames
+  rownames(geno) <- names(header)[-(1:9)]
+
+  list(G = geno,
+       snps.info = snps.info)
+
+}
