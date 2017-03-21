@@ -72,13 +72,16 @@ read_vcf_files <- function(file.pattern, maf.threshold = NULL,
 #'
 #' @export
 read_vcf <- function(f, maf.threshold = NULL,
-                     n_max = -1,
+                     n_max = Inf,
                      block.size = 100000) {
 
   ## read col_names
   header <- readr::read_delim(file = f,
                     delim = "\t", comment = "##",col_names = TRUE, n_max = 1,
-                    col_types = readr::cols(`#CHROM` = readr::col_integer(),POS = readr::col_integer(), .default = readr::col_character()))
+                    col_types = readr::cols(`#CHROM` = readr::col_integer(),
+                                            POS = readr::col_integer(),
+                                            .default = readr::col_character()),
+                    progress = FALSE)
   DebugMessage(paste0("FORMAT = ", header$FORMAT))
 
 
@@ -97,7 +100,8 @@ read_vcf <- function(f, maf.threshold = NULL,
                       skip = skip,
                       col_types = readr::cols(X1 = readr::col_integer(),
                                               X2 = readr::col_integer(),
-                                              .default = readr::col_character()))
+                                              .default = readr::col_character()),
+                      progress = FALSE)
     names(vcf) <- names(header)
 
     ## update skip
