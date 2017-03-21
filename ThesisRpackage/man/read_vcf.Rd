@@ -4,7 +4,8 @@
 \alias{read_vcf}
 \title{read vcf}
 \usage{
-read_vcf(f, maf.threshold = NULL, n_max = Inf, block.size = 1e+05)
+read_vcf(f, maf.threshold = NULL, n_max = Inf, block.size = 1e+05,
+  ploidy = 2)
 }
 \arguments{
 \item{maf.threshold}{filter with this maf threshold}

@@ -73,7 +73,8 @@ read_vcf_files <- function(file.pattern, maf.threshold = NULL,
 #' @export
 read_vcf <- function(f, maf.threshold = NULL,
                      n_max = Inf,
-                     block.size = 100000) {
+                     block.size = 100000,
+                     ploidy = 2.0) {
 
   ## read col_names
   header <- readr::read_delim(file = f,
@@ -126,7 +127,7 @@ read_vcf <- function(f, maf.threshold = NULL,
     geno.aux <- t(matrix(as.integer(geno.aux), nrow(geno.aux), ncol(geno.aux)))
 
     ## maf filterring
-    maf <- apply(geno.aux, 2, function(locus) {p <- mean(locus); min(p, 1 - p)})
+    maf <- apply(geno.aux, 2, function(locus) {p <- mean(locus, na.rm = TRUE) / ploidy; min(p, 1 - p)})
     DebugMessage(paste0("Removing ", mean(maf <= maf.threshold),"% loci\n"))
     geno.aux <- geno.aux[,maf > maf.threshold, drop = FALSE]
 

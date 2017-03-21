@@ -6,6 +6,7 @@ Article2_figure2 <- function() {
 
   ## retrieve results
   exp <- retrieveExperiment(55)
+  assertthat::assert_that(exp$name == "2Article_figure2")
 
   toplot <- exp$df %>%
     dplyr::mutate(n = paste0("$n = ",n, "$")) %>%

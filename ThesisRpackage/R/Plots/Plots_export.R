@@ -22,3 +22,26 @@ Plots_export_tikz_pdf <- function(pl, basename.output, env) {
 
 
 }
+
+#' @export
+Plots_export_pdf <- function(pl, basename.output, env, width, height) {
+
+
+  pdf(paste0(env$fig.dir, "/", basename.output, ".pdf"), width = width,
+      height = height)
+  print(pl)
+
+  dev.off()
+
+
+}
+
+#' @export
+Plots_export_png <- function(pl, basename.output, env, width, height) {
+
+  png(paste0(env$fig.dir, "/", basename.output, ".png"), width = width,
+      height = height, res = 600, units = "in")
+  print(pl)
+
+  dev.off()
+}

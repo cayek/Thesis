@@ -7,6 +7,7 @@ Article2_figure1 <- function() {
 
   ## retrieve results
   exp <- retrieveExperiment(54)
+  assertthat::assert_that(exp$name == "2Article_figure1")
 
 
   ## plot
