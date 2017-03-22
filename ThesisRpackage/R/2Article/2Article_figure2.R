@@ -16,7 +16,12 @@ Article2_figure2 <- function() {
     dplyr::mutate(Fst = mean(Fst), rmse.mean = mean(rmseQ), N = length(rmseQ), sd = sd(rmseQ), se = sd / sqrt(N)) %>%
     rename(Methods = method )
   levels(toplot$Methods)[1] <- "APLS"
-  pl <- ggplot(toplot ,aes(x = Fst.theorical, y = rmse.mean, col = Methods, shape = Methods)) +
+  pl <- ggplot(toplot ,
+               aes(x = Fst.theorical,
+                   y = rmse.mean,
+                   col = Methods,
+                   shape = Methods,
+                   linetype = Methods)) +
     geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = 0.0) +
     geom_line() +
     geom_point() +
@@ -27,6 +32,7 @@ Article2_figure2 <- function() {
     ylab("RMSE") +
     Article2.env$gtheme +
     theme(legend.position = c(0.85,0.3)) +
-    Article2.env$scale.color
+    Article2.env$scale.color +
+    Article2.env$scale.linetype
   pl
 }

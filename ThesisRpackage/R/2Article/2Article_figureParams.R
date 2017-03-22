@@ -1,14 +1,14 @@
 #############################################################
 # color and linetype
-Article2.env$color <- list(TESS3 = "blue",
-              APLS = "orange",
+Article2.env$color <- list(TESS3 = "orange",
+              APLS = "blue",
               AQP = "darkgrey",
               snmf = "chartreuse4",
               before.admixure = "azure4")
-Article2.env$linetype <- list(TESS3 = "solid",
+Article2.env$linetype <- list(TESS3 = "twodash",
                               APLS = "solid",
                               AQP = "dashed",
-                              snmf = "solid",
+                              snmf = "twodash",
                               before.admixure = "dashed")
 
 ################################################################################

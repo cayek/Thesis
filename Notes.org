@@ -216,7 +216,8 @@
    R CMD INSTALL ThesisRpackage
    #+END_SRC
    
-   Mount depuis krakenator, je ne doit pas etre dans le [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][fuse group]]... Try [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][that]]
+   Mount depuis krakenator, je ne doit pas etre dans le [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][fuse group]]... Try [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][that]].
+   C'est fait :D
 
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
@@ -547,11 +548,13 @@
    supplementary technical reference.
 *** On résume à faire
 **** TODO experiments
-***** [ ] on reprend les simulations et on bruite les coords. graph RMSE(Q) x sigma(bruit) x regularization param 
+***** DONE on reprend les simulations et on bruite les coords. graph RMSE(Q) x sigma(bruit) x regularization param 
+      CLOSED: [2017-03-22 mer. 10:00]
       Ok ca marche il reste à mettre en forme.
-***** [ ] CV si ca marche ! Je le ferai pour la thèse.  
+***** DONE CV si ca marche ! Je le ferai pour la thèse.  
+      CLOSED: [2017-03-22 mer. 10:00]
       On va juste citer laliterature.
-***** [ ] simu 1000 genome (European Africain et Afro americain). 
+***** TODO simu 1000 genome (European Africain et Afro americain). 
       Que donne snmf et tess3r. Le fichier est énorme, on va faire un LD
       prunning et un filtrage par la maf ! 
 
@@ -559,23 +562,69 @@
 
       On va regarder dans le variogram (3 classes) il ne devrait pas y avoir
       d'autocorélation spatial. On devrait trouver comme sNMF
-***** [ ] simons avec la maf 5%
+***** DONE simons avec la maf 5%
+      CLOSED: [2017-03-22 mer. 10:01]
       pas pertinant sur des données humaines, trop de facteur non spatiaux, les
       deplacement humains sont trops complexe. Pour les plantes c'est adapté, on
       a de la dispertion.
 
       On va juste les télécharger pour voir. 
+
+      C'est la merde a ddl...
 **** TODO implémentation
-     - [ ] un fonction prédict sur un indiv pas vu ! Qui pourrait servir pour la
+     - [ ] une fonction prédict sur un indiv pas vu ! Qui pourrait servir pour la
        cross validation.
-*** TODO Figures
-    - style de ligne par method -> plus visble pour meilleurs methodes
-    - visible en noir et blanc
-    - point trop gros
-    - AT : 2 fig 1 couleur et 1 noir et blanc
-    - ManhattanPlot : le tasser + alternance de gris + taille des points
 
+       On vera plutard ! 
+**** TODO Figures
+     - [ ] style de ligne par method -> plus visble pour meilleurs methodes
+     - [ ] visible en noir et blanc
+     - [ ] point trop gros
+     - [ ] AT : 2 fig 1 couleur et 1 noir et blanc
+     - [ ] ManhattanPlot : le tasser + alternance de gris + taille des points
+     - [ ] rmk sur papier
+**** TODO References
+            - faut fair une passe et ajouter ca: 
 
+            Jinliang Wang (2017) The computer program structure for assigning
+            individuals to populations: easy to use but easier to misuse. Mol.
+            Ecol Resources DOI: 10.1111/1755-0998.12650
+
+            1000 Genomes Project Consortium. (2015). A global reference for
+            human genetic variation. Nature, 526 (7571), 68-74.
+
+            Efron B. Large-scale simultaneous hypothesis testing: the choice of
+            a null hypothesis, J. Amer. Statist. Assoc, 2004, vol. 99, 96-104.
+
+            Hardy, Olivier J., and Xavier Vekemans. "Isolation by distance in a
+            continuous population: reconciliation between spatial
+            autocorrelation analysis and population genetics models." Heredity
+            83.2 (1999): 145-154.
+
+            Epperson, Bryan K., and Tianquan Li. "Measurement of genetic
+            structure within populations using Moran's spatial autocorrelation
+            statistics." Proceedings of the National Academy of Sciences 93.19
+            (1996): 10528-10532.
+
+            Mantel, N. (1967). "The detection of disease clustering and a
+            generalized regression approach". Cancer Research. 27 (2): 209–220.
+
+            Bradburd GS, Ralph PL, Coop GM (2016) A Spatial Framework for
+            Understanding Population Structure and Admixture. PLoS Genet 12(1):
+            e100570
+
+            Fast spatial ancestry via flexible allele frequency surfaces. Rañola
+            JM1, Novembre J1, Lange K. Bioinformatics 2014.
+            https://www.ncbi.nlm.nih.gov/pubmed/25012181.
+            
+            Anand Bhaskar, Adel Javanmard, Thomas A. Courtade, David Tse
+            https://arxiv.org/abs/1610.07306.
+**** TODO Relire
+     - Tout est dans le titre.
+     
+     - Bien verifier les labels !!
+
+     - Voir dans le cahier aussi !
 ** Rnotebook
 *** TODO Cross validation                                         :Rnotebook:
     On va voir si la cross validation marche

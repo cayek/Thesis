@@ -22,7 +22,7 @@ Article2_figure1 <- function() {
     geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = .1) +
     geom_line() +
     geom_point() +
-    xlab("Number of individuals ($n$)") +
+    xlab(latex2exp::TeX("Number of individuals ($n$)")) +
     ylab("RMSE") +
     Article2.env$gtheme +
     theme(legend.position = "none") +
@@ -34,7 +34,7 @@ Article2_figure1 <- function() {
     geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = .1) +
     geom_line() +
     geom_point() +
-    xlab("Number of individuals ($n$)") +
+    xlab(latex2exp::TeX("Number of individuals ($n$)")) +
     ylab("") +
     Article2.env$gtheme +
     theme(legend.position = c(0.75,0.70)) +
@@ -50,7 +50,7 @@ Article2_figure1 <- function() {
     geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = .1) +
     geom_line() +
     geom_point() +
-    xlab("Number of loci ($L$)") +
+    xlab(latex2exp::TeX("Number of loci ($L$)")) +
     ylab("RMSE") +
     Article2.env$gtheme +
     theme(legend.position = "none") +
@@ -61,7 +61,7 @@ Article2_figure1 <- function() {
     geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = .1) +
     geom_line() +
     geom_point() +
-    xlab("Number of loci ($L$)") +
+    xlab(latex2exp::TeX("Number of loci ($L$)")) +
     ylab("") +
     Article2.env$gtheme +
     theme(legend.position = "none") +

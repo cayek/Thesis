@@ -9,14 +9,16 @@ Article2_figure5 <- function() {
 
 
   variogram.pl <- ggplot(exp$vario.gen, aes(x = h, y = semi.variance, size = size)) +
-    geom_point() + geom_vline(xintercept = 1.5, colour = "red") +
+    geom_point(shape = 1) +
+    geom_vline(xintercept = 1.5, colour = "red") +
     labs(y = "Semivariance",
          x = "Geographic distance (km $\\times 100$)") +
     theme_gray(base_size = 12) +
     scale_size_continuous(range = c(1,3)) +
     guides(size = guide_legend(title = "Bin size")) +
     Article2.env$gtheme +
-    theme(legend.position = c(0.8,0.3))
+    theme(legend.position = c(0.8,0.3)) +
+    scale_shape_discrete(solid = FALSE)
 
 
 
@@ -116,7 +118,7 @@ Article2_manhattanplot <- function() {
 }
 
 #' @export
-Article2_map <- function() {
+Article2_map <- function(col.palette = NULL) {
 
   TestRequiredPkg(c("sp", "raster",
                     "rworldmap", "rgeos", "rasterVis",
@@ -146,24 +148,24 @@ Article2_map <- function() {
 
   ################################################################################
   # Color palette
+  if (is.null(col.palette)) {
+    gg_color_hue <- function(n) {
+      hues = seq(15, 375, length = n + 1)
+      hcl(h = hues, l = 65, c = 100)[1:n]
+    }
+    n = 6
+    cols = gg_color_hue(n)
 
-  gg_color_hue <- function(n) {
-    hues = seq(15, 375, length = n + 1)
-    hcl(h = hues, l = 65, c = 100)[1:n]
+    col.palette = list(
+      colorRampPalette(c("white",cols[1]))(9)[5:9],
+      colorRampPalette(c("white",cols[2]))(9)[5:9],
+      colorRampPalette(c("white",cols[3]))(9)[5:9],
+      colorRampPalette(c("white",cols[4]))(9)[5:9],
+      colorRampPalette(c("white",cols[5]))(9)[5:9],
+      colorRampPalette(c("white",cols[6]))(9)[5:9]
+    )
+    # plot(rep(1,5),col = col.palette[[2]],pch=19,cex=3)
   }
-  n = 6
-  cols = gg_color_hue(n)
-
-  col.palette = list(
-    colorRampPalette(c("white",cols[1]))(9)[5:9],
-    colorRampPalette(c("white",cols[2]))(9)[5:9],
-    colorRampPalette(c("white",cols[3]))(9)[5:9],
-    colorRampPalette(c("white",cols[4]))(9)[5:9],
-    colorRampPalette(c("white",cols[5]))(9)[5:9],
-    colorRampPalette(c("white",cols[6]))(9)[5:9]
-  )
-  # plot(rep(1,5),col = col.palette[[2]],pch=19,cex=3)
-
 
   ################################################################################
   # Interpolation
@@ -219,15 +221,32 @@ Article2_map <- function() {
                       function(c) seq(min(c),
                                       max(c),
                                       length.out = length(col.palette[[1]]) + 1))
-  ## compute color for each tile
-  color <- function(coef, col.palette, col.breaks) {
-    max.i <- which.max(coef)
+  # ## compute color for each tile
+  # color <- function(coef, col.palette, col.breaks) {
+  #   max.i <- which.max(coef)
+  #   c <- max(which(col.breaks[,max.i] - as.numeric(coef[max.i]) >= 0)[1] - 1,1)
+  #   return(col.palette[[max.i]][c])
+  #   # return(c)
+  # }
+  # toplot$color <- apply(toplot[3:8], 1,
+  #                       function(r) color(r, col.palette, col.breaks))
+
+  ## with removed artefact
+  color.rm.art <- function(r, col.palette, col.breaks) {
+    coef <- r[3:8]
+    pos <- r[1:2]
+    if (pos[1] > 28 && pos[2] < 46) {
+      max.i <- 5
+    } else {
+      max.i <- which.max(coef)
+    }
     c <- max(which(col.breaks[,max.i] - as.numeric(coef[max.i]) >= 0)[1] - 1,1)
     return(col.palette[[max.i]][c])
     # return(c)
   }
-  toplot$color <- apply(toplot[3:8], 1,
-                        function(r) color(r, col.palette, col.breaks))
+  toplot$color <- apply(toplot[1:8], 1,
+                        function(r) color.rm.art(r, col.palette, col.breaks))
+
   mappl <- ggplot() +
     geom_tile(data = toplot, aes(x = x, y = y, fill = color)) +
     scale_fill_identity() +
