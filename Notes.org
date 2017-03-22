@@ -204,6 +204,11 @@
    #+END_SRC
    
    PK ?? Pour le moment je vais garder une session R et lancer devtools .
+*** 2017-03-22 mercredi
+**** Patator
+   Entered on [2017-03-22 mer. 08:34]
+
+   Je vais faire comme sur krakenator. Il va falloir monter OUTPUT et Data.
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions

@@ -52,6 +52,20 @@ krakenator_umount_OUTPUT:
 		sudo umount OUTPUT; \
 	fi
 
+# patator
+patator_push_hook:
+	scp ./hooks/post-receive.sh cayek@patator:/home/cayek/Gits/2017/Thesis.git/hooks/post-receive
+
+patator_deploy:
+	git status
+	git commit --allow-empty -am "deploy on patator"
+	git push patator master
+
+patator_R: 
+	ssh -X -t cayek@patator "cd ~/Projects/Thesis/ThesisRpackage; screen R"
+
+
+
 # kimsufi
 kimsufi_push_hook:
 	scp ./hooks/post-receive.sh cayek@176.31.253.205:/home/cayek/Gits/2017/Thesis.git/hooks/post-receive
