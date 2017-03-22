@@ -209,6 +209,13 @@
    Entered on [2017-03-22 mer. 08:34]
 
    Je vais faire comme sur krakenator. Il va falloir monter OUTPUT et Data.
+
+   =devtools= ne veut pas s'installer je ne me rapelle plus comment j'ai fait
+   sur krakenator... Je vais utiliser : 
+   #+BEGIN_SRC sh
+   R CMD INSTALL ThesisRpackage
+   #+END_SRC
+   
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions

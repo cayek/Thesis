@@ -12,7 +12,7 @@ Rpackage_install_nodep:
 	R -e 'devtools::install(pkg = "./ThesisRpackage/", dependencies = FALSE)'
 
 Rpackage_install:
-	R -e 'devtools::install(pkg = "./ThesisRpackage/")'
+	R CMD INSTALL --no-multiarch --with-keep.source ThesisRpackage
 
 # krakenator 
 krakenator_push_hook:

@@ -23,11 +23,36 @@ DebugMessage <- function(msg) {
 #' Install bioconductor dependencies
 #'
 #' @export
-BioConductorDep <- function(pkgs = c("sva", "impute")) {
+BioConductorDep <- function(pkgs = c("sva", "impute", "qvalue")) {
   source("https://bioconductor.org/biocLite.R")
   biocLite(pkgs = pkgs)
 }
 
+
+#' Install CRAN dep
+#'
+#' @export
+CRANDep <- function(pkgs = c('ggplot2',
+                             "cowplot",
+                             "tidyr",
+                             "tibble",
+                             "purrr",
+                             "RSQLite",
+                             "magrittr",
+                             "MASS",
+                             "foreach",
+                             "tools",
+                             "readr",
+                             "knitr",
+                             "gtools",
+                             "doParallel",
+                             "parallel",
+                             "FAMT",
+                             "assertthat",
+                             "fdrtool",
+                             "crayon")) {
+  install.packages(pkgs)
+}
 
 #' Test if you are on krakenator
 #'
