@@ -42,8 +42,8 @@ exp <- long_tess3_noisyCoord(ns = c(50, 500),
                              noise.signal = c(0.0, 0.2, 0.5,0.8, 1.0, 2.0, 3.0, 10.0),
                              nb.rep = 10,
                              compute.vario = FALSE,
-                             cluster.nb = 2,
-                             save = TRUE, bypass = FALSE)
+                             cluster.nb = 4,
+                             save = FALSE, bypass = TRUE)
 ```
 
 ## plot 
