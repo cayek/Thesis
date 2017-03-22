@@ -65,7 +65,6 @@ patator_R:
 	ssh -X -t cayek@patator "cd ~/Projects/Thesis/ThesisRpackage; screen R"
 
 
-
 # kimsufi
 kimsufi_push_hook:
 	scp ./hooks/post-receive.sh cayek@176.31.253.205:/home/cayek/Gits/2017/Thesis.git/hooks/post-receive

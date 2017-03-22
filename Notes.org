@@ -216,6 +216,8 @@
    R CMD INSTALL ThesisRpackage
    #+END_SRC
    
+   Mount depuis krakenator, je ne doit pas etre dans le [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][fuse group]]... Try [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][that]]
+
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
