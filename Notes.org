@@ -197,6 +197,13 @@
    Je pense que rochei à cassé un truc :D ... 
    
    Pour le resoudre j'ai set le TMP dir dans .Renviron
+
+   Mais il y a encore des pb avec 
+   #+BEGIN_SRC sh
+   R -e "..."
+   #+END_SRC
+   
+   PK ?? Pour le moment je vais garder une session R et lancer devtools .
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
