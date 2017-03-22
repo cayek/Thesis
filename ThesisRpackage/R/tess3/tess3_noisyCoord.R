@@ -150,17 +150,19 @@ long_tess3_noisyCoord <- function(ns = c(50, 500),
   exp
 }
 
-#' @export
-plot_tess3_noisyCoord <- function(exp, mean.before = TRUE) {
+plot_tess3_noisyCoord_toplot <- function(exp, mean.before) {
 
-  assertthat::assert_that(class(exp)[1] == "long_tess3_noisyCoord")
-
+  ## L floor
+  toplot.aux <- exp$df.res %>%
+    group_by(nsites.neutral) %>%
+    dplyr::mutate(L  = round(mean(L))) %>%
+    ungroup()
 
   if (mean.before) {
 
 
-    toplot.aux <- exp$df.res %>%
-      group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
+    toplot.aux <- toplot.aux %>%
+      group_by(n, Fst.theorical, L, noise.signal) %>%
       summarise(rmse.Q.tess3.mean = mean(rmse.Q.tess3),
                 rmse.Q.tess3.mean.se = sd(rmse.Q.tess3) / sqrt(length(rmse.Q.tess3)),
                 rmse.Q.snmf.mean = mean(rmse.Q.snmf),
@@ -174,7 +176,7 @@ plot_tess3_noisyCoord <- function(exp, mean.before = TRUE) {
 
     ## compute rel.diff.rmse = rmse_snmf - rmse_tess3 / rmse_snmf
     toplot <- toplot.aux %>%
-      group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
+      group_by(n, Fst.theorical, L, noise.signal) %>%
       dplyr::mutate(## Q
         rel.diff.rmse.Q.mean = (rmse.Q.snmf.mean - rmse.Q.tess3.mean) / rmse.Q.snmf.mean,
 
@@ -186,8 +188,8 @@ plot_tess3_noisyCoord <- function(exp, mean.before = TRUE) {
 
   } else {
     ## compute rel.diff.rmse = rmse_snmf - rmse_tess3 / rmse_snmf
-    toplot.aux <- exp$df.res %>%
-      group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
+    toplot.aux <- toplot.aux %>%
+      group_by(n, Fst.theorical, L, noise.signal) %>%
       dplyr::mutate(## Q
         rel.diff.rmse.Q = (rmse.Q.snmf - rmse.Q.tess3) / rmse.Q.snmf,
 
@@ -198,7 +200,7 @@ plot_tess3_noisyCoord <- function(exp, mean.before = TRUE) {
 
 
     toplot <- toplot.aux %>%
-      group_by(n, Fst.theorical, nsites.neutral, noise.signal) %>%
+      group_by(n, Fst.theorical, L, noise.signal) %>%
       summarise(rel.diff.rmse.Q.mean = mean(rel.diff.rmse.Q),
                 rel.diff.rmse.Q.mean.se = sd(rel.diff.rmse.Q) / sqrt(length(rel.diff.rmse.Q)),
 
@@ -207,14 +209,25 @@ plot_tess3_noisyCoord <- function(exp, mean.before = TRUE) {
       )  %>%
       ungroup()
   }
+  toplot
+}
 
+
+#' @export
+plot_tess3_noisyCoord <- function(exp, mean.before = TRUE) {
+
+  assertthat::assert_that(class(exp)[1] == "long_tess3_noisyCoord")
+
+
+
+  toplot <- plot_tess3_noisyCoord_toplot(exp, mean.before)
 
   ## main plot
   pl <- ggplot(toplot, aes(x = noise.signal, y = rel.diff.rmse.Q.mean,
                            color = as.factor(Fst.theorical))) +
     geom_point() +
     geom_line() +
-    facet_grid(nsites.neutral ~ n)
+    facet_grid(L ~ n)
 
   pl
 }

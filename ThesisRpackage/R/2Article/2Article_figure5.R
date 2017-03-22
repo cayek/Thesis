@@ -12,7 +12,7 @@ Article2_figure5 <- function() {
     geom_point(shape = 1) +
     geom_vline(xintercept = 1.5, colour = "red") +
     labs(y = "Semivariance",
-         x = "Geographic distance (km $\\times 100$)") +
+         x = "Geographic distance ($100$ km)") +
     theme_gray(base_size = 12) +
     scale_size_continuous(range = c(1,3)) +
     guides(size = guide_legend(title = "Bin size")) +
@@ -100,15 +100,18 @@ Article2_manhattanplot <- function() {
   toplot <- toplot %>% dplyr::filter(pvalue != 0.0)
   pl <- ggplot(toplot, aes(x = index, y = -log(pvalue),
                            color = as.factor(Chromosome), fill = Chromosome)) +
-    geom_point() +
+    geom_point(size = 0.5) +
     labs(y = "-log(pvalue)", x = "locus index") +
     scale_y_continuous(limits = c(0,510)) +
     scale_x_continuous(breaks = sapply(1:5, function(i) mean(toplot[toplot$Chromosome == i, ]$index)),
                        labels = 1:5) +
     xlab("Chromosome") +
-    ylab("$-\\log(p{\\rm -value})$") +
+    ylab("log(p-value)") +
     Article2.env$gtheme +
-    theme(legend.position = "none")
+    theme(legend.position = "none") +
+    scale_color_manual(values = c(Article2.env$cbPalette[6], Article2.env$cbPalette[2],
+                                  Article2.env$cbPalette[6], Article2.env$cbPalette[2],
+                                  Article2.env$cbPalette[6]))
 
 
   ## rm data
@@ -270,7 +273,7 @@ Article2_map <- function(col.palette = NULL) {
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank()) +
     xlab("Individual") +
-    ylab("Admixture\n\ coefficient ($Q$)") +
+    ylab("Admixture\n\ coefficient (Q)") +
     scale_y_continuous(breaks = c(0.0,0.5,1.0))
 
   ################################################################################

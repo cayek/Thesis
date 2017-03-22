@@ -20,7 +20,7 @@ Article2_figure4 <- function() {
     rename(Methods = method)
   pl.it.n <- ggplot(toplot ,aes(x = n, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_line() +
-    geom_point() +
+    geom_point(size = Article2.env$point.size) +
     geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.0) +
     theme_bw() +
     xlab("") +
@@ -35,7 +35,7 @@ Article2_figure4 <- function() {
     rename(Methods = method)
   pl.time.n <- ggplot(toplot ,aes(x = n, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_line() +
-    geom_point() +
+    geom_point(size = Article2.env$point.size) +
     geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = .1) +
     theme_bw() +
     scale_y_log10() +
@@ -49,9 +49,9 @@ Article2_figure4 <- function() {
   toplot <- exp$df.L  %>% group_by(method, L) %>%
     mutate(mean = mean(it), N = length(it), sd = sd(it), se = sd / sqrt(N)) %>%
     rename(Methods = method)
-  pl.it.L <- ggplot(toplot ,aes(x = L, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
+  pl.it.L <- ggplot(toplot ,aes(x = L / 1000, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_line() +
-    geom_point() +
+    geom_point(size = Article2.env$point.size) +
     geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = .1) +
     theme_bw() +
     xlab("") +
@@ -65,13 +65,13 @@ Article2_figure4 <- function() {
     mutate(mean = mean(time.per.it.mean), N = length(time.per.it.mean), sd = sd(time.per.it.mean), se = sd / sqrt(N)) %>%
     rename(Methods = method)
 
-  pl.time.L <- ggplot(toplot ,aes(x = L, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
+  pl.time.L <- ggplot(toplot ,aes(x = L / 1000, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_line() +
-    geom_point() +
+    geom_point(size = Article2.env$point.size) +
     geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = .1) +
     theme_bw() +
     scale_y_log10() +
-    xlab("Number of loci ($L$)") +
+    xlab("Number of loci $\\times 1000$ ($L$)") +
     ylab("") +
     Article2.env$gtheme +
     theme(legend.position = c(0.75,0.3)) +

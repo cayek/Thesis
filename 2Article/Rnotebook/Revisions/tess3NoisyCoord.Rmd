@@ -43,7 +43,7 @@ exp <- long_tess3_noisyCoord(ns = c(50, 500),
                              nb.rep = 10,
                              compute.vario = FALSE,
                              cluster.nb = 4,
-                             save = FALSE, bypass = TRUE)
+                             save = TRUE, bypass = TRUE)
 ```
 
 ## plot 
@@ -61,10 +61,16 @@ plot_tess3_noisyCoord(exp)
 exp <- long_tess3_noisyCoord(n = 200,
                              cluster.nb = NULL,
                              nb.rep = 1,
-                             noise.signal = c(0.0, 1.0, 3.0),
+                             noise.signal = c(0.0, 1.0, 1.5, 2.0),
+                             m.neutral = 0.25 * 0.05 * 1e-6,
+                             nsites.neutral = 1.2 * 1e5,
                              compute.vario = TRUE,
                              save = FALSE, bypass = TRUE)
-plot_tess3_noisyCoord(exp)
+```
+
+```{r}
+exp <- retrieveExperiment(59)
+plot_tess3_noisyCoord_vario(exp)
 ```
 
 

@@ -577,48 +577,16 @@
 
        On vera plutard ! 
 **** TODO Figures
-     - [ ] style de ligne par method -> plus visble pour meilleurs methodes
-     - [ ] visible en noir et blanc
-     - [ ] point trop gros
+     - [X] style de ligne par method -> plus visble pour meilleurs methodes
+     - [X] visible en noir et blanc
+     - [X] point trop gros
      - [ ] AT : 2 fig 1 couleur et 1 noir et blanc
-     - [ ] ManhattanPlot : le tasser + alternance de gris + taille des points
+     - [X] ManhattanPlot : le tasser + alternance de gris + taille des points
      - [ ] rmk sur papier
-**** TODO References
-            - faut fair une passe et ajouter ca: 
-
-            Jinliang Wang (2017) The computer program structure for assigning
-            individuals to populations: easy to use but easier to misuse. Mol.
-            Ecol Resources DOI: 10.1111/1755-0998.12650
-
-            1000 Genomes Project Consortium. (2015). A global reference for
-            human genetic variation. Nature, 526 (7571), 68-74.
-
-            Efron B. Large-scale simultaneous hypothesis testing: the choice of
-            a null hypothesis, J. Amer. Statist. Assoc, 2004, vol. 99, 96-104.
-
-            Hardy, Olivier J., and Xavier Vekemans. "Isolation by distance in a
-            continuous population: reconciliation between spatial
-            autocorrelation analysis and population genetics models." Heredity
-            83.2 (1999): 145-154.
-
-            Epperson, Bryan K., and Tianquan Li. "Measurement of genetic
-            structure within populations using Moran's spatial autocorrelation
-            statistics." Proceedings of the National Academy of Sciences 93.19
-            (1996): 10528-10532.
-
-            Mantel, N. (1967). "The detection of disease clustering and a
-            generalized regression approach". Cancer Research. 27 (2): 209–220.
-
-            Bradburd GS, Ralph PL, Coop GM (2016) A Spatial Framework for
-            Understanding Population Structure and Admixture. PLoS Genet 12(1):
-            e100570
-
-            Fast spatial ancestry via flexible allele frequency surfaces. Rañola
-            JM1, Novembre J1, Lange K. Bioinformatics 2014.
-            https://www.ncbi.nlm.nih.gov/pubmed/25012181.
-            
-            Anand Bhaskar, Adel Javanmard, Thomas A. Courtade, David Tse
-            https://arxiv.org/abs/1610.07306.
+**** DONE References
+     CLOSED: [2017-03-22 mer. 17:28]
+     Faudra que je reunisse toutes les citations dans un seul bib, plutard !!
+     
 **** TODO Relire
      - Tout est dans le titre.
      

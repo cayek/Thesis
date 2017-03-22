@@ -7,36 +7,78 @@
 %%
 %%
 
-In this section we present two new algorithms for estimating individual admixture coefficients and ancestral genotype frequencies assuming $K$ ancestral populations. In addition to genotypes, the new algorithms require individual geographic coordinates of sampled individuals.
+In this section we present two new algorithms for estimating individual
+admixture coefficients and ancestral genotype frequencies assuming $K$ ancestral
+populations. In addition to genotypes, the new algorithms require individual
+geographic coordinates of sampled individuals.
 
-\paragraph{$Q$ and $G$-matrices} Consider a genotypic matrix, {\bf Y}, recording data for $n$ individuals at $L$ polymorphic loci for a $p$-ploid species (common values for $p$ are $p = 1,2$). For autosomal SNPs in a diploid organism, the genotype at locus $\ell$  is an integer number, 0, 1 or 2, corresponding to the number of reference alleles at this locus. In our algorithms, disjunctive forms are used  to encode each genotypic value as the indicator of a heterozygote or a homozygote locus (Frichot et al. 2014). For a diploid organism each genotypic value $,0,1,2$ is encoded as $100$, $010$ and $001$. For $p$-ploid organisms, there are $(p+1)$ possible genotypic values at each locus, and each value corresponds to a unique disjunctive form. While our focus is on SNPs, the algorithms presented in this section extend to multi-allelic loci without loss of generality. 
-Moreover, the method can be easily extended to genotype likelihoods by using the likelihood to encode each genotypic value~\citep{Korneliussen2014}.
+\paragraph{$Q$ and $G$-matrices} Consider a genotypic matrix, {\bf Y}, recording
+data for $n$ individuals at $L$ polymorphic loci for a $p$-ploid species (common
+values for $p$ are $p = 1,2$). For autosomal SNPs in a diploid organism, the
+genotype at locus $\ell$ is an integer number, 0, 1 or 2, corresponding to the
+number of reference alleles at this locus. In our algorithms, disjunctive forms
+are used to encode each genotypic value as the indicator of a heterozygote or a
+homozygote locus (Frichot et al. 2014). For a diploid organism each genotypic
+value $,0,1,2$ is encoded as $100$, $010$ and $001$. For $p$-ploid organisms,
+there are $(p+1)$ possible genotypic values at each locus, and each value
+corresponds to a unique disjunctive form. While our focus is on SNPs, the
+algorithms presented in this section extend to multi-allelic loci without loss
+of generality. Moreover, the method can be easily extended to genotype
+likelihoods by using the likelihood to encode each genotypic
+value~\citep{Korneliussen2014}.
 
-Our algorithms provide statistical estimates for the matrix ${\bf Q} \in \mathbb{R}^{K \times n}$ which contains the admixture coefficients, ${\bf Q}_{i,k}$, for each sampled individual, $i$, and each ancestral population, $k$. The algorithms also provide estimates for the matrix ${\bf G} \in \mathbb{R}^{(p+1)L \times K}$, for which the entries, ${\bf G}_{(p+1)\ell + j, k}$, correspond to the frequency of genotype $j$ at locus $\ell$ in population $k$. Obviously, the $Q$ and $G$-matrices must satisfy the following set of probabilistic constraints 
+Our algorithms provide statistical estimates for the matrix ${\bf Q} \in
+\mathbb{R}^{K \times n}$ which contains the admixture coefficients, ${\bf
+  Q}_{i,k}$, for each sampled individual, $i$, and each ancestral population,
+$k$. The algorithms also provide estimates for the matrix ${\bf G} \in
+\mathbb{R}^{(p+1)L \times K}$, for which the entries, ${\bf G}_{(p+1)\ell + j,
+  k}$, correspond to the frequency of genotype $j$ at locus $\ell$ in population
+$k$. Obviously, the $Q$ and $G$-matrices must satisfy the following set of
+probabilistic constraints
 
 $$
-\quad {\bf Q},{\bf G} \geq 0 \, , \quad  \sum_{k=1}^K {\bf Q}_{i,k} = 1 \, , \quad \sum_{j=0}^p {\bf G}_{(p+1)\ell + j, k} = 1 \, , \quad j = 0,1,\dots, p,
+\quad {\bf Q},{\bf G} \geq 0 \, , \quad \sum_{k=1}^K {\bf Q}_{i,k} = 1 \, ,
+\quad \sum_{j=0}^p {\bf G}_{(p+1)\ell + j, k} = 1 \, , \quad j = 0,1,\dots, p,
 $$
-for all $i, k$ and $\ell$. Using disjunctive forms and the law of total probability, estimates of {\bf Q} and {\bf G} can be obtained by factorizing the genotypic matrix as follows ${\bf Y}$=${\bf Q}\,{\bf G}^T$~\citep{Frichot2014}. Thus the inference problem can be solved by using constrained nonnegative matrix factorization methods~\citep{Lee1999, Cichocki2009}. In the sequel, we shall use the notations  $\Delta_Q$ and $\Delta_G$ to represent the sets of probabilistic constraints put on the {\bf Q} and {\bf G} matrices respectively. 
+for all $i, k$ and $\ell$. Using disjunctive forms and the law of total
+probability, estimates of {\bf Q} and {\bf G} can be obtained by factorizing the
+genotypic matrix as follows ${\bf Y}$=${\bf Q}\,{\bf G}^T$~\citep{Frichot2014}.
+Thus the inference problem can be solved by using constrained nonnegative matrix
+factorization methods~\citep{Lee1999, Cichocki2009}. In the sequel, we shall use
+the notations $\Delta_Q$ and $\Delta_G$ to represent the sets of probabilistic
+constraints put on the {\bf Q} and {\bf G} matrices respectively.
 
 
- \paragraph{Geographic weighting} Geography is introduced in the matrix factorization problem by using weights for each pair of sampled individuals. The weights impose regularity constraints on ancestry estimates over geographic space. The definition of geographic weights is based on the spatial coordinates of the sampling sites, $(x_i)$. Samples close to each other are given more weight than samples that are far apart. The computation of the weights starts with building a complete graph from the sampling sites. Then the weight matrix is defined as follows
+\paragraph{Geographic weighting} Geography is introduced in the matrix
+factorization problem by using weights for each pair of sampled individuals. The
+weights impose regularity constraints on ancestry estimates over geographic
+space. The definition of geographic weights is based on the spatial coordinates
+of the sampling sites, $(x_i)$. Samples close to each other are given more
+weight than samples that are far apart. The computation of the weights starts
+with building a complete graph from the sampling sites. Then the weight matrix
+is defined as follows
 
 $$
 w_{ij} = \exp( - {\rm dist}( x_i, x_j )^2/ \sigma^2),
 $$
-\noindent where dist$( x_i, x_j )$ denotes the geodesic distance between sites $x_i$ and  $x_j$, and $\sigma$ is a range parameter. 
+\noindent where dist$( x_i, x_j )$ denotes the geodesic distance between sites
+$x_i$ and $x_j$, and $\sigma$ is a range parameter.
 
 
-Next, we introduce the {\it Laplacian matrix} associated with the geographic weight matrix, {\bf W}. The Laplacian matrix is defined as ${\bf \Lambda}$ = {\bf D} $-$ {\bf W}  where  {\bf D} is a diagonal matrix with entries
-${\bf D}_{i,i} = \sum_{j = 1}^n  {\bf W}_{i,j}$,  for  $i = 1, \dots, n$~\citep{Belkin2003}. Elementary matrix algebra shows that~\citep{DengCai2011}
+Next, we introduce the {\it Laplacian matrix} associated with the geographic
+weight matrix, {\bf W}. The Laplacian matrix is defined as ${\bf \Lambda}$ =
+{\bf D} $-$ {\bf W} where {\bf D} is a diagonal matrix with entries ${\bf
+  D}_{i,i} = \sum_{j = 1}^n {\bf W}_{i,j}$, for $i = 1, \dots,
+n$~\citep{Belkin2003}. Elementary matrix algebra shows that~\citep{DengCai2011}
 
 $$
  {\rm Tr} ({\bf Q}^T {\bf \Lambda} {\bf Q})  = \frac12 \sum_{i,j = 1}^n  w_{ij}  \|   {\bf Q}_{i,.}  - {\bf Q}_{j,.} \|^2 \, .
 $$
 In our approach, assuming that geographically close individuals are more likely to share ancestry than individuals at distant sites is thus equivalent to minimizing the quadratic form ${\cal C}({\bf Q}) ={\rm Tr} ({\bf Q}^T {\bf \Lambda} {\bf Q})$ while estimating the matrix ${\bf Q}$. 
 
-\paragraph{Least-squares optimization problems} Estimating the matrices ${\bf Q}$ and ${\bf G }$ from the observed genotypic matrix ${\bf Y}$ is performed through solving an optimization problem defined as follows~\citep{Caye2016}
+\paragraph{Least-squares optimization problems} Estimating the matrices ${\bf
+  Q}$ and ${\bf G }$ from the observed genotypic matrix ${\bf Y}$ is performed
+through solving an optimization problem defined as follows~\citep{Caye2016}
 
 \begin{equation}
 \begin{aligned}
@@ -87,9 +129,14 @@ q^\star = \underset{q \in \Delta_Q}{\arg \min} ( -2 v^T_G \, q + q^T {\bf D}_G q
 \end{aligned}
 \label{eq:AQPq}
 \end{equation}
-
-\noindent where ${\bf D}_G = {\bf I}_{n} \otimes {\bf G}^T {\bf G } + \alpha {\bf \Lambda}  \otimes {\bf I}_K$ and $v_G = {\rm vec}({\bf G}^T{\bf  Y}^T)$. Unlike subproblem~\eqref{eq:AQPg}, subproblem~\eqref{eq:AQPq} can not be decomposed into smaller problems. Thus, the computation of the second step of the AQP algorithm implies to solve a quadratic programming problem with $nK$ variables which can be problematic for large samples ($n$ is the sample size). 
-The AQP algorithm is described in details in Appendix~\ref{algo:aqp}. For AQP, we have the following convergence result.
+\noindent where ${\bf D}_G = {\bf I}_{n} \otimes {\bf G}^T {\bf G } + \alpha
+{\bf \Lambda} \otimes {\bf I}_K$ and $v_G = {\rm vec}({\bf G}^T{\bf Y}^T)$.
+Unlike subproblem~\eqref{eq:AQPg}, subproblem~\eqref{eq:AQPq} can not be
+decomposed into smaller problems. Thus, the computation of the second step of
+the AQP algorithm implies to solve a quadratic programming problem with $nK$
+variables which can be problematic for large samples ($n$ is the sample size).
+The AQP algorithm is described in details in Appendix~\ref{algo:aqp}. For AQP,
+we have the following convergence result.
 \begin{thm}
 \label{th}
 	The AQP algorithm converges to a critical point of problem~\eqref{eq:LS}.
@@ -154,10 +201,10 @@ notoriously difficult. For ancestry estimation, a number of common practices
 have evolved to help reducing computational burden. Those practices rely on
 heuristics or empirical rules for determining the prior parameters. For example,
 the program structure implements weakly informative prior distributions for
-ancestry proportions (Wang 2017), the program admixture has a set of
+ancestry proportions~\citep{wang2017}, the program admixture has a set of
 regularization parameters that encourages shrinkage and “aggressive” parsimony
-on ancestry estimates (Alexander and Lange 2011), and so does the Bayesian
-version TESS 2.3 (Durand et al. 2009). In general, more intense efforts are
+on ancestry estimates~\citep{Alexander2011}, and so does the Bayesian
+version TESS 2.3~\citep{Durand2009}. In general, more intense efforts are
 devoted to choosing the number of factors, and cross-validation methods or and
 information theoretic measures are used to this purpose. In our program
 implementation, the hyper-parameters $\alpha$ and $\sigma$ are set as options
@@ -166,17 +213,17 @@ with cross-validation or known heuristics.
 
 \paragraph{Range parameter.} Testing correlations between genetic and geographic
 has a long tradition in population genetics. Popular approaches are based on
-Mantel tests (Mantel 1968) and spatial autocorrelation measures (Epperson and Li
-1996, Hardy and Vekemans 1999). Prior to the application of our spatial ancestry
+Mantel tests~\citep{mantel1967} and spatial autocorrelation
+measures~\citep{hardy1999, epperson1996}. Prior to the application of our spatial ancestry
 estimation program, we investigated biologically relevant values for the range
 parameter by using spatial variograms~\citep{Cressie1993}. The variogram was
 extended to genotypic data as follows
+
 
 \begin{equation}
 \gamma(h) = \frac{1}{2 |N(h)|} \sum_{i,j \in N(h)} \frac{1}{L} \sum_{l = 1}^{(p+1)L} |Y_{i,l} - Y_{j,l}|,
 \label{eq:gamma}
 \end{equation}
-
 where $N(h)$ is defined as the set of individuals separated by geographic
 distance $h$. Visualizing the variogram provides useful information on the level
 of spatial autocorrelation in the data, and yields empirical estimates of the
@@ -193,14 +240,13 @@ matrix (The Laplacian matrix has nonnegative eigenvalues).
 
 \paragraph{Number of factors.} The number of ancestral populations, $K$, can be
 evaluated by using a cross-validation technique based on imputation of masked
-genotypes (Wold 1978, Eastment and Krzanowski 1982, Alexander and Lange, 2011;
-Frichot et al., 2014). The cross-validation
-procedure partitions the genotypic matrix entries into a learning set and a test
-set in which 5\% of all genotypes are tagged as masked entries. The genotype
-probabilities for the masked entries are predicted from the factor estimates
-obtained from unmasked entries. Then, a cross-entropy between the predicted and
-truly observed genotype frequencies is computed, and smaller values of that
-criterion indicate better choices. 
+genotypes~\citep{wold1978,eastment1982, Alexander2011, Frichot2014}. The
+cross-validation procedure partitions the genotypic matrix entries into a
+learning set and a test set in which 5\% of all genotypes are tagged as masked
+entries. The genotype probabilities for the masked entries are predicted from
+the factor estimates obtained from unmasked entries. Then, a cross-entropy
+between the predicted and truly observed genotype frequencies is computed, and
+smaller values of that criterion indicate better choices.
 
 \paragraph{Comparison with {\tt tess3}} The algorithm implemented in a previous
 version of {\tt tess3} also provides another approximation of the solution
@@ -229,7 +275,6 @@ estimates of a population differentiation statistic similar to $F_{\rm
 $$
 F^{Q}_{\rm ST} = 1 - \sum_{k=1}^K  q_k \frac{f_k (1-f_k)}{f(1-f)} \, ,
 $$
-
 \noindent where $q_k$ is the average of ancestry coefficients over sampled
 individuals, $q_k = \sum_{i =1}^n Q_{i,k}/n$, for the cluster $k$, $f_k$ is the
 ancestral allele frequency in population $k$ at the locus of interest,
@@ -237,7 +282,6 @@ ancestral allele frequency in population $k$ at the locus of interest,
 $$
 f_k =  \sum_{j = 1}^p  j G_{(p+1)(\ell) + j, k}/p ,
 $$
-
 and $f = \sum_{k = 1}^K q_k f_k$~\citep{Martins2016}.
 For a particular locus, the formula for $F^Q_{\rm ST}$ corresponds to the
 proportion of the genetic variation (or variance) in ancestral allele frequency
@@ -246,7 +290,6 @@ that can be explained by latent population structure
 $$
 F^Q _{\rm ST}  =  \frac{\sigma^2_T - \sigma^2_S}{\sigma^2_T },
 $$
-
 where $\sigma^2_T$ is the total variance and $\sigma^2_S$ is the error
 variance~\citep{weir1996}. Following ANOVA theory, the $F^Q_{\rm ST}$ statistics
 were used to perform statistical tests of neutrality at each locus, by comparing
@@ -256,7 +299,7 @@ test was based on the squared $z$-score statistic, $z^2 = (n-K) F^{Q}_{\rm
 degrees of freedom was assumed under the null-hypothesis. To avoid an increased
 number of false positive tests, we adopted an empirical null-hypothesis testing
 approach that recalibrates the null-hypothesis for the background levels of
-population differentiation expected at selectively neutral SNPs (Efron 2004).
+population differentiation expected at selectively neutral SNPs~\citep{efron2004}.
 The calibration of the null-hypothesis was achieved by using genomic control to
 adjust the test statistics~\citep{Devlin1999, Francois2016}. After recalibration
 of the null-hypothesis, the control of the false discovery rate was achieved by
@@ -321,10 +364,10 @@ case of African-American populations. This is an interesting case for which the
 incorporation of geographic data could potentially bias estimation of ancestry
 coefficients. Genotypes with minor allele frequency greater than $5 \%$ were
 obtained from a public release of the
-% TODO ref 1000 genome + number of snips + number of infiv by pop
+% TODO number of snips + number of infiv by pop
 1000 Genome project phase 3 (2015) for individuals from African Americans (ASW,
 X individuals), Africans (YRI and LWK, X individuals), and Europeans (GBR and
-TSI, X individuals). A total of 500k SNPs were analyzed with geographic data
+TSI, X individuals)~\citep{1000genome}. A total of 500k SNPs were analyzed with geographic data
 corresponding to the country of origin of individual samples. We compared the
 estimates from the APLS algorithm applied with its default parameter settings to
 the results of the sNMF program that do not make use of geographic information.

@@ -47,7 +47,6 @@ Plots_export_pdf <- function(pl, basename.output, env, ...) {
     params$height <- env$page$height * env$fig.prop$height
   }
 
-
   pdf(paste0(env$fig.dir, "/", basename.output, ".pdf"), width = params$width,
       height = params$height)
   print(pl)

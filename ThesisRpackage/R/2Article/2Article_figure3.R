@@ -15,7 +15,7 @@ Article2_figure3 <- function() {
   pl <- ggplot(toplot ,aes(x = m.ms, y = auc.mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_errorbar(aes(ymin = auc.mean - se, ymax = auc.mean + se), width = 0.0) +
     geom_line() +
-    geom_point() +
+    geom_point(size = Article2.env$point.size) +
     theme_bw() +
     xlab("Intensity of selection ($m/m_s$)") +
     ylab("AUC") +
