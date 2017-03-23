@@ -75,6 +75,7 @@ long_init <- function(cluster.nb,
 }
 
 #' make a description string
+#' @export
 make_description <- function(desc, ...) {
   params <- list(...)
   ns <- names(params)

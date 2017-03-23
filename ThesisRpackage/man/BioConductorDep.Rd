@@ -4,7 +4,7 @@
 \alias{BioConductorDep}
 \title{Install bioconductor dependencies}
 \usage{
-BioConductorDep(pkgs = c("sva", "impute"))
+BioConductorDep(pkgs = c("sva", "impute", "qvalue"))
 }
 \description{
 Install bioconductor dependencies
