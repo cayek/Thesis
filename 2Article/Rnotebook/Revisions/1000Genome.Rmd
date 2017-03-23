@@ -1,0 +1,116 @@
+---
+title: "1000 genome study"
+author: "kevin caye"
+date: "23 mars 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+
+```{r}
+library(tess3r)
+library(ThesisRpackage)
+```
+
+# Only chrm 1
+
+## Plot on map
+```{r}
+dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.chr1.maf.05.rds")
+library(maps)
+map()
+points(dat$coord, col = as.factor(dat$indiv$pop))
+image(dat$W)
+```
+
+## variogram
+### on krak
+```{r}
+compute_vario_exp <- function() {
+  require(ThesisRpackage)
+  require(tess3r)
+
+  dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.chr1.maf.05.rds")
+  
+  exp <- Experiment(name = "1000genome_chrm1_variogram", 
+                    description = "1000genome_chrm1_variogram")
+  
+  
+  ## subsample G
+  prop <- 0.25
+  L <- ncol(dat$G)
+  ploidy <- max(dat$G)
+  loci.index <- sample.int(L, prop * L)
+  X <- dat$G[,loci.index]
+  XBin <- matrix(as.double(X), nrow(X), ncol(X) * (ploidy + 1))
+  X2XBin(X, ploidy, XBin)
+  rm(X)
+  Dx <- dat$dist.matrix
+  rm(dat)
+  gc()
+  
+  Dz <- stats::dist(XBin, method = "manhattan") / ncol(XBin)
+  exp$variogram <- CalculateEmpiricalSemivariogram(Dz = Dz, Dx = Dx)
+  
+  dumpExperiment(exp)
+}
+exp <- compute_vario_exp()
+```
+
+### plot variogram
+```{r}
+exp <- retrieveExperiment(61)
+ggplot(exp$variogram, aes(x = h, y = semi.variance, size = size)) +
+    geom_point(shape = 1)
+```
+
+## Run of tess3
+### On krak
+```{r}
+run_tess3_exp <- function(dat.file = "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.chr1.maf.05.rds") {
+  require(tess3r)
+  require(ThesisRpackage)
+  dat <- readRDS(dat.file)
+  K <- 2
+  exp <- Experiment(name = "1000genome_chrm1_tess3", 
+                    description = make_description("run of tess3r", dat.file = dat.file,
+                                                   K = K))
+  
+  ## tess3
+  exp$tess3.res <- tess3(X = dat$G, K = K,  coord = dat$coord, W = dat$W, ploidy = 2, verbose = TRUE)
+  
+  ## snmf
+  exp$snmf.method <- sNMFMethod(K = K)
+  exp$snmf.method <- fit(m = exp$snmf.method, dat)
+  
+  dumpExperiment(exp)
+}
+exp <- run_tess3_exp()
+```
+
+
+### barplots
+
+```{r}
+exp <- retrieveExperiment(63)
+exp$description
+```
+
+```{r}
+a = barplot(exp$tess3.res$Q)
+a = barplot(exp$snmf.method$Q)
+```
+
