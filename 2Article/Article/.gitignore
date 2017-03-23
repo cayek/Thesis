@@ -4,3 +4,6 @@
 draft.pdf
 *.bbl
 *.blg
+*_latexmk
+*.dvi
+*.fls
