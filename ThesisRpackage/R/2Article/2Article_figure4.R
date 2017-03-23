@@ -21,7 +21,9 @@ Article2_figure4 <- function() {
   pl.it.n <- ggplot(toplot ,aes(x = n, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_line() +
     geom_point(size = Article2.env$point.size) +
-    geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.0) +
+    geom_errorbar(aes(ymin = mean - se,
+                      ymax = mean + se,
+                      width = (max(n) - min(n)) * Article2.env$errorbar.width.ratio)) +
     theme_bw() +
     xlab("") +
     ylab("Number\nof iterations") +
@@ -36,7 +38,8 @@ Article2_figure4 <- function() {
   pl.time.n <- ggplot(toplot ,aes(x = n, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_line() +
     geom_point(size = Article2.env$point.size) +
-    geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = .1) +
+    geom_errorbar(aes(ymin = mean - se, ymax = mean + se,
+                      width = (max(n) - min(n)) * Article2.env$errorbar.width.ratio)) +
     theme_bw() +
     scale_y_log10() +
     xlab("Number of individuals ($n$)") +
@@ -52,7 +55,9 @@ Article2_figure4 <- function() {
   pl.it.L <- ggplot(toplot ,aes(x = L / 1000, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_line() +
     geom_point(size = Article2.env$point.size) +
-    geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = .1) +
+    geom_errorbar(aes(ymin = mean - se,
+                      ymax = mean + se,
+                      width = (max(L) - min(L)) * Article2.env$errorbar.width.ratio / 1000)) +
     theme_bw() +
     xlab("") +
     ylab("") +
@@ -68,15 +73,17 @@ Article2_figure4 <- function() {
   pl.time.L <- ggplot(toplot ,aes(x = L / 1000, y = mean, col = Methods, linetype = Methods, shape = Methods)) +
     geom_line() +
     geom_point(size = Article2.env$point.size) +
-    geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = .1) +
+    geom_errorbar(aes(ymin = mean - se, ymax = mean + se,
+                      width = (max(L) - min(L)) * Article2.env$errorbar.width.ratio / 1000)) +
     theme_bw() +
     scale_y_log10() +
     xlab("Number of loci $\\times 1000$ ($L$)") +
     ylab("") +
     Article2.env$gtheme +
-    theme(legend.position = c(0.75,0.3)) +
+    theme(legend.position = c(0.61,0.22)) +
     Article2.env$scale.linetype +
-    Article2.env$scale.color
+    Article2.env$scale.color +
+    guides(linetype = guide_legend(nrow = 2))
 
   pl <- cowplot::plot_grid(pl.it.n, pl.it.L, pl.time.n, pl.time.L, ncol = 2, labels = c("A", "B", "C", "D"))
 

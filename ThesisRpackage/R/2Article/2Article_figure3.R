@@ -13,7 +13,9 @@ Article2_figure3 <- function() {
   levels(toplot$Methods)[3] <- "before-admixure"
 
   pl <- ggplot(toplot ,aes(x = m.ms, y = auc.mean, col = Methods, linetype = Methods, shape = Methods)) +
-    geom_errorbar(aes(ymin = auc.mean - se, ymax = auc.mean + se), width = 0.0) +
+    geom_errorbar(aes(ymin = auc.mean - se,
+                      ymax = auc.mean + se,
+                      width = (max(m.ms) - min(m.ms)) * Article2.env$errorbar.width.ratio)) +
     geom_line() +
     geom_point(size = Article2.env$point.size) +
     theme_bw() +

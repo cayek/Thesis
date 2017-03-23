@@ -23,13 +23,16 @@ Article2_figure2 <- function() {
     dplyr::mutate(Fst = mean(Fst), rmse.mean = mean(rmseQ), N = length(rmseQ), sd = sd(rmseQ), se = sd / sqrt(N)) %>%
     rename(Methods = method )
   levels(toplot$Methods)[1] <- "APLS"
+
+
   pl <- ggplot(toplot ,
                aes(x = Fst.theorical,
                    y = rmse.mean,
                    col = Methods,
                    shape = Methods,
                    linetype = Methods)) +
-    geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se), width = 0.0) +
+    geom_errorbar(aes(ymin = rmse.mean - se, ymax = rmse.mean + se,
+                      width = (max(Fst.theorical) - min(Fst.theorical)) * Article2.env$errorbar.width.ratio)) +
     geom_line() +
     geom_point(size = Article2.env$point.size) +
     facet_grid(L ~ n, labeller = labbeler) +

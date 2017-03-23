@@ -34,13 +34,14 @@ Article2.env$gtheme <- theme_bw(base_size = 11) +
 
 Article2.env$point.size = 2
 
-
+Article2.env$errorbar.width.ratio = 0.02
 
 ################################################################################
 # page size
 Article2.env$page <- list(width = 8.26772, height = 11.69291)
+Article2.env$text <- list(width = 5, height = 7,63889)
 Article2.env$fig.prop <- list(width = 0.65, height = 0.35)
-
+Article2.env$fig <- list(width = 1.0 * Article2.env$text$width, height = 0.6 * Article2.env$text$height)
 ################################################################################
 # output
 Article2.env$fig.dir <- "~/Projects/Thesis/2Article/Article/Figures"

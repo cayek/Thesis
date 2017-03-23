@@ -576,13 +576,14 @@
        cross validation.
 
        On vera plutard ! 
-**** TODO Figures
+**** DONE Figures
+     CLOSED: [2017-03-23 jeu. 10:03]
      - [X] style de ligne par method -> plus visble pour meilleurs methodes
      - [X] visible en noir et blanc
      - [X] point trop gros
-     - [ ] AT : 2 fig 1 couleur et 1 noir et blanc
+     - [X] AT : 2 fig 1 couleur et 1 noir et blanc
      - [X] ManhattanPlot : le tasser + alternance de gris + taille des points
-     - [ ] rmk sur papier
+     - [X] rmk sur papier
 **** DONE References
      CLOSED: [2017-03-22 mer. 17:28]
      Faudra que je reunisse toutes les citations dans un seul bib, plutard !!
@@ -593,6 +594,7 @@
      - Bien verifier les labels !!
 
      - Voir dans le cahier aussi !
+
 ** Rnotebook
 *** TODO Cross validation                                         :Rnotebook:
     On va voir si la cross validation marche

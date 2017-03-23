@@ -5,11 +5,11 @@ Plots_export_tikz_pdf <- function(pl, basename.output, env,
   params <- list(...)
 
   if (is.null(params$width)) {
-    params$width <- env$page$width * env$fig.prop$width
+    params$width <- env$fig$width
   }
 
   if (is.null(params$height)) {
-    params$height <- env$page$height * env$fig.prop$height
+    params$height <- env$fig$height
   }
 
   TestRequiredPkg(c("tikzDevice", "tools"))
@@ -40,11 +40,11 @@ Plots_export_pdf <- function(pl, basename.output, env, ...) {
   params <- list(...)
 
   if (is.null(params$width)) {
-    params$width <- env$page$width * env$fig.prop$width
+    params$width <- env$fig$width
   }
 
   if (is.null(params$height)) {
-    params$height <- env$page$height * env$fig.prop$height
+    params$height <- env$fig$height
   }
 
   pdf(paste0(env$fig.dir, "/", basename.output, ".pdf"), width = params$width,
@@ -62,15 +62,19 @@ Plots_export_png <- function(pl, basename.output, env, ...) {
   params <- list(...)
 
   if (is.null(params$width)) {
-    params$width <- env$page$width * env$fig.prop$width
+    params$width <- env$fig$width
   }
 
   if (is.null(params$height)) {
-    params$height <- env$page$height * env$fig.prop$height
+    params$height <- env$fig$height
+  }
+
+  if (is.null(params$res)) {
+    params$res <- 600
   }
 
   png(paste0(env$fig.dir, "/", basename.output, ".png"), width = params$width,
-      height = params$height, res = 600, units = "in")
+      height = params$height, res = params$res, units = "in")
   print(pl)
 
   dev.off()

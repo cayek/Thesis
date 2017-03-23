@@ -12,12 +12,12 @@ Article2_figure5 <- function() {
     geom_point(shape = 1) +
     geom_vline(xintercept = 1.5, colour = "red") +
     labs(y = "Semivariance",
-         x = "Geographic distance ($100$ km)") +
+         x = "Geographic distance($100$ km)") +
     theme_gray(base_size = 12) +
     scale_size_continuous(range = c(1,3)) +
-    guides(size = guide_legend(title = "Bin size")) +
+    guides(size = guide_legend(title = "Bin size", nrow = 3)) +
     Article2.env$gtheme +
-    theme(legend.position = c(0.8,0.3)) +
+    theme(legend.position = c(0.6,0.25)) +
     scale_shape_discrete(solid = FALSE)
 
 
@@ -100,7 +100,7 @@ Article2_manhattanplot <- function() {
   toplot <- toplot %>% dplyr::filter(pvalue != 0.0)
   pl <- ggplot(toplot, aes(x = index, y = -log(pvalue),
                            color = as.factor(Chromosome), fill = Chromosome)) +
-    geom_point(size = 0.5) +
+    geom_point(size = 0.25) +
     labs(y = "-log(pvalue)", x = "locus index") +
     scale_y_continuous(limits = c(0,510)) +
     scale_x_continuous(breaks = sapply(1:5, function(i) mean(toplot[toplot$Chromosome == i, ]$index)),
@@ -121,7 +121,7 @@ Article2_manhattanplot <- function() {
 }
 
 #' @export
-Article2_map <- function(col.palette = NULL) {
+Article2_map <- function(cols = NULL) {
 
   TestRequiredPkg(c("sp", "raster",
                     "rworldmap", "rgeos", "rasterVis",
@@ -151,24 +151,24 @@ Article2_map <- function(col.palette = NULL) {
 
   ################################################################################
   # Color palette
-  if (is.null(col.palette)) {
+  if (is.null(cols)) {
     gg_color_hue <- function(n) {
       hues = seq(15, 375, length = n + 1)
       hcl(h = hues, l = 65, c = 100)[1:n]
     }
     n = 6
     cols = gg_color_hue(n)
-
-    col.palette = list(
-      colorRampPalette(c("white",cols[1]))(9)[5:9],
-      colorRampPalette(c("white",cols[2]))(9)[5:9],
-      colorRampPalette(c("white",cols[3]))(9)[5:9],
-      colorRampPalette(c("white",cols[4]))(9)[5:9],
-      colorRampPalette(c("white",cols[5]))(9)[5:9],
-      colorRampPalette(c("white",cols[6]))(9)[5:9]
-    )
-    # plot(rep(1,5),col = col.palette[[2]],pch=19,cex=3)
   }
+
+  col.palette = list(
+    colorRampPalette(c("white",cols[1]))(9)[5:9],
+    colorRampPalette(c("white",cols[2]))(9)[5:9],
+    colorRampPalette(c("white",cols[3]))(9)[5:9],
+    colorRampPalette(c("white",cols[4]))(9)[5:9],
+    colorRampPalette(c("white",cols[5]))(9)[5:9],
+    colorRampPalette(c("white",cols[6]))(9)[5:9]
+  )
+  # plot(rep(1,5),col = col.palette[[2]],pch=19,cex=3)
 
   ################################################################################
   # Interpolation
@@ -274,7 +274,8 @@ Article2_map <- function(col.palette = NULL) {
           panel.grid.minor = element_blank()) +
     xlab("Individual") +
     ylab("Admixture\n\ coefficient (Q)") +
-    scale_y_continuous(breaks = c(0.0,0.5,1.0))
+    scale_y_continuous(breaks = c(0.0,0.5,1.0)) +
+    scale_color_manual(values = cols)
 
   ################################################################################
   # Plot

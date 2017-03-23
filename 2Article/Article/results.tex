@@ -12,7 +12,7 @@ generate the data. For the $G$-matrix, the ground truth matrix (${\bf G}_0$) was
 computed from the empirical genotype frequencies in the two population samples
 before an admixture event. The root mean squared errors (RMSE) for the ${\bf Q}$
 and ${\bf G}$ estimates decreased as the sample size and the number of loci
-increased (Figure 1). For all algorithms, the statistical errors were generally
+increased (Figure~\ref{fig:fig1}). For all algorithms, the statistical errors were generally
 small when the number of loci was greater than $10$k SNPs. Those results
 provided evidence that the three algorithms produced equivalent estimates of the
 matrices ${\bf Q}_0$ and ${\bf G}_0$. The results also provided a check
@@ -26,9 +26,9 @@ neutral coalescent simulations of spatial admixture, we compared the statistical
 estimates obtained from a spatial algorithm (APLS) and a non-spatial algorithm
 (sNMF, Frichot et al. 2014). For various levels of ancestral population
 differentiation, estimates obtained from the spatial algorithm were more
-accurate than for those obtained using non-spatial approaches (Figure 2). For
+accurate than for those obtained using non-spatial approaches (Figure~\ref{fig:fig2}). For
 the larger samples, much finer population structure was detected with the
-spatial method than with the non-spatial algorithm (Figure 2).
+spatial method than with the non-spatial algorithm (Figure~\ref{fig:fig2}).
 
 In simulations of outlier loci, we used the area under the precision-recall
 curve (AUC) for quantifying the performances of tests based on the estimates of
@@ -37,7 +37,7 @@ $F_{\rm ST}$-based neutrality tests using truly ancestral genotypes. As they
 represented the maximum reachable values, AUCs based on truly ancestral
 genotypes were always higher than those obtained for tests based on
 reconstructed matrices. For all values of the relative selection intensity, AUCs
-were higher for spatial methods than for non-spatial methods (Figure 3, the
+were higher for spatial methods than for non-spatial methods (Figure~\ref{fig:fig3}, the
 relative selection intensity is the ratio of migration rates at neutral and
 adaptive loci). For high selection intensities, the performances of tests based
 on estimates of ancestry matrices were close to the optimal values reached by
@@ -57,11 +57,12 @@ observable with a noise-to-signal ratio of 1.
 %% TODO paragraph quand fig OK
 A noise-to-signal ratio of 1 increased statistical errors in the $Q$-matrix
 estimates, but the RMSEs remained generally lower than for methods without
-spatial coordinates ($\alpha = 0$ and sNMF, Figure). For a noise-to-signal ratio
-of 3, errors were higher than for methods without spatial coordinates (Figure).
-To a large extent, estimates from the APLS algorithm were robust to uncertainty
-in spatial measurements. Standard graphical tests such as a variogram analysis
-can help deciding whether our spatially explicit algorithm is useful or not.
+spatial coordinates ($\alpha = 0$ and sNMF, Figure~\ref{fig:fig2_5}). For a noise-to-signal ratio
+of 3, errors were higher than for methods without spatial coordinates
+(Figure~\ref{fig:fig2_5}). To a large extent, estimates from the APLS algorithm
+were robust to uncertainty in spatial measurements. Standard graphical tests
+such as a variogram analysis can help deciding whether our spatially explicit
+algorithm is useful or not.
 
 
 \paragraph{Runtime and convergence analyses} We subsampled a large SNP data set
@@ -70,7 +71,7 @@ runtimes of the {\tt tess3}, AQP, and APLS algorithms. In those experiments, we
 used $K = 6$ ancestral populations, and replicated 5 runs for each simulation.
 For $n = 100-600$ individuals ($L = 50$k SNPs), the APLS algorithm required more
 iterations (25 iterations) than the AQP algorithm (20 iterations) to converge to
-its solution (Figure 4). This was less than for {\tt tess3} (30 iterations). For
+its solution (Figure~\ref{fig:fig4}). This was less than for {\tt tess3} (30 iterations). For
 $L = 10-200$k SNPs ($n = 150$ individuals), similar results were observed. For
 $50$k SNPs, the runtimes were significantly lower for the APLS algorithm than
 for the {\tt tess3} and AQP algorithms. For $L = 50$k SNPs and $n = 600$
@@ -94,9 +95,9 @@ in Europe, corresponding to geographic regions in Western Europe, Eastern and
 Central Europe and Northern Scandinavia. For $K$ greater than four, the values
 of the cross validation criterion decreased in a slower way, indicating that
 subtle substructure resulting from complex historical isolation-by-distance
-processes could also be detected (Figure 5). The spatial analysis provided an
-approximate range of $\sigma = 150$km for the spatial variogram (Figure 5).
-Figure 6 displays the $Q$-matrix estimate interpolated on a geographic map of
+processes could also be detected (Figure~\ref{fig:fig5}). The spatial analysis provided an
+approximate range of $\sigma = 150$km for the spatial variogram (Figure~\ref{fig:fig5}).
+Figure~\ref{fig:map} displays the $Q$-matrix estimate interpolated on a geographic map of
 Europe for $K = 6$ ancestral groups. The estimated admixture coefficients
 provided clear evidence for the clustering of the ecotypes in spatially
 homogeneous genetic groups.
