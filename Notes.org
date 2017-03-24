@@ -218,7 +218,14 @@
    
    Mount depuis krakenator, je ne doit pas etre dans le [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][fuse group]]... Try [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][that]].
    C'est fait :D
+*** 2017-03-24 vendredi
+**** NuclearNorm + lasso
+   Entered on [2017-03-24 ven. 11:44]
 
+   On va pas jeter cette méthode :D. EN faite ca marche pas si mal !
+   [[file:ThesisRpackage/tests/testthat/3Article_old/test_NuclearLFMMMethod.R]]
+
+   Il faut l'ajouter un banc de test ! 
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -1089,7 +1096,7 @@
       
        On va faire un bootstrap du model de lfmm complet.
 ****** Resultats
-       file:LabNotebook/bootstrapCalibration.nb.html
+       file:3Article/LabNotebook/bootstrapCalibration.nb.html
 ****** Conclusion
        Non c'est logique que sigma soit encore moins bien estimé ! Le bootstrap
        sous estime l'erreur car les datasets sont très corrélés ! 
@@ -1106,7 +1113,7 @@
 ****** Calibration des tests
        Je veux un test d'hypothèse calibré !!
        - bootstrap : donne comme lm théorique voir
-         [[file:LabNotebook/bootstrapCalibration.nb.html]].
+         [[file:3Article/LabNotebook/bootstrapCalibration.nb.html]].
        - permutation : on va perdre en puissance. Mon intuition est que on test
          ne sachant pas X, or on connait X ! 
 ****** Choix du lambda (choix du model)
@@ -1131,7 +1138,7 @@
 ****** Objectif
        Trouver un moyen d'esimer une variance residuelle plus juste !
 ****** Resultats
-       [[file:LabNotebook/gifExperiment.nb.html]]
+       [[file:3Article/LabNotebook/gifExperiment.nb.html]]
 ****** Conclusion
        Je pense pas que la corrélation va se voir dans les resudus, ils sont
        construit pour etre indépendant ! C'est vraiment dans les beta que ca se
@@ -1205,7 +1212,7 @@
       Entered on [2017-02-17 Ven 09:59]
 ****** Les resultats
 ******* Validation sur simulation                                :Rnotebook:
-        [[file:LabNotebook/simuValidation.nb.html]]
+        [[file:3Article/LabNotebook/simuValidation.nb.html]]
 ******** DONE Simulations
          CLOSED: [2017-03-16 Jeu 12:41]
          From le 1000 genomes. 2 cas : 
@@ -1241,7 +1248,7 @@
         Même experience que [[*Validation sur simulation][Validation sur simulation]] mais avec une strategie
         d'imputation des missing values
        
-        [[file:LabNotebook/missingValuesSimuValidation.nb.html]]
+        [[file:3Article/LabNotebook/missingValuesSimuValidation.nb.html]]
 ******** Le message
          - La méthode alternée est meilleur quand il y a des missing values
          - je pense que je vais mettre juste deux lfmm avec imputation par la
@@ -1260,7 +1267,7 @@
         cite:crossValidated_PCACrossValidation_2017 m'a fait changer d'avis. On
         va essayer des missing values. 
 
-        Ca marche !!! [[file:LabNotebook/crossValidationCriteria.nb.html]]
+        Ca marche !!! [[file:3Article/LabNotebook/crossValidationCriteria.nb.html]]
         Pas sur toutes mes simulations...
        
 ******** TODO La suite 
@@ -1287,7 +1294,7 @@
 ******* TODO GWAS                                                :Rnotebook:
         Le HGDP. Et on compare se qui sort par rapport aux autres papiers.
 ******** Résultats
-         [[file:LabNotebook/HGDP.nb.html]]
+         [[file:3Article/LabNotebook/HGDP.nb.html]]
 ******** Le message
          - On fait comme dans cite:frichot13_testin_assoc_between_loci_envir.   
         
@@ -1318,11 +1325,11 @@
 ***** FAMT test                                                  :Rnotebook:
     Entered on [2017-02-17 Ven 13:10]
  
-    Test of the [[http://famt.free.fr/][famt package]] [[file:LabNotebook/FAMT.nb.html]]
+    Test of the [[http://famt.free.fr/][famt package]] [[file:3Article/LabNotebook/FAMT.nb.html]]
 ***** SVA test                                                   :Rnotebook:
     Entered on [2017-02-17 Ven 14:32]
    
-    Test of [[http://www.bioconductor.org/packages/release/bioc/html/sva.html][SVA R package]] : [[file:LabNotebook/SVA.nb.html]]
+    Test of [[http://www.bioconductor.org/packages/release/bioc/html/sva.html][SVA R package]] : [[file:3Article/LabNotebook/SVA.nb.html]]
 ***** Bilan de la semaine
     Entered on [2017-02-17 Ven 16:28]
    
@@ -1394,7 +1401,7 @@
     Je veux faire un exemple pour illustrer les facteur de confusion, en
     replacant ma super carte :D
 ****** Resultats
-       [[file:LabNotebook/AthalianaIllustration.nb.html]]
+       [[file:3Article/LabNotebook/AthalianaIllustration.nb.html]]
 ******* Avant et après le gif
         Avant le gif, on observe que rien n'est significatif ! Mon
         interpretation : le modèle linéaire simple n'est pas adapté, du coup la

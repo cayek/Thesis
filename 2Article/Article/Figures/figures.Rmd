@@ -1,0 +1,149 @@
+---
+title: "Article 2 figures"
+author: "kevin caye"
+date: "21 mars 2017"
+output:
+  html_notebook:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: journal
+    highlight: tango
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE,
+                      results = "hide", error = FALSE, fig.width = 10, fig.width = 10)
+```
+
+
+# Figure1
+```{r}
+library(ThesisRpackage)
+fig1 <- Article2_figure1()
+fig1
+```
+
+
+```{r}
+Plots_export_tikz_pdf(pl = fig1, 
+                      basename.output = "figure1", 
+                      env = get_Article2())
+```
+
+
+# Figure2
+```{r}
+library(ThesisRpackage)
+fig2 <- Article2_figure2()
+fig2
+```
+
+```{r}
+Plots_export_tikz_pdf(pl = fig2, 
+                      basename.output = "figure2", 
+                      env = get_Article2())
+```
+
+# Figure2.5
+```{r}
+library(ThesisRpackage)
+fig2.5 <- Article2_figure2.5()
+fig2.5
+```
+
+```{r}
+Plots_export_tikz_pdf(pl = fig2.5, 
+                      basename.output = "figure2_5", 
+                      env = get_Article2())
+```
+
+# Figure3
+```{r}
+library(ThesisRpackage)
+fig3 <- Article2_figure3()
+fig3
+```
+
+```{r}
+Plots_export_tikz_pdf(pl = fig3, 
+                      basename.output = "figure3", 
+                      env = get_Article2())
+```
+
+
+# Figure 4
+```{r}
+library(ThesisRpackage)
+fig4 <- Article2_figure4()
+fig4
+```
+
+```{r}
+Plots_export_tikz_pdf(pl = fig4, 
+                      basename.output = "figure4", 
+                      env = get_Article2(),
+                      height = get_Article2()$text$height * 0.7)
+```
+
+
+# Figure 5
+
+```{r}
+library(ThesisRpackage)
+fig5 <- Article2_figure5()
+fig5
+```
+
+```{r}
+Plots_export_tikz_pdf(pl = fig5, 
+                      basename.output = "figure5", 
+                      env = get_Article2(),
+                      height = get_Article2()$text$height * 0.42)
+```
+
+# manhattanplot
+
+```{r}
+library(ThesisRpackage)
+man <- Article2_manhattanplot()
+man
+```
+
+```{r}
+Plots_export_png(pl = man, 
+                 basename.output = "manhattanplot", 
+                 env = get_Article2(),
+                 width = get_Article2()$text$width * 1.0, 
+                 height = get_Article2()$text$height * 0.25,
+                 res = 1800)
+```
+
+# map
+```{r}
+library(ThesisRpackage)
+map <- Article2_map()
+map
+```
+
+```{r}
+Plots_export_pdf(pl = map, 
+                 basename.output = "map", 
+                 env = get_Article2())
+```
+
+# map greyscale
+```{r}
+library(ThesisRpackage)
+map.grey <- Article2_map(gray.colors(6))
+map.grey
+```
+
+```{r}
+Plots_export_pdf(pl = map.grey, 
+                 basename.output = "map_grey", 
+                 env = get_Article2())
+```

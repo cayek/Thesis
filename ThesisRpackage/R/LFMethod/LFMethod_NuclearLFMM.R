@@ -35,7 +35,10 @@ NuclearLFMMMethod <- function(K,
                              it.max = 100,
                              err.max = 1e-6,
                              gamma = NULL,
-                             lambda = 0.0,
+                             lambda = 0.0, # if null regularization path
+                             lambda.K = 100, # default value used in Friedman et al. 2010
+                             lambda.eps = 0.001, # default value used in Friedman et al. 2010
+                             sparse.prop = NULL, # try to find the lambda such that not null lambda proportion equal this param
                              center = TRUE,
                              name = "NuclearLFMMMethod",
                              lasso = FALSE,
@@ -52,6 +55,9 @@ NuclearLFMMMethod <- function(K,
   m$err.max <- err.max
   m$lasso <- lasso
   m$soft <- soft
+  m$lambda.K <- lambda.K
+  m$lambda.eps <- lambda.eps
+  m$sparse.prop <- sparse.prop
   m
 }
 
