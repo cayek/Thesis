@@ -195,21 +195,25 @@ are expected to be good approximations of AQP algorithms. The APLS algorithm is
 described in details in Appendix~\ref{algo:apls}.
 
 
-\paragraph{Choice of hyper-parameters.} Determination of the number of factors,
-$K$, the penalty constant, $\alpha$, and the range parameter $\sigma$ is
-notoriously difficult. For ancestry estimation, a number of common practices
-have evolved to help reducing computational burden. Those practices rely on
-heuristics or empirical rules for determining the prior parameters. For example,
-the program structure implements weakly informative prior distributions for
-ancestry proportions~\citep{wang2017}, the program admixture has a set of
-regularization parameters that encourages shrinkage and “aggressive” parsimony
-on ancestry estimates~\citep{Alexander2011}, and so does the Bayesian
-version TESS 2.3~\citep{Durand2009}. In general, more intense efforts are
-devoted to choosing the number of factors, and cross-validation methods or and
-information theoretic measures are used to this purpose. In our program
-implementation, the hyper-parameters $\alpha$ and $\sigma$ are set as options
-with default values, which allows users to explore different values consistent
-with cross-validation or known heuristics.
+\paragraph{Choice of hyper-parameters.} In ancestry estimation programs, a
+number of practices have evolved in order to set the model hyper-parameters.
+
+Those practices rely on heuristics or empirical rules for determining the prior
+parameters. For example, the program structure implements weakly informative
+prior distributions for ancestry proportions~\citep{wang2017}, the program {\tt
+  admixture} has a set of regularization parameters that encourages shrinkage
+and “aggressive” parsimony on ancestry estimates~\citep{Alexander2011}, and so
+does the Bayesian version TESS 2.3~\citep{Durand2009}. Choosing the number of
+ancestral populations is based on cross-validation methods or information
+theoretic measures. Our model has three hyper-parameters: the number of factors,
+$K$, the penalty constant, $\alpha$, and the range parameter, $\sigma$.
+Determining those constants is notoriously difficult and can be costly in
+applications. In order to reduce the computational burden, the hyper-parameters
+$\alpha$ and $\sigma$ are set as user-defined options. This option allows an
+advanced user to explore different values with cross-validation or with her own
+heuristics. Less advanced users could use the default values of the
+hyper-parameters evaluated in our simulation study.
+ 
 
 \paragraph{Range parameter.} Testing correlations between genetic and geographic
 has a long tradition in population genetics. Popular approaches are based on
@@ -365,12 +369,13 @@ incorporation of geographic data could potentially bias estimation of ancestry
 coefficients. Genotypes with minor allele frequency greater than $5 \%$ were
 obtained from a public release of the
 % TODO number of snips + number of infiv by pop
-1000 Genome project phase 3 (2015) for individuals from African Americans (ASW,
-X individuals), Africans (YRI and LWK, X individuals), and Europeans (GBR and
-TSI, X individuals)~\citep{1000genome}. A total of 500k SNPs were analyzed with geographic data
+1000 Genomes project phase 3 for African Americans (ASW,
+?? individuals), Africans (YRI from Nigeria and LWK from Kenya, ?? individuals),
+and Europeans (GBR from the United Kingdom and
+TSI from Italy, ?? individuals)~\citep{1000genome}. A total of ?? SNPs were analyzed with geographic data
 corresponding to the country of origin of individual samples. We compared the
 estimates from the APLS algorithm applied with its default parameter settings to
-the results of the sNMF program that do not make use of geographic information.
+the results of the {\tt snmf} program that do not make use of geographic information.
 
 \paragraph{Application to European ecotypes of {\it Arabidopsis thaliana}} We
 used the APLS algorithm to survey spatial population genetic structure and to

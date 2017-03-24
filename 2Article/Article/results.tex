@@ -50,19 +50,24 @@ ancestral populations.
 simulated data sets to evaluate the robustness of APLS estimates to inaccurate
 measurements of spatial coordinates. To this aim, Gaussian noise was added to
 truly observed geographic coordinates by considering values of the
-noise-to-signal ratio ranging from 0 to 3. We computed variograms in all
-cases, and found that the spatial signal was removed from simulations with a
-noise-to-signal ratio of ??? ($\sigma \approx 0$), while the signal was still
-observable with a noise-to-signal ratio of 1.
-%% TODO paragraph quand fig OK
-A noise-to-signal ratio of 1 increased statistical errors in the $Q$-matrix
-estimates, but the RMSEs remained generally lower than for methods without
-spatial coordinates ($\alpha = 0$ and sNMF, Figure~\ref{fig:fig2_5}). For a noise-to-signal ratio
-of 3, errors were higher than for methods without spatial coordinates
-(Figure~\ref{fig:fig2_5}). To a large extent, estimates from the APLS algorithm
-were robust to uncertainty in spatial measurements. Standard graphical tests
-such as a variogram analysis can help deciding whether our spatially explicit
-algorithm is useful or not.
+noise-to-signal ratio ranging from 0 to 3. We computed variograms in all cases,
+and found that the spatial signal was removed from simulations for
+noise-to-signal ratios greater than two, while the signal was still observable
+with a noise-to-signal ratio lower than one. For all simulations, we compared
+the relative error of APLS $Q$-matrix estimates to those obtained from an
+non-spatial method ({\tt snmf}). For small levels of uncertainty in spatial
+coordinates the errors of APLS estimates were lower than those of {\tt snmf}
+(Figure~\ref{fig:fig2_5}). For simulations with $n = 500$ individuals and $L =
+1O^5$ loci, a larger noise-to-signal ratio increased statistical errors in the
+$Q$-matrix estimates from the APLS algorithm. For smaller noise-to-signal ratio,
+RMSEs remained generally lower for the APLS algorithm than for methods without
+spatial coordinates. For simulations with $n = 50$ individuals and $L = 1O^4$
+loci, the APLS estimates were more accurate than the non-spatial estimates. This
+unexpected result could be explained by subtle algorithmic differences in tested
+programs. To a large extent, estimates from the APLS algorithm were robust to
+uncertainty in spatial measurements. Standard graphical tests such as a
+variogram analysis can help deciding whether our spatially explicit algorithm is
+useful or not.
 
 
 \paragraph{Runtime and convergence analyses} We subsampled a large SNP data set
@@ -83,9 +88,24 @@ estimates. For {\tt tess3}, the runtime was on average 1.3 min. For those
 values of $n$ and $L$, the APLS algorithm implementation ran about 2 to 100
 times faster than the other algorithm implementations.
  
-\paragraph{Human data analysis} To evaluate a case of model misspecification
-%% TODO
- 
+\paragraph{Human data analysis} To evaluate a case of model misspecification, we
+analyzed data from the 1000 Genomes project for African Americans, Africans from
+Nigeria and from Kenya, and Europeans from the United Kingdom and from Italy.
+The spatial variogram exhibited a flat shape. Using the default values for the
+hyper-parameters, the Laplacian matrix was a block diagonal matrix where each
+block corresponded to one of the five populations. The APLS algorithm behaved as
+if the five populations were spatially unconstrained. For $K = 2$, the APLS
+estimates for the African American population were equal to $??\%$ for European
+ancestors and ?? for African ancestors. The corresponding {\tt snmf} estimates
+were equal to $??\%$ for European ancestors and ?? for African ancestors. For $K
+= 3$, the APLS estimates for the African American population were equal to
+$??\%$ for European ancestors, ?? for West African ancestors and ?? for East
+African ancestors. The corresponding {\tt snmf} estimates were equal to $??\%$
+for European ancestors, ?? for West African ancestors and ?? for East African
+ancestors. Overall, the results obtained with our spatial method were very
+similar to those obtained with a non-spatial method.
+
+
 \paragraph{Application to European ecotypes of {\it Arabidopsis thaliana}} We
 used the APLS algorithm to survey spatial population genetic structure and
 perform a genome scan for adaptive alleles in European ecotypes of the plant
