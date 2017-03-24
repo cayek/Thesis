@@ -226,6 +226,16 @@
    [[file:ThesisRpackage/tests/testthat/3Article_old/test_NuclearLFMMMethod.R]]
 
    Il faut l'ajouter un banc de test ! 
+**** Fin de week
+   Entered on [2017-03-24 ven. 18:02]
+
+   La semaine prochaine: 
+   - en finir avec les formatage de 100xGenome
+     pour le 1001Genome faudra faire des test !! et j'ai pas reussis a mettre le
+     nom de colonne...
+
+   - faire les maj pour l'article 2
+   - faire les resultats pour article 3
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
