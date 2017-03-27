@@ -7,3 +7,4 @@ draft.pdf
 *_latexmk
 *.dvi
 *.fls
+Figures/*.tex

@@ -1624,3 +1624,4 @@
    
     Je parle de ce problem dans [[ref:lambda_model_choice][cette note.]]
    
+ 
