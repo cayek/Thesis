@@ -131,7 +131,11 @@
       - HGDP PCA+cv+run
       - GSE42861 PCA+cv+run
       - (interet de l'algo avec missing value (rmse(U,U_true)))
-***** TODO Plan d'attaque 
+***** DONE Plan d'attaque 
+      CLOSED: [2017-03-27 lun. 11:31]
+
+      Voir [[Article3Figures]]
+
       On va generer les figures pour l'article !!!
       CAD:
       - [ ] comp de méthode sur simul (pcesision-recall et fdr control)
@@ -139,12 +143,14 @@
       - [ ] HGDP (pca cv et result)
       - [ ] Refactor (pca cv et result)
       Après on envoie à olovier et on ecrit l'article ! 
-****** Figures
+****** DONE Figures
+       CLOSED: [2017-03-27 lun. 11:31]
        - [ ] precision- recall
        - [ ] fdr control (comme dans cite:Song_2015)
        - [ ] more power with missing value algo
        - [ ] cross validation sur GSE42861 et HGDP on verra comment on met en
          formes
+       
 **** Fin de journée                                                :3Article:
    Entered on [2017-03-15 Mer 17:11]
 
@@ -236,6 +242,24 @@
 
    - faire les maj pour l'article 2
    - faire les resultats pour article 3
+*** 2017-03-27 lundi
+**** <<Article3Figures>> Figures de l'article 3                    :3Article:
+     Entered on [2017-03-27 lun. 11:32]
+     [[file:3Article/Article/Figures/figures.nb.html]]
+
+***** Numerical validation
+****** TODO Method comparison
+       2 figures: 
+       - fdr
+       - precision-recall
+       Sur mes simulations generatives du 1000genomes.
+****** TODO With missing value
+       1 figures: fdr + precision-recall
+       methods: ...       
+***** TODO True dataset
+
+
+
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions

@@ -25,10 +25,11 @@ Article2_figure1 <- function() {
     xlab("Number of individuals ($n$)") +
     ylab("RMSE") +
     Article2.env$gtheme +
-    theme(legend.position = "none") +
+    theme(legend.position = "none",
+          plot.title = element_text(size = 16)) +
     Article2.env$scale.linetype +
     Article2.env$scale.color +
-    ggtitle("$G$ RMSE")
+    ggtitle("$G$-matrix")
 
   pl.n.B <- ggplot(toplot %>% dplyr::filter(variable == "rmseQ"),
                    aes(x = n, y = rmse.mean, col = Methods, linetype = Methods, shape = Methods)) +
@@ -39,10 +40,11 @@ Article2_figure1 <- function() {
     xlab("Number of individuals ($n$)") +
     ylab("") +
     Article2.env$gtheme +
-    theme(legend.position = "none") +
+    theme(legend.position = "none",
+          plot.title = element_text(size = 16)) +
     Article2.env$scale.linetype +
     Article2.env$scale.color +
-  ggtitle("$Q$ RMSE")
+  ggtitle("$Q$-matrix")
 
   toplot <- exp$df.L  %>%
     reshape2::melt(id = c("nsites.neutral", "rep", "L", "method"), value.name = "rmse") %>%

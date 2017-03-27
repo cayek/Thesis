@@ -18,7 +18,7 @@ test_that("long_tess3_noisyCoord", {
   ## plot
   plot_tess3_noisyCoord(exp)
 
-}) p
+})
 
 test_that("long_tess3_noisyCoord variogram", {
 

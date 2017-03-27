@@ -67,11 +67,12 @@ KrakTest <- function(bypass) {
 long_init <- function(cluster.nb,
                       bypass) {
   KrakTest(bypass)
-
+  cl <- NULL
   if (!is.null(cluster.nb)) {
     cl <- parallel::makeCluster(cluster.nb, outfile = "")
     doParallel::registerDoParallel(cl)
   }
+  cl
 }
 
 #' make a description string

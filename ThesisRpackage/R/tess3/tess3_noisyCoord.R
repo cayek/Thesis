@@ -179,7 +179,7 @@ plot_tess3_noisyCoord_toplot <- function(exp) {
               rel.diff.rmse.G.mean.se = sd(rel.diff.rmse.G) / sqrt(length(rel.diff.rmse.G))
     )  %>%
     ungroup()
-L
+
   toplot
 }
 

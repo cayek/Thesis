@@ -11,8 +11,8 @@ Article2_figure5 <- function() {
   variogram.pl <- ggplot(exp$vario.gen, aes(x = h, y = semi.variance, size = size)) +
     geom_point(shape = 1) +
     geom_vline(xintercept = 1.5, colour = "red") +
-    labs(y = "Semivariance",
-         x = "Geographic distance($100$ km)") +
+    labs(y = "Semivariogram",
+         x = "$\\sigma$ ($100$ km)") +
     theme_gray(base_size = 12) +
     scale_size_continuous(range = c(1,3)) +
     guides(size = guide_legend(title = "Bin size", nrow = 3)) +
@@ -36,7 +36,8 @@ Article2_figure5 <- function() {
     labs(y = "Cross validation error", x = "$K$") +
     theme_gray() +
     theme(legend.position = "none") +
-    Article2.env$gtheme
+    Article2.env$gtheme +
+    geom_vline(xintercept = 6, colour = "red")
 
 
 
@@ -257,8 +258,8 @@ Article2_map <- function(cols = NULL) {
     coord_equal() +
     geom_point(data = as.data.frame(coord), aes(x = long, y = lat), size = 0.1) +
     Article2.env$gtheme +
-    xlab("Longitute") +
-    ylab("Latitude")
+    xlab("Longitude (°E)") +
+    ylab("Latitude (°N)")
 
   ################################################################################
   # barplot

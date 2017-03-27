@@ -18,5 +18,4 @@ test_that("read_vcf", {
   expect_equal(dim(dat$snps.info), c(12, 9))
   expect_equal(dat$snps.info$ID, colnames(dat$G))
 
-}
-
+})

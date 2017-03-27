@@ -21,10 +21,18 @@ TrueSampler <- function(G.file, X.file, outlier.file,n = NULL, L = NULL) {
 sampl.TrueSampler <- function(s) {
 
   # read G
-  G <- read_G(s$G.file)
+  if (!is.null(s$G.file)) {
+   G <- read_G(s$G.file)
+  } else {
+    G <- matrix(NA,1,1)
+  }
 
   # read X
-  X <- read_X(s$X.file)
+  if (!is.null(s$X.file)) {
+    X <- read_X(s$X.file)
+  } else {
+    X <- matrix(NA, nrow(G), 1)
+  }
 
   # read outlier
   if (is.null(s$outlier.file)) {

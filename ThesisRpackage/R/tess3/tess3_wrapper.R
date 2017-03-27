@@ -116,20 +116,30 @@ fit.sNMFMethod <- function(m, dat) {
   ## ploidy
   ploidy <- computePloidy(dat$G)
 
-  capture.output(aux <- LEA::snmf(input.file = file.geno,
-                                  K = m$K,
-                                  project = "new",
-                                  repetitions = 1,
-                                  alpha = m$alpha,
-                                  tolerance = m$tolerance,
-                                  entropy = FALSE,
-                                  percentage = - 1.0,
-                                  I = 0,
-                                  iterations = m$max.iteration,
-                                  ploidy = ploidy,
-                                  seed = -1,
-                                  CPU = m$openMP.core.num,
-                                  Q.input.file = ""), file = "/dev/null")
+  aux.f <- function() {
+    LEA::snmf(input.file = file.geno,
+              K = m$K,
+              project = "new",
+              repetitions = 1,
+              alpha = m$alpha,
+              tolerance = m$tolerance,
+              entropy = FALSE,
+              percentage = - 1.0,
+              I = 0,
+              iterations = m$max.iteration,
+              ploidy = ploidy,
+              seed = -1,
+              CPU = m$openMP.core.num,
+              Q.input.file = "")
+  }
+
+  if (!is.null(getOption("ThesisRpackage.debug"))) {
+    DebugMessage("sNMF output")
+    aux <- aux.f()
+  } else {
+    capture.output(aux <- aux.f(), file = "/dev/null")
+  }
+
 
   m$Q <- LEA::Q(aux, K = m$K, run = 1)
   class(m$Q) <- "tess3Q"

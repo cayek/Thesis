@@ -25,7 +25,7 @@ test_that("NuclearLFMMMethod on normal generative model", {
   m.nuclear <- NuclearLFMMMethod(K = NULL, gamma = 1.2e2, lambda = 0.8e0, lasso = TRUE, soft = TRUE,
                                  hypothesis.testing.method = lm_zscore(correctionByC = FALSE))
 
-  expect_equal(name(m.nuclear), "NuclearLFMMMethod|Zscore|NormalZscore|AnalyticSigma2")
+  expect_equal(name(m.nuclear), "NuclearLFMMMethod|lm+zscore|calibrate=FALSE")
 
   # test fit
   m.nuclear <- fit(m.nuclear, dat)
@@ -34,18 +34,18 @@ test_that("NuclearLFMMMethod on normal generative model", {
 
 
   # plot and compare
-  m.ridge <- RidgeLFMMMethod(K = K)
-  m.ridge <- run(m.ridge, dat)
-  m.lm <- ClassicLinearMethod()
-  m.lm <- run(m.lm, dat)
-  m.pca <- PCAClassicLinearMethod(K = K)
-  m.pca <- run(m.pca, dat)
-  gplot_stat(m.nuclear$score[1,],
-             m.ridge$score[1,],
-             m.pca$score[1,],
-             m.lm$score[1,],
-             outlier = dat$outlier) +
-    geom_point(aes(x = index, y = stat, color = outlier))
+  # m.ridge <- RidgeLFMMMethod(K = K)
+  # m.ridge <- run(m.ridge, dat)
+  # m.lm <- ClassicLinearMethod()
+  # m.lm <- run(m.lm, dat)
+  # m.pca <- PCAClassicLinearMethod(K = K)
+  # m.pca <- run(m.pca, dat)
+  # gplot_stat(m.nuclear$score[1,],
+  #            m.ridge$score[1,],
+  #            m.pca$score[1,],
+  #            m.lm$score[1,],
+  #            outlier = dat$outlier) +
+  #   geom_point(aes(x = index, y = stat, color = outlier))
 
 })
 
@@ -73,7 +73,7 @@ test_that("NuclearLFMMMethod on binary generative model", {
 
 
   # plot and compare
-  plotAndCompare(m.nuclear, dat, K)
+  # plotAndCompare(m.nuclear, dat, K)
 
 
 })
