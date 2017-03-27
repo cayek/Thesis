@@ -1,5 +1,5 @@
 #' @export
-Article2_1000Genome <- function(s,
+Article2_1000Genome <- function(s, ## oncly for test
                                 K,
                                 cluster.nb = NULL,
                                 save = TRUE,
@@ -10,7 +10,11 @@ Article2_1000Genome <- function(s,
 
   require(tess3r)
   require(ThesisRpackage)
-  dat <- sampl(s)
+  if (is.null(s)) {
+    dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds")
+  } else {
+    dat <- sampl(s)
+  }
   exp <- Experiment(name = "Article2_1000Genome",
                     description = make_description("run of tess3r", dat.file = dat$G.file,
                                                    K = K))

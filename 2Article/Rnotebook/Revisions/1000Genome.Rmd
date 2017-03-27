@@ -119,13 +119,12 @@ a = barplot(exp$snmf.method$Q)
 ## Run of tess3
 ### On krak
 ```{r}
-s <- TrueSampler(G.file = "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds",
-                 NULL,
-                 NULL)
+require(tess3r)
+require(ThesisRpackage)
 
-exp <- Article2_1000Genome(s = s,
+exp <- Article2_1000Genome(s = NULL,
                            K = 3,
-                           cluster.nb = 8,
+                           cluster.nb = 4,
                            save = TRUE,
                            bypass = FALSE)
 ```
