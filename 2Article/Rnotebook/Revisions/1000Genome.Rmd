@@ -122,9 +122,8 @@ a = barplot(exp$snmf.method$Q)
 require(tess3r)
 require(ThesisRpackage)
 
-exp <- Article2_1000Genome(s = NULL,
+exp <- Article2_1000Genome(dat.file = "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds",
                            K = 3,
-                           cluster.nb = 4,
-                           save = TRUE,
-                           bypass = FALSE)
+                           openMP.core.num = 16,
+                           save = TRUE)
 ```
