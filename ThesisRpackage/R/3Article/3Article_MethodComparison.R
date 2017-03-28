@@ -1,0 +1,81 @@
+Article3_MethodComparison <- function(G.file,
+                                      outlier.props = c(0.05, 0.1),
+                                      n = NULL, L = 10000,
+                                      K = 4,
+                                      cs = c(0.6, 0.3, 0.0, 0.0),
+                                      nb.rep = 5,
+                                      fast.only = FALSE,
+                                      cluster.nb = NULL,
+                                      save = TRUE, bypass = FALSE) {
+
+  cl <- long_init(cluster.nb,
+                  bypass)
+
+  s <- FromTrueSampler(G.file = G.file,
+                       n = n,
+                       L = L,
+                       K = K,
+                       prop.outlier = outlier.prop,
+                       rho = NULL,
+                       cs = cs,
+                       round = FALSE)
+
+
+  exp <- Experiment()
+  exp$name <- "Article3_MethodComparison"
+  exp$description = make_description("Article3_MethodComparison",
+                                     G.file = G.file,
+                                     K = K,
+                                     n = n, L = L,
+                                     cs = cs,
+                                     outlier.props = outlier.props,
+                                     nb.rep = nb.rep)
+  exp$df <- tibble()
+  for (p in outlier.props) {
+    DebugMessage(paste0("outlier prop = ",p))
+    bench <- finalBench(K = K,
+                        lambda = 1e-5,
+                        sparse.prop = p,
+                        calibrate = FALSE,
+                        fast.only = fast.only, with.missing = FALSE)
+    exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = nb.rep, s = s), bench))
+    exp.aux <- runExperiment(exp.aux)
+
+
+    exp$df <- exp.aux$result$df.pvalue %>%
+      dplyr::mutate(outlier.prop = p) %>%
+      rbind(exp$df)
+  }
+
+
+
+  ## return
+  long_return(cl, save, exp)
+}
+
+Article3_MethodComparison_plot <- function(exp, plot.type = c("pvalue.grid", "precision.recall")) {
+  assertthat::assert_that(exp$name == "Article3_MethodComparison")
+
+  if (plot.type == "pvalue.grid") {
+    p <- ggplot(exp$df ,
+                aes(x = expected.fd, y = true.fd  - expected.fd )) +
+      facet_grid(method ~ outlier.prop, scales = "free") +
+      layer(geom = "point", mapping = aes(color = method, group = as.factor(rep)),
+            params = list(size = 0.1),
+            stat = "identity", position = "identity") +
+      stat_summary_bin(fun.y = median, geom = "point") +
+      stat_summary_bin(fun.y = function(x) quantile(x,0.9), geom = "point", color = "blue4") +
+      stat_summary_bin(fun.y = function(x) quantile(x,0.1), geom = "point", color = "blue4") +
+      ylab("observed false positives – expected false positives") +
+      xlab("expected false positives") +
+      guides(colour = "none")
+  } else if (plot.type == "precision.recall") {
+    p <- ggplot(exp$df, aes(x = true.power, y = 1 - true.fdr,
+                                          color = method)) +
+      geom_smooth() +
+      ylab("1 - observed false positives rate") +
+      xlab("observed power") +
+      facet_grid(. ~ outlier.prop, scales = "free")
+  }
+  p
+}
