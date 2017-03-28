@@ -1,3 +1,4 @@
+#' @export
 Article3_MethodComparison <- function(G.file,
                                       outlier.props = c(0.05, 0.1),
                                       n = NULL, L = 10000,
@@ -53,6 +54,7 @@ Article3_MethodComparison <- function(G.file,
   long_return(cl, save, exp)
 }
 
+#' @export
 Article3_MethodComparison_plot <- function(exp, plot.type = c("pvalue.grid", "precision.recall")) {
   assertthat::assert_that(exp$name == "Article3_MethodComparison")
 
