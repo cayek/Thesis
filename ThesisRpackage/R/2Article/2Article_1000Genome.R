@@ -1,34 +1,43 @@
 #' @export
-Article2_1000Genome <- function(s, ## oncly for test
-                                K,
-                                cluster.nb = NULL,
-                                save = TRUE,
-                                bypass = FALSE) {
-
-  cl <- long_init(cluster.nb = cluster.nb,
-            bypass = bypass)
+Article2_1000Genome <- function(dat.file = "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds",
+                                K = 3,
+                                openMP.core.num = 1,
+                                save = TRUE) {
 
   require(tess3r)
   require(ThesisRpackage)
-  if (is.null(s)) {
-    dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds")
-  } else {
-    dat <- sampl(s)
-  }
+  dat <- readRDS(dat.file)
+
   exp <- Experiment(name = "Article2_1000Genome",
-                    description = make_description("run of tess3r", dat.file = dat$G.file,
+                    description = make_description("run of tess3r", dat.file = dat.file,
                                                    K = K))
 
+  ## compute XBin
+  ploidy <- computePloidy(dat$G)
+  XBin <- computeXBin(dat$G, ploidy)
+
+
   ## tess3
-  exp$tess3R.method <- tess3RImplementationMethod(K = K)
-  exp$tess3R.method <- fit(exp$tess3R.method, dat)
-  if (!is.null(cl)) {
-    parallel::stopCluster(cl)
-  }
+  exp$tess3r <- tess3r::tess3Main(X = NULL,
+                                  XProba = XBin,
+                                  coord = dat$coord,
+                                  K = K,
+                                  ploidy = ploidy,
+                                  lambda = 1.0,
+                                  W = dat$W,
+                                  method = "projected.ls",
+                                  max.iteration = 200,
+                                  tolerance = 1e-5,
+                                  openMP.core.num = openMP.core.num,
+                                  Q.init = NULL,
+                                  mask = 0.0,
+                                  copy = FALSE,
+                                  algo.copy = FALSE,
+                                  verbose = TRUE)
 
   ## snmf
   exp$snmf.method <- sNMFMethod(K = K,
-                                openMP.core.num = ifelse(!is.null(cluster.nb), cluster.nb, 1))
+                                openMP.core.num = ifelse(!is.null(openMP.core.num), openMP.core.num, 1))
   exp$snmf.method <- fit(m = exp$snmf.method, dat)
 
   ## save exp
