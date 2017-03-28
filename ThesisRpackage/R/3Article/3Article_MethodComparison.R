@@ -12,16 +12,6 @@ Article3_MethodComparison <- function(G.file,
   cl <- long_init(cluster.nb,
                   bypass)
 
-  s <- FromTrueSampler(G.file = G.file,
-                       n = n,
-                       L = L,
-                       K = K,
-                       prop.outlier = outlier.prop,
-                       rho = NULL,
-                       cs = cs,
-                       round = FALSE)
-
-
   exp <- Experiment()
   exp$name <- "Article3_MethodComparison"
   exp$description = make_description("Article3_MethodComparison",
@@ -34,6 +24,14 @@ Article3_MethodComparison <- function(G.file,
   exp$df <- tibble()
   for (p in outlier.props) {
     DebugMessage(paste0("outlier prop = ",p))
+    s <- FromTrueSampler(G.file = G.file,
+                         n = n,
+                         L = L,
+                         K = K,
+                         prop.outlier = p,
+                         rho = NULL,
+                         cs = cs,
+                         round = FALSE)
     bench <- finalBench(K = K,
                         lambda = 1e-5,
                         sparse.prop = p,
