@@ -45,6 +45,11 @@ test <- function(m, nickname, classname) {
   return(NULL)
 }
 
+test_that("lfmm lasso", {
+  m <- finalLfmmLassoMethod(1, 1)
+  test(m, "LassoLfmm", "finalLfmmLassoMethod")
+})
+
 test_that("lfmm ridge", {
   m <- finalLfmmRdigeMethod(1, 1)
   test(m, "RidgeLfmm", "finalLfmmRdigeMethod")

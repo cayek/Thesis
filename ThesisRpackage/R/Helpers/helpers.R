@@ -75,6 +75,18 @@ long_init <- function(cluster.nb,
   cl
 }
 
+#' Use it after running the core of a long function
+long_return <- function(cl, save, exp) {
+  if (!is.null(cl)) {
+    parallel::stopCluster(cl)
+  }
+  # save exp
+  if (save) {
+    dumpExperiment(exp)
+  }
+  exp
+}
+
 #' make a description string
 #' @export
 make_description <- function(desc, ...) {
@@ -82,6 +94,9 @@ make_description <- function(desc, ...) {
   ns <- names(params)
   desc <- paste0(desc, " with ")
   for (n in ns) {
+    if (is.function(params[[n]])) {
+      params[[n]] <- "function..."
+    }
     desc <- paste0(desc, n,"=", paste0(params[[n]], collapse = "|")," ")
   }
   desc

@@ -6,9 +6,8 @@
 \usage{
 NuclearLFMMMethod(K, hypothesis.testing.method = Zscore(NormalZscore(),
   AnalyticSigma2Functor()), it.max = 100, err.max = 1e-06, gamma = NULL,
-  lambda = 0, lambda.K = 100, lambda.eps = 0.001, sparse.prop = NULL,
-  center = TRUE, name = "NuclearLFMMMethod", lasso = FALSE, soft = TRUE,
-  nickname = NULL)
+  lambda = 0, center = TRUE, name = "NuclearLFMMMethod", lasso = FALSE,
+  soft = TRUE, nickname = NULL)
 }
 \arguments{
 \item{gamma}{if -1 try to compute a gamma such that rk(C) = K.}

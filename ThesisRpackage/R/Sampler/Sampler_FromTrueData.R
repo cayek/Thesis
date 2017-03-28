@@ -65,6 +65,8 @@ sampl.FromTrueSampler <- function(s) {
   # compute X
   if (is.null(s$cs)) {
     s$cs <- runif(s$K)
+  } else if (is.function(s$cs)) {
+    s$cs <- s$cs() # ^^
   }
   X <- sample_X_sum_correlated_U(U = U, cs = s$cs)
 

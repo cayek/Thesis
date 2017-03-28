@@ -17,7 +17,17 @@ D_thau <- function(m, X) {
   m$U <- svd.res$u %*% Sigma
   m$V <- svd.res$v
   m$C <- tcrossprod(m$U, m$V)
+  m$C.nuclear.norm <- sum(svd.res$d[1:m$K])
+  m
+}
 
+ComputeGamma <- function(m, G_) {
+  # compute a gamma
+  if (is.null(m$gamma)) {
+    svd.res <- svd(G_, nu = 0, nv = 0) # compute only singular value
+    m$gamma <- (svd.res$d[m$K] + svd.res$d[m$K + 1]) / 2
+    DebugMessage(paste("Gamma = ", m$gamma, "\n"))
+  }
   m
 }
 
@@ -35,10 +45,7 @@ NuclearLFMMMethod <- function(K,
                              it.max = 100,
                              err.max = 1e-6,
                              gamma = NULL,
-                             lambda = 0.0, # if null regularization path
-                             lambda.K = 100, # default value used in Friedman et al. 2010
-                             lambda.eps = 0.001, # default value used in Friedman et al. 2010
-                             sparse.prop = NULL, # try to find the lambda such that not null lambda proportion equal this param
+                             lambda = 0.0,
                              center = TRUE,
                              name = "NuclearLFMMMethod",
                              lasso = FALSE,
@@ -55,9 +62,6 @@ NuclearLFMMMethod <- function(K,
   m$err.max <- err.max
   m$lasso <- lasso
   m$soft <- soft
-  m$lambda.K <- lambda.K
-  m$lambda.eps <- lambda.eps
-  m$sparse.prop <- sparse.prop
   m
 }
 
@@ -87,13 +91,8 @@ fit.NuclearLFMMMethod <- function(m, dat, reuse = FALSE) {
     G_ <- m$impute.genotype.method$fun(G_)
   }
 
-
-  # compute a gamma
-  if (is.null(m$gamma)) {
-    svd.res <- svd(G_, nu = 0, nv = 0) # compute only singular value
-    m$gamma <- (svd.res$d[m$K] + svd.res$d[m$K + 1]) / 2
-    DebugMessage(paste("Gamma = ", m$gamma, "\n"))
-  }
+  # compute gamma
+  m <- ComputeGamma(m, G_)
 
 
   # init algo

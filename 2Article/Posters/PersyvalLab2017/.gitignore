@@ -8,3 +8,6 @@ draft.pdf
 *.dvi
 *.fls
 Figures/*.tex
+main.tex
+cache/*
+figure/*

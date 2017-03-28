@@ -33,11 +33,7 @@ LassoLFMM_main <- function(m, G_, dat, lambda) {
     it <- it + 1
 
     ## calculate C
-    svd.res <- svd(G_ - dat$X %*% m$B, nu = m$K, nv = m$K)
-    m$U <- svd.res$u %*% diag(svd.res$d[1:m$K], m$K, m$K)
-    m$V <- svd.res$v
-    m$C <- tcrossprod(m$U, m$V)
-    m$C.nuclear.norm <- sum(svd.res$d[1:m$K])
+    m <- D_thau(m, G_ - dat$X %*% m$B)
 
     ## calculate B
     m$B <- B_lasso(A = G_ - m$C, X = dat$X, lambda = lambda)
@@ -60,19 +56,21 @@ LassoLFMM_main <- function(m, G_, dat, lambda) {
 ################################################################################
 # LassoLFMMMethod
 
-#' ||G  - U V^t - X B || + lambda |B|
+#' ||G  - U V^t - X B || + lambda |B| + gamma |UV^T|
 #'
 #' @export
 LassoLFMMMethod <- function(K,
                             it.max,
                             err.max,
+                            gamma = NULL,
                             lambda = 0.0, # if null regularization path
                             lambda.K = 100, # default value used in Friedman et al. 2010
                             lambda.eps = 0.001, # default value used in Friedman et al. 2010
                             sparse.prop = NULL, # try to find the lambda such that not null lambda proportion equal this param
                             center = TRUE,
+                            soft = FALSE,
                             name = "LassoLFMMMethod",
-                            nickname = NULL,
+                            nickname = "LassoLFMMMethod",
                             hypothesis.testing.method = NULL) {
   m <- Method(name,
               hypothesis.testing.method = hypothesis.testing.method,
@@ -86,6 +84,8 @@ LassoLFMMMethod <- function(K,
   m$it.max = it.max
   m$err.max = err.max
   m$sparse.prop = sparse.prop
+  m$soft = soft
+  m$gamma = gamma
   m
 }
 
@@ -117,9 +117,13 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
   # init algo
   if (!reuse) {
     m$B <- matrix(0, d, L)
-    # m$B <- matrix(rnorm(d * L), d, L)
+    #m$B <- matrix(rnorm(d * L), d, L)
     m$C <- matrix(0, n, L)
   }
+
+  # compute gamma
+  m <- ComputeGamma(m, G_)
+
 
   if (is.null(m$lambda)) {
     # reg path

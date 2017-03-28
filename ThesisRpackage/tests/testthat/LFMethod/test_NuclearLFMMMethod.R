@@ -77,3 +77,4 @@ test_that("NuclearLFMMMethod on binary generative model", {
 
 
 })
+

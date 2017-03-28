@@ -2,14 +2,14 @@
 % Please edit documentation in LFMethod/LFMethod_LassoLFMMMethod.R
 \name{LassoLFMMMethod}
 \alias{LassoLFMMMethod}
-\title{||G  - U V^t - X B || + lambda |B|}
+\title{||G  - U V^t - X B || + lambda |B| + gamma |UV^T|}
 \usage{
-LassoLFMMMethod(K, it.max, err.max, lambda = 0, lambda.K = 100,
-  lambda.eps = 0.001, sparse.prop = NULL, center = TRUE,
-  name = "LassoLFMMMethod", nickname = NULL,
+LassoLFMMMethod(K, it.max, err.max, gamma = NULL, lambda = 0,
+  lambda.K = 100, lambda.eps = 0.001, sparse.prop = NULL, center = TRUE,
+  soft = FALSE, name = "LassoLFMMMethod", nickname = "LassoLFMMMethod",
   hypothesis.testing.method = NULL)
 }
 \description{
-||G  - U V^t - X B || + lambda |B|
+||G  - U V^t - X B || + lambda |B| + gamma |UV^T|
 }
 

@@ -86,6 +86,27 @@ fit.finalLfmmRdigeMethod <- function(m, dat, reuse = FALSE) {
 }
 
 ################################################################################
+finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = NULL) {
+  m <- LassoLFMMMethod(K = K,
+                       it.max = 200,
+                       err.max = 1e-6,
+                       hypothesis.testing.method = lm_zscore(calibrate = calibrate,
+                                                             sigma.computation = "lm",
+                                                             correctionByC = FALSE),
+                       sparse.prop = sparse.prop,
+                       lambda = NULL, # if null regularization path
+                       lambda.K = 100, # default value used in Friedman et al. 2010
+                       lambda.eps = 0.001, # default value used in Friedman et al. 2010
+                       center = TRUE,
+                       name = "finalLfmmLassoMethod",
+                       nickname = "LassoLfmm")
+
+  class(m) <- c("final", "LassoLFMMMethod", class(m))
+  m
+}
+
+
+################################################################################
 
 #' @export
 finalFamtMethod <- function(K) {
@@ -190,11 +211,13 @@ finalOracle <- function(K, calibrate = FALSE) {
 ################################################################################
 
 #' @export
-finalBench <- function(K, lambda, calibrate, fast.only = FALSE, with.missing = FALSE) {
+finalBench <- function(K, lambda, calibrate, sparse.prop,
+                       fast.only = FALSE, with.missing = FALSE) {
     bench <- list()
     bench$lfmmRidge <- finalLfmmRdigeMethod(K = K,
                                             lambda = lambda,
                                             calibrate = calibrate)
+
     bench$famt <- finalFamtMethod(K = K)
     bench$sva <- finalSVAMethod(K = K)
     bench$refactor <- finalRefactorMethod(K = K, calibrate = calibrate)
@@ -203,6 +226,9 @@ finalBench <- function(K, lambda, calibrate, fast.only = FALSE, with.missing = F
     bench$oracle <- finalOracle(K = K, calibrate = calibrate)
     if (!fast.only) {
       bench$lea <- finalLEAMethod(K = K)
+      bench$lfmmLasso <- finalLfmmLassoMethod(K = K,
+                                              sparse.prop = sparse.prop,
+                                              calibrate = calibrate)
     }
     if (with.missing) {
       bench$lfmm.ridge.impute.first <- finalLfmmRdigeMethod(K = K,
