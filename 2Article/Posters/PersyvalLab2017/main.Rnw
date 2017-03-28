@@ -1,0 +1,405 @@
+\documentclass[a0paper,portrait]{baposter}
+
+%%% Packages  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{relsize}		% For \smaller
+\usepackage{epstopdf}	% Included EPS files automatically converted to PDF to include with pdflatex
+\usepackage{amssymb,amsmath}
+\usepackage{algorithm,algorithmicx,algpseudocode}
+\usepackage[]{natbib}
+\bibliographystyle{plain}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{tikz}
+
+% xkcd
+% \usepackage{fontspec}
+% \setmainfont{xkcd}
+
+%%% Color Definitions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{bordercol}{RGB}{40,40,40}
+\definecolor{headercol1}{RGB}{186,215,230}
+\definecolor{headercol2}{RGB}{80,80,80}
+\definecolor{headerfontcol}{RGB}{0,0,0}
+\definecolor{boxcolor}{RGB}{186,215,230}
+\definecolor{alert}{RGB}{255,102,102}
+\definecolor{astral}{RGB}{46,116,181}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Utility functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Save space in lists. Use this after the opening of the list %%%%%%%%%%%%%%%%
+\newcommand{\compresslist}{
+	\setlength{\itemsep}{1pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Document Start %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\typeout{Poster rendering started}
+
+%:Background image
+%%% Setting Background Image %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\background{%
+    \begin{tikzpicture}
+        [remember picture,overlay]\node[opacity=0.95] at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{persyval_posters_doctorants2017.pdf}};
+    \end{tikzpicture}%
+}
+
+
+
+%%% General Poster Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Eye Catcher, Title, Authors and University Images %%%%%%%%%%%%%%%%%%%%%%
+\begin{poster}{
+	grid=false,
+	% Option is left on true though the eyecatcher is not used. The reason is
+	% that we have a bit nicer looking title and author formatting in the headercol
+	% this way
+	%eyecatcher=false, 
+	borderColor=bordercol,
+	headerColorOne=headercol1,
+	headerColorTwo=headercol2,
+	headerFontColor=headerfontcol,
+	% Only simple background color used, no shading, so boxColorTwo isn't necessary
+	boxColorOne=boxcolor,
+	headershape=roundedright,
+	headerfont=\Large\sf\bf,
+	textborder=rectangle,
+	background=user,
+	headerborder=open,
+  boxshade=plain
+}
+%%% Eye Cacther %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+\setlength\fboxsep{0pt}
+\setlength\fboxrule{0.5pt}
+	\fbox{
+			% \includegraphics[width=0.15\textwidth]{persyval.jpg}
+	}
+
+  
+}
+%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\sf\bf \color{headercol1}
+	Estimation of Spatial Population \\ 
+	Structure
+}
+%%% Authors %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+	\vspace{1em} Kevin Caye$^{1}$, Olivier Michel$^{2}$, Olivier Francois$^{1}$ \\
+	$^{1}$ TIMC-IMAG, $^{2}$ GIPSA-lab
+}
+%%% Logo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+% The logos are compressed a bit into a simple box to make them smaller on the result
+% (Wasn't able to find any bigger of them.)
+\setlength\fboxsep{0pt}
+\setlength\fboxrule{0.5pt}
+	\fbox{
+      % \includegraphics[width=0.1\textwidth]{logoTIMC.jpg}
+	}
+}
+
+%%% knitr setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<<setup, include=FALSE>>=
+library(knitr)
+options(formatR.arrow=TRUE,width=50)
+opts_chunk$set(echo = FALSE, cache = TRUE, eval = TRUE,
+               fig.path = 'figure/graphics-', cache.path = 'cache/graphics-', 
+               fig.align = 'center', dev = 'tikz', fig.width = 5, fig.height = 5, fig.show = 'hold',
+               warning = FALSE, error = FALSE, results = FALSE, message = FALSE)
+
+knit_hooks$set(par = function(before, options, envir){
+  if (before && options$fig.show != 'none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+}, crop = hook_pdfcrop)
+
+
+@
+
+<<libs, include=FALSE>>=
+library(data.table)
+library(maps)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+library(gridExtra)
+library(cowplot)
+library(ggmap)
+library(xtable)
+library(GGally)
+library(tess3r)
+library(network)
+library(grid)
+
+g_legend <- function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
+@
+
+
+<<at.data>>=
+data.pipe <- pipe('ssh cayek@patator.imag.fr "cat /home/cayek/Data/AthalianaGegMapLines/call_method_75/call_method_75_TAIR8.RData"')
+load(data.pipe)
+@
+
+
+%%% Introduction %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\headerbox{Introduction}{name=intro,column=0,row=0, span=3}{
+
+Geography and landscape are important determinants of genetic variation in natural populations,
+and several ancestry estimation methods have been proposed to investigate population
+structure using genetic and geographic data simultaneously. Those approaches are often based on
+computer-intensive stochastic simulations, and do not scale with the dimensions of the data sets
+generated by high-throughput sequencing technologies. There is a growing demand for faster algorithms
+able to analyze genome-wide patterns of population genetic variation in their geographic
+context.
+
+}
+
+%%% Data %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\headerbox{Input Data}{name=data,column=0,below=intro}{
+
+\textbf{Genotypic data:} 
+
+DNA Sequencing Technologies : 
+\begin{itemize}
+  \item SNPs array (\emph{Arabidopsis thaliana} RegMap lines \citep{horton2012genome} : $200k$ loci of 1 307 individuals)
+  \item next generation sequencing (1000 Genome project \citep{10002015global} : whole genome of $2504$ individuals)
+\end{itemize}
+
+
+\begin{center}
+<<table>>=
+n = 3
+L = 2
+table <- as.data.frame(call_method_75_TAIR8.europe$X[1:n,1:L])
+#rownames(table)[n] <- "$\\hdots$" 
+#colnames(table) <- c( "1_657", "1_3102", "$\\vdots$")
+kable(table)
+@
+\end{center}
+
+\textbf{Spatial data:}
+
+Individual spatial coordinates of \emph{Arabidopsis thaliana} RegMap Lines dataset.
+
+<<spatial.data, eval=TRUE, fig.width=4*sqrt(2), fig.height=4>>=
+sbbox <- c(min(call_method_75_TAIR8.europe$coord[,1]), min(call_method_75_TAIR8.europe$coord[,2]), 
+           max(call_method_75_TAIR8.europe$coord[,1]), max(call_method_75_TAIR8.europe$coord[,2]))
+toplot = data.frame(x = call_method_75_TAIR8.europe$coord[,1], 
+                                             y = call_method_75_TAIR8.europe$coord[,2], 
+                                             name = rownames(call_method_75_TAIR8.europe$coord))
+sq_map <- get_map(location = sbbox, maptype = "satellite", source = "google")
+ggmap(sq_map) + geom_point(data = toplot, aes(x = x, y = y, col = "red"), size = 0.3) +
+   #geom_text(data = toplot, aes(label = paste("  ", as.character(name), sep=""), x = x, y = y), angle = 0, hjust = 0, color = "yellow", inherit.aes = FALSE, size = 1.5) +
+  labs(x = "Latitude", y = "Longitude") +
+  theme(legend.position = "none") + 
+  coord_map() + 
+  theme(axis.line=element_blank(),
+      axis.text.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks=element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank(),
+      legend.position="none",
+      panel.background=element_blank(),
+      panel.border=element_blank(),
+      panel.grid.major=element_blank(),
+      panel.grid.minor=element_blank(),
+      plot.background=element_blank())
+@
+
+
+}
+
+
+%%% Model %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\headerbox{Model}{name=model,column=1,span = 2,below=intro}{
+ \begin{multicols}{2}
+ \textbf{Ancestry coefficients and ancestral population definitions:}
+
+We write $G$ the genomic matrix.
+\begin{equation*}
+\begin{array}{rcl}
+P(G_{i,\ell} = j) & = & \sum_{k=1}^K Q_{i,k} f_{k,\ell}(j),\\
+\\
+P &=& QF^T,
+\end{array}
+\end{equation*}
+where $Q$ is the ancestry coefficient matrix and $F$ the ancestral genotype frequency matrix.
+
+\textbf{Optimisation Problem:}
+
+Optimisation problem to estimate $Q$ and $F$ of sNMF method~\citep{frichot2014fast}:
+\begin{equation*}
+\begin{aligned}
+& \underset{Q,F}{\text{min}} & & ||X-QF^T||^2 \\
+& \text{such as} & & Q \succeq 0,~F \succeq 0 \\
+&&& \sum_{k=1}^{K} Q_{i,k} = 1,~\forall i \in \{1,...,n\}  \\
+&&& \sum_{j=0}^{d} f_{k,\ell}(j) = 1,~\forall \ell \in \{1,...,L\}, \\
+\end{aligned}
+\end{equation*}
+where $X$ is a binary matrix which encode absence or the presence of each genotype at each locus.
+
+\textbf{Graphe based regularization:}
+
+We construct a weighted graph using spatial data: 
+\begin{equation*}
+W_{i,j} = e^{ - \frac{||z_i - z_j||^2}{\sigma}}, 
+\end{equation*}
+where $z$ are geographic positions.
+
+
+The loss function introduce in GNMF method~\citep{cai2011graph} is:
+\begin{equation*}
+\begin{aligned}
+||X-QF^T||^2 + \lambda \sum_{i,j}^{n} W_{i,j} ||Q_{i,} - Q_{j,}||^2 \\
+||X-QF^T||^2 + \lambda \text{trace}(Q^T L Q), 
+\end{aligned}
+\end{equation*}
+where $L$ is the graph laplacian matrix.
+\end{multicols}
+}
+
+%%% Algoritm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\headerbox{Algorithm}{name=algo,column=1,span=2,below=model}{
+ \begin{multicols}{2}
+\begin{itemize}
+
+\item The TESS3 optimisation problem is not convex.
+
+\item It is convex with respect to one of the variables $Q$ or $F$ when the other one is fixed.
+
+\item We can use a block-coordinate descent scheme
+
+\end{itemize}
+\begin{algorithmic}
+\For {$it \in \{1,..,itMax\}$}
+
+\textcolor{alert}{\# Least squares problems}
+
+\For {$j \in \{1,..,(D+1)L\}$}
+
+$ F_{j, .}^T \gets \text{arg min}  || Vec(X^j) - Q f||^2$ 
+
+\EndFor
+
+\textcolor{alert}{\# Projection onto $F$ polygon of constraints}
+
+$F \gets \mathcal{P}_{F}(F)$ 
+
+\textcolor{alert}{\# $\ell_2$-regularized least squares problems}
+
+\For {$i \in \{1,..,n\}$}
+
+$ {Q_R^T}_{i, .} \gets \text{arg min} || {X_R^T}_{,i} - F q ||^2 + \lambda \mu_i ||q||^2$ 
+
+\EndFor
+
+\textcolor{alert}{\# Projection onto $Q$ polygon of constraints}
+
+$Q \gets \mathcal{P}_{Q}(R^T Q_R)$ 
+
+\EndFor
+\end{algorithmic}
+\end{multicols}
+
+}
+
+
+%%% Resultats %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<<before.ancestry.plots, eval=TRUE>>=
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+n = 3
+cols = gg_color_hue(n)
+
+res.dir <- "/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/Figure5.res/"
+load(paste0(res.dir,"tess3.run.K3.res"))
+Q <- tess3.run.K3$Q
+# northen cluster
+id.northers <- which(apply(Q, 1, which.max) == 2)
+Q.notnorthers <- Q[!(1:nrow(Q) %in% id.northers),]
+coord.notnorthers <- call_method_75_TAIR8.europe$coord[!(1:nrow(Q) %in% id.northers),]
+id <- sort(coord.notnorthers[,1], index.return = TRUE)
+Q.ordered <- rbind(Q[id.northers,], Q.notnorthers[id$ix,])
+
+
+# plot(rep(1,5),col = col.palette[[2]],pch=19,cex=3)
+palette.step = 6 
+col.palette = list(
+      c(RColorBrewer::brewer.pal(palette.step,"Reds")),
+      c(RColorBrewer::brewer.pal(palette.step,"Greens")),
+      c(RColorBrewer::brewer.pal(palette.step,"Blues"))
+      )
+@
+
+
+\headerbox{Results}{name=res,column=1,span=2,below=algo}{
+ \begin{multicols}{2}
+We computed population structure of the \emph{Arabidopsis thaliana} RegMap Lines dataset with $K = 3$ ancestral populations.
+
+\textbf{Individual ancestry coefficients:}
+Ancestry coefficients can be projected on a map.
+<<Q.plot, eval=TRUE, fig.width=4*sqrt(2), fig.height=4, dev="pdf">>=
+# plot.new()
+#dev.off()
+par(mar=c(2,2,2,2))
+plot(tess3.run.K3$Q, call_method_75_TAIR8.europe$coord, col.palette = col.palette, interpolation.function = kriging(), plot.type = "max", cex = 0.5, xlab="", ylab = "")
+@
+
+<<barplot, fig.width=4*sqrt(2), fig.height=1, eval=TRUE, dev="pdf">>=
+
+# toplot <- data.frame(Q.ordered[,c(1,3,2)], indiv = rownames(call_method_75_TAIR8.europe$coord)) 
+# toplot <- toplot[!duplicated(toplot$indiv),]
+# toplot <- toplot %>% melt(id = c("indiv"))
+# pl.bar <- ggplot(toplot, aes(x = as.factor(indiv), y = value, fill = variable)) + geom_bar(stat="identity") + 
+#   theme_grey() + 
+#   theme(axis.text.x = element_blank(),
+#         axis.ticks.x = element_blank()) 
+
+# dev.off()
+par(mar = c(0,0,0,0))
+barplot(t(Q.ordered[,c(1,3,2)]), col = c(col.palette[[1]][6], col.palette[[2]][6], col.palette[[3]][6]), border = NA, axes = FALSE)
+@
+
+\textbf{Ancestral populations:}
+A $F_{st}$ statistic is calculated to represent the genotype distribution differentiation between ancestral populations.
+<<manhattan_plot, eval=TRUE, fig.width=5*sqrt(2), fig.height=5, dev="pdf">>=
+toplot <- data.frame(fst = as.vector(tess3.run.K3$Fst), Chromosome = as.factor(call_method_75_TAIR8.europe$locus.coord$Chromosome), index = seq_along(tess3.run.K3$Fst))
+toplot <- toplot[sample(1:nrow(toplot),10000),]
+p <- ggplot(toplot, aes(x = index, y = -log(1 - fst), col = Chromosome)) + 
+  geom_point() + 
+  theme(legend.position = "bottom") +
+   xlab("Locus Index") + 
+  ylab("- log(1 - Fst)")
+p
+@
+\end{multicols}
+
+}
+
+%%% ref %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\headerbox{References}{name=ref,column=0,span=1,below=data}{
+\renewcommand\refname{\vskip -0.5cm}
+\bibliography{main}
+
+}
+
+\end{poster}
+\end{document}
