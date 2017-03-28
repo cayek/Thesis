@@ -257,9 +257,16 @@
        1 figures: fdr + precision-recall
        methods: ...       
 ***** TODO True dataset
+*** 2017-03-28 mardi
+**** TODO Feature importance                                :3Article:Thesis:
+   Entered on [2017-03-28 mar. 18:09]
+   
+   Feature importance pour remplacer la pvalue ? Il faut que je vois les
+   alternative a la pvalue. C'est trop dépendant d'un modèle ! On le fait pour
+   le folclore ! 
 
-
-
+   Pour ma thèse faut que je parle de ces alternative a la pvalue ! Et de sont
+   monopole :D
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
