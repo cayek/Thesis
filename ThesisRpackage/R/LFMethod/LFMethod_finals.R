@@ -238,3 +238,28 @@ finalBench <- function(K, lambda, calibrate, sparse.prop,
     }
     bench
 }
+
+#' @export
+finalBenchWithMissingValue <- function(K, lambda, calibrate, sparse.prop,
+                       fast.only = FALSE) {
+  bench <- list()
+  bench$lfmmRidge <- finalLfmmRdigeMethod(K = K,
+                                          lambda = lambda,
+                                          calibrate = calibrate)
+
+  bench$famt <- finalFamtMethod(K = K)
+  bench$sva <- finalSVAMethod(K = K)
+  bench$oracle <- finalOracle(K = K, calibrate = calibrate)
+  if (!fast.only) {
+    bench$lfmmLasso <- finalLfmmLassoMethod(K = K,
+                                            sparse.prop = sparse.prop,
+                                            calibrate = calibrate)
+  }
+  if (with.missing) {
+    bench$lfmm.ridge.impute.first <- finalLfmmRdigeMethod(K = K,
+                                                          lambda = lambda,
+                                                          calibrate = calibrate,
+                                                          prior.impute = TRUE)
+  }
+  bench
+}

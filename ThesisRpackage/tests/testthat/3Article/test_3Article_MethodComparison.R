@@ -2,7 +2,7 @@ library(testthat)
 context("Article3_MethodComparison")
 
 test_that("Article3_MethodComparison", {
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.sample.10000.rds"
   skip_if_not(file.exists(G.file))
 
   exp <- Article3_MethodComparison(G.file = G.file,

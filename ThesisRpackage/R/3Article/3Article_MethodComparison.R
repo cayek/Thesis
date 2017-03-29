@@ -1,3 +1,26 @@
+Article3_MethodComparison_main <- function(exp) {
+  exp$df <- tibble()
+  for (p in exp$outlier.props) {
+    DebugMessage(paste0("outlier prop = ",p))
+    s <- exp$s
+    s$prop.outlier <- p
+    bench <- finalBench(K = s$K,
+                        lambda = 1e-5,
+                        sparse.prop = p,
+                        calibrate = FALSE,
+                        fast.only = exp$fast.only, with.missing = FALSE)
+    exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = exp$nb.rep, s = s), bench))
+    exp.aux <- runExperiment(exp.aux)
+
+
+    exp$df <- exp.aux$result$df.pvalue %>%
+      dplyr::mutate(outlier.prop = p) %>%
+      rbind(exp$df)
+  }
+  exp
+}
+
+
 #' @export
 Article3_MethodComparison <- function(G.file,
                                       outlier.props = c(0.05, 0.1),
@@ -21,32 +44,18 @@ Article3_MethodComparison <- function(G.file,
                                      cs = cs,
                                      outlier.props = outlier.props,
                                      nb.rep = nb.rep)
-  exp$df <- tibble()
-  for (p in outlier.props) {
-    DebugMessage(paste0("outlier prop = ",p))
-    s <- FromTrueSampler(G.file = G.file,
-                         n = n,
-                         L = L,
-                         K = K,
-                         prop.outlier = p,
-                         rho = NULL,
-                         cs = cs,
-                         round = FALSE)
-    bench <- finalBench(K = K,
-                        lambda = 1e-5,
-                        sparse.prop = p,
-                        calibrate = FALSE,
-                        fast.only = fast.only, with.missing = FALSE)
-    exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = nb.rep, s = s), bench))
-    exp.aux <- runExperiment(exp.aux)
-
-
-    exp$df <- exp.aux$result$df.pvalue %>%
-      dplyr::mutate(outlier.prop = p) %>%
-      rbind(exp$df)
-  }
-
-
+  exp$fast.only <- fast.only
+  exp$nb.rep <- nb.rep
+  exp$outlier.props  <- outlier.props
+  exp$s <- FromTrueSampler(G.file = G.file,
+                       n = n,
+                       L = L,
+                       K = K,
+                       prop.outlier = NULL,
+                       rho = NULL,
+                       cs = cs,
+                       round = FALSE)
+  exp <- Article3_MethodComparison_main(exp)
 
   ## return
   long_return(cl, save, exp)
