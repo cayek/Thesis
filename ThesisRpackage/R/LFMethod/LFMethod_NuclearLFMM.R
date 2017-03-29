@@ -24,6 +24,10 @@ D_thau <- function(m, X) {
 ComputeGamma <- function(m, G_) {
   # compute a gamma
   if (is.null(m$gamma)) {
+    if (anyNA(G_)) {
+      DebugMessage("In ComputeGamma: missing values detected. Impute by mean")
+      G_ <- imputeByMean()$fun(G_)
+    }
     svd.res <- svd(G_, nu = 0, nv = 0) # compute only singular value
     m$gamma <- (svd.res$d[m$K] + svd.res$d[m$K + 1]) / 2
     DebugMessage(paste("Gamma = ", m$gamma, "\n"))

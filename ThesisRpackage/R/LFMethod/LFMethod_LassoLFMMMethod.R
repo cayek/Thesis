@@ -3,6 +3,10 @@
 
 #' compute lambda_max such as B = 0
 lambda_max <- function(G_, dat, d, L, m) {
+  if (anyNA(G_)) {
+    DebugMessage("In lambda_max: missing values detected. Impute by mean")
+    G_ <- imputeByMean()$fun(G_)
+  }
   # C
   svd.res <- svd(G_, nu = m$K, nv = m$K)
   m$U <- svd.res$u %*% diag(svd.res$d[1:m$K], m$K, m$K)
@@ -109,10 +113,10 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
   }
 
   # impute missing value
-  if (anyNA(G_)) {
-    DebugMessage("Missing values detected")
-    G_ <- m$impute.genotype.method$fun(G_)
-  }
+  ## if (anyNA(G_)) {
+  ##   DebugMessage("Missing values detected")
+  ##   G_ <- m$impute.genotype.method$fun(G_)
+  ## }
 
   # init algo
   if (!reuse) {
@@ -120,6 +124,16 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
     #m$B <- matrix(rnorm(d * L), d, L)
     m$C <- matrix(0, n, L)
   }
+
+  ## update function
+  update.func <- function(m, G_, dat) {
+    ## calculate C
+    m <- D_thau(m, G_ - dat$X %*% m$B)
+    ## calculate B
+    m$B <- B_lasso(A = G_ - m$C, X = dat$X, lambda = m$lambda)
+    m
+  }
+
 
   # compute gamma
   m <- ComputeGamma(m, G_)
@@ -145,12 +159,15 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
   for (i in seq_along(lambdas)) {
     # main loop
     DebugMessage(paste0("loop number ",i," / ", m$lambda.K, "|lambda = ",lambdas[i]))
-    m <- LassoLFMM_main(m = m,
-                        G_ = G_,
-                        dat = dat,
-                        lambda = lambdas[i])
-    B.all[,,i] <- m$B
 
+    m$lambda <- lambdas[i]
+    m <- missingValueImputationLoop(m = m,
+                                    G_ = G_,
+                                    update.func = update.func,
+                                    dat = dat,
+                                    reuse = TRUE)
+    B.all[,,i] <- m$B
+    DebugMessage(paste0("-> B not null prop = ", mean(m$B != 0)))
     if (!is.null(m$sparse.prop) && (mean(m$B != 0.0) >= m$sparse.prop)) break() #if a sparse proportion is define, we leave the loop if this proportion is reached
 
   }

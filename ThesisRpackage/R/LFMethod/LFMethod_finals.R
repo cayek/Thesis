@@ -34,7 +34,7 @@ finalLfmmRdigeMethod <- function(K, lambda, calibrate  = FALSE, prior.impute = F
 
 
   ## for iterative version
-  m$it.max = 200
+  m$it.max = 300
   m$err.max = 1e-6
   m
 }
@@ -86,7 +86,9 @@ fit.finalLfmmRdigeMethod <- function(m, dat, reuse = FALSE) {
 }
 
 ################################################################################
-finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = NULL) {
+finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = NULL,
+                                 lambda.K = 100,
+                                 lambda.eps = 0.001) {
   m <- LassoLFMMMethod(K = K,
                        it.max = 200,
                        err.max = 1e-6,
@@ -95,13 +97,13 @@ finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = 
                                                              correctionByC = FALSE),
                        sparse.prop = sparse.prop,
                        lambda = NULL, # if null regularization path
-                       lambda.K = 100, # default value used in Friedman et al. 2010
-                       lambda.eps = 0.001, # default value used in Friedman et al. 2010
+                       lambda.K = lambda.K, # default value used in Friedman et al. 2010
+                       lambda.eps = lambda.eps, # default value used in Friedman et al. 2010
                        center = TRUE,
                        name = "finalLfmmLassoMethod",
                        nickname = "LassoLfmm")
 
-  class(m) <- c("final", "LassoLFMMMethod", class(m))
+  class(m) <- c("LassoLFMMMethod", class(m))
   m
 }
 
@@ -237,29 +239,4 @@ finalBench <- function(K, lambda, calibrate, sparse.prop,
                                                             prior.impute = TRUE)
     }
     bench
-}
-
-#' @export
-finalBenchWithMissingValue <- function(K, lambda, calibrate, sparse.prop,
-                       fast.only = FALSE) {
-  bench <- list()
-  bench$lfmmRidge <- finalLfmmRdigeMethod(K = K,
-                                          lambda = lambda,
-                                          calibrate = calibrate)
-
-  bench$famt <- finalFamtMethod(K = K)
-  bench$sva <- finalSVAMethod(K = K)
-  bench$oracle <- finalOracle(K = K, calibrate = calibrate)
-  if (!fast.only) {
-    bench$lfmmLasso <- finalLfmmLassoMethod(K = K,
-                                            sparse.prop = sparse.prop,
-                                            calibrate = calibrate)
-  }
-  if (with.missing) {
-    bench$lfmm.ridge.impute.first <- finalLfmmRdigeMethod(K = K,
-                                                          lambda = lambda,
-                                                          calibrate = calibrate,
-                                                          prior.impute = TRUE)
-  }
-  bench
 }

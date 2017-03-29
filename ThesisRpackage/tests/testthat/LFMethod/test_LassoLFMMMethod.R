@@ -130,6 +130,41 @@ test_that("Test of soft feature", {
 
 })
 
+################################################################################
+# with missing values
+
+
+test_that("Test of lasso with missing values", {
+
+  # sample data
+  K <- 5
+  prop <- 0.1
+  s <- LogisticSampler(n = 100,
+                       L = 1000,
+                       K = K,
+                       prop.outlier = prop,
+                       c = 0.6,
+                       mean.B = 0.0,
+                       sd.mu = 1.0,
+                       mean.mu = 0.5) %>%
+    SparseMissingValueSampler(missing.prop = 0.1, missing.prop.by.loci = 0.5)
+  dat <- sampl(s)
+
+  m <- LassoLFMMMethod(K = K,
+                       sparse.prop = 0.10,
+                       lambda = 1e-1,
+                       lambda.K = 50,
+                       lambda.eps = 0.002,
+                       it.max = 100,
+                       err.max = 1e-6,
+                       soft = TRUE)
+  m <- run(m, dat)
+
+  expect_lte(abs(mean(m$B != 0.0) - prop), 0.01)
+  gplot_stat(m$B[1,], dat$B[1,], outlier = dat$outlier) +
+    geom_point(aes(x = index, y = stat, color = outlier))
+
+})
 
 ################################################################################
 # SSMPG dataset

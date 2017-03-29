@@ -63,7 +63,7 @@ require(ThesisRpackage)
 G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.rds"
 s <- FromTrueSampler(G.file = G.file,
                            n = NULL,
-                           L = 1000,
+                           L = 10000,
                            K = 4,
                            prop.outlier = 0.1,
                            rho = NULL,
@@ -72,11 +72,22 @@ s <- FromTrueSampler(G.file = G.file,
     SparseMissingValueSampler(missing.prop = 0.1, missing.prop.by.loci = 0.5)
 
 exp <- Article3_withMissingValueResults(s = s,
-                                        s.name = "sample from European_Chrm22.maf.05.rds with 0.1 missing prop",
-                                        nb.rep = 10,
+                                        s.name = "from European_Chrm22.maf.05.rds with 0.1 missing prop",
+                                        nb.rep = 5,
                                         lambda = 1e-5,
                                         K = 4,
-                                        cluster.nb = 2,
-                                        save = TRUE, bypass = FALSE)
+                                        cluster.nb = 4,
+                                        fast.only = FALSE,
+                                        save = FALSE, bypass = TRUE)
+```
+
+### plots
+
+```{r}
+exp <- retrieveExperiment(89)
+```
+
+```{r}
+plot(exp)
 ```
 
