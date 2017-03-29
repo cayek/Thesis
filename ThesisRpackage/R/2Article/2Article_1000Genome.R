@@ -47,3 +47,38 @@ Article2_1000Genome <- function(dat.file = "~/Projects/Thesis/Data/1000Genomes/P
   }
   exp
 }
+
+#' @export
+Article2_1000Genome_res <- function(exp, indiv) {
+
+  assertthat::assert_that(exp$name == "Article2_1000Genome")
+  df.res <- tibble()
+
+
+  pops <- list()
+  pops[["EU"]] <- c("TSI", "GBR")
+  pops[["AFAM"]] <- c("ASW")
+  pops[["AF"]] <- c("YRI", "LWK")
+
+  ## tess3
+  cluster.mean <- list()
+  Q <- exp$tess3r$Q
+  for (n in names(pops)) {
+    cluster.mean[[n]] <- apply(Q[indiv$pop %in% pops[[n]],], 2, mean)
+  }
+  df.res <- as_tibble(cluster.mean) %>%
+    mutate(method = "tess3") %>%
+    rbind(df.res)
+
+  ## snmf
+  cluster.mean <- list()
+  Q <- exp$snmf.method$Q
+  for (n in names(pops)) {
+    cluster.mean[[n]] <- apply(Q[indiv$pop %in% pops[[n]],], 2, mean)
+  }
+  df.res <- as_tibble(cluster.mean) %>%
+    mutate(method = "snmf") %>%
+    rbind(df.res)
+
+  df.res
+}

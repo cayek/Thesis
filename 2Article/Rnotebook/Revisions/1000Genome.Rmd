@@ -114,6 +114,28 @@ a = barplot(exp$tess3.res$Q)
 a = barplot(exp$snmf.method$Q)
 ```
 
+# ALL chrm subsample
+
+## Run of tess3
+### On krak
+```{r}
+require(tess3r)
+require(ThesisRpackage)
+dat.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.sample.rds"
+exp <- Article2_1000Genome(dat.file,
+                           K = 3,
+                           openMP.core.num = 4,
+                           save = TRUE)
+```
+
+Compute proportion by pop
+```{r}
+dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.sample.rds")
+exp <- retrieveExperiment(83)
+Article2_1000Genome_res(exp, dat$indiv)
+```
+
+
 # ALL chrm
 
 ## Run of tess3
