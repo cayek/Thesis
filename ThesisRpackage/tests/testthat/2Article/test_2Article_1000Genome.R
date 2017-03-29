@@ -14,11 +14,11 @@ test_that("2Article_1000Genome", {
                              save = FALSE)
 
 
-  expect_equal(exp$description, "run of tess3r with dat.file= K=2 ")
+  expect_equal(exp$description, "run of tess3r with dat.file=~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.sample.rds K=3 ")
   expect_equal(exp$name, "Article2_1000Genome")
   expect_lt(tess3r::ComputeRmseWithBestPermutation(exp$tess3r$Q,
                                                       exp$snmf.method$Q), 0.07)
 
-  barplot(exp$tess3r$Q)
-  barplot(exp$snmf.method$Q)
+  barplot(exp$tess3r$Q, border = NA)
+  barplot(exp$snmf.method$Q, border = NA)
 })
