@@ -28,14 +28,28 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALS
 ```{r}
 require(ThesisRpackage)
 G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.rds"
-Article3_MethodComparison(G.file,
-                          outlier.props = c(0.05, 0.1),
-                          n = NULL, L = 10000,
-                          K = 4,
-                          cs = c(0.6, 0.3, 0.0, 0.0),
-                          nb.rep = 5,
-                          fast.only = FALSE,
-                          cluster.nb = 2,
-                          save = TRUE, bypass = FALSE)
+exp <- Article3_MethodComparison(G.file,
+                                 outlier.props = c(0.05, 0.1),
+                                 n = NULL, L = 10000,
+                                 K = 4,
+                                 cs = c(0.6, 0.3, 0.0, 0.0),
+                                 nb.rep = 10,
+                                 fast.only = FALSE,
+                                 cluster.nb = 2,
+                                 save = TRUE, bypass = FALSE)
+```
+
+### plots
+
+```{r}
+exp <- retrieveExperiment(82)
+```
+
+```{r}
+Article3_MethodComparison_plot(exp, plot.type = "pvalue.grid")
+```
+
+```{r}
+Article3_MethodComparison_plot(exp, plot.type = "precision.recall")
 ```
 

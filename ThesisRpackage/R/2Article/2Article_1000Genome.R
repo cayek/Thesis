@@ -33,7 +33,8 @@ Article2_1000Genome <- function(dat.file = "~/Projects/Thesis/Data/1000Genomes/P
                                   mask = 0.0,
                                   copy = FALSE,
                                   algo.copy = FALSE,
-                                  verbose = TRUE)
+                                  verbose = TRUE,
+                                  only.ancestry = TRUE)
 
   ## snmf
   exp$snmf.method <- sNMFMethod(K = K,
