@@ -9,8 +9,8 @@ Article3_withMissingValueResults <- function(s,
                                              save = TRUE, bypass = FALSE) {
 
   ## init
-  long_init(cluster.nb = cluster.nb,
-            bypass = bypass)
+  cl <- long_init(cluster.nb = cluster.nb,
+                  bypass = bypass)
 
   ## methods
   methods <- list()
@@ -45,11 +45,9 @@ Article3_withMissingValueResults <- function(s,
   exp <- runExperiment(exp)
 
   class(exp) <- c("Article3_withMissingValueResults", class(exp))
-  ## save exp
-  if (save) {
-    dumpExperiment(exp)
-  }
-  exp
+
+  ## return
+  long_return(cl = cl, save = save, exp = exp)
 }
 
 

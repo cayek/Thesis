@@ -58,8 +58,8 @@ CRANDep <- function(pkgs = c('ggplot2',
 #'
 #'
 KrakTest <- function(bypass) {
-  if (Sys.info()["nodename"] != "krakenator.imag.fr" && !bypass) {
-    stop("Your are not on krakenator")
+  if (!(Sys.info()["nodename"] %in% c("krakenator.imag.fr","patator.imag.fr")) && !bypass) {
+    stop("Your are not on krakenator or patator")
   }
 }
 

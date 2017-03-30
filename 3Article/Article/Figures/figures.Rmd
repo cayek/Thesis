@@ -81,7 +81,7 @@ exp <- Article3_withMissingValueResults(s = s,
                                         lambda = 1e-5,
                                         K = 4,
                                         cluster.nb = 4,
-                                        fast.only = FALSE,
+                                        fast.only = TRUE,
                                         save = TRUE, bypass = FALSE)
 ```
 
