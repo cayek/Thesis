@@ -55,7 +55,60 @@ LassoLFMM_main <- function(m, G_, dat, lambda) {
   m
 }
 
+#' compute a range of lambda
+Lasso_LambdaGammaRange <- function(dat, lambda.K, Ks) {
+  res <- list()
 
+  n <- nrow(dat$G)
+  L <- ncol(dat$G)
+
+  m <- list(center = TRUE)
+  m <- mu(m, dat$G)
+  G_ <- center(m, dat$G)
+
+
+  if (anyNA(G_)) {
+    DebugMessage("In lambda_max: missing values detected. Impute by mean")
+    G_ <- imputeByMean()$fun(G_)
+  }
+
+  # C
+  svd.res <- svd(G_, nu = 0, nv = 0)
+  # res$gammas <- svd.res$d[ceiling(seq.int(1, n, length.out = gamma.K))]
+  res$gammas <- svd.res$d[Ks]
+
+  # B
+  B <- B_ridge(A = G_, X = dat$X, lambda = 0.0)
+  B.sorted <- sort(B, decreasing = TRUE)
+  res$lambdas <- B.sorted[ceiling(seq.int(1, n, length.out = lambda.K))]
+
+  res
+}
+
+Lasso_HeuristicGammaLambda <- function(dat, K, sparse.prop, lambda.lfmm = 1e-10) {
+
+  res <- list()
+
+  ## run lfmm ridge
+  m <- finalLfmmRdigeMethod(K, lambda = lambda.lfmm, prior.impute = TRUE)
+  m <- fit(m, dat)
+
+  ## lambda
+  B <- m$B
+  L <- ncol(B)
+  d <- nrow(B) ## to handle case with several co-variate, but I did not test it...
+  all.B.sorted <- sort(B, decreasing = TRUE)
+  res$lambda <- (all.B.sorted[L * d * sparse.prop] + all.B.sorted[L * d * sparse.prop + 1]) / 2
+
+  m <- finalLfmmRdigeMethod(K + 1, lambda = lambda.lfmm, prior.impute = TRUE)
+  m <- fit(m, dat)
+
+  ## gamma
+  svd.res <- svd(m$C, nu = 0, nv = 0)
+  res$gamma <- (svd.res$d[K] + svd.res$d[K + 1]) / 2
+
+  res
+}
 
 ################################################################################
 # LassoLFMMMethod
@@ -135,9 +188,22 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
   }
 
 
-  # compute gamma
-  m <- ComputeGamma(m, G_)
 
+  ## compute gamma and lambda
+  if (is.null(m$lambda) &&
+      is.null(m$gamma) &&
+      is.null(m$lambda.eps) &&
+      is.null(m$lambda.K)) {
+    DebugMessage(paste0("Lasso_HeuristicGammaLambda"))
+    gamma.lambda.heuristic <- Lasso_HeuristicGammaLambda(dat, m$K, m$sparse.prop)
+    m$lambda <- gamma.lambda.heuristic$lambda
+    m$gamma <- gamma.lambda.heuristic$gamma
+  }
+
+  if (is.null(m$gamma)) {
+    # compute gamma
+    m <- ComputeGamma(m, G_)
+  }
 
   if (is.null(m$lambda)) {
     # reg path

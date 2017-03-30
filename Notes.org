@@ -267,6 +267,22 @@
 
    Pour ma thèse faut que je parle de ces alternative a la pvalue ! Et de sont
    monopole :D
+*** 2017-03-29 mercredi
+**** bilan de la journée
+   Entered on [2017-03-29 mer. 17:29]
+
+   Je me perds un peut avec les simulations avec missing value. Ca marche très
+   bien sur le jeux de données que j'ai choisi. 
+   
+   Demain ajouter lasso au protocole de validation sur des vrai jeux de données.
+   Faudrai que je trouve un moyen de comparer les sortie des différent algos,
+   pour valider que ma methode fait comme d'autre !! DU coup sur chaque jeux de
+   données GWAS/EWAS/EAS il me faut une méthode de reférence !! 
+
+   Je vais travailler sur les function Article3_cv/pca/runExp, il me faut un
+   protocole unifié !!
+
+   A demain ! 
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions

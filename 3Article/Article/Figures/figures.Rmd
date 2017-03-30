@@ -78,7 +78,7 @@ exp <- Article3_withMissingValueResults(s = s,
                                         K = 4,
                                         cluster.nb = 4,
                                         fast.only = FALSE,
-                                        save = FALSE, bypass = TRUE)
+                                        save = TRUE, bypass = FALSE)
 ```
 
 ### plots

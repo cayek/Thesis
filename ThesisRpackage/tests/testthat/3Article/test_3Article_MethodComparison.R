@@ -14,7 +14,7 @@ test_that("Article3_MethodComparison", {
                                    nb.rep = 1,
                                    fast.only = TRUE,
                                    cluster.nb = NULL,
-                                   save = TRUE, bypass = TRUE)
+                                   save = FALSE, bypass = TRUE)
 
   Article3_MethodComparison_plot(exp, plot.type = "pvalue.grid")
   Article3_MethodComparison_plot(exp, plot.type = "precision.recall")

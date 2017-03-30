@@ -30,8 +30,6 @@ Article3_withMissingValueResults <- function(s,
     methods$lfmm.lasso <- finalLfmmLassoMethod(K = K,
                                                sparse.prop = s$sampler$prop.outlier,
                                                calibrate = FALSE,
-                                               lambda.K = 4,
-                                               lambda.eps = 0.025,
                                                nickname = "lfmm.lasso")
   }
 

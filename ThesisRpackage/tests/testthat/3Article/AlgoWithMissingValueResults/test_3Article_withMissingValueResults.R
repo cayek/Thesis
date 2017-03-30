@@ -14,7 +14,7 @@ test_that("3Article_withMissingValueResults with SparseMissingValueSampler", {
                                             s.name = "NormalSampler2",
                                             nb.rep = 1,
                                             lambda = 1e-1,
-                                            K = 3,
+                                            K = 3 + 1,
                                             cluster.nb = NULL,
                                             fast.only = FALSE,
                                             save = FALSE, bypass = TRUE)

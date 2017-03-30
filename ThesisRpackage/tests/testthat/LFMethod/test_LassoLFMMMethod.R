@@ -167,6 +167,62 @@ test_that("Test of lasso with missing values", {
 })
 
 ################################################################################
+# Lasso_LambdaGammaRange
+
+test_that("Lasso_LambdaGammaRange", {
+
+  K <- 5
+  prop <- 0.1
+  s <- LogisticSampler(n = 100,
+                       L = 1000,
+                       K = K,
+                       prop.outlier = prop,
+                       c = 0.6,
+                       mean.B = 0.0,
+                       sd.mu = 1.0,
+                       mean.mu = 0.5)
+  dat <- sampl(s)
+
+  res <- Lasso_LambdaGammaRange(dat, 4, 4)
+
+})
+
+
+################################################################################
+# Lasso_HeuristicGammaLambda
+
+test_that("Lasso_HeuristicGammaLambda", {
+
+  K <- 5
+  prop <- 0.1
+  s <- LogisticSampler(n = 100,
+                       L = 1000,
+                       K = K,
+                       prop.outlier = prop,
+                       c = 0.6,
+                       mean.B = 0.0,
+                       sd.mu = 1.0,
+                       mean.mu = 0.5)
+  dat <- sampl(s)
+
+  gamma.lambda.heuristic <- Lasso_HeuristicGammaLambda(dat, K, prop, lambda.lfmm = 1e-10)
+  gamma.lambda.heuristic$lambda
+  gamma.lambda.heuristic$gamma
+
+  m <- LassoLFMMMethod(K = 5,
+                       gamma = NULL,
+                       lambda = NULL,
+                       lambda.K = NULL,
+                       lambda.eps = NULL,
+                       sparse.prop = 0.1,
+                       it.max = 200,
+                       err.max = 1e-6,
+                       soft = TRUE)
+  m <- fit(m, dat) ## heuristic do not work well... but let's try that
+
+})
+
+################################################################################
 # SSMPG dataset
 
 test_that("lasso lfmm on case3", {

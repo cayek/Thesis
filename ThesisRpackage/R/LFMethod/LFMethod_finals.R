@@ -86,9 +86,8 @@ fit.finalLfmmRdigeMethod <- function(m, dat, reuse = FALSE) {
 }
 
 ################################################################################
-finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = NULL,
-                                 lambda.K = 100,
-                                 lambda.eps = 0.001) {
+finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = NULL) {
+
   m <- LassoLFMMMethod(K = K,
                        it.max = 200,
                        err.max = 1e-6,
@@ -97,8 +96,9 @@ finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = 
                                                              correctionByC = FALSE),
                        sparse.prop = sparse.prop,
                        lambda = NULL, # if null regularization path
-                       lambda.K = lambda.K, # default value used in Friedman et al. 2010
-                       lambda.eps = lambda.eps, # default value used in Friedman et al. 2010
+                       lambda.K = NULL, # default value used in Friedman et al. 2010
+                       lambda.eps = NULL, # default value used in Friedman et al. 2010
+                       gamma = NULL,
                        center = TRUE,
                        name = "finalLfmmLassoMethod",
                        nickname = "LassoLfmm")
@@ -226,11 +226,12 @@ finalBench <- function(K, lambda, calibrate, sparse.prop,
     bench$lm <- finalLm(calibrate = calibrate)
     bench$pcaLm <- finalPcaLm(K = K, calibrate = calibrate)
     bench$oracle <- finalOracle(K = K, calibrate = calibrate)
+    bench$lfmmLasso <- finalLfmmLassoMethod(K = K,
+                                            sparse.prop = sparse.prop,
+                                            calibrate = calibrate)
     if (!fast.only) {
       bench$lea <- finalLEAMethod(K = K)
-      bench$lfmmLasso <- finalLfmmLassoMethod(K = K,
-                                              sparse.prop = sparse.prop,
-                                              calibrate = calibrate)
+
     }
     if (with.missing) {
       bench$lfmm.ridge.impute.first <- finalLfmmRdigeMethod(K = K,
