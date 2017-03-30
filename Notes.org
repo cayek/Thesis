@@ -282,7 +282,32 @@
    Je vais travailler sur les function Article3_cv/pca/runExp, il me faut un
    protocole unifié !!
 
-   A demain ! 
+   A demain !
+*** 2017-03-30 Jeudi
+**** On reproducibility talk
+   Entered on [2017-03-30 Jeu 11:06]
+
+   - to see [[https://github.com/alegrand]]
+***** literate programming
+****** knitr 
+       - Rpubs to share markdown
+       - everything is public
+       - "knitr cache handling not that good"
+       - "not to write paper more to share experiment"
+       - "I use inkscape for publication because i can not do with R goor plots" NO
+       - rmd with emacs work -> to see
+****** jupyter
+       - communitation between language : need to serialize data
+       - beaker notebook
+       - hard write article with jupyter
+****** orgmode
+       - see on his github
+       - journall backup with cron
+       - orgzly on smart phone
+       - not well integrated everywhere
+
+       - notepad (google doc text)
+
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
