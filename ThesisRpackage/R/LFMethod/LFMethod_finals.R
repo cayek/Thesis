@@ -86,7 +86,7 @@ fit.finalLfmmRdigeMethod <- function(m, dat, reuse = FALSE) {
 }
 
 ################################################################################
-finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = NULL) {
+finalLfmmLassoMethod <- function(K, sparse.prop, lambda.K = 10, lambda.eps = 0.001, calibrate  = FALSE, nickname = NULL) {
 
   m <- LassoLFMMMethod(K = K,
                        it.max = 200,
@@ -96,14 +96,14 @@ finalLfmmLassoMethod <- function(K, sparse.prop, calibrate  = FALSE, nickname = 
                                                              correctionByC = FALSE),
                        sparse.prop = sparse.prop,
                        lambda = NULL, # if null regularization path
-                       lambda.K = NULL, # default value used in Friedman et al. 2010
-                       lambda.eps = NULL, # default value used in Friedman et al. 2010
+                       lambda.K = lambda.K, # default value used in Friedman et al. 2010
+                       lambda.eps = lambda.eps, # default value used in Friedman et al. 2010
                        gamma = NULL,
                        center = TRUE,
                        name = "finalLfmmLassoMethod",
                        nickname = "LassoLfmm")
 
-  class(m) <- c("LassoLFMMMethod", class(m))
+  class(m) <- c("finalLfmmLassoMethod", class(m))
   m
 }
 

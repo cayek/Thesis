@@ -218,7 +218,9 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
     m$lambda.K <- 1
   }
 
-  lambdas <- seq(m$lambda.max, m$lambda.min, length.out = m$lambda.K)
+  ## strategie presented in Friedman et al. 2010
+  ## log scaled sequence
+  lambdas <- exp(seq(log(m$lambda.max), log(m$lambda.min), length.out = m$lambda.K))
 
   B.all <- array(dim = c(d, L, m$lambda.K)) # keep all B result
 

@@ -253,9 +253,15 @@
        - fdr
        - precision-recall
        Sur mes simulations generatives du 1000genomes.
+
+       Ca tourne sur patator !
+
 ****** TODO With missing value
-       1 figures: fdr + precision-recall
-       methods: ...       
+       1 figures: fdr + precision-recall methods: juste lfmm ridge pour le
+       moment. Je fixerai des valeur pour lasso quand j'aurais des bon resultats
+       
+       Ca tourne sur patator ! 
+
 ***** TODO True dataset
 *** 2017-03-28 mardi
 **** TODO Feature importance                                :3Article:Thesis:

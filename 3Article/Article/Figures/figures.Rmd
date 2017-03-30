@@ -27,12 +27,12 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALS
 ### run on krak
 ```{r}
 require(ThesisRpackage)
-G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.rds"
+G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.sample.10000.rds" ## run all simulation on the same 10000 loci sample
 exp <- Article3_MethodComparison(G.file,
-                                 outlier.props = c(0.05, 0.1),
+                                 outlier.props = c(0.01, 0.05, 0.1),
                                  n = NULL, L = 10000,
                                  K = 4,
-                                 cs = c(0.6, 0.3, 0.0, 0.0),
+                                 cs = c(0.2, 0.4, 0.6, 0.8),
                                  nb.rep = 10,
                                  fast.only = FALSE,
                                  cluster.nb = 4,
