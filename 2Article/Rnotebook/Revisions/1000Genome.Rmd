@@ -138,8 +138,24 @@ Article2_1000Genome_res(exp, dat$indiv)
 
 # ALL chrm
 
-## Run of tess3
-### On krak
+## K = 2
+
+### Run of tess3
+#### On krak
+```{r}
+require(tess3r)
+require(ThesisRpackage)
+
+exp <- Article2_1000Genome(dat.file = "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds",
+                           K = 2,
+                           openMP.core.num = 16,
+                           save = TRUE)
+```
+
+## K = 3
+
+### Run of tess3
+#### On krak
 ```{r}
 require(tess3r)
 require(ThesisRpackage)
