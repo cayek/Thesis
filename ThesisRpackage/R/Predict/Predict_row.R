@@ -6,7 +6,7 @@ Predict_row <- function(m, X_i, G_i, j.assumed, j.unknow) {
 }
 
 #' @export
-Predict_row.RidgeLFMMMethod <- function(m, X_i, G_i, j.assumed, j.unknow) {
+Predict_row.LFMMMethod <- function(m, X_i, G_i, j.assumed, j.unknow) {
 
   n <- nrow(G_i)
 

@@ -1,11 +1,12 @@
 #' @export
-Article3_cvExp <- function(s,
-                           s.name,
+Article3_cvExp <- function(dat,
+                           dat.name,
                            Ks,
                            lambdas,
                            row.left.out.func = left.out.kfold(5),
                            col.left.out.func = left.out.sample(5, 0.2),
                            cluster.nb = NULL,
+                           m = finalLfmmRdigeMethod(K = NULL, lambda = NULL),
                            save = TRUE, bypass = FALSE) {
 
   ## init
@@ -14,14 +15,11 @@ Article3_cvExp <- function(s,
   ## exp
   exp <- Experiment(name = "Article3_cvExp",
                     description = make_description("Article3_cvExp",
-                                                   s.name = s.name,
+                                                   dat.name = dat.name,
                                                    lambdas = lambdas,
-                                                   Ks = Ks))
+                                                   Ks = Ks,
+                                                   m = m$nickname))
   class(exp) <- c("Article3_cvExp", class(exp))
-
-  ## run exp
-  set.seed(exp$seed)
-  dat <- sampl(s)
 
   ## We remove snip with na
   if (anyNA(dat$G)) {
@@ -31,8 +29,7 @@ Article3_cvExp <- function(s,
     dat$G <- dat$G[,!locus.na]
   }
 
-  ## cv
-  m <- finalLfmmRdigeMethod(K = NULL, lambda = NULL)
+
 
   ## crossvalid lambda
   exp$cv <- CrossValidation_rowwise(m, dat,

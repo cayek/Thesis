@@ -1,4 +1,4 @@
-Article3_runExp_main <- function(m, dat, lambdas, Ks, r) {
+Article3_runExp_main <- function(m, dat, lambdas, Ks) {
   foreach(lambda = lambdas, .combine = 'rbind') %:%
     foreach(K = Ks, .combine = 'rbind') %dopar%
     {
@@ -29,63 +29,74 @@ Article3_runExp_main <- function(m, dat, lambdas, Ks, r) {
              score = score,
              B = B,
              qvalue = qval,
-             rep = r)
+             method = m$nickname)
     }
 }
 
 
 #' @export
-Article3_runExp <- function(s,
-                            s.name,
+Article3_runExp <- function(dat,
+                            dat.name,
                             Ks,
                             lambdas,
-                            nb.rep,
-                            m = finalLfmmRdigeMethod(K = NULL,
-                                                     lambda = NULL,
-                                                     calibrate = TRUE),
+                            methods = list(ridgeLfmm = finalLfmmRdigeMethod(K = NULL,
+                                                                            lambda = NULL,
+                                                                            calibrate = TRUE)),
                             cluster.nb = NULL,
                             save = TRUE, bypass = FALSE) {
 
   ## init
-  long_init(cluster.nb = cluster.nb,
+  cl <- long_init(cluster.nb = cluster.nb,
             bypass = bypass)
+
+  assertthat::assert_that(ncol(dat$X) == 1)
+
   ## exp
-  exp <- Experiment(name = "Article3_runExp",
-                    description = make_description("Article3_runExp",
-                                                   m.name = m$nickname,
-                                                   s.name = s.name,
-                                                   lambdas = lambdas,
-                                                   Ks = Ks))
+  exp <- Experiment(name = "Article3_runExp")
+
   class(exp) <- c("Article3_runExp", class(exp))
 
   ## main
   exp$df.res <- tibble()
-  for (r in 1:nb.rep) {
-    dat <- sampl(s)
-    assertthat::assert_that(ncol(dat$X) == 1)
-    exp$df.res <- Article3_runExp_main(m, dat, lambdas, Ks, r) %>%
+  for (m in methods) {
+    exp$df.res <- Article3_runExp_main(m, dat, lambdas, Ks) %>%
       rbind(exp$df.res)
   }
 
+  ## description
+  exp$description = make_description("Article3_runExp",
+                                     methods = unique(exp$df.res$method),
+                                     dat.name = dat.name,
+                                     lambdas = lambdas,
+                                     Ks = Ks)
 
-  ## save exp
-  if (save) {
-    dumpExperiment(exp)
-  }
-  exp
+  ## return
+  long_return(cl, save, exp)
+
 }
 
 
 #' @export
-plot.Article3_runExp <- function(exp, threshold, plot.type = c("B", "manhattan")) {
+Article3_runExp_plotB <- function(exp, threshold, lambda) {
 
-  if (plot.type == "B") {
-  ggplot(exp$df.res, aes(x = index, y = B, color = qvalue < threshold)) +
+  assertthat::assert_that(exp$name == "Article3_runExp")
+
+  toplot <- exp$df.res %>%
+    dplyr::filter(lambda == lambda)
+  ggplot(toplot, aes(x = index, y = B, color = qvalue < threshold)) +
     geom_point() +
-    facet_grid(lambda ~ K, scales = "free")
-  } else if (plot.type == "manhattan") {
-    ggplot(exp$df.res, aes(x = index, y = -log10(pvalue), color = qvalue < threshold)) +
+    facet_grid(method ~ K, scales = "free")
+
+}
+
+#' @export
+Article3_runExp_manhattan <- function(exp, threshold, lambda) {
+
+  assertthat::assert_that(exp$name == "Article3_runExp")
+
+  toplot <- exp$df.res %>%
+    dplyr::filter(lambda == lambda)
+    ggplot(toplot, aes(x = index, y = -log10(pvalue), color = qvalue < threshold)) +
       geom_point() +
-      facet_grid(lambda ~ K, scales = "free")
-  }
+      facet_grid(method ~ K, scales = "free")
 }

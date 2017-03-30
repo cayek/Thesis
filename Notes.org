@@ -313,7 +313,28 @@
        - not well integrated everywhere
 
        - notepad (google doc text)
+**** Sur la method lasso LFMM                                      :3Article:
+   Entered on [2017-03-30 Jeu 15:17]
 
+   Dans l'algo alterné update d'abord B et après C converge plus vite...
+**** CrossValidation sur lasso LFMM                                :3Article:
+   Entered on [2017-03-30 Jeu 16:25]
+
+   C'est pas super util de CV le lambda ! On peut le choisir avec sparse.prop !
+   De plus il faudrait cross valider sur gamma !! Je vais pas me prendre la tete
+   je vais vendre la CV pour lfmm ridge car c'est rapide et utiliser les valeus
+   choisis pour lfmm lasso pour K.
+**** Fin de journée
+   Entered on [2017-03-30 Jeu 16:56]
+***** TODO DEMAIN
+      - c'est la copie de snmf qui merde : faire une version .geno du dataset !!
+      - enlever tous le merdier que j'ai ajouté dans tess3r
+      - faire l'étude du true dataset GSE42861. On va lancer sur refactor,
+        ridge/lassoLfmm et on va comparer les tops lists !
+      - ca peut etre ca la facon de se comparer au autres méthodes ...
+
+     En tout cas demain j'ai des resultats péliminaire et je peux commencer a
+     ecrir le papier :D
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions

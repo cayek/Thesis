@@ -112,6 +112,7 @@ fit.sNMFMethod <- function(m, dat) {
 
   file.geno <- paste0(tempfile(),".geno")
   LEA::write.geno(dat$G, file.geno)
+  # write(dat$G, file.geno, sep = "")
 
   ## ploidy
   ploidy <- computePloidy(dat$G)

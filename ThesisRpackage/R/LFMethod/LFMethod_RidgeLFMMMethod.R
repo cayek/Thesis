@@ -70,7 +70,7 @@ RidgeLFMMMethod <- function(K,
                             reuse.V = FALSE) {
   m <- Method(name, hypothesis.testing.method,
               nickname = nickname)
-  class(m) <- c("RidgeLFMMMethod", class(m))
+  class(m) <- c("RidgeLFMMMethod", "LFMMMethod",class(m))
   m$center <- center
   m$K = K
   m$lambda = lambda

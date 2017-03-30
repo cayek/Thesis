@@ -55,34 +55,34 @@ LassoLFMM_main <- function(m, G_, dat, lambda) {
   m
 }
 
-#' compute a range of lambda
-Lasso_LambdaGammaRange <- function(dat, lambda.K, Ks) {
+#' compute a range of gamma and lambda
+Lasso_LambdaRange <- function(dat, K, lambda.K  = 100, lambda.eps = 0.001) {
   res <- list()
 
   n <- nrow(dat$G)
   L <- ncol(dat$G)
+  d <- nrow(dat$X)
 
-  m <- list(center = TRUE)
+  m <- finalLfmmLassoMethod(K = K, sparse.prop = 0.5)
   m <- mu(m, dat$G)
   G_ <- center(m, dat$G)
 
-
   if (anyNA(G_)) {
-    DebugMessage("In lambda_max: missing values detected. Impute by mean")
+    DebugMessage("In Lasso_LambdaRange: missing values detected. Impute by mean")
     G_ <- imputeByMean()$fun(G_)
   }
 
-  # C
-  svd.res <- svd(G_, nu = 0, nv = 0)
-  # res$gammas <- svd.res$d[ceiling(seq.int(1, n, length.out = gamma.K))]
-  res$gammas <- svd.res$d[Ks]
+  m <- lambda_max(G_ = G_, dat = dat, d = d, L = L, m = m)
+  lambda.max <- m$lambda.max
+  # lambda.min = lambda.eps * lambda.max like in Friedman et al. 2010
+  lambda.min <- lambda.eps * lambda.max
 
-  # B
-  B <- B_ridge(A = G_, X = dat$X, lambda = 0.0)
-  B.sorted <- sort(B, decreasing = TRUE)
-  res$lambdas <- B.sorted[ceiling(seq.int(1, n, length.out = lambda.K))]
+  ## strategie presented in Friedman et al. 2010
+  ##   log scaled sequence
+  lambdas <- exp(seq(log(lambda.max), log(lambda.min), length.out = lambda.K))
 
-  res
+
+  lambdas
 }
 
 Lasso_HeuristicGammaLambda <- function(dat, K, sparse.prop, lambda.lfmm = 1e-10) {
@@ -125,14 +125,14 @@ LassoLFMMMethod <- function(K,
                             lambda.eps = 0.001, # default value used in Friedman et al. 2010
                             sparse.prop = NULL, # try to find the lambda such that not null lambda proportion equal this param
                             center = TRUE,
-                            soft = FALSE,
+                            soft = TRUE,
                             name = "LassoLFMMMethod",
                             nickname = "LassoLFMMMethod",
                             hypothesis.testing.method = NULL) {
   m <- Method(name,
               hypothesis.testing.method = hypothesis.testing.method,
               nickname = nickname)
-  class(m) <- c("LassoLFMMMethod", class(m))
+  class(m) <- c("LassoLFMMMethod", "LFMMMethod",class(m))
   m$center <- center
   m$K = K
   m$lambda = lambda
@@ -180,10 +180,14 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
 
   ## update function
   update.func <- function(m, G_, dat) {
-    ## calculate C
-    m <- D_thau(m, G_ - dat$X %*% m$B)
+
     ## calculate B
     m$B <- B_lasso(A = G_ - m$C, X = dat$X, lambda = m$lambda)
+
+
+    ## calculate C
+    m <- D_thau(m, G_ - dat$X %*% m$B)
+
     m
   }
 
