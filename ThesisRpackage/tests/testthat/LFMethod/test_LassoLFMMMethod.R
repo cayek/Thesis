@@ -68,6 +68,7 @@ test_that("lasso Regularization path lfmm on binomial dataset with outlier", {
 
 test_that("Test of sparse proportion feature", {
 
+  set.seed(3547434)
   # sample data
   K <- 5
   prop <- 0.1
@@ -88,6 +89,7 @@ test_that("Test of sparse proportion feature", {
                        lambda.eps = 0.001,
                        it.max = 100,
                        err.max = 1e-6)
+
   m <- run(m, dat)
 
   expect_lte(abs(mean(m$B != 0.0) - prop), 0.01)
@@ -136,6 +138,7 @@ test_that("Test of soft feature", {
 
 test_that("Test of lasso with missing values", {
 
+  set.seed(34557)
   # sample data
   K <- 5
   prop <- 0.1
