@@ -155,7 +155,7 @@ finalLEAMethod <- function(K) {
                      hypothesis.testing.method = NULL, #useless we retrieve LEA output
                      name = "LeaLFMMMethod",
                      nickname = "LEA",
-                     verbose = FALSE)
+                     verbose = TRUE)
   class(m) <- c("finalLEAMethod", class(m))
   m
 }

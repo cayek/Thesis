@@ -47,18 +47,19 @@ fit.LeaLFMMMethod <- function(m, dat, reuse = FALSE) {
   LEA::write.env(dat$X, X.file)
 
   # run lfmm
-  {
-    if (!m$verbose) {
-      sink("/dev/null")
-    }
+  if (m$verbose && !is.null(getOption("ThesisRpackage.debug"))) {
     lfmm.res <- LEA::lfmm(input.file = G.file,
                           K = m$K,
                           environment.file = X.file,
                           project = "new")
-    if (!m$verbose) {
-      sink()
-    }
+
+  } else {
+    capture.output(lfmm.res <- LEA::lfmm(input.file = G.file,
+                                         K = m$K,
+                                         environment.file = X.file,
+                                         project = "new"), file = "/dev/null")
   }
+
 
   # restrieve results
   m$score <- t(LEA::z.scores(lfmm.res, K = m$K, d = 1))
