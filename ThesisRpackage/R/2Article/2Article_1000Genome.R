@@ -17,7 +17,15 @@ Article2_1000Genome <- function(dat.file = "~/Projects/Thesis/Data/1000Genomes/P
   XBin <- computeXBin(dat$G, ploidy)
 
 
+  ## snmf
+  DebugMessage("Run of snmf")
+  exp$snmf.method <- sNMFMethod(K = K,
+                                openMP.core.num = ifelse(!is.null(openMP.core.num), openMP.core.num, 1))
+  exp$snmf.method <- fit(m = exp$snmf.method, dat)
+
+
   ## tess3
+  DebugMessage("Run of tess3")
   exp$tess3r <- tess3r::tess3Main(X = NULL,
                                   XProba = XBin,
                                   coord = dat$coord,
@@ -36,10 +44,6 @@ Article2_1000Genome <- function(dat.file = "~/Projects/Thesis/Data/1000Genomes/P
                                   verbose = TRUE,
                                   only.ancestry = TRUE)
 
-  ## snmf
-  exp$snmf.method <- sNMFMethod(K = K,
-                                openMP.core.num = ifelse(!is.null(openMP.core.num), openMP.core.num, 1))
-  exp$snmf.method <- fit(m = exp$snmf.method, dat)
 
   ## save exp
   if (save) {
