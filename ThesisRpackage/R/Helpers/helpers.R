@@ -58,19 +58,28 @@ long_init <- function(cluster.nb,
                       bypass, log.file = NULL) {
   KrakTest(bypass)
   cl <- NULL
+
+  ## logger
   env <- new.env()
   if (!is.null(log.file)) {
-    env$ap <- futile.logger::appender.file(log.file)
+    ap <- futile.logger::appender.file(log.file)
   } else {
-    env$ap <- futile.logger::appender.console()
+    ap <- futile.logger::appender.console()
   }
-  futile.logger::flog.appender(env$ap, name = "ThesisRpackage")
+  futile.logger::flog.appender(ap, name = "ThesisRpackage")
+  env$fl <- futile.logger::flog.logger(name = "ThesisRpackage")
+
+  ## init cluster
   if (!is.null(cluster.nb)) {
     cl <- parallel::makeCluster(cluster.nb, outfile = "")
     doParallel::registerDoParallel(cl)
     ## set the appender
-    parallel::clusterExport(cl, varlist = c("ap"), envir = env)
-    parallel::clusterEvalQ(cl, futile.logger::flog.appender(ap, name = "ThesisRpackage"))
+    parallel::clusterExport(cl, varlist = c("fl"), envir = env)
+    parallel::clusterEvalQ(cl,
+                           futile.logger::flog.logger(name = "ThesisRpackage",
+                                                      threshold = fl$threshold,
+                                                      appender = fl$appender,
+                                                      layout = fl$layout))
   }
   cl
 }

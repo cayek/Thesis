@@ -25,20 +25,24 @@ runExperiment.FDRControlExperiment <- function(exp) {
 
   df.pvalue <- tibble()
 
+  ## compute dat
+  dats <- list()
+  for (i in 1:exp$nb.rep) {
+    dats[[i]] <- sampl(exp$sampler)
+  }
+
+  ## main loop
   start.time <- Sys.time()
-  for (r in 1:exp$nb.rep) {
-    dat <- sampl(exp$sampler)
-    df.pvalue <- foreach(method = exp$methods, .combine = 'rbind') %dopar%
+  df.pvalue <-  foreach(r = 1:exp$nb.rep, .combine = 'rbind') %:%
+    foreach(method = exp$methods, .combine = 'rbind') %dopar%
     {
       method.name <- name(method)
-      res <- run(method, dat)
+      res <- run(method, dats[[r]])
       tidy_fdr(res$pvalue,
-               outlier = dat$outlier) %>%
-        mutate(rep = r,
-               method = method.name)
-    } %>%
-      rbind(df.pvalue)
-  }
+               outlier = dats[[r]]$outlier) %>%
+        dplyr::mutate(rep = r,
+                      method = method.name)
+    }
   end.time <- Sys.time()
   exp$runtime <- end.time - start.time
 

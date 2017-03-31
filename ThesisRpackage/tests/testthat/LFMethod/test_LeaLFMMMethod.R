@@ -1,5 +1,4 @@
 library(testthat)
-library(Article3Package)
 context("Lea lfmm method")
 
 ################################################################################

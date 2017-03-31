@@ -2,7 +2,7 @@ Article3_MethodComparison_main <- function(exp) {
   exp$df <- tibble()
   for (p in exp$outlier.props) {
     for (c in exp$cs) {
-      flog.console(paste0("outlier prop=",p, " and c=",c))
+      flog.info(paste0("outlier prop=",p, " and c=",c), name = "console")
       s <- exp$s
       s$prop.outlier <- p
       s$cs <- c
