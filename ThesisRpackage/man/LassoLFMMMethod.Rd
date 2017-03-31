@@ -6,7 +6,7 @@
 \usage{
 LassoLFMMMethod(K, it.max, err.max, gamma = NULL, lambda = 0,
   lambda.K = 100, lambda.eps = 0.001, sparse.prop = NULL, center = TRUE,
-  soft = FALSE, name = "LassoLFMMMethod", nickname = "LassoLFMMMethod",
+  soft = TRUE, name = "LassoLFMMMethod", nickname = "LassoLFMMMethod",
   hypothesis.testing.method = NULL)
 }
 \description{

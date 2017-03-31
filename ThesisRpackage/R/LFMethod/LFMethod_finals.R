@@ -86,7 +86,7 @@ fit.finalLfmmRdigeMethod <- function(m, dat, reuse = FALSE) {
 }
 
 ################################################################################
-finalLfmmLassoMethod <- function(K, sparse.prop, lambda.K = 10, lambda.eps = 0.001, calibrate  = FALSE, nickname = NULL) {
+finalLfmmLassoMethod <- function(K, sparse.prop, lambda.K = 100, lambda.eps = 0.001, calibrate  = FALSE, nickname = NULL) {
 
   m <- LassoLFMMMethod(K = K,
                        it.max = 200,

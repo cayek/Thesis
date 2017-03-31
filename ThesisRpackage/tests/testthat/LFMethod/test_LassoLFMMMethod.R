@@ -172,7 +172,7 @@ test_that("Test of lasso with missing values", {
 ################################################################################
 # Lasso_LambdaGammaRange
 
-test_that("Lasso_LambdaGammaRange", {
+test_that("Lasso_LambdaRange", {
 
   K <- 5
   prop <- 0.1
@@ -186,7 +186,8 @@ test_that("Lasso_LambdaGammaRange", {
                        mean.mu = 0.5)
   dat <- sampl(s)
 
-  res <- Lasso_LambdaGammaRange(dat, 4, 4)
+  res <- Lasso_LambdaRange(dat, K = K)
+  expect_equal(length(res), 100)
 
 })
 
