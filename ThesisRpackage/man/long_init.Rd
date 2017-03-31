@@ -4,7 +4,7 @@
 \alias{long_init}
 \title{Use it before running the core of a long function}
 \usage{
-long_init(cluster.nb, bypass)
+long_init(cluster.nb, bypass, log.file = NULL)
 }
 \description{
 Use it before running the core of a long function

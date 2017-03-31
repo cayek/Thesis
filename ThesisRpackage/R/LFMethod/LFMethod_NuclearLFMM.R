@@ -12,7 +12,7 @@ D_thau <- function(m, X) {
   }
   # Sigma <- diag(svd.res$d[svd.res$d > gamma])
   m$K <- ncol(Sigma)
-  DebugMessage(paste("---> K = ", m$K, "\n"))
+  flog.debug(paste("D_thau: K = ", m$K, "\n"))
   svd.res <- svd(X, nu = m$K, nv = m$K)
   m$U <- svd.res$u %*% Sigma
   m$V <- svd.res$v
@@ -25,12 +25,12 @@ ComputeGamma <- function(m, G_) {
   # compute a gamma
   if (is.null(m$gamma)) {
     if (anyNA(G_)) {
-      DebugMessage("In ComputeGamma: missing values detected. Impute by mean")
+      flog.debug("ComputeGamma: missing values detected. Impute by mean")
       G_ <- imputeByMean()$fun(G_)
     }
     svd.res <- svd(G_, nu = 0, nv = 0) # compute only singular value
     m$gamma <- (svd.res$d[m$K] + svd.res$d[m$K + 1]) / 2
-    DebugMessage(paste("Gamma = ", m$gamma, "\n"))
+    flog.debug(paste("ComputeGamma: Gamma = ", m$gamma, "\n"))
   }
   m
 }
@@ -91,7 +91,7 @@ fit.NuclearLFMMMethod <- function(m, dat, reuse = FALSE) {
 
   # impute missing value
   if (anyNA(G_)) {
-    DebugMessage("Missing values detected")
+    flog.debug("fit.NuclearLFMMMethod: Missing values detected")
     G_ <- m$impute.genotype.method$fun(G_)
   }
 
@@ -111,7 +111,7 @@ fit.NuclearLFMMMethod <- function(m, dat, reuse = FALSE) {
   # main loop
   while ((it < m$it.max) && !stop) {
 
-    DebugMessage(paste("it = ",it, "| err = ", err.new, "\n"))
+    flog.debug(paste("fit.NuclearLFMMMethod: it = ",it, "| err = ", err.new, "\n"))
     err.old <- err.new
     it <- it + 1
 
@@ -121,7 +121,7 @@ fit.NuclearLFMMMethod <- function(m, dat, reuse = FALSE) {
     ## calculate B
     if (m$lasso) {
       m$B <- B_lasso(A = G_ - m$C, X = dat$X, lambda = m$lambda)
-      DebugMessage(paste("---> mean(B == 0) = ", mean(m$B == 0.0), "\n"))
+      flog.debug(paste("fit.NuclearLFMMMethod: mean(B == 0) = ", mean(m$B == 0.0), "\n"))
     } else {
       m$B <- B_ridge(A = G_ - m$C, X = dat$X, lambda = m$lambda)
     }

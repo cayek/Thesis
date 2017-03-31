@@ -1,5 +1,6 @@
 library(tidyverse)
 library(testthat)
+futile.logger::flog.threshold(futile.logger::TRACE, name = "ThesisRpackage")
 if (Sys.info()["nodename"] != "patator.imag.fr") {
   library(devtools)
 }

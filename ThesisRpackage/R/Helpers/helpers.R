@@ -10,16 +10,6 @@ TestRequiredPkg <- function(pkg) {
 }
 
 
-#' Print a message if getOption("Article3Package.debug") is not null
-#'
-#'
-#' @param msg The message
-DebugMessage <- function(msg) {
-  if (!is.null(getOption("ThesisRpackage.debug"))) {
-    cat(crayon::bgGreen(paste0("= ", msg,"\n")))
-  }
-}
-
 #' Install bioconductor dependencies
 #'
 #' @export
@@ -65,12 +55,22 @@ KrakTest <- function(bypass) {
 
 #' Use it before running the core of a long function
 long_init <- function(cluster.nb,
-                      bypass) {
+                      bypass, log.file = NULL) {
   KrakTest(bypass)
   cl <- NULL
+  env <- new.env()
+  if (!is.null(log.file)) {
+    env$ap <- futile.logger::appender.file(log.file)
+  } else {
+    env$ap <- futile.logger::appender.console()
+  }
+  futile.logger::flog.appender(env$ap, name = "ThesisRpackage")
   if (!is.null(cluster.nb)) {
     cl <- parallel::makeCluster(cluster.nb, outfile = "")
     doParallel::registerDoParallel(cl)
+    ## set the appender
+    parallel::clusterExport(cl, varlist = c("ap"), envir = env)
+    parallel::clusterEvalQ(cl, futile.logger::flog.appender(ap, name = "ThesisRpackage"))
   }
   cl
 }
@@ -84,6 +84,7 @@ long_return <- function(cl, save, exp) {
   if (save) {
     dumpExperiment(exp)
   }
+  futile.logger::flog.appender(futile.logger::appender.console(), name = "ThesisRpackage")
   exp
 }
 

@@ -92,7 +92,7 @@ fit.RidgeLFMMMethod <- function(m, dat, reuse = FALSE) {
 
   # impute missing value
   if (anyNA(G_)) {
-    DebugMessage("Missing values detected")
+    flog.debug("Missing values detected")
     G_ <- m$impute.genotype.method$fun(G_)
   }
 

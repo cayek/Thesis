@@ -2,24 +2,23 @@ Article3_MethodComparison_main <- function(exp) {
   exp$df <- tibble()
   for (p in exp$outlier.props) {
     for (c in exp$cs) {
-    DebugMessage(paste0("outlier prop=",p, " and c=",c))
-    s <- exp$s
-    s$prop.outlier <- p
-    s$cs <- c
-    bench <- finalBench(K = s$K,
-                        lambda = 1e-5,
-                        sparse.prop = p,
-                        calibrate = FALSE,
-                        fast.only = exp$fast.only, with.missing = FALSE)
-    exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = exp$nb.rep, s = s), bench))
-    capture.output(exp.aux <- runExperiment(exp.aux),
-                   file = "Article3_MethodComparison_main.log", append = TRUE)
+      flog.console(paste0("outlier prop=",p, " and c=",c))
+      s <- exp$s
+      s$prop.outlier <- p
+      s$cs <- c
+      bench <- finalBench(K = s$K,
+                          lambda = 1e-5,
+                          sparse.prop = p,
+                          calibrate = FALSE,
+                          fast.only = exp$fast.only, with.missing = FALSE)
+      exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = exp$nb.rep, s = s), bench))
+      exp.aux <- runExperiment(exp.aux)
 
 
-    exp$df <- exp.aux$result$df.pvalue %>%
-      dplyr::mutate(outlier.prop = p) %>%
-      dplyr::mutate(`cor(U1,X)` = c) %>%
-      rbind(exp$df)
+      exp$df <- exp.aux$result$df.pvalue %>%
+        dplyr::mutate(outlier.prop = p) %>%
+        dplyr::mutate(`cor(U1,X)` = c) %>%
+        rbind(exp$df)
     }
   }
   exp
@@ -43,8 +42,9 @@ Article3_MethodComparison <- function(G.file,
                                       cluster.nb = NULL,
                                       save = TRUE, bypass = FALSE) {
 
+
   cl <- long_init(cluster.nb,
-                  bypass)
+                  bypass, log.file = "Article3_MethodComparison.log")
 
   exp <- Experiment()
   exp$name <- "Article3_MethodComparison"

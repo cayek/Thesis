@@ -4,7 +4,7 @@
 #' compute lambda_max such as B = 0
 lambda_max <- function(G_, dat, d, L, m) {
   if (anyNA(G_)) {
-    DebugMessage("In lambda_max: missing values detected. Impute by mean")
+    flog.debug("In lambda_max: missing values detected. Impute by mean")
     G_ <- imputeByMean()$fun(G_)
   }
   # C
@@ -68,7 +68,7 @@ Lasso_LambdaRange <- function(dat, K, lambda.K  = 100, lambda.eps = 0.001) {
   G_ <- center(m, dat$G)
 
   if (anyNA(G_)) {
-    DebugMessage("In Lasso_LambdaRange: missing values detected. Impute by mean")
+    flog.debug("In Lasso_LambdaRange: missing values detected. Impute by mean")
     G_ <- imputeByMean()$fun(G_)
   }
 
@@ -198,7 +198,7 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
       is.null(m$gamma) &&
       is.null(m$lambda.eps) &&
       is.null(m$lambda.K)) {
-    DebugMessage(paste0("Lasso_HeuristicGammaLambda"))
+    flog.debug(paste0("fit.LassoLFMMMethod: using Lasso_HeuristicGammaLambda"))
     gamma.lambda.heuristic <- Lasso_HeuristicGammaLambda(dat, m$K, m$sparse.prop)
     m$lambda <- gamma.lambda.heuristic$lambda
     m$gamma <- gamma.lambda.heuristic$gamma
@@ -230,7 +230,7 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
 
   for (i in seq_along(lambdas)) {
     # main loop
-    DebugMessage(paste0("loop number ",i," / ", m$lambda.K, "|lambda = ",lambdas[i]))
+    flog.debug(paste0("fit.LassoLFMMMethod: i=",i," / ", m$lambda.K, "|lambda = ",lambdas[i]))
 
     m$lambda <- lambdas[i]
     m <- missingValueImputationLoop(m = m,
@@ -239,7 +239,7 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
                                     dat = dat,
                                     reuse = TRUE)
     B.all[,,i] <- m$B
-    DebugMessage(paste0("-> B not null prop = ", mean(m$B != 0)))
+    flog.debug(paste0("fit.LassoLFMMMethod: B not null prop=", mean(m$B != 0)))
     if (!is.null(m$sparse.prop) && (mean(m$B != 0.0) >= m$sparse.prop)) break() #if a sparse proportion is define, we leave the loop if this proportion is reached
 
   }

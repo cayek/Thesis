@@ -152,6 +152,14 @@ exp <- Article2_1000Genome(dat.file = "~/Projects/Thesis/Data/1000Genomes/Phase3
                            save = TRUE)
 ```
 
+####  Compute proportion by pop
+```{r}
+dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.sample.rds")
+exp <- retrieveExperiment(83)
+Article2_1000Genome_res(exp, dat$indiv)
+```
+
+
 ## K = 3
 
 ### Run of tess3

@@ -159,24 +159,14 @@ fit.refractorMethod <- function(m, dat, reuse = FALSE) {
 
   # test t
   if (m$t > L) {
-    print(paste('Refactor: t > L. t is set to L =', L))
+    flog.debug(paste('Refactor: t > L. t is set to L =', L))
     m$t <- L
   }
 
   # run refractor
-  {
-    if (!m$verbose) {
-      sink("/dev/null")
-    }
-    ref.output <- refactor(O = O, k = m$K, out = "demo_refactor", t = m$t)
 
-    #print("Adjusted analysis using ReFACTor...")
-    #observed_pvalues <- associations_test(O, dat$X, ref.output$refactor_components[,1:m$K])
-
-    if (!m$verbose) {
-      sink()
-    }
-  }
+  out <- capture.output(ref.output <- refactor(O = O, k = m$K, out = "demo_refactor", t = m$t))
+  DebugMessage("refactor", out)
 
   # retrieve results
   m$U <- ref.output$refactor_components

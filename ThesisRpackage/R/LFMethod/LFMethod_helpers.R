@@ -36,7 +36,7 @@ missingValueImputationLoop <- function(m, G_, update.func, dat, reuse) {
   d <- ncol(dat$X)
 
   if (anyNA(G_)) {
-    DebugMessage("Missing values detected")
+    flog.debug("missingValueImputationLoop: Missing values detected")
     any.missing <- TRUE
     m$missing.index <- which(is.na(dat$G))
     G_[m$missing.index] <- sample(dat$G[-m$missing.index], length(m$missing.index)) # maybe we can impute at random column wise ?
@@ -58,7 +58,7 @@ missingValueImputationLoop <- function(m, G_, update.func, dat, reuse) {
   # main loop
   while ((it < m$it.max) && !stop) {
 
-    DebugMessage(paste("it = ",it, "| err = ", err.new, "\n"))
+    flog.debug(paste("missingValueImputationLoop: it = ",it, "| err = ", err.new))
     err.old <- err.new
     it <- it + 1
 

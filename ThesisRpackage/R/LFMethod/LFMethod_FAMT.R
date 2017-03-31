@@ -22,7 +22,8 @@ FAMTMethod <- function(K,
 fit.FAMTMethod <- function(m, dat, reuse = FALSE) {
 
   # because of a bug in FAMT impute must be loaded...
-  require("impute")
+  flog.trace("attaching impute")
+  library("impute")
 
   if (ncol(dat$X) > 1) {
     stop("only d = 1 allowed ;-)")
@@ -34,12 +35,14 @@ fit.FAMTMethod <- function(m, dat, reuse = FALSE) {
   expresssion <- as.data.frame(t(dat$G))
   covariates <- data.frame(array.id = colnames(expresssion),
                            x = dat$X[,1])
-  dat.FAMT = FAMT::as.FAMTdata(expression = expresssion,
-                               covariates = covariates)
+  out <- capture.output(dat.FAMT <- FAMT::as.FAMTdata(expression = expresssion,
+                                                     covariates = covariates))
+  DebugMessage("FAMT::as.FAMTdata", out)
+
 
   # run model
-  model <- FAMT::modelFAMT(dat.FAMT, x = 2, nbf = m$K)
-
+  out <- capture.output(model <- FAMT::modelFAMT(dat.FAMT, x = 2, nbf = m$K))
+  DebugMessage("FAMT::modelFAMT", out)
   # output
   m$score <- matrix(model$adjtest, nrow = 1, ncol = L)
   m$pvalue <- matrix(model$adjpval, nrow = 1, ncol = L)

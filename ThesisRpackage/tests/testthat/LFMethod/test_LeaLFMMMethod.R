@@ -23,9 +23,9 @@ test_that("lea lfmm method", {
   dat <- sampl(s)
 
   # method
-  m <- LeaLFMMMethod(K = K, verbose = FALSE)
+  m <- LeaLFMMMethod(K = K, verbose = TRUE)
 
-  expect_equal(name(m), "LeaLFMMMethod|NULL")
+  expect_equal(m$name, "LeaLFMMMethod")
 
   # test fit
   m <- fit(m, dat)

@@ -30,4 +30,5 @@ Imports: ggplot2,
     FAMT,
     assertthat,
     fdrtool,
-    crayon
+    crayon,
+    futile.logger

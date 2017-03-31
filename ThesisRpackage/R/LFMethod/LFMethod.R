@@ -91,7 +91,7 @@ UXlink <- function(m, dat, ...) {
 #' @export
 run.Method <- function(m, dat){
   if (!is.null(m$hypothesis.testing.method)) {
-    DebugMessage(paste("Running ", m$hypothesis.testing.method$name))
+    flog.debug(paste("run.Method: running ", m$hypothesis.testing.method$name))
     tmp <- m$hypothesis.testing.method$fun(m, dat)
     m[names(tmp)] <- tmp
   }

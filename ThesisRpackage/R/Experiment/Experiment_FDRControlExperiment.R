@@ -20,7 +20,7 @@ FDRControlExperiment <- function(nb.rep, sampler,
 runExperiment.FDRControlExperiment <- function(exp) {
 
   # set the seed
-  DebugMessage("We set the seed")
+  flog.debug("runExperiment.FDRControlExperiment: We set the seed")
   set.seed(exp$seed)
 
   df.pvalue <- tibble()

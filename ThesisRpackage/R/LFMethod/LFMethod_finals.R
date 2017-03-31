@@ -4,7 +4,7 @@
 fit.final <- function(m, dat, reuse = FALSE) {
   ## impute
   if (anyNA(dat$G)) {
-    DebugMessage("Missing values detected")
+    flog.debug("fit.final: Missing values detected")
     m$missing.index <- which(is.na(dat$G))
     dat <- imputeMeanDataSet(dat)
     m$imputed.values <- dat$G[m$missing.index]

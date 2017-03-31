@@ -36,14 +36,17 @@ fit.SVAMethod <- function(m, dat, reuse = FALSE) {
   # We confounding structure
   # n.sv <- num.sv(edata,mod,method = "leek")
   n.sv <- m$K# K is given
-  svobj <- sva::sva(edata,mod,mod0,n.sv = n.sv)
+  out <- capture.output(svobj <- sva::sva(edata,mod,mod0,n.sv = n.sv))
+  DebugMessage("sva::sva", out)
+
 
   # We perform association with confounding correction
   modSv <- cbind(mod,svobj$sv)
   mod0Sv <- cbind(mod0,svobj$sv)
-  fstatSv <- sva::fstats(edata,modSv,mod0Sv)
-  pValuesSv <- sva::f.pvalue(edata,modSv,mod0Sv)
-
+  out <- capture.output(fstatSv <- sva::fstats(edata,modSv,mod0Sv))
+  DebugMessage("sva::fstats", out)
+  out <- capture.output(pValuesSv <- sva::f.pvalue(edata,modSv,mod0Sv))
+  DebugMessage("sva::f.pvalue", out)
 
   # output
   m$score <- matrix(fstatSv, nrow = 1, ncol = L)
