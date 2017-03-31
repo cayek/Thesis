@@ -33,7 +33,7 @@ exp <- Article3_MethodComparison(G.file,
                                  n = NULL, L = 10000,
                                  K = 4,
                                  cs = c(0.2, 0.4, 0.6, 0.8),
-                                 nb.rep = 10,
+                                 nb.rep = 16,
                                  fast.only = FALSE,
                                  cluster.nb = 8,
                                  save = TRUE, bypass = FALSE)
