@@ -12,7 +12,8 @@ Article3_MethodComparison_main <- function(exp) {
                         calibrate = FALSE,
                         fast.only = exp$fast.only, with.missing = FALSE)
     exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = exp$nb.rep, s = s), bench))
-    exp.aux <- runExperiment(exp.aux)
+    capture.output(exp.aux <- runExperiment(exp.aux),
+                   file = "Article3_MethodComparison_main.log", append = TRUE)
 
 
     exp$df <- exp.aux$result$df.pvalue %>%

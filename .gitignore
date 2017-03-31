@@ -1,3 +1,6 @@
+# log file
+*.log
+
 *Rplots.pdf
 
 # Data

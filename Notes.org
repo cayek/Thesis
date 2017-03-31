@@ -254,13 +254,11 @@
        - precision-recall
        Sur mes simulations generatives du 1000genomes.
 
-       Ca tourne sur patator !
 
 ****** TODO With missing value
        1 figures: fdr + precision-recall methods: juste lfmm ridge pour le
        moment. Je fixerai des valeur pour lasso quand j'aurais des bon resultats
        
-       Ca tourne sur patator ! 
 
 ***** TODO True dataset
 *** 2017-03-28 mardi
@@ -334,7 +332,7 @@
       - ca peut etre ca la facon de se comparer au autres méthodes ...
 
      En tout cas demain j'ai des resultats péliminaire et je peux commencer a
-     ecrir le papier :D
+     ecrire le papier :D
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions

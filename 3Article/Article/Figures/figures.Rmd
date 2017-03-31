@@ -88,7 +88,7 @@ exp <- Article3_withMissingValueResults(s = s,
 ### plots
 
 ```{r}
-exp <- retrieveExperiment(89)
+exp <- retrieveExperiment(93)
 ```
 
 ```{r}
