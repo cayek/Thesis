@@ -3,145 +3,22 @@
 
 
 \section{Results}
-\paragraph{Statistical errors} We used coalescent simulations of neutral
-polymorphisms under spatial models of admixture to compare the statistical
-errors of the AQP and APLS estimates with those of the {\tt tess3}
-algorithm~\citep{Caye2016}. The ground truth for the $Q$-matrix (${\bf Q}_0$)
-was computed from the mathematical model for admixture proportions used to
-generate the data. For the $G$-matrix, the ground truth matrix (${\bf G}_0$) was
-computed from the empirical genotype frequencies in the two population samples
-before an admixture event. The root mean squared errors (RMSE) for the ${\bf Q}$
-and ${\bf G}$ estimates decreased as the sample size and the number of loci
-increased (Figure~\ref{fig:fig1}). For all algorithms, the statistical errors were generally
-small when the number of loci was greater than $10$k SNPs. Those results
-provided evidence that the three algorithms produced equivalent estimates of the
-matrices ${\bf Q}_0$ and ${\bf G}_0$. The results also provided a check
-that the APLS and {\tt tess3} algorithms converged to the same estimates as
-those obtained after the application of the AQP algorithm, which is guaranteed
-to converge mathematically.
+\paragraph{Statistical errors}  We used  coalescent simulations of neutral polymorphisms under spatial models of admixture to compare the statistical errors of the AQP and APLS estimates with those of the {\tt tess3} algorithm. The ground truth for the $Q$-matrix (${\bf Q}_0$)  was computed from the mathematical model for admixture proportions used to generate the data. For the $G$-matrix, the  ground truth matrix (${\bf G}_0$) was computed from the empirical genotype frequencies in the two population samples before an admixture event.  The root mean squared errors (RMSE) for the ${\bf Q}$ and ${\bf G}$ estimates decreased as the sample size and the number of loci increased (Figure 1). For all algorithms, the statistical errors were generally small when the number of loci was greater than $10$k SNPs. Those results provided evidence that the three algorithms produced equivalent estimates of the matrices ${\bf Q}_0$ and ${\bf G}_0$. The results also provided a formal check that the APLS and {\tt tess3} algorithms converged to the same estimates as those obtained after the application of  the AQP algorithm, which is guaranteed to converge mathematically.   
 
 
-\paragraph{The benefit of including spatial information in algorithms} Using
-neutral coalescent simulations of spatial admixture, we compared the statistical
-estimates obtained from a spatial algorithm (APLS) and a non-spatial algorithm
-(sNMF, Frichot et al. 2014). For various levels of ancestral population
-differentiation, estimates obtained from the spatial algorithm were more
-accurate than for those obtained using non-spatial approaches (Figure~\ref{fig:fig2}). For
-the larger samples, much finer population structure was detected with the
-spatial method than with the non-spatial algorithm (Figure~\ref{fig:fig2}).
+\paragraph{The benefit of including spatial information in algorithms}    Using  neutral coalescent simulations of spatial admixture, we compared the statistical estimates obtained from a spatial algorithm (APLS) and a non-spatial algorithm (sNMF, Frichot et al. 2014).  For various levels of ancestral population differentiation, estimates obtained from the spatial algorithm were more accurate than for those obtained using non-spatial approaches (Figure 2). For the larger samples, much finer population structure was detected with the spatial method than with the non-spatial algorithm (Figure 2). 
 
-In simulations of outlier loci, we used the area under the precision-recall
-curve (AUC) for quantifying the performances of tests based on the estimates of
-ancestry matrices, {\bf Q} and {\bf G}. In addition, we computed AUCs for
-$F_{\rm ST}$-based neutrality tests using truly ancestral genotypes. As they
-represented the maximum reachable values, AUCs based on truly ancestral
-genotypes were always higher than those obtained for tests based on
-reconstructed matrices. For all values of the relative selection intensity, AUCs
-were higher for spatial methods than for non-spatial methods (Figure~\ref{fig:fig3}, the
-relative selection intensity is the ratio of migration rates at neutral and
-adaptive loci). For high selection intensities, the performances of tests based
-on estimates of ancestry matrices were close to the optimal values reached by
-tests based on true ancestral frequencies. These results provided evidence that
-including spatial information in ancestry estimation algorithms improves the
-detection of signatures of hard selective sweeps having occurred in unknown
-ancestral populations.
+In simulations of outlier loci, we used the area under the precision-recall curve (AUC) for quantifying the performances of tests based on the estimates of ancestry matrices, {\bf Q} and {\bf G}. In addition, we computed AUCs for $F_{\rm ST}$-based neutrality tests using truly ancestral genotypes. As they represented the maximum reachable values, AUCs based on truly ancestral genotypes were always higher than those obtained for tests based on reconstructed matrices. For all values of the relative  selection intensity, AUCs were higher for spatial methods than for non-spatial methods (Figure 3, the relative selection intensity is the ratio of migration rates at neutral and adaptive loci). For high selection intensities, the performances of tests based on estimates of ancestry matrices were close to the optimal values reached  by tests based on true ancestral frequencies. These results provided evidence that including spatial information in ancestry estimation algorithms improves the detection of signatures of hard selective sweeps having occurred in unknown ancestral populations. 
 
-\paragraph{Sensitivity of estimates to spatial measurements.} Next, we used the
-simulated data sets to evaluate the robustness of APLS estimates to inaccurate
-measurements of spatial coordinates. To this aim, Gaussian noise was added to
-truly observed geographic coordinates by considering values of the
-noise-to-signal ratio ranging from 0 to 3. We computed variograms in all cases,
-and found that the spatial signal was removed from simulations for
-noise-to-signal ratios greater than two, while the signal was still observable
-with a noise-to-signal ratio lower than one. For all simulations, we compared
-the relative error of APLS $Q$-matrix estimates to those obtained from an
-non-spatial method ({\tt snmf}). For small levels of uncertainty in spatial
-coordinates the errors of APLS estimates were lower than those of {\tt snmf}
-(Figure~\ref{fig:fig2_5}). For simulations with $n = 500$ individuals and $L =
-1O^5$ loci, a larger noise-to-signal ratio increased statistical errors in the
-$Q$-matrix estimates from the APLS algorithm. For smaller noise-to-signal ratio,
-RMSEs remained generally lower for the APLS algorithm than for methods without
-spatial coordinates. For simulations with $n = 50$ individuals and $L = 1O^4$
-loci, the APLS estimates were more accurate than the non-spatial estimates. This
-unexpected result could be explained by subtle algorithmic differences in tested
-programs. To a large extent, estimates from the APLS algorithm were robust to
-uncertainty in spatial measurements. Standard graphical tests such as a
-variogram analysis can help deciding whether our spatially explicit algorithm is
-useful or not.
-
-
-\paragraph{Runtime and convergence analyses} We subsampled a large SNP data set
-for {\it A. thaliana} ecotypes to compare the convergence properties and
-runtimes of the {\tt tess3}, AQP, and APLS algorithms. In those experiments, we
-used $K = 6$ ancestral populations, and replicated 5 runs for each simulation.
-For $n = 100-600$ individuals ($L = 50$k SNPs), the APLS algorithm required more
-iterations (25 iterations) than the AQP algorithm (20 iterations) to converge to
-its solution (Figure~\ref{fig:fig4}). This was less than for {\tt tess3} (30 iterations). For
-$L = 10-200$k SNPs ($n = 150$ individuals), similar results were observed. For
-$50$k SNPs, the runtimes were significantly lower for the APLS algorithm than
-for the {\tt tess3} and AQP algorithms. For $L = 50$k SNPs and $n = 600$
-individuals, it took on average 1.0 min for the APLS and 100 min for the AQP
-algorithm to compute ancestry estimates. For {\tt tess3}, the runtime was on
-average 66 min. For $L = 100$k SNPs and $n = 150$ individuals, it took on
-average 0.6 min (9.0 min) for the APLS (AQP) algorithm to compute ancestry
-estimates. For {\tt tess3}, the runtime was on average 1.3 min. For those
-values of $n$ and $L$, the APLS algorithm implementation ran about 2 to 100
-times faster than the other algorithm implementations.
+\paragraph{Runtime and convergence analyses} We subsampled a large SNP data set for {\it A. thaliana} ecotypes  to compare the convergence properties and runtimes of the {\tt tess3}, AQP, and APLS algorithms. In those experiments, we used $K = 6$ ancestral populations, and replicated 5 runs for each simulation. For $n = 100-600$ individuals ($L = 50$k SNPs), the APLS algorithm required more iterations (25 iterations)  than the AQP algorithm (20 iterations) to converge to its solution  (Figure 4). This was less than for {\tt tess3} (30 iterations).  For $L = 10-200$k SNPs ($n = 150$ individuals), similar results were observed. For $50$k SNPs, the runtimes were significantly lower for the APLS algorithm than for the {\tt tess3} and AQP algorithms. For $L = 50$k SNPs and $n = 600$ individuals, it took on average 0.956 min for the APLS and 100 min for the AQP algorithm to compute ancestry estimates. For {\tt tess3}, the runtime was on average 66.3 min. For $L = 100$k SNPs and $n = 150$ individuals, it took on average 0.628 min (8.97 min) for the APLS (AQP) algorithm to compute ancestry estimates. For {\tt tess3}, the runtime was on average 1.27 min.  For those values of $n$ and $L$, the APLS algorithm implementation ran about 2 to 100 times faster than the other algorithm implementations.
  
-\paragraph{Human data analysis} To evaluate a case of model misspecification, we
-analyzed data from the 1000 Genomes project for African Americans, Africans from
-Nigeria and from Kenya, and Europeans from the United Kingdom and from Italy.
-Using the default values for the hyper-parameters, the Laplacian matrix was a
-block diagonal matrix where each block corresponded to one of the five
-populations. The spatial variogram exhibited a flat shape. For $K = 2$, the APLS
-estimates for the African American population were equal to $24.2 \%$ for
-European ancestors and $75.8 \%$ for African ancestors. The corresponding {\tt
-  snmf} estimates were equal to $22.4 \%$ for European ancestors and $77.6 \%$
-for African ancestors. For $K = 3$, the APLS estimates for the African American
-population were equal to $21.4 \%$ for European ancestors, $51.8 \%$ for West
-African ancestors and $26.8 \%$ for East African ancestors. The corresponding
-{\tt snmf} estimates were equal to $22.2 \%$ for European ancestors, $68.4 \%$
-for West African ancestors and $9.4 \%$ for East African ancestors. Overall, the
-results obtained with our spatial method for African Americans were similar to
-those obtained with {\tt snmf}. The main difference between APLS and {\tt snmf}
-estimates were for African populations. For Africans, {\tt snmf} detected two
-distinct genetic clusters whereas APLS detected a larger proportion of shared
-ancestry between eastern and western populations.
+ 
+\paragraph{Application to European ecotypes of {\it Arabidopsis  thaliana}} We used  the APLS algorithm to survey spatial population genetic structure and perform a genome scan for adaptive alleles in European ecotypes of the plant species {\it A.  thaliana}. The cross validation criterion decreased rapidly from $K=1$ to $K=3$ clusters,  indicating  that  there were three main ancestral groups in Europe, corresponding to geographic regions in Western Europe, Eastern and Central Europe and Northern Scandinavia. For $K$ greater than four, the values of the cross validation criterion decreased in a slower way, indicating that subtle substructure resulting from complex historical isolation-by-distance  processes could also be detected (Figure 5). The spatial analysis provided an approximate range of  $\sigma = 150$km for the spatial variogram (Figure 5). Figure 6 displays the $Q$-matrix estimate  interpolated on a geographic map of Europe for $K = 6$ ancestral groups. The estimated admixture coefficients provided clear evidence for the clustering of the ecotypes in spatially homogeneous genetic groups. 
 
-
-\paragraph{Application to European ecotypes of {\it Arabidopsis thaliana}} We
-used the APLS algorithm to survey spatial population genetic structure and
-perform a genome scan for adaptive alleles in European ecotypes of the plant
-species {\it A. thaliana}. The cross validation criterion decreased rapidly from
-$K=1$ to $K=3$ clusters, indicating that there were three main ancestral groups
-in Europe, corresponding to geographic regions in Western Europe, Eastern and
-Central Europe and Northern Scandinavia. For $K$ greater than four, the values
-of the cross validation criterion decreased in a slower way, indicating that
-subtle substructure resulting from complex historical isolation-by-distance
-processes could also be detected (Figure~\ref{fig:fig5}). The spatial analysis provided an
-approximate range of $\sigma = 150$km for the spatial variogram (Figure~\ref{fig:fig5}).
-Figure~\ref{fig:map} displays the $Q$-matrix estimate interpolated on a geographic map of
-Europe for $K = 6$ ancestral groups. The estimated admixture coefficients
-provided clear evidence for the clustering of the ecotypes in spatially
-homogeneous genetic groups.
-
-\paragraph{Targets of selection in {\it A. thaliana} genomes} Tests based on the
-$F^Q_{\rm ST}$ statistic were applied to the 241k SNP data set to reveal new
-targets of natural selection in the {\it A. thaliana} genome. {\it A. thaliana}
-occurs in a broad variety of habitats, and local adaptation to the environment
-is acknowledged to be important in shaping its genetic diversity through
-space~\citep{Hancock2011, Fournier-Level2011}. The APLS algorithm was run on the
-1,095 European lines of {\it A. thaliana} with $K=6$ ancestral populations and
-$\sigma = 1.5$ for the range parameter. Using the Benjamini-Hochberg algorithm to
-control the FDR at the level $1\%$, the program produced a list of 12,701
-candidate SNPs, including linked loci and representing 3\% of the total number
-of loci. The top 100 candidates included SNPs in the flowering-related genes
-SHORT VEGETATIVE PHASE (SVP), COP1-interacting protein 4.1 (CIP4.1) and FRIGIDA
-(FRI) ($p$-values $< 10^{-300}$). These genes were detected by previous scans
-for selection on this dataset~\citep{Horton2012}. We performed a gene ontology
-enrichment analysis using AmiGO in order to evaluate which biological functions
-might be involved in local adaptation in Europe. We found a significant
-over-representation of genes involved in cellular processes (fold enrichment of
-1.06, $p$-value equal to 0.0215 after Bonferonni correction).
+\paragraph{Targets of selection in {\it A.  thaliana} genomes}  Tests based on the $F^Q_{\rm ST}$  statistic were applied to the 241k SNP data set to reveal new targets of natural selection in the {\it A. thaliana} genome. {\it A. thaliana} occurs in a broad variety of habitats, and local adaptation to the environment is acknowledged to be important in shaping its genetic diversity through space~\citep{Hancock2011, Fournier-Level2011}. 
+The APLS algorithm was run on the 1,095 European lines of {\it A. thaliana} with $K=6$ ancestral populations and $\sigma = 1.5$ for the range parameter. After controlling the FDR at the level $1\%$, the program produced a list of 12,701 candidate SNPs, including linked loci and representing 3\% of the total number of loci. 
+ The top 100 candidates included SNPs in the flowering-related genes SHORT VEGETATIVE PHASE (SVP), COP1-interacting protein 4.1 (CIP4.1) and FRIGIDA (FRI) ($p$-values $< 10^{-300}$). These genes were detected by previous scans for selection on this dataset~\citep{Horton2012}.
+ We performed a gene ontology enrichment analysis using AmiGO in order to evaluate which biological functions might be involved in local adaptation in Europe. 
+ We found a significant over-representation of genes involved in cellular processes (fold enrichment of 1.06, $p$-value equal to 0.0215 after Bonferonni correction).
 
 
