@@ -2,6 +2,8 @@ library(testthat)
 context("test_Sampler")
 
 test_that("Tess3Sampler", {
+
+  skip("because of message")
   options(tess3.ms = "~/BiocompSoftware/msdir/ms")
   s <- Tess3Sampler(n = 100,
                     nsites.neutral = 1000,

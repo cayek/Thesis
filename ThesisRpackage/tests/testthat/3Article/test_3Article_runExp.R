@@ -1,6 +1,8 @@
 library(testthat)
 context("3Article_runExp")
 
+flog.threshold(2)
+
 test_that("Article3_runExp", {
 
 
@@ -49,5 +51,5 @@ test_that("Article3_runExp with missing", {
                "Article3_runExp with methods=RidgeLfmm dat.name=NormalSampler2 lambdas=1e+05 Ks=4 ")
 
 
-  plot(exp, threshold = 0.05, 1e5)
+  # plot(exp, threshold = 0.05, 1e5)
 })

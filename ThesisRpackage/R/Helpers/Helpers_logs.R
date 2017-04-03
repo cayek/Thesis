@@ -33,3 +33,13 @@ flog.trace <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
 flog.info <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
   futile.logger::flog.info(msg = msg, ..., name = name, capture = capture)
 }
+#' futile.logger
+#'
+#' @export
+flog.threshold <- function(threshold = NULL, name = "ThesisRpackage") {
+  if (!is.null(threshold)) {
+    futile.logger::flog.threshold(threshold = threshold, name = name)
+  } else {
+    futile.logger::flog.logger(name = name)$threshold
+  }
+}

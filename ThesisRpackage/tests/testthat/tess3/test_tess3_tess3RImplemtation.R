@@ -3,6 +3,7 @@ context("tess3_tess3RImplementation")
 
 test_that("tess3_tess3RImplementation", {
 
+  skip("Abort, bad idea")
   skip_if_not_installed("tess3r")
 
   ## data

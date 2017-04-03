@@ -2,6 +2,7 @@ library(testthat)
 context("tess3_wrapper")
 
 test_that("tess3Method", {
+
   s <- Tess3Sampler(n = 100,
                     nsites.neutral = 10000,
                     nsites.selected = 0,
@@ -14,7 +15,7 @@ test_that("tess3Method", {
 
   expect_equal(class(m)[1], "tess3Method")
 
-  plot(m, dat)
+  capture_output(plot(m, dat))
 
 })
 
@@ -29,7 +30,7 @@ test_that("sNMFMethod", {
   expect_equal(class(m)[1], "sNMFMethod")
   m <- fit(m, dat)
 
-  plot(m, dat)
+  capture_output(plot(m, dat))
 
 })
 

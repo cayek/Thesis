@@ -82,7 +82,8 @@ FdrtoolsCalibratedZscore <- function() {
   Functor(fun = function(score) {
     pvalue <- score
     for (i in 1:nrow(score)) {
-      pvalue[i, ] <- fdrtool::fdrtool(score[i, ])$pval
+      out <- capture.output(pvalue[i, ] <- fdrtool::fdrtool(score[i, ], plot = FALSE)$pval)
+      DebugMessage("fdrtool", out)
     }
     pvalue
   },

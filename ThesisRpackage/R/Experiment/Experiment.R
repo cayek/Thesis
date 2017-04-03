@@ -90,8 +90,8 @@ initBenchmark <- function(dir = getwd()) {
   RSQLite::dbDisconnect(db)
 
   # add to .Rprofile
-  cat("Add to .Rprofile: \n
-      options( thesis.dump.file = \"",bench.dir,"\")", sep = "")
+  flog.info(paste0("Add to .Rprofile: \n
+      options( thesis.dump.file = \"",bench.dir,"\")", sep = ""))
   bench.dir
 }
 

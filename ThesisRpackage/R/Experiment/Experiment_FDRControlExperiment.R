@@ -28,8 +28,7 @@ runExperiment.FDRControlExperiment <- function(exp) {
   ## compute dat
   dats <- list()
   for (i in 1:exp$nb.rep) {
-    dats[[i]] <- sampl(exp$sampler)
-    dats[[i]]$rep <- i
+    dats[[i]] <- c(sampl(exp$sampler), list(rep = i))
   }
 
   ## main loop
@@ -41,7 +40,7 @@ runExperiment.FDRControlExperiment <- function(exp) {
       res <- run(method, dat)
       tidy_fdr(res$pvalue,
                outlier = dat$outlier) %>%
-        dplyr::mutate(rep = dat$rep,
+        dplyr::mutate(rep = as.numeric(dat$rep), ## why as.numeric ... without => bug
                       method = method.name)
     }
   end.time <- Sys.time()

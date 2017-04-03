@@ -87,6 +87,7 @@ long_init <- function(cluster.nb,
 #' Use it after running the core of a long function
 long_return <- function(cl, save, exp) {
   if (!is.null(cl)) {
+    doParallel::stopImplicitCluster()
     parallel::stopCluster(cl)
   }
   # save exp

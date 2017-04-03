@@ -11,12 +11,12 @@ test_that("Article3_MethodComparison", {
   exp <- Article3_MethodComparison(G.file = G.file,
                                    outlier.props = c(0.1),
                                    n = NULL,
-                                   L = 100,
-                                   K = 4,
+                                   L = 200,
+                                   K = 2,
                                    cs = c(0.4),
-                                   nb.rep = 2,
+                                   nb.rep = 1,
                                    fast.only = TRUE,
-                                   cluster.nb = 2,
+                                   cluster.nb = NULL,
                                    save = FALSE, bypass = TRUE)
 
   expect_equal(dim(exp$df), c(1600, 13))

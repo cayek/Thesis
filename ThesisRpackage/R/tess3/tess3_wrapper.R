@@ -50,17 +50,18 @@ fit.tess3Method <- function(m, dat) {
   ## ploidy
   ploidy <- computePloidy(dat$G)
 
-  res <- tess3r::tess3(X = dat$G,
-                                 coord = dat$coord,
-                                 K = m$K,
-                                 ploidy = ploidy,
-                                 lambda = m$lambda,
-                                 W = W,
-                                 max.iteration = m$max.iteration,
-                                 tolerance = m$tolerance,
-                                 openMP.core.num = m$openMP.core.num,
-                                 Q.init = m$Q.init,
-                                 mask = 0)
+  out <- capture.output(res <- tess3r::tess3(X = dat$G,
+                                             coord = dat$coord,
+                                             K = m$K,
+                                             ploidy = ploidy,
+                                             lambda = m$lambda,
+                                             W = W,
+                                             max.iteration = m$max.iteration,
+                                             tolerance = m$tolerance,
+                                             openMP.core.num = m$openMP.core.num,
+                                             Q.init = m$Q.init,
+                                             mask = 0))
+  DebugMessage("tess3r", out)
   m[names(res)] <- res
   m
 }

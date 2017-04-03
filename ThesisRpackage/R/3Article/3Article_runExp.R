@@ -12,7 +12,9 @@ Article3_runExp_main <- function(m, dat, lambdas, Ks) {
       B <- as.numeric(m.tmp$B)
       score <- as.numeric(m.tmp$score)
       pval <- as.numeric(m.tmp$pvalue)
-      qval <- qvalue::qvalue(pval)$qvalue
+      out <- capture.output(qval <- qvalue::qvalue(pval)$qvalue)
+      DebugMessage("qvalue", out)
+
 
       ## colname
       col.name <- colnames(dat$G)
