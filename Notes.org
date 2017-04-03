@@ -356,6 +356,23 @@
        GSE42861.
       - Et on ecrit la méthode !!!
       - On trouve un moyen de partager des objets quand je fais du parallel !!
+** 2017-04 April
+*** 2017-04-03 Monday
+**** Diff entre version                                            :2Article:
+   Entered on [2017-04-03 Mon 10:54]
+
+   Je vais creer un faux commit avec lancienne version sur une autre branche
+   juste pour faire les diffs. 
+   #+BEGIN_SRC bash
+   git tag -a 2Article_v1.0.1 -m "Article version submitted to aoas"
+   git push --tags
+   #+END_SRC
+**** Biblio in latex 
+   Entered on [2017-04-03 Mon 13:52]
+   
+   To understand what I say when I speak about bibtex: [[http://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib][here]]
+
+   How i reduce the number of author in text citations: [[http://tex.stackexchange.com/questions/26575/bibtex-how-can-i-automatically-reduce-long-author-lists-to-xxx-et-al][here]]
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions

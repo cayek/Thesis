@@ -8,3 +8,7 @@ draft.pdf
 *.dvi
 *.fls
 Figures/*.tex
+OldVersion/
+diff.tex
+diff.pdf
+draft.run.xml

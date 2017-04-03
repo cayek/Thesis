@@ -499,7 +499,7 @@ FUNCTION {cite.author.editor}
 
   s #1 "{vv~}{ll}" format.name$
   s num.names$ duplicate$
-  #3 >
+  #1 >
     { pop$ " et~al." * }
     { #3 =
         { s #3 "{vv~}{ll}{ jj}{ f}" format.name$ "others" =
