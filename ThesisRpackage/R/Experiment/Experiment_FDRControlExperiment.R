@@ -29,18 +29,19 @@ runExperiment.FDRControlExperiment <- function(exp) {
   dats <- list()
   for (i in 1:exp$nb.rep) {
     dats[[i]] <- sampl(exp$sampler)
+    dats[[i]]$rep <- i
   }
 
   ## main loop
   start.time <- Sys.time()
-  df.pvalue <-  foreach(r = 1:exp$nb.rep, .combine = 'rbind') %:%
+  df.pvalue <-  foreach(dat = dats, .combine = 'rbind') %:%
     foreach(method = exp$methods, .combine = 'rbind') %dopar%
     {
       method.name <- name(method)
-      res <- run(method, dats[[r]])
+      res <- run(method, dat)
       tidy_fdr(res$pvalue,
-               outlier = dats[[r]]$outlier) %>%
-        dplyr::mutate(rep = r,
+               outlier = dat$outlier) %>%
+        dplyr::mutate(rep = dat$rep,
                       method = method.name)
     }
   end.time <- Sys.time()
