@@ -63,6 +63,8 @@ Article2_1000Genome_res <- function(exp, indiv) {
   pops[["EU"]] <- c("TSI", "GBR")
   pops[["AFAM"]] <- c("ASW")
   pops[["AF"]] <- c("YRI", "LWK")
+  pops[["AF_East"]] <- c("LWK")
+  pops[["AF_West"]] <- c("YRI")
 
   ## tess3
   cluster.mean <- list()

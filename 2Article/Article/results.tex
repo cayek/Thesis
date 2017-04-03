@@ -91,19 +91,22 @@ times faster than the other algorithm implementations.
 \paragraph{Human data analysis} To evaluate a case of model misspecification, we
 analyzed data from the 1000 Genomes project for African Americans, Africans from
 Nigeria and from Kenya, and Europeans from the United Kingdom and from Italy.
-The spatial variogram exhibited a flat shape. Using the default values for the
-hyper-parameters, the Laplacian matrix was a block diagonal matrix where each
-block corresponded to one of the five populations. The APLS algorithm behaved as
-if the five populations were spatially unconstrained. For $K = 2$, the APLS
-estimates for the African American population were equal to $??\%$ for European
-ancestors and ?? for African ancestors. The corresponding {\tt snmf} estimates
-were equal to $??\%$ for European ancestors and ?? for African ancestors. For $K
-= 3$, the APLS estimates for the African American population were equal to
-$??\%$ for European ancestors, ?? for West African ancestors and ?? for East
-African ancestors. The corresponding {\tt snmf} estimates were equal to $??\%$
-for European ancestors, ?? for West African ancestors and ?? for East African
-ancestors. Overall, the results obtained with our spatial method were very
-similar to those obtained with a non-spatial method.
+Using the default values for the hyper-parameters, the Laplacian matrix was a
+block diagonal matrix where each block corresponded to one of the five
+populations. The spatial variogram exhibited a flat shape. For $K = 2$, the APLS
+estimates for the African American population were equal to $24.2 \%$ for
+European ancestors and $75.8 \%$ for African ancestors. The corresponding {\tt
+  snmf} estimates were equal to $22.4 \%$ for European ancestors and $77.6 \%$
+for African ancestors. For $K = 3$, the APLS estimates for the African American
+population were equal to $21.4 \%$ for European ancestors, $51.8 \%$ for West
+African ancestors and $26.8 \%$ for East African ancestors. The corresponding
+{\tt snmf} estimates were equal to $22.2 \%$ for European ancestors, $68.4 \%$
+for West African ancestors and $9.4 \%$ for East African ancestors. Overall, the
+results obtained with our spatial method for African Americans were similar to
+those obtained with {\tt snmf}. The main difference between APLS and {\tt snmf}
+estimates were for African populations. For Africans, {\tt snmf} detected two
+distinct genetic clusters whereas APLS detected a larger proportion of shared
+ancestry between eastern and western populations.
 
 
 \paragraph{Application to European ecotypes of {\it Arabidopsis thaliana}} We

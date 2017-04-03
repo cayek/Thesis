@@ -116,6 +116,21 @@ a = barplot(exp$snmf.method$Q)
 
 # ALL chrm subsample
 
+
+```{r}
+dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.sample.rds")
+dat$indiv %>%
+  group_by(pop) %>%
+  summarise(count = n())
+dat$indiv %>%
+  group_by(super_pop) %>%
+  summarise(count = n())
+dat$indiv %>%
+  summarise(count = n())
+```
+
+Number of loci = 6 994 677
+
 ## Run of tess3
 ### On krak
 ```{r}
@@ -155,7 +170,7 @@ exp <- Article2_1000Genome(dat.file = "~/Projects/Thesis/Data/1000Genomes/Phase3
 ####  Compute proportion by pop
 ```{r}
 dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.sample.rds")
-exp <- retrieveExperiment(83)
+exp <- retrieveExperiment(94)
 Article2_1000Genome_res(exp, dat$indiv)
 ```
 
@@ -172,4 +187,11 @@ exp <- Article2_1000Genome(dat.file = "~/Projects/Thesis/Data/1000Genomes/Phase3
                            K = 3,
                            openMP.core.num = 16,
                            save = TRUE)
+```
+
+####  Compute proportion by pop
+```{r}
+dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.sample.rds")
+exp <- retrieveExperiment(95)
+Article2_1000Genome_res(exp, dat$indiv)
 ```
