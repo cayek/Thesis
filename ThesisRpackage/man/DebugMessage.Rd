@@ -4,7 +4,7 @@
 \alias{DebugMessage}
 \title{Print a message if getOption("Article3Package.debug") is not null}
 \usage{
-DebugMessage(who, out)
+DebugMessage(who, out = "")
 }
 \arguments{
 \item{msg}{The message}

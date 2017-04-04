@@ -2,7 +2,7 @@
 #'
 #'
 #' @param msg The message
-DebugMessage <- function(who, out) {
+DebugMessage <- function(who, out = "") {
   flog.debug(paste0(c(paste0(who, " said:"),
                       "--------------------------------",
                       out,

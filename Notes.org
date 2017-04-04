@@ -12,7 +12,7 @@
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
 #+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
-#+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
+#+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) RUNNING(r!) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
 
 * 2017
 ** 2017-03 mars
@@ -1791,6 +1791,8 @@ plot(1)
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-12505znD.png]]
 ** STARTED Comparaison of methods for 3Article                    :3Article:
 :LOGBOOK:
+- State "STARTED"    from "WAITING"    [2017-04-04 mar. 16:55]
+- State "WAITING"    from "STARTED"    [2017-04-04 mar. 15:58]
 - State "STARTED"    from "TODO"       [2017-04-04 mar. 13:01]
 - State "TODO"       from              [2017-04-04 mar. 11:06]
 :END:
@@ -1832,8 +1834,11 @@ We retrieve the experiment
 
 #+RESULTS:
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-4989Cvd.png]]
-*** With the same 10000 loci for every body 
-**** Run on krak
+*** By sampling loci every time
+**** RUNNING Run on krak
+:LOGBOOK:
+- State "RUNNING"    from              [2017-04-04 mar. 16:56]
+:END:
 #+begin_src R :results output :session *R* :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.rds"
@@ -1849,10 +1854,89 @@ We retrieve the experiment
                                    save = TRUE, bypass = FALSE)
 #+end_src
 
-** TODO EWAS for LFMM article                                     :3Article:
+** STARTED EWAS for LFMM article                                  :3Article:
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-04-04 mar. 16:19]
 - State "TODO"       from              [2017-04-04 mar. 12:06]
 :END:
+*** PCA on betanormalized_metylationlvl.filtered.rds
+**** on krakenator
+#+begin_src R :results output :session *R* :exports both
+library(ThesisRpackage)
+s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.rds",
+                 X.file = "../Data/GSE42861/X.rds",
+                 outlier.file = NULL,
+                 n = NULL,
+                 L = NULL)
+exp <- Article3_pcaExp(s = s,
+                       s.name = "GSE42861 filtered",
+                       cluster.nb = NULL,
+                       save = TRUE, bypass = FALSE)
+#+end_src
+**** Plots
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+  exp <- retrieveExperiment(40)
+  plot(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-28683uFt.png]]
+*** LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.rds
+**** On krakenator
+#+begin_src R :results output :session *R* :exports both
+library(ThesisRpackage)
+s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.rds",
+                 X.file = "../Data/GSE42861/X.rds",
+                 outlier.file = NULL,
+                 n = NULL,
+                 L = NULL)
+dat <- sampl(s)
+exp <- Article3_cvExp(s = s,
+                      s.name = "GSE42861 filtered",
+                      Ks = c(1,2,3, 4, 5, 6, 7, 8, 10,15),
+                      lambdas = c(1e-10, 1e0, 1e10, 1e20),
+                      row.left.out.func = left.out.kfold(5),
+                      col.left.out.func = left.out.sample(5, 0.2),
+                      cluster.nb = 2,
+                      save = TRUE, bypass = FALSE)
+#+end_src
+**** Plots
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+exp <- retrieveExperiment(41)
+plot(exp$cv, color = "K")
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-28683tZC.png]]
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+plot(exp$cv, color = "lambda")
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-286836jI.png]]
+
+*** LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.LMresidu.rds
+**** RUNNING On krakenator
+:LOGBOOK:
+- State "RUNNING"    from              [2017-04-04 mar. 16:56]
+:END:
+#+begin_src R :results output :session *R* :exports both
+  library(ThesisRpackage)
+  s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds",
+                   X.file = "../Data/GSE42861/X.rds",
+                   outlier.file = NULL,
+                   n = NULL,
+                   L = NULL)
+  dat <- sampl(s)
+  exp <- Article3_cvExp(dat = dat,
+                        dat.name = "GSE42861 filtered and LM residual",
+                        Ks = c(1,2,3, 4, 5, 6, 7, 8, 10,15),
+                        lambdas = c(1e-10, 1e0, 1e10, 1e20),
+                        row.left.out.func = left.out.kfold(5),
+                        col.left.out.func = left.out.sample(5, 0.2),
+                        cluster.nb = 2,
+                        save = TRUE, bypass = FALSE)
+#+end_src
 ** TODO GWAS for LFMM article                                     :3Article:
 :LOGBOOK:
 - State "TODO"       from              [2017-04-04 mar. 12:07]
