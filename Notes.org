@@ -409,6 +409,12 @@ Entered on [2017-04-04 mar. 15:11]
 ***** to see
 - https://github.com/vspinu/imenu-anywhere
 - https://github.com/emacs-ess/ESS/issues/307
+**** Fin de journée
+Entered on [2017-04-04 mar. 18:29]
+
+Bye Rstudio ! 
+
+DEMAIN je fait propre [[file:ThesisRpackage/R/HypothesisTesting/HypothesisTesting_phenotypeWay.R][phenotypeReg_glm_score]] ! Et je lance les simus !!!
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -1936,6 +1942,18 @@ plot(exp$cv, color = "lambda")
                         col.left.out.func = left.out.sample(5, 0.2),
                         cluster.nb = 2,
                         save = TRUE, bypass = FALSE)
+#+end_src
+*** Run of LFMM ridge
+**** on krakenator
+#+begin_src R :results output :session *R* :exports both
+  library(ThesisRpackage)
+
+  ## ridge lfmm
+
+  methods <- paramGrid()
+
+    ## lasso lfmm
+
 #+end_src
 ** TODO GWAS for LFMM article                                     :3Article:
 :LOGBOOK:

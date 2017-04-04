@@ -7,7 +7,7 @@
 #' we use R lm
 #'
 #' @export
-phenotypeWayReg_glm_score <- function(gif = FALSE, family = gaussian, factorized.X1 = FALSE) {
+phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, factorized.X1 = FALSE) {
 
   Functor(fun = function(m, dat) {
 
@@ -42,5 +42,5 @@ phenotypeWayReg_glm_score <- function(gif = FALSE, family = gaussian, factorized
     res
 
   },
-  name = paste0("phenotypeWayLm","|gif=",gif))
+  name = paste0("phenotypeWayLm","|calibrate=",calibrate))
 }

@@ -1,49 +1,38 @@
-Article3_runExp_main <- function(m, dat, lambdas, Ks) {
-  foreach(lambda = lambdas, .combine = 'rbind') %:%
-    foreach(K = Ks, .combine = 'rbind') %dopar%
-    {
-      m.tmp <- m
-      m.tmp$lambda <- lambda
-      m.tmp$K <- K
+Article3_runExp_main <- function(m, dat) {
 
-      m.tmp <- run(m.tmp, dat)
+  m <- run(m, dat)
 
-      ## compute qvalue
-      B <- as.numeric(m.tmp$B)
-      score <- as.numeric(m.tmp$score)
-      pval <- as.numeric(m.tmp$pvalue)
-      out <- capture.output(qval <- qvalue::qvalue(pval)$qvalue)
-      DebugMessage("qvalue", out)
+  ## compute qvalue
+  B <- as.numeric(m$B)
+  score <- as.numeric(m$score)
+  pval <- as.numeric(m$pvalue)
+  out <- capture.output(qval <- qvalue::qvalue(pval)$qvalue)
+  DebugMessage("qvalue", out)
 
+  ## colname
+  col.name <- colnames(dat$G)
+  index = 1:ncol(dat$G)
+  if (is.null(col.name)) {
+    col.name <- sapply(index, function(i) paste0("V",i))
+  }
 
-      ## colname
-      col.name <- colnames(dat$G)
-      index = 1:ncol(dat$G)
-      if (is.null(col.name)) {
-        col.name <- sapply(index, function(i) paste0("V",i))
-      }
-
-      tibble(index = index,
-             col.name = col.name,
-             lambda = lambda,
-             K = K,
-             pvalue = pval,
-             score = score,
-             B = B,
-             qvalue = qval,
-             method = m$nickname)
-    }
+  tibble(index = index,
+         col.name = col.name,
+         pvalue = pval,
+         score = score,
+         B = B,
+         qvalue = qval,
+         method = strsplit(m$nickname, "\\|")[[1]][1],
+         lambda = ifelse(!is.null(m$lambda),m$lambda, NA),
+         K = ifelse(!is.null(m$K),m$K, NA),
+         sparse.prop = ifelse(!is.null(m$sparse.prop),m$sparse.prop, NA))
 }
 
 
 #' @export
 Article3_runExp <- function(dat,
                             dat.name,
-                            Ks,
-                            lambdas,
-                            methods = list(ridgeLfmm = finalLfmmRdigeMethod(K = NULL,
-                                                                            lambda = NULL,
-                                                                            calibrate = TRUE)),
+                            methods,
                             cluster.nb = NULL,
                             save = TRUE, bypass = FALSE) {
 
@@ -59,18 +48,18 @@ Article3_runExp <- function(dat,
   class(exp) <- c("Article3_runExp", class(exp))
 
   ## main
-  exp$df.res <- tibble()
-  for (m in methods) {
-    exp$df.res <- Article3_runExp_main(m, dat, lambdas, Ks) %>%
-      rbind(exp$df.res)
-  }
+  exp$df.res <-foreach (m = methods, .combine = 'rbind') %dopar%
+    {
+      Article3_runExp_main(m, dat)
+    }
 
   ## description
   exp$description = make_description("Article3_runExp",
                                      methods = unique(exp$df.res$method),
-                                     dat.name = dat.name,
-                                     lambdas = lambdas,
-                                     Ks = Ks)
+                                     lambdas = unique(exp$df.res$lambda),
+                                     Ks = unique(exp$df.res$K),
+                                     sparse.prop = unique(exp$df.res$sparse.prop),
+                                     dat.name = dat.name)
 
   ## return
   long_return(cl, save, exp)
