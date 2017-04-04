@@ -53,9 +53,10 @@ s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtere
                  outlier.file = NULL,
                  n = NULL,
                  L = NULL)
+dat <- sampl(s)
 exp <- Article3_cvExp(s = s,
                       s.name = "GSE42861 filtered",
-                      Ks = c(1,2,3, 4, 5, 6),
+                      Ks = c(1,2,3, 4, 5, 6, 7, 8, 10,15),
                       lambdas = c(1e-10, 1e0, 1e10, 1e20),
                       row.left.out.func = left.out.kfold(5),
                       col.left.out.func = left.out.sample(5, 0.2),

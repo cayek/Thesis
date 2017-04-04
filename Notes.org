@@ -348,14 +348,14 @@
      le faire :D
 
 ***** TODO Lundi 
-      - c'est quoi ce problem d'erreur de connexion quand je lance les tests ??
+      - [X] c'est quoi ce problem d'erreur de connexion quand je lance les tests ??
         Avant d'aller plus loin je regle ca !! Je veux des tests propres !! Et
         surtout une sortie propre pour les tests
       - on plot le resultat de la simulation. 
       - On fait la comparaison entre mes 2 méthode et refactor sur le dataset
        GSE42861.
       - Et on ecrit la méthode !!!
-      - On trouve un moyen de partager des objets quand je fais du parallel !!
+      - [X] On trouve un moyen de partager des objets quand je fais du parallel !!
 ** 2017-04 April
 *** 2017-04-03 Monday
 **** Diff entre version                                            :2Article:
@@ -373,6 +373,13 @@
    To understand what I say when I speak about bibtex: [[http://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib][here]]
 
    How i reduce the number of author in text citations: [[http://tex.stackexchange.com/questions/26575/bibtex-how-can-i-automatically-reduce-long-author-lists-to-xxx-et-al][here]]
+**** Bilan de la journée
+   Entered on [2017-04-03 lun. 18:20]
+
+   Je vais faire du litterate programming pour les data (pour essayer) et en même
+   temps setup emacs pour R ! 
+
+   Demain on s'occupe de GSE42861 !!! et on plot ce qui tourne ! 
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
