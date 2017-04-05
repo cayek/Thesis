@@ -1980,13 +1980,14 @@ La cross validation donne plutot K = 2 et pas d'importance pour le choix de
 lambda. Ce qui est interessant c'est que la [[CV_GSE42861_not_corrected][CV]] sur les données avec variables
 lattente donne plutot K = 4 et lambda petit.
 *** Run on betanormalized_metylationlvl.filtered.rds
-**** TODO on krakenator
+**** RUNNING on krakenator
 :LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-04-05 mer. 12:33]
 - State "TODO"       from              [2017-04-05 mer. 08:58]
 :END:
 #+begin_src R :results output :session *R* :exports both
   library(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds"
+  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.rds"
   X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
 
 
@@ -1994,7 +1995,7 @@ lattente donne plutot K = 4 et lambda petit.
                    X.file = X.file,
                    outlier.file = NULL)
   dat <- sampl(s)
-  dat$X <- dat$X[1,] ## keep only first covariate
+  dat$X <- dat$X[1,,drop=FALSE] ## keep only first covariate
   exp <- Article3_GSE42861(dat = dat,
                            dat.name = "betanormalized_metylationlvl.filtered.LMresidu.rds",
                            cluster.nb = 4,
@@ -2006,20 +2007,33 @@ lattente donne plutot K = 4 et lambda petit.
 
 #+end_src
 *** Run on betanormalized_metylationlvl.filtered.LMresidu.rds
-**** TODO on krakenator
+**** RUNNING on krakenator
 :LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-04-05 mer. 12:33]
 - State "TODO"       from              [2017-04-05 mer. 08:59]
 :END:
 #+begin_src R :results output :session *R* :exports both
   library(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds"
+  X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
 
-  ## ridge lfmm
 
-  methods <- paramGrid()
-
-    ## lasso lfmm
+  s <- TrueSampler(G.file = G.file,
+                   X.file = X.file,
+                   outlier.file = NULL)
+  dat <- sampl(s)
+  dat$X <- dat$X[1,,drop=FALSE] ## keep only first covariate
+  exp <- Article3_GSE42861(dat = dat,
+                           dat.name = "betanormalized_metylationlvl.filtered.LMresidu.rds",
+                           cluster.nb = 4,
+                           Ks = c(2,3,4),
+                           lambdas = c(1e-4, 1e0, 1e10),
+                           sparse.prop = c(0.1),
+                           save = TRUE,
+                           bypass = FALSE)
 
 #+end_src
+
 ** TODO GWAS for LFMM article                                     :3Article:
 :LOGBOOK:
 - State "TODO"       from              [2017-04-04 mar. 12:07]
