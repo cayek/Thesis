@@ -32,12 +32,17 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
 
     for (j in 1:L)
     {
-
-      model <- glm(X ~ dat$G[,j] + CoVar, family = family)
-
+      model <- glm(X ~ dat$G[,j] + CoVar, family = family) ## I assume that if there is missing value glm remove them...
+      ## RMK: there is an intercept by default in glm model
       res$score[1,j] <- coef(summary(model))[2,3]
       res$pvalue[1,j] <- coef(summary(model))[2,4]
     }
+    ## calibrate ?
+    if (calibrate) {
+      zscorepvalue.functor <- FdrtoolsCalibratedZscore()
+      res$pvalue <- zscorepvalue.functor$fun(res$score)
+
+    } 
 
     res
 

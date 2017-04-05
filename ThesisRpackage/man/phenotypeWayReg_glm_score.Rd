@@ -4,7 +4,7 @@
 \alias{phenotypeWayReg_glm_score}
 \title{lm + zscore in the phenotype way i.e X ~ G_j + U}
 \usage{
-phenotypeWayReg_glm_score(gif = FALSE, family = gaussian,
+phenotypeWayReg_glm_score(calibrate = FALSE, family = gaussian,
   factorized.X1 = FALSE)
 }
 \description{

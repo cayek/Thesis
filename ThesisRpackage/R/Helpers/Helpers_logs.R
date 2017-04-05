@@ -22,6 +22,15 @@ flog.debug <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
 #'
 #'
 #' @param msg The message
+flog.warning <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
+  futile.logger::flog.warn(msg = msg, ..., name = name, capture = capture)
+}
+
+
+#' futile.logger wrapper
+#'
+#'
+#' @param msg The message
 flog.trace <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
   futile.logger::flog.trace(msg = msg, ..., name = name, capture = capture)
 }

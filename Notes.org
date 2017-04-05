@@ -1842,12 +1842,22 @@ We retrieve the experiment
 #+RESULTS:
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-4989Cvd.png]]
 ***** precision-recall
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_precisionRecall(exp)
 #+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-15107ugK.png]]
+
+On y voit pas grand chose. Faire des courbes d'AUC comme dans 2Article ? Je vais
+lancer sur tous le data set pour voir si c'est pas ces 10000 loci qui sont bizare.
+
 *** By sampling loci every time
-**** RUNNING Run on krak
+**** WAITING Run on krak
 :LOGBOOK:
+- Note taken on [2017-04-05 mer. 09:03] \\
+  Bug when running on krakenator
+- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 09:01]
 - State "RUNNING"    from              [2017-04-04 mar. 16:56]
 :END:
 #+begin_src R :results output :session *R* :exports both
@@ -1892,7 +1902,7 @@ exp <- Article3_pcaExp(s = s,
 
 #+RESULTS:
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-28683uFt.png]]
-*** LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.rds
+*** <<CV_GSE42861_not_corrected>> LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.rds
 **** On krakenator
 #+begin_src R :results output :session *R* :exports both
 library(ThesisRpackage)
@@ -1927,12 +1937,14 @@ plot(exp$cv, color = "lambda")
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-286836jI.png]]
 
 *** LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.LMresidu.rds
-**** RUNNING On krakenator
+**** DONE On krakenator
+CLOSED: [2017-04-05 mer. 08:47]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-05 mer. 08:47]
 - State "RUNNING"    from              [2017-04-04 mar. 16:56]
 :END:
 #+begin_src R :results output :session *R* :exports both
-  library(ThesisRpackage)
+library(ThesisRpackage)
   s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds",
                    X.file = "../Data/GSE42861/X.rds",
                    outlier.file = NULL,
@@ -1948,8 +1960,56 @@ plot(exp$cv, color = "lambda")
                         cluster.nb = 2,
                         save = TRUE, bypass = FALSE)
 #+end_src
-*** Run of LFMM ridge
-**** on krakenator
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+exp <- retrieveExperiment(97)
+plot(exp$cv, color = 'K')
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-15107iJj.png]]
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+plot(exp$cv, color = "lambda")
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-151077xE.png]]
+
+La cross validation donne plutot K = 2 et pas d'importance pour le choix de
+lambda. Ce qui est interessant c'est que la [[CV_GSE42861_not_corrected][CV]] sur les données avec variables
+lattente donne plutot K = 4 et lambda petit.
+*** Run on betanormalized_metylationlvl.filtered.rds
+**** TODO on krakenator
+:LOGBOOK:
+- State "TODO"       from              [2017-04-05 mer. 08:58]
+:END:
+#+begin_src R :results output :session *R* :exports both
+  library(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds"
+  X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
+
+
+  s <- TrueSampler(G.file = G.file,
+                   X.file = X.file,
+                   outlier.file = NULL)
+  dat <- sampl(s)
+  dat$X <- dat$X[1,] ## keep only first covariate
+  exp <- Article3_GSE42861(dat = dat,
+                           dat.name = "betanormalized_metylationlvl.filtered.LMresidu.rds",
+                           cluster.nb = 4,
+                           Ks = c(2,3,4),
+                           lambdas = c(1e-4, 1e0, 1e10),
+                           sparse.prop = c(0.1),
+                           save = TRUE,
+                           bypass = FALSE)
+
+#+end_src
+*** Run on betanormalized_metylationlvl.filtered.LMresidu.rds
+**** TODO on krakenator
+:LOGBOOK:
+- State "TODO"       from              [2017-04-05 mer. 08:59]
+:END:
 #+begin_src R :results output :session *R* :exports both
   library(ThesisRpackage)
 

@@ -49,3 +49,4 @@ test_that("Article3_runExp on several method", {
 
   # plot(exp, threshold = 0.05, 1e5)
 })
+
