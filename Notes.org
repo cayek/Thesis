@@ -1840,6 +1840,10 @@ We retrieve the experiment
 
 #+RESULTS:
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-4989Cvd.png]]
+***** precision-recall
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+
+#+end_src
 *** By sampling loci every time
 **** RUNNING Run on krak
 :LOGBOOK:
