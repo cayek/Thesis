@@ -415,6 +415,7 @@ Entered on [2017-04-04 mar. 18:29]
 Bye Rstudio ! 
 
 DEMAIN je fait propre [[file:ThesisRpackage/R/HypothesisTesting/HypothesisTesting_phenotypeWay.R][phenotypeReg_glm_score]] ! Et je lance les simus !!!
+
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
