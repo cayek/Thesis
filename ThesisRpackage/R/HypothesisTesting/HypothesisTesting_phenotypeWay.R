@@ -12,8 +12,7 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
   Functor(fun = function(m, dat) {
 
     if (ncol(dat$X) > 1) {
-      warning("We take X = dat$X[,1], other variables are used as co-variables",
-              call. = FALSE, immediate. = TRUE)
+      flog.warning("We take X = dat$X[,1], other variables are used as co-variables")
     }
     if (factorized.X1) {
       X <- as.factor(dat$X[,1])

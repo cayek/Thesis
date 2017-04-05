@@ -1995,7 +1995,7 @@ lattente donne plutot K = 4 et lambda petit.
                    X.file = X.file,
                    outlier.file = NULL)
   dat <- sampl(s)
-  dat$X <- dat$X[1,,drop=FALSE] ## keep only first covariate
+  dat$X <- dat$X[,1,drop=FALSE] ## keep only first covariate
   exp <- Article3_GSE42861(dat = dat,
                            dat.name = "betanormalized_metylationlvl.filtered.LMresidu.rds",
                            cluster.nb = 4,
@@ -2022,7 +2022,7 @@ lattente donne plutot K = 4 et lambda petit.
                    X.file = X.file,
                    outlier.file = NULL)
   dat <- sampl(s)
-  dat$X <- dat$X[1,,drop=FALSE] ## keep only first covariate
+  dat$X <- dat$X[,1,drop=FALSE] ## keep only first covariate
   exp <- Article3_GSE42861(dat = dat,
                            dat.name = "betanormalized_metylationlvl.filtered.LMresidu.rds",
                            cluster.nb = 4,

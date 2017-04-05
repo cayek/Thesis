@@ -31,8 +31,8 @@ test_that("Article3_GSE42861_methods", {
   exp <- Article3_GSE42861(dat = dat,
                            dat.name = "GSE42861 sample",
                            cluster.nb = NULL,
-                           Ks = c(3),
-                           lambdas = c(1e-4),
+                           Ks = c(2,3),
+                           lambdas = c(1e-4, 1e0),
                            sparse.prop = c(0.1),
                            save = FALSE,
                            bypass = TRUE)
