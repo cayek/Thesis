@@ -240,6 +240,15 @@
    
    Mount depuis krakenator, je ne doit pas etre dans le [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][fuse group]]... Try [[http://askubuntu.com/questions/502115/sshfs-you-do-not-have-the-permissions-necessary-to-view-the-contents-of-mounted][that]].
    C'est fait :D
+   
+   Pour mount:
+   #+BEGIN_SRC bash
+   ssh patator
+   cd Projects/Thesis/
+   sshfs cayek@krakenator.imag.fr:/home/cayek/Projects/Thesis/OUTPUT OUTPUT/
+   sshfs cayek@krakenator.imag.fr:/home/cayek/Projects/Thesis/Data Data
+   #+END_SRC
+   
 *** 2017-03-24 vendredi
 **** NuclearNorm + lasso
    Entered on [2017-03-24 ven. 11:44]
@@ -289,20 +298,20 @@
    monopole :D
 *** 2017-03-29 mercredi
 **** bilan de la journée
-   Entered on [2017-03-29 mer. 17:29]
+Entered on [2017-03-29 mer. 17:29]
 
-   Je me perds un peut avec les simulations avec missing value. Ca marche très
-   bien sur le jeux de données que j'ai choisi. 
-   
-   Demain ajouter lasso au protocole de validation sur des vrai jeux de données.
-   Faudrai que je trouve un moyen de comparer les sortie des différent algos,
-   pour valider que ma methode fait comme d'autre !! DU coup sur chaque jeux de
-   données GWAS/EWAS/EAS il me faut une méthode de reférence !! 
+Je me perds un peut avec les simulations avec missing value. Ca marche très
+bien sur le jeux de données que j'ai choisi. 
 
-   Je vais travailler sur les function Article3_cv/pca/runExp, il me faut un
-   protocole unifié !!
+Demain ajouter lasso au protocole de validation sur des vrai jeux de données.
+Faudrai que je trouve un moyen de comparer les sortie des différent algos,
+pour valider que ma methode fait comme d'autre !! DU coup sur chaque jeux de
+données GWAS/EWAS/EAS il me faut une méthode de reférence !! 
 
-   A demain !
+Je vais travailler sur les function Article3_cv/pca/runExp, il me faut un
+protocole unifié !!
+
+A demain !
 *** 2017-03-30 Jeudi
 **** On reproducibility talk
    Entered on [2017-03-30 Jeu 11:06]
@@ -1798,6 +1807,8 @@ plot(1)
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-12505znD.png]]
 ** STARTED Comparaison of methods for 3Article                    :3Article:
 :LOGBOOK:
+- State "STARTED"    from "RUNNING"    [2017-04-05 mer. 16:33]
+- State "RUNNING"    from "STARTED"    [2017-04-05 mer. 16:33]
 - State "STARTED"    from "WAITING"    [2017-04-04 mar. 16:55]
 - State "WAITING"    from "STARTED"    [2017-04-04 mar. 15:58]
 - State "STARTED"    from "TODO"       [2017-04-04 mar. 13:01]
@@ -1982,6 +1993,10 @@ lattente donne plutot K = 4 et lambda petit.
 *** Run on betanormalized_metylationlvl.filtered.rds
 **** RUNNING on krakenator
 :LOGBOOK:
+- State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
+- Note taken on [2017-04-05 mer. 16:22] \\
+  krakenator va etre mis a jour, on relance après !
+- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 16:22]
 - State "RUNNING"    from "TODO"       [2017-04-05 mer. 12:33]
 - State "TODO"       from              [2017-04-05 mer. 08:58]
 :END:
@@ -2009,6 +2024,10 @@ lattente donne plutot K = 4 et lambda petit.
 *** Run on betanormalized_metylationlvl.filtered.LMresidu.rds
 **** RUNNING on krakenator
 :LOGBOOK:
+- State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
+- Note taken on [2017-04-05 mer. 16:23] \\
+  krakenator va etre mis a jour...
+- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 16:23]
 - State "RUNNING"    from "TODO"       [2017-04-05 mer. 12:33]
 - State "TODO"       from              [2017-04-05 mer. 08:59]
 :END:
@@ -2042,8 +2061,13 @@ lattente donne plutot K = 4 et lambda petit.
 :LOGBOOK:
 - State "TODO"       from              [2017-04-04 mar. 12:09]
 :END:
-** TODO Run of methods on OF GWAS simulation                      :3Article:
+** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-05 mer. 17:57] \\
+  to be continued: finir le [[file:ThesisRpackage/R/Sampler/Sampler_PhenotypeFromTrueData.R][cette fonction]]
+- Note taken on [2017-04-05 mer. 15:55] \\
+  Premiere etape: faire le sampler
+- State "STARTED"    from "TODO"       [2017-04-05 mer. 15:55]
 - State "TODO"       from              [2017-04-04 mar. 13:07]
 :END:
 - [ ] pca

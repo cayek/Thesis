@@ -19,7 +19,7 @@ new_file <- function(dir, name) {
     assertthat::assert_that(!file.exists(file.R))
     file.create(file.R)
     system(paste0("cd ", dir.base, "; ln -s ", dir,"/", name, ".R ", name, ".R"))
-    rstudioapi::navigateToFile(file.R)
+    ## rstudioapi::navigateToFile(file.R)
   }
 
   ## create file R
