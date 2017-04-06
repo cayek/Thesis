@@ -4,7 +4,7 @@
 \alias{flog.warning}
 \title{futile.logger wrapper}
 \usage{
-flog.warning(msg, ..., name = "ThesisRpackage", capture = FALSE)
+flog.warning(..., name = "ThesisRpackage", capture = FALSE)
 }
 \arguments{
 \item{msg}{The message}

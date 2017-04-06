@@ -14,16 +14,18 @@ DebugMessage <- function(who, out = "") {
 #'
 #'
 #' @param msg The message
-flog.debug <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
-  futile.logger::flog.debug(msg = msg, ..., name = name, capture = capture)
+flog.debug <- function(..., name = "ThesisRpackage", capture = FALSE) {
+  msg <- paste(...)
+  futile.logger::flog.debug(msg = msg, name = name, capture = capture)
 }
 
 #' futile.logger wrapper
 #'
 #'
 #' @param msg The message
-flog.warning <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
-  futile.logger::flog.warn(msg = msg, ..., name = name, capture = capture)
+flog.warning <- function(..., name = "ThesisRpackage", capture = FALSE) {
+  msg <- paste(...)
+  futile.logger::flog.warn(msg = msg, name = name, capture = capture)
 }
 
 
@@ -31,16 +33,18 @@ flog.warning <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
 #'
 #'
 #' @param msg The message
-flog.trace <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
-  futile.logger::flog.trace(msg = msg, ..., name = name, capture = capture)
+flog.trace <- function(..., name = "ThesisRpackage", capture = FALSE) {
+  msg <- paste(...)
+  futile.logger::flog.trace(msg = msg, name = name, capture = capture)
 }
 
 #' futile.logger wrapper
 #'
 #'
 #' @param msg The message
-flog.info <- function(msg,..., name = "ThesisRpackage", capture = FALSE) {
-  futile.logger::flog.info(msg = msg, ..., name = name, capture = capture)
+flog.info <- function(..., name = "ThesisRpackage", capture = FALSE) {
+  msg <- paste(...)
+  futile.logger::flog.info(msg = msg, name = name, capture = capture)
 }
 #' futile.logger
 #'

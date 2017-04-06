@@ -4,7 +4,7 @@
 \alias{flog.debug}
 \title{futile.logger wrapper}
 \usage{
-flog.debug(msg, ..., name = "ThesisRpackage", capture = FALSE)
+flog.debug(..., name = "ThesisRpackage", capture = FALSE)
 }
 \arguments{
 \item{msg}{The message}

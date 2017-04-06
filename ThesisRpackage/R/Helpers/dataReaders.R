@@ -149,3 +149,18 @@ read_vcf <- function(f, maf.threshold = NULL,
        snps.info = snps.info)
 
 }
+
+read_all <- function(file) {
+if (tools::file_ext(file) == "lfmm") {
+    readr::read_delim(file, delim = " ",
+                      col_names = FALSE,
+                      col_types = readr::cols(.default = readr::col_integer())) %>%
+      as.matrix()
+  } else if (tools::file_ext(file) == "RData") {
+    stop("TODO")
+  } else if (tools::file_ext(file) == "rds") {
+    readRDS(file)
+  } else {
+    stop("TODO")
+  }
+}

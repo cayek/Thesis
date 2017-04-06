@@ -4,7 +4,7 @@
 \alias{flog.trace}
 \title{futile.logger wrapper}
 \usage{
-flog.trace(msg, ..., name = "ThesisRpackage", capture = FALSE)
+flog.trace(..., name = "ThesisRpackage", capture = FALSE)
 }
 \arguments{
 \item{msg}{The message}

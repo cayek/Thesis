@@ -1994,6 +1994,8 @@ lattente donne plutot K = 4 et lambda petit.
 *** Run on betanormalized_metylationlvl.filtered.rds
 **** RUNNING on krakenator
 :LOGBOOK:
+- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 09:15]
+- State "WAITING"    from "RUNNING"    [2017-04-06 jeu. 08:35]
 - State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
 - Note taken on [2017-04-05 mer. 16:22] \\
   krakenator va etre mis a jour, on relance après !
@@ -2025,6 +2027,8 @@ lattente donne plutot K = 4 et lambda petit.
 *** Run on betanormalized_metylationlvl.filtered.LMresidu.rds
 **** RUNNING on krakenator
 :LOGBOOK:
+- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 09:16]
+- State "WAITING"    from "RUNNING"    [2017-04-06 jeu. 08:35]
 - State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
 - Note taken on [2017-04-05 mer. 16:23] \\
   krakenator va etre mis a jour...
@@ -2075,4 +2079,66 @@ lattente donne plutot K = 4 et lambda petit.
 - [ ] run all methods
 - [ ] Eigenstrat
 - [ ] mesure de la précision ??
+*** Install of ThesisRpackage
+*** Run of methods
+#+begin_src R :results output :session *R* :exports both
+  ## library
+  library(ThesisRpackage)
 
+  ## sample
+  G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
+  env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"
+  pca.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.pca.rds"
+  coord.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.coord.rds"
+  s <- PhenotypeFromTrueSampler(G.file,
+                                coord.file,
+                                env.file,
+                                pca.file,
+                                n = NULL,
+                                L = 10000,
+                                K = 40,
+                                J = 10,
+                                beta = 6,
+                                delta = 0.3)
+
+  dat <- sampl(s)
+
+  ## methods
+  methods <- list()
+  K <- 40
+  hypothesis.testing.func <- phenotypeWayReg_glm_score(calibrate = FALSE,
+                                                       family = gaussian,
+                                                       factorized.X1 = FALSE)
+
+  ## lm
+  methods$lm <- ClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                    nickname="lm")
+  ## lm + PCA
+  methods$lm <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                       K = K, 
+                                       nickname="lm")
+
+
+  ## lfmm ridge
+  methods$ridgeLFMM <- RidgeLFMMMethod(K = K,
+                                      lambda = 1e-5,
+                                      hypothesis.testing.method = hypothesis.testing.func,
+                                      nickname = "ridgeLFMM")
+
+  ## sva
+  methods$sva <- SVAMethod(K = K,
+                           hypothesis.testing.method = hypothesis.testing.func,
+                           nickname = "sva")
+
+  ## experiment
+  exp <- do.call(FDRControlExperiment, c(list(nb.rep = 1,
+                                              sampler = s), methods))
+  exp <- runExperiment(exp)
+
+#+end_src
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+  ## plots
+  plot(exp, plot.type = "pvalue.grid")
+  plot(exp, plot.type = "precision.recall")
+#+end_src

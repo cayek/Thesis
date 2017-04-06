@@ -4,7 +4,7 @@
 \alias{flog.info}
 \title{futile.logger wrapper}
 \usage{
-flog.info(msg, ..., name = "ThesisRpackage", capture = FALSE)
+flog.info(..., name = "ThesisRpackage", capture = FALSE)
 }
 \arguments{
 \item{msg}{The message}
