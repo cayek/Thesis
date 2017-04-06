@@ -2068,6 +2068,8 @@ lattente donne plutot K = 4 et lambda petit.
 :END:
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-06 jeu. 11:28] \\
+  C'est très la boucle des glm !!
 - Note taken on [2017-04-05 mer. 17:57] \\
   to be continued: finir le [[file:ThesisRpackage/R/Sampler/Sampler_PhenotypeFromTrueData.R][cette fonction]]
 - Note taken on [2017-04-05 mer. 15:55] \\
@@ -2095,7 +2097,7 @@ lattente donne plutot K = 4 et lambda petit.
                                 env.file,
                                 pca.file,
                                 n = NULL,
-                                L = 10000,
+                                L = 1000,
                                 K = 40,
                                 J = 10,
                                 beta = 6,
@@ -2114,16 +2116,16 @@ lattente donne plutot K = 4 et lambda petit.
   methods$lm <- ClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
                                     nickname="lm")
   ## lm + PCA
-  methods$lm <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
-                                       K = K, 
-                                       nickname="lm")
+  methods$lmPCA <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                          K = K, 
+                                          nickname="lm")
 
 
   ## lfmm ridge
   methods$ridgeLFMM <- RidgeLFMMMethod(K = K,
-                                      lambda = 1e-5,
-                                      hypothesis.testing.method = hypothesis.testing.func,
-                                      nickname = "ridgeLFMM")
+                                       lambda = 1e-5,
+                                       hypothesis.testing.method = hypothesis.testing.func,
+                                       nickname = "ridgeLFMM")
 
   ## sva
   methods$sva <- SVAMethod(K = K,
