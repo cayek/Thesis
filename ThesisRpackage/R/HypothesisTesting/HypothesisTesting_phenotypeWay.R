@@ -29,10 +29,22 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
     res$score <- matrix(NA, 1, L)
     res$pvalue <- matrix(NA, 1, L)
 
+    ## model
+    ## I assume that if there is missing value glm remove them...
+    ## RMK: there is an intercept by default in glm model
+    if (ncol(CoVar) == 0) {
+      modl.func <- function(j) {
+        glm(X ~ dat$G[,j], family = family)
+      }
+    } else {
+      modl.func <- function(j) {
+        glm(X ~ dat$G[,j] + CoVar, family = family) 
+      }
+    }
+
     for (j in 1:L)
     {
-      model <- glm(X ~ dat$G[,j] + CoVar, family = family) ## I assume that if there is missing value glm remove them...
-      ## RMK: there is an intercept by default in glm model
+      model <- modl.func(j)
       res$score[1,j] <- coef(summary(model))[2,3]
       res$pvalue[1,j] <- coef(summary(model))[2,4]
     }
