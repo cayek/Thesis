@@ -3,9 +3,9 @@ Article3_runExp_main <- function(m, dat) {
   m <- run(m, dat)
 
   ## compute qvalue
-  B <- as.numeric(m$B)
-  score <- as.numeric(m$score)
-  pval <- as.numeric(m$pvalue)
+  B <- as.numeric(m$B[1,])
+  score <- as.numeric(m$score[1,])
+  pval <- as.numeric(m$pvalue[1,])
   out <- capture.output(qval <- qvalue::qvalue(pval)$qvalue)
   DebugMessage("qvalue", out)
 
@@ -20,7 +20,7 @@ Article3_runExp_main <- function(m, dat) {
          col.name = col.name,
          pvalue = pval,
          score = score,
-         B = B,
+         B = ifelse(length(B) == 0, NA, B),
          qvalue = qval,
          method = strsplit(m$nickname, "\\|")[[1]][1],
          lambda = ifelse(!is.null(m$lambda),m$lambda, NA),
@@ -38,9 +38,9 @@ Article3_runExp <- function(dat,
 
   ## init
   cl <- long_init(cluster.nb = cluster.nb,
-            bypass = bypass)
-
-  assertthat::assert_that(ncol(dat$X) == 1)
+                  bypass = bypass)
+  if (ncol(dat$X) > 1)
+    flog.warning("(ncol(dat$X) > 1. Only first pvalue for the first co-variate computed")
 
   ## exp
   exp <- Experiment(name = "Article3_runExp")

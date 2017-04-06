@@ -12,8 +12,7 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
   Functor(fun = function(m, dat) {
 
     if (ncol(dat$X) > 1) {
-      warning("We take X = dat$X[,1], other variables are used as co-variables",
-              call. = FALSE, immediate. = TRUE)
+      flog.warning("We take X = dat$X[,1], other variables are used as co-variables")
     }
     if (factorized.X1) {
       X <- as.factor(dat$X[,1])
@@ -32,12 +31,17 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
 
     for (j in 1:L)
     {
-
-      model <- glm(X ~ dat$G[,j] + CoVar, family = family)
-
+      model <- glm(X ~ dat$G[,j] + CoVar, family = family) ## I assume that if there is missing value glm remove them...
+      ## RMK: there is an intercept by default in glm model
       res$score[1,j] <- coef(summary(model))[2,3]
       res$pvalue[1,j] <- coef(summary(model))[2,4]
     }
+    ## calibrate ?
+    if (calibrate) {
+      zscorepvalue.functor <- FdrtoolsCalibratedZscore()
+      res$pvalue <- zscorepvalue.functor$fun(res$score)
+
+    } 
 
     res
 
