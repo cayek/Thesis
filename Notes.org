@@ -1865,8 +1865,13 @@ On y voit pas grand chose. Faire des courbes d'AUC comme dans 2Article ? Je vais
 lancer sur tous le data set pour voir si c'est pas ces 10000 loci qui sont bizare.
 
 *** By sampling loci every time
-**** WAITING Run on krak
+**** DONE Run on krakenator or patator
+CLOSED: [2017-04-07 ven. 08:32]
 :LOGBOOK:
+- Note taken on [2017-04-07 ven. 08:33] \\
+  exp id = 100
+- State "DONE"       from "RUNNING"    [2017-04-07 ven. 08:32]
+- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 11:53]
 - Note taken on [2017-04-05 mer. 09:03] \\
   Bug when running on krakenator
 - State "WAITING"    from "RUNNING"    [2017-04-05 mer. 09:01]
@@ -1886,7 +1891,58 @@ lancer sur tous le data set pour voir si c'est pas ces 10000 loci qui sont bizar
                                    cluster.nb = 16,
                                    save = TRUE, bypass = FALSE)
 #+end_src
+**** Plots
+We retrieve exp results
+#+begin_src R :results output :session *ssh krakenator* :exports both
+library(ThesisRpackage)
+exp <- retrieveExperiment(100)
+#+end_src
 
+#+RESULTS:
+
+***** C = 0.2
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *ssh krakenator* 
+Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560Z9V.png]]
+
+***** C = 0.6
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.6)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560Aco.png]]
+
+***** C = 0.8
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.8)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560aw0.png]]
+
+***** precision-recall
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_precisionRecall(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560ZEK.png]]
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+  geom <- "point"
+  p <- ggplot(exp$df,
+              aes(x = expected.fd, y = true.fd  - expected.fd )) +
+    facet_grid(method ~ pvalue.index, scale = "free") +
+    layer(geom = geom, mapping = aes(group = as.factor(rep)), params = list(color = "grey", size = 0.1),
+          stat = "identity", position = "identity") +
+    stat_summary_bin(fun.y = median, geom = geom) +
+    stat_summary_bin(fun.y = function(x) quantile(x,0.9), geom = geom, color = "blue4")  +
+    stat_summary_bin(fun.y = function(x) quantile(x,0.1), geom = geom, color = "blue4")
+#+end_src
 ** STARTED EWAS for LFMM article                                  :3Article:
 :LOGBOOK:
 - State "STARTED"    from "TODO"       [2017-04-04 mar. 16:19]
