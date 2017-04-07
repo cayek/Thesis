@@ -428,6 +428,14 @@ DEMAIN je fait propre [[file:ThesisRpackage/R/HypothesisTesting/HypothesisTestin
 *** 2017-04-07 vendredi
 **** [[http://stackoverflow.com/questions/2908822/speed-up-the-loop-operation-in-r][Speed up loop in R]]
 Entered on [2017-04-07 ven. 11:19]
+**** Fin de semaine
+Entered on [2017-04-07 ven. 18:21]
+
+La semaine prochaine il faut que je debug phenotypeWayReg_lm ([[file:ThesisRpackage/tests/testthat/HypothesisTesting/test_HypothesisTesting_glm.R][fichier de test]])
+en comprant phenotypeWayReg_lm_score à phenotypeReg_glm_score. Je devrais avoir
+la même chose ! 
+
+Après je peux finir [[file:Notes.org::*Run%20of%20methods%20on%20OF%20GWAS%20simulation][ca]] !!! Et l'envoyer a OF....
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -2136,6 +2144,9 @@ lattente donne plutot K = 4 et lambda petit.
 :END:
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-07 ven. 18:23] \\
+  il faut debug + integrer les modif dans le sampler et après on pourra voir ce
+  que ca fait
 - Note taken on [2017-04-06 jeu. 11:28] \\
   C'est très long la boucle des glm !!
 - Note taken on [2017-04-05 mer. 17:57] \\
@@ -2153,9 +2164,8 @@ lattente donne plutot K = 4 et lambda petit.
 *** Install of ThesisRpackage
 *** Run of methods
 #+begin_src R :results output :session *R* :exports both
-  ## library
-    ## library
-    library(ThesisRpackage)
+## library
+library(ThesisRpackage)
 
     ## sample
     G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
@@ -2204,9 +2214,11 @@ lattente donne plutot K = 4 et lambda petit.
     exp <- do.call(FDRControlExperiment, c(list(nb.rep = 1,
                                                 sampler = s), methods))
     exp <- runExperiment(exp)
+#+end_src
+
 
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-  ## plots
+## plots
   plot(exp, plot.type = "pvalue.grid")
   plot(exp, plot.type = "precision.recall")
 #+end_src

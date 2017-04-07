@@ -31,4 +31,6 @@ Imports: ggplot2,
     assertthat,
     fdrtool,
     crayon,
-    futile.logger
+    futile.logger,
+    Rcpp
+LinkingTo: Rcpp, RcppEigen

@@ -57,7 +57,7 @@ test_that("phenotypeWayReg_lm_score", {
   qplot(x = ind,
         y = -log10(lm.res$pvalue[1,]),
         color = ind %in% dat$outlier)
-  
+
   ## hypothesis testing calibrate=TRUE
   ht.func <- phenotypeWayReg_lm_score(calibrate = TRUE)
   lm.res <- ht.func$fun(m, dat)
@@ -69,3 +69,27 @@ test_that("phenotypeWayReg_lm_score", {
 
 })
 
+test_that("phenotypeWayReg_lm", {
+
+  ## dat
+  s <- NormalSampler2(n = 100,
+                      L = 1000,
+                      K = 3)
+  dat <- sampl(s)
+
+  ## LFmethod
+  m <- finalLfmmRdigeMethod(K = 3, lambda = 1e-2)
+  m <-  fit(m, dat)
+
+  CoVar <- cbind(matrix(1,nrow(dat$G),1), dat$U)
+  lm.res <- phenotypeWayReg_lm(Y = dat$X,X = dat$G, CoVar = CoVar)
+
+  ind <- seq_along(lm.res$B)
+  qplot(x = ind,
+        y = as.numeric(lm.res$B),
+        color = ind %in% dat$outlier)
+  qplot(x = ind,
+        y = as.numeric(lm.res$B.sigma2),
+        color = ind %in% dat$outlier)
+
+})

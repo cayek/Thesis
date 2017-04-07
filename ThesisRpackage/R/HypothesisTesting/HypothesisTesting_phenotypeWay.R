@@ -61,9 +61,6 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
   name = paste0("phenotypeWayGlm","|calibrate=",calibrate))
 }
 
-
-
-
 #' lm + zscore in the phenotype way i.e X ~ G_j + U
 #'
 #' we use R lm
@@ -72,7 +69,6 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
 phenotypeWayReg_lm_score <- function(calibrate = FALSE) {
 
   Functor(fun = function(m, dat) {
-    res <- list()
     n <- nrow(dat$G)
     L <- ncol(dat$G)
 
@@ -85,24 +81,12 @@ phenotypeWayReg_lm_score <- function(calibrate = FALSE) {
 
 
     ## model
-    res$B <- array(NA, dim = c(1,L,d))
-    res$B.sigma2 <- array(NA, dim = c(1,L,d))
-    epsilon <- matrix(NA, n, 1)
-    cov.aux <- matrix(NA, n, d)
-    ## Compute B
-    for (j in 1:L) {
-      cov.aux <- cbind(dat$G[,j], CoVar)
-      res$B[1,j,] <- B_ridge(X, cov.aux, 0.0)
-      epsilon <- X - cov.aux %*% res$B[1,j,]
-      eps.sigma2 <- epsilon.sigma2(epsilon, reduced.df = d)
-      res$B.sigma2[1,j,] <- B.sigma2(epsilon.sigma2 = eps.sigma2,
-                                     X = cov.aux,
-                                     lambda = 0.0,
-                                     A = X)
-    }
+    res <-  phenotypeWayReg_lm(Y = dat$X,
+                               X = dat$G,
+                               CoVar = CoVar)
 
     ## score and pvalue
-    res$score <- matrix((res$B[1,,1] - 0) / sqrt(res$B.sigma2[1,,1]), 1, L)
+    res$score <- matrix((res$B - 0) / sqrt(res$B.sigma2), 1, L)
     res$pvalue <- NormalZscore()$fun(res$score)
 
     ## calibrate ?

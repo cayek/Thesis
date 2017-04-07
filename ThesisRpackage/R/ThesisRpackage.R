@@ -10,5 +10,8 @@
 #' @importFrom magrittr "%>%"
 #' @importFrom foreach foreach %:% %do% %dopar%
 #' @import tibble
+#' @importFrom Rcpp evalCpp
+#' @useDynLib ThesisRpackage
+#' @import RcppEigen
 NULL
 
