@@ -1,3 +1,7 @@
+*.so
+*.o
+ThesisRpackage/wc2-5/*
+
 # TAGS
 ThesisRpackage/TAGS
 
