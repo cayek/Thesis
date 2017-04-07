@@ -4,6 +4,9 @@ Article3_runExp_main <- function(m, dat) {
 
   ## compute qvalue
   B <- as.numeric(m$B[1,])
+  if (length(B) == 0) {
+    B <- NA
+  }
   score <- as.numeric(m$score[1,])
   pval <- as.numeric(m$pvalue[1,])
   out <- capture.output(qval <- qvalue::qvalue(pval)$qvalue)
@@ -20,7 +23,7 @@ Article3_runExp_main <- function(m, dat) {
          col.name = col.name,
          pvalue = pval,
          score = score,
-         B = ifelse(length(B) == 0, NA, B),
+         B = B,
          qvalue = qval,
          method = strsplit(m$nickname, "\\|")[[1]][1],
          lambda = ifelse(!is.null(m$lambda),m$lambda, NA),
@@ -68,26 +71,26 @@ Article3_runExp <- function(dat,
 
 
 #' @export
-Article3_runExp_plotB <- function(exp, threshold, lambda) {
+Article3_runExp_plotB <- function(exp, threshold, method.name) {
 
   assertthat::assert_that(exp$name == "Article3_runExp")
 
   toplot <- exp$df.res %>%
-    dplyr::filter(lambda == lambda)
+    dplyr::filter(method == method.name)
   ggplot(toplot, aes(x = index, y = B, color = qvalue < threshold)) +
     geom_point() +
-    facet_grid(method ~ K, scales = "free")
+    facet_grid(lambda ~ K, scales = "free")
 
 }
 
 #' @export
-Article3_runExp_manhattan <- function(exp, threshold, lambda) {
+Article3_runExp_manhattan <- function(exp, threshold, method.name) {
 
   assertthat::assert_that(exp$name == "Article3_runExp")
 
   toplot <- exp$df.res %>%
-    dplyr::filter(lambda == lambda)
+    dplyr::filter(method == method.name)
     ggplot(toplot, aes(x = index, y = -log10(pvalue), color = qvalue < threshold)) +
       geom_point() +
-      facet_grid(method ~ K, scales = "free")
+      facet_grid(lambda ~ K, scales = "free")
 }

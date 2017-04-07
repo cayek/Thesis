@@ -7,7 +7,7 @@ classicLm <- function(G_, X, center, res = list()) {
   res$B <- B_ridge(G_, X, 0.0)
   res$epsilon <- G_ - X %*% res$B
   res$epsilon.sigma2 <- epsilon.sigma2(res$epsilon,
-                                       reduced.df = ifelse(center,1,0))
+                                       reduced.df = ifelse(center,1,0) + ncol(X))
   res$B.sigma2 <- B.sigma2(epsilon.sigma2 = res$epsilon.sigma2,
                            X = X,
                            lambda = 0.0,
@@ -86,7 +86,7 @@ epsilon.sigma2 <- function(epsilon, reduced.df) {
     sigma2
   } else {
     ## Whithout missing value
-    effective.degree.freedom <- nrow(epsilon) - reduced.df#=1 if A was centered
+    effective.degree.freedom <- nrow(epsilon) - reduced.df
     ## compute s2
     sigma2 <- epsilon %>% purrr::array_branch(2) %>%
       purrr::map_dbl(function(x) sum(x ^ 2) / effective.degree.freedom)

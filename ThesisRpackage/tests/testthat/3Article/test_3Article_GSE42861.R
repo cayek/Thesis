@@ -13,11 +13,11 @@ test_that("Article3_GSE42861_methods", {
 
   sapply(methods, function(m) m$nickname)
   expect_equal(unique(sapply(methods, function(m) strsplit(m$nickname, split = "\\|")[[1]][1])),
-               c("lfmmRidge", "glm", "refactor", "lassoRidge"))
+               c("lfmmRidge", "glm", "refactor", "lfmmLasso"))
 
 })
 
-test_that("Article3_GSE42861_methods", {
+test_that("Article3_GSE42861", {
   G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.sample.rds"
   X.file <- "~/Projects/Thesis/Data/GSE42861/X.sample.rds"
 
@@ -37,10 +37,22 @@ test_that("Article3_GSE42861_methods", {
                            save = FALSE,
                            bypass = TRUE)
 
-  expect_equal(unique(exp$df.res$method), c("lfmmRidge",  "glm"     ,   "refactor" ,  "lassoRidge"))
+  expect_equal(unique(exp$df.res$method), c("lfmmRidge",  "glm"     ,   "refactor" ,  "lfmmLasso"))
   expect_equal(unique(exp$df.res$K), c(2, 3, NA))
   expect_equal(unique(exp$df.res$lambda), c(1e-4, 1.0, NA, 0.010082447,0.009442308))
   expect_equal(unique(exp$df.res$sparse.prop), c(NA, 0.1))
+
+  Article3_runExp_plotB(exp, 0.05, "lfmmRidge")
+  Article3_runExp_manhattan(exp, 0.05, "lfmmRidge")
+
+  Article3_runExp_plotB(exp, 0.05, "glm")
+  Article3_runExp_manhattan(exp, 0.05, "glm")
+
+  Article3_runExp_plotB(exp, 0.05, "refactor") ## NA because B not computed with this method
+  Article3_runExp_manhattan(exp, 0.05, "refactor")
+
+  Article3_runExp_plotB(exp, 0.05, "lfmmLasso")
+  Article3_runExp_manhattan(exp, 0.05, "lfmmLasso")
 
 })
 

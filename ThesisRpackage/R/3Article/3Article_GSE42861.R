@@ -44,7 +44,7 @@ Article3_GSE42861_methods <- function(Ks,
     m
   }
 
-  methods <- c(methods, paramGrid(lassoLFMM.const, nickname.base = "lassoRidge",
+  methods <- c(methods, paramGrid(lassoLFMM.const, nickname.base = "lfmmLasso",
                                   K = Ks,
                                   sparse.prop = sparse.prop))
 

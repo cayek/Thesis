@@ -425,7 +425,9 @@ Bye Rstudio !
 
 DEMAIN je fait propre [[file:ThesisRpackage/R/HypothesisTesting/HypothesisTesting_phenotypeWay.R][phenotypeReg_glm_score]] ! Et je lance les simus !!!
 *** 2017-04-05 Wednesday
-
+*** 2017-04-07 vendredi
+**** [[http://stackoverflow.com/questions/2908822/speed-up-the-loop-operation-in-r][Speed up loop in R]]
+Entered on [2017-04-07 ven. 11:19]
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -1808,6 +1810,10 @@ plot(1)
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-12505znD.png]]
 ** STARTED Comparaison of methods for 3Article                    :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-07 ven. 10:30] \\
+  Courbe d'AUC ?
+- Note taken on [2017-04-07 ven. 10:27] \\
+  Les resultats sont pas clairs => mettre d'autre param (comme avant c(0.6,0.3)?)
 - State "STARTED"    from "RUNNING"    [2017-04-05 mer. 16:33]
 - State "RUNNING"    from "STARTED"    [2017-04-05 mer. 16:33]
 - State "STARTED"    from "WAITING"    [2017-04-04 mar. 16:55]
@@ -1893,7 +1899,7 @@ CLOSED: [2017-04-07 ven. 08:32]
 #+end_src
 **** Plots
 We retrieve exp results
-#+begin_src R :results output :session *ssh krakenator* :exports both
+#+begin_src R :results output :session *R* :exports both
 library(ThesisRpackage)
 exp <- retrieveExperiment(100)
 #+end_src
@@ -1901,7 +1907,7 @@ exp <- retrieveExperiment(100)
 #+RESULTS:
 
 ***** C = 0.2
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *ssh krakenator* 
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
 Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
 #+end_src
 
@@ -1932,17 +1938,7 @@ Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
 #+RESULTS:
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560ZEK.png]]
 
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-  geom <- "point"
-  p <- ggplot(exp$df,
-              aes(x = expected.fd, y = true.fd  - expected.fd )) +
-    facet_grid(method ~ pvalue.index, scale = "free") +
-    layer(geom = geom, mapping = aes(group = as.factor(rep)), params = list(color = "grey", size = 0.1),
-          stat = "identity", position = "identity") +
-    stat_summary_bin(fun.y = median, geom = geom) +
-    stat_summary_bin(fun.y = function(x) quantile(x,0.9), geom = geom, color = "blue4")  +
-    stat_summary_bin(fun.y = function(x) quantile(x,0.1), geom = geom, color = "blue4")
-#+end_src
+
 ** STARTED EWAS for LFMM article                                  :3Article:
 :LOGBOOK:
 - State "STARTED"    from "TODO"       [2017-04-04 mar. 16:19]
@@ -2050,6 +2046,10 @@ lattente donne plutot K = 4 et lambda petit.
 *** Run on betanormalized_metylationlvl.filtered.rds
 **** RUNNING on krakenator
 :LOGBOOK:
+- State "RUNNING"    from "DONE"       [2017-04-07 ven. 13:56]
+- Note taken on [2017-04-07 ven. 13:17] \\
+  exp id = 99
+- State "DONE"       from "RUNNING"    [2017-04-07 ven. 13:17]
 - State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 09:15]
 - State "WAITING"    from "RUNNING"    [2017-04-06 jeu. 08:35]
 - State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
@@ -2071,7 +2071,7 @@ lattente donne plutot K = 4 et lambda petit.
   dat <- sampl(s)
   dat$X <- dat$X[,1,drop=FALSE] ## keep only first covariate
   exp <- Article3_GSE42861(dat = dat,
-                           dat.name = "betanormalized_metylationlvl.filtered.LMresidu.rds",
+                           dat.name = "betanormalized_metylationlvl.filtered.rds",
                            cluster.nb = 4,
                            Ks = c(2,3,4),
                            lambdas = c(1e-4, 1e0, 1e10),
@@ -2080,6 +2080,18 @@ lattente donne plutot K = 4 et lambda petit.
                            bypass = FALSE)
 
 #+end_src
+**** plots
+#+begin_src R :results output :session *R* :exports both
+  exp <- retrieveExperiment()
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+  Article3_runExp_manhattan(exp, 0.05, lambda = 1e-4)
+#+end_src
+
+
 *** Run on betanormalized_metylationlvl.filtered.LMresidu.rds
 **** RUNNING on krakenator
 :LOGBOOK:
@@ -2125,7 +2137,7 @@ lattente donne plutot K = 4 et lambda petit.
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
 - Note taken on [2017-04-06 jeu. 11:28] \\
-  C'est très la boucle des glm !!
+  C'est très long la boucle des glm !!
 - Note taken on [2017-04-05 mer. 17:57] \\
   to be continued: finir le [[file:ThesisRpackage/R/Sampler/Sampler_PhenotypeFromTrueData.R][cette fonction]]
 - Note taken on [2017-04-05 mer. 15:55] \\
@@ -2137,63 +2149,61 @@ lattente donne plutot K = 4 et lambda petit.
 - [ ] run all methods
 - [ ] Eigenstrat
 - [ ] mesure de la précision ??
+- [ ] Gemma 
 *** Install of ThesisRpackage
 *** Run of methods
 #+begin_src R :results output :session *R* :exports both
   ## library
-  library(ThesisRpackage)
+    ## library
+    library(ThesisRpackage)
 
-  ## sample
-  G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
-  env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"
-  pca.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.pca.rds"
-  coord.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.coord.rds"
-  s <- PhenotypeFromTrueSampler(G.file,
-                                coord.file,
-                                env.file,
-                                pca.file,
-                                n = NULL,
-                                L = 1000,
-                                K = 40,
-                                J = 10,
-                                beta = 6,
-                                delta = 0.3)
+    ## sample
+    G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
+    env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"
+    pca.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.pca.rds"
+    coord.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.coord.rds"
+    s <- PhenotypeFromTrueSampler(G.file,
+                                  coord.file,
+                                  env.file,
+                                  pca.file,
+                                  n = NULL,
+                                  L = 1000,
+                                  K = 40,
+                                  J = 10,
+                                  beta = 6,
+                                  delta = 0.3)
 
-  dat <- sampl(s)
+    dat <- sampl(s)
 
-  ## methods
-  methods <- list()
-  K <- 40
-  hypothesis.testing.func <- phenotypeWayReg_glm_score(calibrate = FALSE,
-                                                       family = gaussian,
-                                                       factorized.X1 = FALSE)
+    ## methods
+    methods <- list()
+    K <- 40
+    hypothesis.testing.func <- phenotypeWayReg_lm_score(calibrate = FALSE)
 
-  ## lm
-  methods$lm <- ClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
-                                    nickname="lm")
-  ## lm + PCA
-  methods$lmPCA <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
-                                          K = K, 
-                                          nickname="lm")
+    ## lm
+    methods$lm <- ClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                      nickname="lm")
+    ## lm + PCA
+    methods$lmPCA <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                            K = K, 
+                                            nickname="lm")
 
 
-  ## lfmm ridge
-  methods$ridgeLFMM <- RidgeLFMMMethod(K = K,
-                                       lambda = 1e-5,
-                                       hypothesis.testing.method = hypothesis.testing.func,
-                                       nickname = "ridgeLFMM")
+    ## lfmm ridge
+    methods$ridgeLFMM <- RidgeLFMMMethod(K = K,
+                                         lambda = 1e-5,
+                                         hypothesis.testing.method = hypothesis.testing.func,
+                                         nickname = "ridgeLFMM")
 
-  ## sva
-  methods$sva <- SVAMethod(K = K,
-                           hypothesis.testing.method = hypothesis.testing.func,
-                           nickname = "sva")
+    ## sva
+    methods$sva <- SVAMethod(K = K,
+                             hypothesis.testing.method = hypothesis.testing.func,
+                             nickname = "sva")
 
-  ## experiment
-  exp <- do.call(FDRControlExperiment, c(list(nb.rep = 1,
-                                              sampler = s), methods))
-  exp <- runExperiment(exp)
-
-#+end_src
+    ## experiment
+    exp <- do.call(FDRControlExperiment, c(list(nb.rep = 1,
+                                                sampler = s), methods))
+    exp <- runExperiment(exp)
 
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
   ## plots
