@@ -50,7 +50,7 @@ main_tess3_noisyCoord <- function(exp,
     foreach(m.n = m.neutral, .combine = 'rbind') %dopar%
     {
 
-      DebugMessage(paste0("run r=",r, " n=", n, "n.n=",n.n, "m.n=",m.n))
+      flog.debug(paste0("run r=",r, " n=", n, "n.n=",n.n, "m.n=",m.n))
 
       ## simulation
       s <- Tess3Sampler(n = n,

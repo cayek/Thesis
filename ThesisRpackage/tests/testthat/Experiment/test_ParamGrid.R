@@ -1,5 +1,4 @@
 library(testthat)
-library(Article3Package)
 context("param grid")
 
 ################################################################################

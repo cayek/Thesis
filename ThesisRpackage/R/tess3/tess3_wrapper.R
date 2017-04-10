@@ -138,13 +138,8 @@ fit.sNMFMethod <- function(m, dat) {
               Q.input.file = "")
   }
 
-  if (!is.null(getOption("ThesisRpackage.debug"))) {
-    DebugMessage("sNMF output")
-    aux <- aux.f()
-  } else {
-    capture.output(aux <- aux.f(), file = "/dev/null")
-  }
-
+  out <- capture.output(aux <- aux.f())
+  DebugMessage("sNMF", out)
 
   m$Q <- LEA::Q(aux, K = m$K, run = 1)
   class(m$Q) <- "tess3Q"

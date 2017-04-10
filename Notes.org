@@ -2164,56 +2164,56 @@ lattente donne plutot K = 4 et lambda petit.
 *** Install of ThesisRpackage
 *** Run of methods
 #+begin_src R :results output :session *R* :exports both
-## library
-library(ThesisRpackage)
+  ## library
+  library(ThesisRpackage)
 
-    ## sample
-    G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
-    env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"
-    pca.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.pca.rds"
-    coord.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.coord.rds"
-    s <- PhenotypeFromTrueSampler(G.file,
-                                  coord.file,
-                                  env.file,
-                                  pca.file,
-                                  n = NULL,
-                                  L = 1000,
-                                  K = 40,
-                                  J = 10,
-                                  beta = 6,
-                                  delta = 0.3)
+      ## sample
+      G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
+      env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"
+      pca.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.pca.rds"
+      coord.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.coord.rds"
+      s <- PhenotypeFromTrueSampler(G.file,
+                                    coord.file,
+                                    env.file,
+                                    pca.file,
+                                    n = NULL,
+                                    L = 1000,
+                                    K = 40,
+                                    J = 10,
+                                    beta = 6,
+                                    delta = 0.3)
 
-    dat <- sampl(s)
+      dat <- sampl(s)
 
-    ## methods
-    methods <- list()
-    K <- 40
-    hypothesis.testing.func <- phenotypeWayReg_lm_score(calibrate = FALSE)
+      ## methods
+      methods <- list()
+      K <- 40
+      hypothesis.testing.func <- phenotypeWayReg_lm_score(calibrate = FALSE)
 
-    ## lm
-    methods$lm <- ClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
-                                      nickname="lm")
-    ## lm + PCA
-    methods$lmPCA <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
-                                            K = K, 
-                                            nickname="lm")
+      ## lm
+      methods$lm <- ClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                        nickname="lm")
+      ## lm + PCA
+      methods$lmPCA <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                              K = K, 
+                                              nickname="lm")
 
 
-    ## lfmm ridge
-    methods$ridgeLFMM <- RidgeLFMMMethod(K = K,
-                                         lambda = 1e-5,
-                                         hypothesis.testing.method = hypothesis.testing.func,
-                                         nickname = "ridgeLFMM")
+      ## lfmm ridge
+      methods$ridgeLFMM <- RidgeLFMMMethod(K = K,
+                                           lambda = 1e-5,
+                                           hypothesis.testing.method = hypothesis.testing.func,
+                                           nickname = "ridgeLFMM")
 
-    ## sva
-    methods$sva <- SVAMethod(K = K,
-                             hypothesis.testing.method = hypothesis.testing.func,
-                             nickname = "sva")
+      ## sva
+      methods$sva <- SVAMethod(K = K,
+                               hypothesis.testing.method = hypothesis.testing.func,
+                               nickname = "sva")
 
-    ## experiment
-    exp <- do.call(FDRControlExperiment, c(list(nb.rep = 1,
-                                                sampler = s), methods))
-    exp <- runExperiment(exp)
+      ## experiment
+      exp <- do.call(FDRControlExperiment, c(list(nb.rep = 1,
+                                                  sampler = s), methods))
+      exp <- runExperiment(exp)
 #+end_src
 
 

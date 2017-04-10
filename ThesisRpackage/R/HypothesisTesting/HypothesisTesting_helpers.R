@@ -17,3 +17,8 @@ compute_mean_var_B_sample <- function(B.sample) {
   }
   res
 }
+
+tscoreToPvalue <- function(score, df) {
+  score %>%
+    apply(1:2,function(z) 2 * pt(abs(z), df = df, lower.tail = FALSE))
+}

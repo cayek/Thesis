@@ -1,8 +1,11 @@
 library(testthat)
 context("tess3_noisyCoord")
 
+flog.threshold(2)
+
 test_that("long_tess3_noisyCoord", {
 
+  skip("a lil too long")
   options(tess3.ms = "~/BiocompSoftware/msdir/ms")
   exp <- long_tess3_noisyCoord(ns = c(50),
                                nsites.neutral = c(1.5 * 1e4),
@@ -22,6 +25,7 @@ test_that("long_tess3_noisyCoord", {
 
 test_that("long_tess3_noisyCoord variogram", {
 
+  skip("a lil too long")
   options(tess3.ms = "~/BiocompSoftware/msdir/ms")
   exp <- long_tess3_noisyCoord(ns = c(50),
                                nsites.neutral = c(1.5 * 1e4),

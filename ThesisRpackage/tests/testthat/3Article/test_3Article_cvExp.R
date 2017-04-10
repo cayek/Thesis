@@ -1,6 +1,8 @@
 library(testthat)
 context("3Article_cvExp")
 
+flog.threshold(2)
+
 ################################################################################
 ## with lfmmRidge
 

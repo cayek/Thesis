@@ -28,6 +28,7 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
 
     res$score <- matrix(NA, 1, L)
     res$pvalue <- matrix(NA, 1, L)
+    res$B <- matrix(NA, 1, L)
 
     ## model
     ## I assume that if there is missing value glm remove them...
@@ -38,13 +39,14 @@ phenotypeWayReg_glm_score <- function(calibrate = FALSE, family = gaussian, fact
       }
     } else {
       modl.func <- function(j) {
-        glm(X ~ dat$G[,j] + CoVar, family = family) 
+        glm(X ~ dat$G[,j] + CoVar, family = family)
       }
     }
 
     for (j in 1:L)
     {
       model <- modl.func(j)
+      res$B[1,j] <- coef(summary(model))[2,1]
       res$score[1,j] <- coef(summary(model))[2,3]
       res$pvalue[1,j] <- coef(summary(model))[2,4]
     }
@@ -87,7 +89,7 @@ phenotypeWayReg_lm_score <- function(calibrate = FALSE) {
 
     ## score and pvalue
     res$score <- matrix((res$B - 0) / sqrt(res$B.sigma2), 1, L)
-    res$pvalue <- NormalZscore()$fun(res$score)
+    res$pvalue <- tscoreToPvalue(res$score, n - d)
 
     ## calibrate ?
     if (calibrate) {

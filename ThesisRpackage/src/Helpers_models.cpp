@@ -36,7 +36,7 @@ Rcpp::List phenotypeWayReg_lm(const Eigen::Map<Eigen::MatrixXd> & Y,
     B_aux = llt_aux.solve(cov_aux.transpose() * Y);
 
     // epsilon_sigma2
-    epsilon_sigma2_aux = (Y - B_aux.transpose() * cov_aux).squaredNorm() / (n - d);
+    epsilon_sigma2_aux = (Y - cov_aux * B_aux).squaredNorm() / (n - d);
 
     // compute B.sigma2
     covt_cov_inv_aux = covt_cov_aux.inverse();

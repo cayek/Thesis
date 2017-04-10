@@ -69,6 +69,37 @@ test_that("phenotypeWayReg_lm_score", {
 
 })
 
+test_that("comparison of phenotypeWayReg_lm_score and phenotypeWayReg_glm_score", {
+
+  ## dat
+  s <- NormalSampler2(n = 100,
+                      L = 1000,
+                      K = 3)
+  dat <- sampl(s)
+
+  ## LFmethod
+  m <- finalLfmmRdigeMethod(K = 3, lambda = 1e-2)
+  m <-  fit(m, dat)
+
+  ## hypothesis testing calibrate=FALSE
+  ht.func.glm <- phenotypeWayReg_glm_score(calibrate = FALSE,
+                                           family = gaussian)
+  glm.res <- ht.func.glm$fun(m, dat)
+
+  ht.func.lm <- phenotypeWayReg_lm_score(calibrate = FALSE)
+  lm.res <- ht.func.lm$fun(m, dat)
+
+  ## comparison of regression coefficients
+  expect_lt(sqrt(mean((lm.res$B - glm.res$B) ^ 2)), 1e-14)
+  
+  ## comparison of score
+  expect_lt(sqrt(mean((lm.res$score - glm.res$score) ^ 2)), 1e-13)
+  
+  ## comparison of pvalue
+  expect_lt(sqrt(mean((lm.res$pvalue - glm.res$pvalue) ^ 2)), 1e-13)
+
+})
+
 test_that("phenotypeWayReg_lm", {
 
   ## dat
