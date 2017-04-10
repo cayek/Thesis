@@ -61,3 +61,27 @@ test_that("Article3_runExp on several method", {
 
 })
 
+test_that("Article3_runExp_calibrate", {
+
+  s <- NormalSampler2(n = 100,
+                      L = 1000,
+                      K = 3)
+  dat <- sampl(s)
+  methods <- list()
+  ## methods <- paramGrid(finalLfmmRdigeMethod,
+  ##                      nickname.base = "RidgeLfmm",
+  ##                      K = c(2,3,4),
+  ##                      lambda = c(1e-5, 1e0, 1e5))
+  ## methods <-  c(methods, list(finalLfmmLassoMethod(K = 3, sparse.prop = 0.1)))
+  methods <- c(methods, list(finalRefactorMethod(K = 1)))
+  exp <- Article3_runExp(dat = dat,
+                         dat.name = "NormalSampler2",
+                         methods = methods,
+                         cluster.nb = NULL,
+                         save = FALSE, bypass = TRUE)
+
+  Article3_runExp_hist(exp, 0.05, "Refactor")
+  exp.calibrated <- Article3_runExp_calibrate(exp)
+  Article3_runExp_hist(exp.calibrated, 0.05, "Refactor")
+})
+

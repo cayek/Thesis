@@ -94,3 +94,31 @@ Article3_runExp_manhattan <- function(exp, threshold, method.name) {
       geom_point() +
       facet_grid(lambda ~ K, scales = "free")
 }
+
+#' @export
+Article3_runExp_hist <- function(exp, threshold, method.name) {
+
+  assertthat::assert_that(exp$name == "Article3_runExp")
+
+  toplot <- exp$df.res %>%
+    dplyr::filter(method == method.name)
+  ggplot(toplot, aes(pvalue, color = qvalue < threshold, fill = qvalue < threshold)) +
+    geom_histogram() +
+    facet_grid(lambda ~ K, scales = "free")
+}
+
+#' @export
+Article3_runExp_calibrate <- function(exp) {
+
+  auxf <- function(df) {
+    res <- fdrtool::fdrtool(as.numeric(df$pvalue), plot = TRUE, statistic = "pvalue")
+    tibble(pvalue = res$pval, qvalue = res$qval)
+  }
+
+  exp$df.res <- exp$df.res %>%
+    dplyr::group_by(K, lambda, sparse.prop, method) %>%
+    dplyr::do(auxf(.)) %>%
+    ungroup()
+
+  exp
+}

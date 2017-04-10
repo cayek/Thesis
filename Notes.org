@@ -1422,9 +1422,9 @@ Après je peux finir [[file:Notes.org::*Run%20of%20methods%20on%20OF%20GWAS%20si
       Entered on [2017-02-17 Ven 09:59]
 ****** Les resultats
 ******* Validation sur simulation                                :Rnotebook:
-        [[file:3Article/LabNotebook/simuValidation.nb.html]]
+[[file:3Article/LabNotebook/simuValidation.nb.html]]
 ******** DONE Simulations
-         CLOSED: [2017-03-16 Jeu 12:41]
+CLOSED: [2017-03-16 Jeu 12:41]
          From le 1000 genomes. 2 cas : 
          - peu d'outlier
          - beaucoups d'oulier
@@ -1435,7 +1435,7 @@ Après je peux finir [[file:Notes.org::*Run%20of%20methods%20on%20OF%20GWAS%20si
          Voir les simu qu'on peut faire d'autre
 
 ******** DONE Les méthodes
-         CLOSED: [2017-03-01 mer. 15:29]
+CLOSED: [2017-03-01 mer. 15:29]
          - [X] lfmm ridge
          - [X] FAMT
          - [X] SVA
@@ -1509,9 +1509,9 @@ Après je peux finir [[file:Notes.org::*Run%20of%20methods%20on%20OF%20GWAS%20si
          - On fait comme dans cite:frichot13_testin_assoc_between_loci_envir.   
         
 ******* EWAS                                                     :Rnotebook:
-        On lance lfmm dessus et on compare se qui sort.
+On lance lfmm dessus et on compare se qui sort.
        
-        [[file:3Article/LabNotebook/GSE42861.nb.html]]
+[[file:3Article/LabNotebook/GSE42861.nb.html]]
 ******** DONE pas encore fait
          CLOSED: [2017-03-08 mer. 08:50]
          On retrouve bien les locus du papier cite:Rahmani_2016, mais les qqplot
@@ -1531,7 +1531,7 @@ Après je peux finir [[file:Notes.org::*Run%20of%20methods%20on%20OF%20GWAS%20si
 
           Bref, avec la recalibration ca marche ! 
 ******* TODO Robustesse au choix des parametres
-        A voir comment on peut faire.
+A voir comment on peut faire.
 ***** FAMT test                                                  :Rnotebook:
     Entered on [2017-02-17 Ven 13:10]
  
@@ -1949,6 +1949,10 @@ Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
 
 ** STARTED EWAS for LFMM article                                  :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-10 lun. 17:43] \\
+  Il faut que je recalibre les tests. Pk. Je vais faire de la biblio la dessus et
+  identifier les causes du fdr pas controlé !!!! 
+  Debug ca aussi [[file:ThesisRpackage/tests/testthat/test_3Article_runExp.R::test_that("Article3_runExp_calibrate",%20{][Article3_runExp_calibrate]]
 - State "STARTED"    from "TODO"       [2017-04-04 mar. 16:19]
 - State "TODO"       from              [2017-04-04 mar. 12:06]
 :END:
@@ -2052,8 +2056,10 @@ La cross validation donne plutot K = 2 et pas d'importance pour le choix de
 lambda. Ce qui est interessant c'est que la [[CV_GSE42861_not_corrected][CV]] sur les données avec variables
 lattente donne plutot K = 4 et lambda petit.
 *** Run on betanormalized_metylationlvl.filtered.rds
-**** RUNNING on krakenator
+**** DONE on krakenator
+CLOSED: [2017-04-10 lun. 14:39]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-10 lun. 14:39]
 - State "RUNNING"    from "DONE"       [2017-04-07 ven. 13:56]
 - Note taken on [2017-04-07 ven. 13:17] \\
   exp id = 99
@@ -2091,18 +2097,22 @@ lattente donne plutot K = 4 et lambda petit.
 **** plots
 #+begin_src R :results output :session *R* :exports both
   exp <- retrieveExperiment(101)
+  exp$description
 #+end_src
 
 #+RESULTS:
+: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0152324128831718|0.0120402443893896|0.00992138012483149 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.rds "
 
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-  Article3_runExp_plotB(exp, 0.05,'refactor')
+Article3_runExp_manhattan(exp, 0.05,'refactor')
 #+end_src
 
 
 *** Run on betanormalized_metylationlvl.filtered.LMresidu.rds
-**** RUNNING on krakenator
+**** DONE on krakenator
+CLOSED: [2017-04-10 lun. 14:39]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-10 lun. 14:39]
 - State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 09:16]
 - State "WAITING"    from "RUNNING"    [2017-04-06 jeu. 08:35]
 - State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
@@ -2135,16 +2145,99 @@ lattente donne plutot K = 4 et lambda petit.
 #+end_src
 **** plots
 #+begin_src R :results output :session *R* :exports both
-  exp <- retrieveExperiment(102)
+exp.LMresidu <- retrieveExperiment(102)
+exp.LMresidu$description
 #+end_src
 
 #+RESULTS:
+: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0118857550712915|0.00966331357938067|0.00901972710130546 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.LMresidu.rds "
 
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-  Article3_runExp_manhattan(exp, 0.05,'lfmmRidge')
+Article3_runExp_manhattan(exp.LMresidu, 0.05,'refactor')
 #+end_src
 
+*** Interesting loci
+List discuted in cite:Rahmani_2016 
+#+begin_src R :results output :session *R* :exports both
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  exp.LMresidu$df.res %>%
+    dplyr::filter(col.name %in% rahmani.outlier,
+                  method == "refactor")
+  exp$df.res %>%
+    dplyr::filter(col.name %in% rahmani.outlier,
+                  method == "refactor")
 
+  exp$df.res %>%
+    dplyr::filter(col.name %in% rahmani.outlier,
+                  method == "glm")
+#+end_src
+
+#+RESULTS:
+#+begin_example
+# A tibble: 9 × 10
+   index   col.name       pvalue     score     B       qvalue   method lambda
+   <int>      <chr>        <dbl>     <dbl> <dbl>        <dbl>    <chr>  <dbl>
+1  36714 cg05428452 9.339330e-16 -8.035243    NA 2.081697e-13 refactor     NA
+2  51546 cg07839457 1.286740e-10 -6.428731    NA 3.125326e-09 refactor     NA
+3 101455 cg16411857 4.428888e-12 -6.922772    NA 2.005025e-10 refactor     NA
+4  36714 cg05428452 4.787580e-13 -7.231196    NA 2.189824e-10 refactor     NA
+5  51546 cg07839457 4.877471e-09 -5.851299    NA 2.533710e-07 refactor     NA
+6 101455 cg16411857 5.670667e-11 -6.552171    NA 7.623022e-09 refactor     NA
+7  36714 cg05428452 3.221914e-12 -6.967688    NA 9.739772e-08 refactor     NA
+8  51546 cg07839457 2.888125e-09 -5.937834    NA 5.020182e-06 refactor     NA
+9 101455 cg16411857 5.414775e-10 -6.206587    NA 2.104871e-06 refactor     NA
+# ... with 2 more variables: K <dbl>, sparse.prop <dbl>
+# A tibble: 9 × 10
+   index   col.name       pvalue     score     B       qvalue   method lambda
+   <int>      <chr>        <dbl>     <dbl> <dbl>        <dbl>    <chr>  <dbl>
+1  36714 cg05428452 4.245903e-16 -8.131334    NA 1.108760e-13 refactor     NA
+2  51546 cg07839457 6.395240e-11 -6.534195    NA 1.771405e-09 refactor     NA
+3 101455 cg16411857 2.174284e-12 -7.022824    NA 1.117797e-10 refactor     NA
+4  36714 cg05428452 1.466297e-13 -7.390180    NA 1.000277e-10 refactor     NA
+5  51546 cg07839457 8.570508e-09 -5.756836    NA 4.075391e-07 refactor     NA
+6 101455 cg16411857 1.028115e-10 -6.462758    NA 1.311893e-08 refactor     NA
+7  36714 cg05428452 3.653304e-14 -7.572777    NA 6.668225e-12 refactor     NA
+8  51546 cg07839457 4.747825e-09 -5.855778    NA 9.198646e-08 refactor     NA
+9 101455 cg16411857 6.215250e-10 -6.184873    NA 1.747915e-08 refactor     NA
+# ... with 2 more variables: K <dbl>, sparse.prop <dbl>
+# A tibble: 3 × 10
+   index   col.name       pvalue      score            B       qvalue method
+   <int>      <chr>        <dbl>      <dbl>        <dbl>        <dbl>  <chr>
+1  36714 cg05428452 6.772196e-20 -9.1312355 -0.045467876 2.888329e-19    glm
+2  51546 cg07839457 5.077905e-01 -0.6622819 -0.002318433 1.710891e-01    glm
+3 101455 cg16411857 1.138380e-02 -2.5306913 -0.004700647 6.103030e-03    glm
+# ... with 3 more variables: lambda <dbl>, K <dbl>, sparse.prop <dbl>
+#+end_example
+
+**** Do we find these loci with lfmmLasso and lfmmRidge
+#+begin_src R :results output :session *R* :exports both
+  exp.calibrated <- Article3_runExp_calibrate(exp)
+
+  Article3_runExp_manhattan(exp.calibrated, 0.05, "refactor")
+  Article3_runExp_hist(exp.calibrated, 0.3, "refactor")
+
+  pval <- (exp.calibrated$df.res %>% dplyr::filter(K == 2, method == "refactor"))$pvalue
+  length(pval)
+  hist(pval)
+  ftools <- fdrtool::fdrtool(pval, statistic = "pvalue")
+  hist(ftools$pval)
+  hist(ftools$qval)
+
+
+  exp.aux <- exp
+  exp.aux$df.res <- exp.aux$df.res %>% dplyr::filter(K == 2, method == "refactor")
+  exp.aux <- Article3_runExp_calibrate(exp.aux)
+
+  auwf <- function(pvalue) {
+    message(length(pvalue))
+    res <- fdrtool::fdrtool(as.numeric(pvalue), plot = FALSE, statistic = "pvalue")
+    tibble(pvalue = res$pval, qvalue = res$qval)
+  }
+  rr = exp.aux$df.res %>% group_by(K, lambda, sparse.prop, method) %>%
+    dplyr::do(auwf(.$pvalue))
+  rr
+  hist(rr$pvalue)
+#+end_src
 ** TODO GWAS for LFMM article                                     :3Article:
 :LOGBOOK:
 - State "TODO"       from              [2017-04-04 mar. 12:07]
@@ -2155,6 +2248,9 @@ lattente donne plutot K = 4 et lambda petit.
 :END:
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-10 lun. 17:40] \\
+  Il faut debuguer la simu : une methode oracle qui doit faire le top (ou alors je
+  ne met pas de var environmental) et fdr controlé !!
 - Note taken on [2017-04-10 lun. 14:15] \\
   J'ai debuguer phenotypeWayReg_lm et ajouter les modifs de OF dans le sampler. Et
   maintenant ?
@@ -2182,6 +2278,7 @@ make Rpackage_install
 #+END_SRC
 *** Run of methods
 #+begin_src R :results output :session *R* :exports both
+
   ## library
   library(ThesisRpackage)
 
@@ -2201,7 +2298,7 @@ make Rpackage_install
                                 K = 40,
                                 J = 10,
                                 beta = 6,
-                                delta = 0.3,
+                                delta = 0.0,
                                 chrm.file = chrm.file,
                                 chrm.window = 20)
 
@@ -2250,7 +2347,7 @@ make Rpackage_install
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5549iVN.png]]
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-4925ulr.png]]
 
 *** Precision recall
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
@@ -2258,4 +2355,4 @@ make Rpackage_install
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5549VLH.png]]
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-49257vx.png]]
