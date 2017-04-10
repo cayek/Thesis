@@ -8,6 +8,7 @@ test_that("PhenotypeFromTrueSampler", {
   env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"
   pca.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.pca.rds"
   coord.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.coord.rds"
+  chrm.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.chrm.rds"
   s <- PhenotypeFromTrueSampler(G.file,
                                 coord.file,
                                 env.file,
@@ -17,7 +18,9 @@ test_that("PhenotypeFromTrueSampler", {
                                 K = 40,
                                 J = 10,
                                 beta = 6,
-                                delta = 0.3)
+                                delta = 0.3,
+                                chrm.file = chrm.file,
+                                chrm.window = 21)
   flog.threshold(9)
   dat <- sampl(s)
 

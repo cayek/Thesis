@@ -9,7 +9,9 @@ PhenotypeFromTrueSampler <- function(G.file,
                                      n, L, K,
                                      J,
                                      beta,
-                                     delta) {
+                                     delta,
+                                     chrm.file = NULL,
+                                     chrm.window = NULL) {
   s <- Sampler()
   s$G.file <- G.file
   s$coord.file<- coord.file
@@ -21,6 +23,8 @@ PhenotypeFromTrueSampler <- function(G.file,
   s$J <- J
   s$beta <- beta
   s$delta <- delta
+  s$chrm.window <- chrm.window
+  s$chrm.file <- chrm.file
   class(s) <- c("PhenotypeFromTrueSampler", class(s))
   s
 }
@@ -67,8 +71,9 @@ sampl.PhenotypeFromTrueSampler <- function(s) {
   ## PCA
   if (!is.null(s$pca.file) && file.exists(s$pca.file)) {
       flog.trace("Reading pca from", s$pca.file)
-    pca <- read_all(s$pca.file)
+      pca <- read_all(s$pca.file)
   } else {
+    flog.trace("Compute PCA")
     pca <- prcomp(G)
     if (!is.null(s$pca.file)) {
       flog.trace("Writting file", s$pca.file)
@@ -76,18 +81,36 @@ sampl.PhenotypeFromTrueSampler <- function(s) {
     }
   }
 
-  ## X simulation
+  ## outlier list
+  if (!is.null(s$chrm.file)) {
+    flog.trace("Chromosome read from", s$chrm.file)
+    ## read chromosome
+    chr <- read_all(s$chrm.file)
+    window = s$chrm.window
+    lch = 0
+    ref.set = NULL
+
+    for (i in 1:max(chr)){
+      chromosome = which(chr == i)
+      set = seq(lch + 1 + (window - 1) / 2, lch + length(chromosome) , by = window)
+      ref.set = c(ref.set, set)
+      lch = lch + length(chromosome)
+    }
+    loc.J = sort(sample.int(ref.set, s$J))
+  } else {
+    loc.J = sort(sample.int(ncol(G), s$J))
+  }
+    ## X simulation
   flog.trace("Computing phenotype")
   sigma = sqrt(sum(pca$sdev ^ 2) - sum(pca$sdev[1:s$K] ^ 2))
   base.effect = sqrt(sum(pca$sdev ^ 2))
   J = s$J
-  loc.J = sort(sample.int(ncol(G), s$J))
   beta = s$beta * base.effect
   delta = s$delta * base.effect ##G X E
   X = beta * rowSums(G[,loc.J]) +
     delta * rowSums(G[,loc.J]) * env +
     rowSums(pca$x[,1:s$K]) + rnorm(n, sd = sigma)
-  
+
   ## return
   X = matrix(X, n, 1)
   dat <- TrueDataSet(G = G,

@@ -4,10 +4,10 @@
 \alias{LassoLFMMMethod}
 \title{||G  - U V^t - X B || + lambda |B| + gamma |UV^T|}
 \usage{
-LassoLFMMMethod(K, it.max, err.max, gamma = NULL, lambda = 0,
-  lambda.K = 100, lambda.eps = 0.001, sparse.prop = NULL, center = TRUE,
-  soft = TRUE, name = "LassoLFMMMethod", nickname = "LassoLFMMMethod",
-  hypothesis.testing.method = NULL)
+LassoLFMMMethod(K, it.max = 200, err.max = 1e-06, gamma = NULL,
+  lambda = 0, lambda.K = 100, lambda.eps = 0.001, sparse.prop = NULL,
+  center = TRUE, soft = TRUE, name = "LassoLFMMMethod",
+  nickname = "LassoLFMMMethod", hypothesis.testing.method = NULL)
 }
 \description{
 ||G  - U V^t - X B || + lambda |B| + gamma |UV^T|

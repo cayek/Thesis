@@ -2090,13 +2090,13 @@ lattente donne plutot K = 4 et lambda petit.
 #+end_src
 **** plots
 #+begin_src R :results output :session *R* :exports both
-  exp <- retrieveExperiment()
+  exp <- retrieveExperiment(101)
 #+end_src
 
 #+RESULTS:
 
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-  Article3_runExp_manhattan(exp, 0.05, lambda = 1e-4)
+  Article3_runExp_plotB(exp, 0.05,'refactor')
 #+end_src
 
 
@@ -2133,6 +2133,17 @@ lattente donne plutot K = 4 et lambda petit.
                            bypass = FALSE)
 
 #+end_src
+**** plots
+#+begin_src R :results output :session *R* :exports both
+  exp <- retrieveExperiment(102)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+  Article3_runExp_manhattan(exp, 0.05,'lfmmRidge')
+#+end_src
+
 
 ** TODO GWAS for LFMM article                                     :3Article:
 :LOGBOOK:
@@ -2144,6 +2155,9 @@ lattente donne plutot K = 4 et lambda petit.
 :END:
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-10 lun. 14:15] \\
+  J'ai debuguer phenotypeWayReg_lm et ajouter les modifs de OF dans le sampler. Et
+  maintenant ?
 - Note taken on [2017-04-07 ven. 18:23] \\
   il faut debug + integrer les modif dans le sampler et après on pourra voir ce
   que ca fait
@@ -2162,63 +2176,86 @@ lattente donne plutot K = 4 et lambda petit.
 - [ ] mesure de la précision ??
 - [ ] Gemma 
 *** Install of ThesisRpackage
+#+BEGIN_SRC bash
+cd /home/cayek/Projects/Thesis
+make Rpackage_install
+#+END_SRC
 *** Run of methods
 #+begin_src R :results output :session *R* :exports both
   ## library
   library(ThesisRpackage)
 
-      ## sample
-      G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
-      env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"
-      pca.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.pca.rds"
-      coord.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.coord.rds"
-      s <- PhenotypeFromTrueSampler(G.file,
-                                    coord.file,
-                                    env.file,
-                                    pca.file,
-                                    n = NULL,
-                                    L = 1000,
-                                    K = 40,
-                                    J = 10,
-                                    beta = 6,
-                                    delta = 0.3)
+  ## sample
+  G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
+  env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"
+  ## pca.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.pca.rds"
+  pca.file <- NULL
+  coord.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.coord.rds"
+  chrm.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.chrm.rds"
+  s <- PhenotypeFromTrueSampler(G.file,
+                                coord.file,
+                                env.file,
+                                pca.file,
+                                n = NULL,
+                                L = 3000,
+                                K = 40,
+                                J = 10,
+                                beta = 6,
+                                delta = 0.3,
+                                chrm.file = chrm.file,
+                                chrm.window = 20)
 
-      dat <- sampl(s)
+  dat <- sampl(s)
 
-      ## methods
-      methods <- list()
-      K <- 40
-      hypothesis.testing.func <- phenotypeWayReg_lm_score(calibrate = FALSE)
+  ## methods
+  methods <- list()
+  K <- 40
+  hypothesis.testing.func <- phenotypeWayReg_lm_score(calibrate = FALSE)
 
-      ## lm
-      methods$lm <- ClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
-                                        nickname="lm")
-      ## lm + PCA
-      methods$lmPCA <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
-                                              K = K, 
-                                              nickname="lm")
+  ## lm
+  methods$lm <- ClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                    nickname="lm")
+  ## lm + PCA
+  methods$lmPCA <- PCAClassicLinearMethod(hypothesis.testing.method = hypothesis.testing.func,
+                                          K = K, 
+                                          nickname="lm+PCA")
 
 
-      ## lfmm ridge
-      methods$ridgeLFMM <- RidgeLFMMMethod(K = K,
-                                           lambda = 1e-5,
-                                           hypothesis.testing.method = hypothesis.testing.func,
-                                           nickname = "ridgeLFMM")
+  ## lfmm ridge
+  methods$ridgeLFMM <- RidgeLFMMMethod(K = K,
+                                       lambda = 1e0,
+                                       hypothesis.testing.method = hypothesis.testing.func,
+                                       nickname = "ridgeLFMM")
 
-      ## sva
-      methods$sva <- SVAMethod(K = K,
-                               hypothesis.testing.method = hypothesis.testing.func,
-                               nickname = "sva")
+  ## lfmm lasso
+  methods$lassoLFMM <- LassoLFMMMethod(K = K,
+                                       lambda = NULL,
+                                       sparse.prop = 0.01,
+                                       hypothesis.testing.method = hypothesis.testing.func,
+                                       nickname = "lassoLFMM")
 
-      ## experiment
-      exp <- do.call(FDRControlExperiment, c(list(nb.rep = 1,
-                                                  sampler = s), methods))
-      exp <- runExperiment(exp)
+  ## sva
+  methods$sva <- SVAMethod(K = K,
+                           hypothesis.testing.method = hypothesis.testing.func,
+                           nickname = "sva")
+
+  ## experiment
+  exp <- do.call(FDRControlExperiment, c(list(nb.rep = 1,
+                                              sampler = s), methods))
+  exp <- runExperiment(exp)
+#+end_src
+*** FDR control
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+  plot(exp, plot.type = "pvalue.grid")
 #+end_src
 
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5549iVN.png]]
 
+*** Precision recall
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-## plots
-  plot(exp, plot.type = "pvalue.grid")
   plot(exp, plot.type = "precision.recall")
 #+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5549VLH.png]]

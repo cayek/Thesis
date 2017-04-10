@@ -117,8 +117,8 @@ Lasso_HeuristicGammaLambda <- function(dat, K, sparse.prop, lambda.lfmm = 1e-10)
 #'
 #' @export
 LassoLFMMMethod <- function(K,
-                            it.max,
-                            err.max,
+                            it.max = 200,
+                            err.max = 1e-6,
                             gamma = NULL,
                             lambda = 0.0, # if null regularization path
                             lambda.K = 100, # default value used in Friedman et al. 2010

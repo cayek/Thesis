@@ -74,12 +74,22 @@ phenotypeWayReg_lm_score <- function(calibrate = FALSE) {
     n <- nrow(dat$G)
     L <- ncol(dat$G)
 
+    ## test type
+    if (typeof(dat$G) != "double") {
+      dat$G <- matrix(as.double(dat$G), n, L)
+    }
+    if (typeof(dat$X) != "double") {
+      dat$X <- matrix(as.double(dat$X), n, ncol(dat$X))
+    }
+
+
     if (ncol(dat$X) > 1) {
       flog.warning("We take X = dat$X[,1], other variables are used as co-variables")
     }
     X <- dat$X[,1]
     CoVar <- cbind(matrix(1,n,1), m$U, dat$X[,-1])
     d <- 1 + ncol(CoVar)
+
 
 
     ## model
