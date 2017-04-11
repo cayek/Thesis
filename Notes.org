@@ -2597,7 +2597,7 @@ make Rpackage_install
   K <- 4
   s <- FromTrueSampler(G.file = G.file,
                        n = NULL,
-                       L = 10000,
+                       L = 1000,
                        K = K,
                        prop.outlier = 0.05,
                        rho = NULL,
@@ -2606,7 +2606,9 @@ make Rpackage_install
   dat <- sampl(s)
 
   ## run LEA
-  m <- finalLEAMethod(K)
+  m <- LeaLFMMMethod(K = K,
+                     iterations = 20000,
+                     CPU = 16)
   m <- run(m, dat)
 
   ## plot
