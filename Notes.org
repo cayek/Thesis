@@ -436,6 +436,15 @@ en comprant phenotypeWayReg_lm_score à phenotypeReg_glm_score. Je devrais avoir
 la même chose ! 
 
 Après je peux finir [[file:Notes.org::*Run%20of%20methods%20on%20OF%20GWAS%20simulation][ca]] !!! Et l'envoyer a OF....
+*** 2017-04-11 Tuesday
+**** fin de journée
+Entered on [2017-04-11 Tue 21:20]
+
+Demain: 
+- on fini de debug LEA
+- on fait des plto de inflation factor sur les neutres
+- on conclut et sur ce qui reste a faire
+- on commence a ecrire le papier 
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
