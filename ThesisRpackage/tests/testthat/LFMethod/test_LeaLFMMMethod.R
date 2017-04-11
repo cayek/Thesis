@@ -54,7 +54,7 @@ test_that("lea lfmm method", {
                        n = NULL,
                        L = 1000,
                        K = 4,
-                       prop.outlier = NULL,
+                       prop.outlier = 0.1,
                        rho = NULL,
                        cs = NULL,
                        round = FALSE)

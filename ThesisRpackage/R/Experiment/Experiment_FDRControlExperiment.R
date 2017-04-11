@@ -98,5 +98,3 @@ plot.FDRControlExperiment <- function(exp,
   }
 }
 
-
-

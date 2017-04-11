@@ -29,7 +29,6 @@ Article3_MethodComparison_main <- function(exp) {
 #'
 #' @param outlier.props proportion of outlier simulated
 #' @param cs correlation between PC1 and X
-
 #'
 #' @export
 Article3_MethodComparison <- function(G.file,
@@ -108,3 +107,27 @@ Article3_MethodComparison_plot_precisionRecall <- function(exp) {
     facet_grid(`cor(U1,X)` ~ outlier.prop, scales = "free")
   p
 }
+
+#' @export
+Article3_MethodComparison_plot_AUC <- function(exp) {
+  assertthat::assert_that(exp$name == "Article3_MethodComparison")
+  TestRequiredPkg("DescTools")
+
+  ## compute AUC
+  toplot <- exp$df %>%
+    group_by(method, outlier.prop, `cor(U1,X)`, rep) %>%
+    summarise(auc = DescTools::AUC(x = true.power, y = 1 - true.fdr)) %>%
+    ungroup()
+
+  ## compute mean and standard error
+  ## toplot <- toplot %>%
+  ##   group_by(method, outlier.prop, `cor(U1,X)`) %>%
+  ##   summarise(auc.mean = mean(auc), mean.sd = sd(auc), mean.se = mean.sd / sqrt(length(auc))) %>%
+  ##   ungroup()
+
+  ggplot(toplot, aes(x = method, y = auc, color = method)) +
+    geom_boxplot() +
+    facet_grid(`cor(U1,X)` ~ outlier.prop)
+
+}
+

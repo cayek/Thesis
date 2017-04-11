@@ -3,7 +3,7 @@ context("2Article_1000Genome")
 
 test_that("2Article_1000Genome", {
 
-  dat.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.sample.rds"
+  dat.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.sample.rds"
   skip_if_not(file.exists(dat.file))
 
   skip("too long")

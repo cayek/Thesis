@@ -274,3 +274,32 @@ test_that("lasso lfmm on case2", {
     geom_point(aes(x = index, y = stat, color = outlier))
 
 })
+
+
+
+################################################################################
+## Bug with FDRControlExperiment
+
+
+test_that("lasso lfmm on case2", {
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
+  skip_if_not(file.exists(G.file))
+  K <- 2
+  prop.outlier <- 0.05
+  s <- FromTrueSampler(G.file = G.file,
+                       n = NULL,
+                       L = 200, ## IF L is too small alternated algo raise an error !!!
+                       K = K,
+                       prop.outlier = prop.outlier,
+                       rho = NULL,
+                       cs = 0.6,
+                       round = FALSE)
+
+  m <- finalLfmmLassoMethod(K = K,
+                            sparse.prop = prop.outlier,
+                            calibrate = FALSE)
+
+  ## FDRControlExperiment
+  exp <- FDRControlExperiment(nb.rep = 2, sampler = s, m)
+  exp <- runExperiment(exp)
+})

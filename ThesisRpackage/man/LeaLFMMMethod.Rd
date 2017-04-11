@@ -4,8 +4,9 @@
 \alias{LeaLFMMMethod}
 \title{LEA package wrapper}
 \usage{
-LeaLFMMMethod(K, hypothesis.testing.method = NULL, name = "LeaLFMMMethod",
-  nickname = NULL, verbose = TRUE)
+LeaLFMMMethod(K, hypothesis.testing.method = NULL, iterations = 10000,
+  CPU = 1, burnin = 5000, name = "LeaLFMMMethod", nickname = NULL,
+  verbose = TRUE)
 }
 \description{
 LEA package wrapper
