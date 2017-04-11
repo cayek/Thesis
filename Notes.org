@@ -444,7 +444,8 @@ Demain:
 - on fini de debug LEA
 - on fait des plto de inflation factor sur les neutres
 - on conclut et sur ce qui reste a faire
-- on commence a ecrire le papier 
+- on commence a ecrire le papier
+- on regle le pb des plots R
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
