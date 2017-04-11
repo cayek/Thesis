@@ -81,7 +81,11 @@ test_that("Article3_runExp_calibrate", {
                          save = FALSE, bypass = TRUE)
 
   Article3_runExp_hist(exp, 0.05, "Refactor")
-  exp.calibrated <- Article3_runExp_calibrate(exp)
+  calibration.function <- function(score) {
+    res <- locfdr::locfdr(as.numeric(score), df = 8, plot = TRUE)
+    res$fdr
+  }
+  exp.calibrated <- Article3_runExp_calibrate(exp, calibration.function = calibration.function )
   Article3_runExp_hist(exp.calibrated, 0.05, "Refactor")
 })
 

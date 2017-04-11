@@ -108,16 +108,14 @@ Article3_runExp_hist <- function(exp, threshold, method.name) {
 }
 
 #' @export
-Article3_runExp_calibrate <- function(exp) {
-
-  auxf <- function(df) {
-    res <- fdrtool::fdrtool(as.numeric(df$pvalue), plot = TRUE, statistic = "pvalue")
-    tibble(pvalue = res$pval, qvalue = res$qval)
-  }
+Article3_runExp_calibrate <- function(exp, calibration.function = function(score) {
+  res <- locfdr::locfdr(as.numeric(score), df = 7, plot = TRUE)
+  res$fdr
+}) {
 
   exp$df.res <- exp$df.res %>%
     dplyr::group_by(K, lambda, sparse.prop, method) %>%
-    dplyr::do(auxf(.)) %>%
+    dplyr::mutate(fdr = calibration.function(score)) %>%
     ungroup()
 
   exp

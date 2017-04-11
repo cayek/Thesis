@@ -31,7 +31,7 @@ test_that("lea lfmm method", {
   # test run
   m <- run(m, dat)
 
-  # plot
+  ## plot
   gplot_stat(m$score[1,],
              outlier = dat$outlier) +
     geom_histogram(aes(stat, fill = outlier, y = ..density..)) +
@@ -41,5 +41,39 @@ test_that("lea lfmm method", {
   gplot_stat(m$pvalue[1,],
              outlier = dat$outlier) +
     geom_histogram(aes(stat, fill = outlier, y = ..density..))
+
+})
+
+test_that("lea lfmm method", {
+
+  skip_if_not_installed("LEA")
+
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
+  skip_if_not(file.exists(G.file))
+  s <- FromTrueSampler(G.file = G.file,
+                       n = NULL,
+                       L = 1000,
+                       K = 4,
+                       prop.outlier = NULL,
+                       rho = NULL,
+                       cs = NULL,
+                       round = FALSE)
+    dat <- sampl(s)
+
+    ## run lEA lfmm
+    m <- finalLEAMethod(K = 4)
+    m <- run(m, dat)
+
+    gplot_stat(m$score[1,],
+               outlier = dat$outlier) +
+      geom_histogram(aes(stat, fill = outlier, y = ..density..)) +
+      stat_function(fun = dnorm)
+    gplot_stat(m$pvalue[1,],
+               outlier = dat$outlier) +
+      geom_histogram(aes(stat, fill = outlier, y = ..density..))
+    gplot_stat(m$pvalue[1,],
+               outlier = dat$outlier) +
+      geom_point(aes(x = index, color = outlier, y = -log10(stat)))
+
 
 })

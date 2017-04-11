@@ -107,8 +107,8 @@ sampl.PhenotypeFromTrueSampler <- function(s) {
   J = s$J
   beta = s$beta * base.effect
   delta = s$delta * base.effect ##G X E
-  X = beta * rowSums(G[,loc.J]) +
-    delta * rowSums(G[,loc.J]) * env +
+  X = beta * rowSums(G[,loc.J, drop = FALSE]) +
+    delta * rowSums(G[,loc.J, drop = FALSE]) * env +
     rowSums(pca$x[,1:s$K]) + rnorm(n, sd = sigma)
 
   ## return
