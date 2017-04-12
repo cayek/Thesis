@@ -288,7 +288,7 @@ test_that("lasso lfmm on case2", {
   prop.outlier <- 0.05
   s <- FromTrueSampler(G.file = G.file,
                        n = NULL,
-                       L = 200, ## IF L is too small alternated algo raise an error !!!
+                       L = 500, ## IF L is too small alternated algo raise an error !!!
                        K = K,
                        prop.outlier = prop.outlier,
                        rho = NULL,

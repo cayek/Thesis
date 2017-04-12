@@ -26,4 +26,5 @@ test_that("Article3_MethodComparison", {
 
   ## AUC
   Article3_MethodComparison_plot_AUC(exp)
+  Article3_MethodComparison_plot_GIF(exp)
 })

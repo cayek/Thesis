@@ -35,6 +35,7 @@ Article3_MethodComparison <- function(G.file,
                                       outlier.props = c(0.01, 0.05, 0.1),
                                       n = NULL, L = 10000,
                                       K = 4,
+                                      K.method = K,
                                       cs = c(0.2, 0.4, 0.6, 0.8),
                                       nb.rep = 5,
                                       fast.only = FALSE,
@@ -50,6 +51,7 @@ Article3_MethodComparison <- function(G.file,
   exp$description <- make_description("Article3_MethodComparison",
                                      G.file = G.file,
                                      K = K,
+                                     K.method = K.method,
                                      n = n, L = L,
                                      cs = cs,
                                      outlier.props = outlier.props,
@@ -61,7 +63,7 @@ Article3_MethodComparison <- function(G.file,
   exp$s <- FromTrueSampler(G.file = G.file,
                            n = n,
                            L = L,
-                           K = K,
+                           K = K.method,
                            prop.outlier = NULL,
                            rho = NULL,
                            cs = NULL,
@@ -131,3 +133,28 @@ Article3_MethodComparison_plot_AUC <- function(exp) {
 
 }
 
+#' This function compute GIF on null loci, so the GIF must be equal to 1
+#'
+#' We use use a quantile function to compute score2 from pvalue... ;)
+#'
+#' @export
+Article3_MethodComparison_plot_GIF <- function(exp) {
+  assertthat::assert_that(exp$name == "Article3_MethodComparison")
+  TestRequiredPkg("DescTools")
+
+  aux.f <- function(pvalue) {
+    score2 <- qchisq(pvalue, lower.tail = FALSE, df = 1)
+    median(score2) / qchisq(0.5, df = 1)
+  }
+
+  ## compute AUC
+  toplot <- exp$df %>%
+    group_by(method, outlier.prop, `cor(U1,X)`, rep) %>%
+    summarise(gif = aux.f(pvalue[!outlier])) %>%
+    ungroup()
+
+  ggplot(toplot, aes(x = method, y = gif, color = method)) +
+    geom_boxplot() +
+    facet_grid(`cor(U1,X)` ~ outlier.prop)
+
+}

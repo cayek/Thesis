@@ -5,8 +5,9 @@
 \title{Article3_MethodComparison}
 \usage{
 Article3_MethodComparison(G.file, outlier.props = c(0.01, 0.05, 0.1),
-  n = NULL, L = 10000, K = 4, cs = c(0.2, 0.4, 0.6, 0.8), nb.rep = 5,
-  fast.only = FALSE, cluster.nb = NULL, save = TRUE, bypass = FALSE)
+  n = NULL, L = 10000, K = 4, K.method = 4, cs = c(0.2, 0.4, 0.6,
+  0.8), nb.rep = 5, fast.only = FALSE, cluster.nb = NULL, save = TRUE,
+  bypass = FALSE)
 }
 \arguments{
 \item{outlier.props}{proportion of outlier simulated}

@@ -44,10 +44,10 @@ test_that("lea lfmm method", {
 
 })
 
-test_that("lea lfmm method", {
+test_that("lea lfmm method simu from true dataset", {
 
+  skip("too long")
   skip_if_not_installed("LEA")
-
   G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
   skip_if_not(file.exists(G.file))
   s <- FromTrueSampler(G.file = G.file,
