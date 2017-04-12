@@ -2025,7 +2025,7 @@ Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
                                    K.method = 5,
                                    cs = c(0.2, 0.4, 0.6, 0.8),
                                    nb.rep = 5,
-                                   fast.only = FALSE,
+                                   fast.only = TRUE,
                                    cluster.nb = 16,
                                    save = TRUE, bypass = FALSE)
 
