@@ -2019,6 +2019,25 @@ Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
   G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.rds"
   ## run all simulation on the same 10000 loci sample
   exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.05, 0.1),
+                                   n = NULL, L = 10000,
+                                   K = 4,
+                                   K.method = 5,
+                                   cs = c(0.2, 0.4, 0.6, 0.8),
+                                   nb.rep = 5,
+                                   fast.only = FALSE,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
+
+
+#+end_src
+*** We over estimate K (K+2)
+**** Run on krakenator
+#+begin_src R :results output :session *R* :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.rds"
+  ## run all simulation on the same 10000 loci sample
+  exp <- Article3_MethodComparison(G.file,
                                    outlier.props = c(0.01, 0.05, 0.1),
                                    n = NULL, L = 10000,
                                    K = 4,
@@ -2030,7 +2049,7 @@ Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
 
 
 #+end_src
-*** We over estimate K (K+2)
+
 *** We over estimate K (K+3)
 ** STARTED EWAS for LFMM article                                  :3Article:
 :LOGBOOK:
