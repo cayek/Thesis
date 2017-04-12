@@ -6,7 +6,7 @@ Article3_MethodComparison_main <- function(exp) {
       s <- exp$s
       s$prop.outlier <- p
       s$cs <- c
-      bench <- finalBench(K = s$K,
+      bench <- finalBench(K = exp$K.method,
                           lambda = 1e-5,
                           sparse.prop = p,
                           calibrate = FALSE,
@@ -61,10 +61,11 @@ Article3_MethodComparison <- function(G.file,
   exp$nb.rep <- nb.rep
   exp$outlier.props  <- outlier.props
   exp$cs  <- cs
+  exp$K.method <- K.method
   exp$s <- FromTrueSampler(G.file = G.file,
                            n = n,
                            L = L,
-                           K = K.method,
+                           K = K,
                            prop.outlier = NULL,
                            rho = NULL,
                            cs = NULL,
