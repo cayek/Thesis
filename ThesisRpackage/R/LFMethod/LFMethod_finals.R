@@ -131,6 +131,17 @@ finalSVAMethod <- function(K) {
   class(m) <- c("final", "finalSVAMethod", class(m))
   m
 }
+################################################################################
+
+#' @export
+finalcateMethod <- function(K) {
+  m <- cateMethod(K = K,
+                  name = "cateMethod",
+                  nickname = "cate")
+  class(m) <- c("final", "finalcateMethod", class(m))
+  m
+}
+
 
 ################################################################################
 

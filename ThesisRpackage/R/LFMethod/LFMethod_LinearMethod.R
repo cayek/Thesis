@@ -234,9 +234,14 @@ fit.PCAClassicLinearMethod <- function(m, dat, reuse = FALSE) {
     G_ <- m$impute.genotype.method$fun(G_)
   }
 
-  # Run K svd
-  if (m$assumingStructure && !is.null(dat$U) && (ncol(dat$U) == m$K)) {
+  if (m$assumingStructure && is.null(dat$U)) {
+    flog.warning("dat$U is null so oracle can not use this information !")
+  }
+
+  ## Run K svd
+  if (m$assumingStructure && !is.null(dat$U)) {
     m$U <- dat$U
+    m$K <- ncol(dat$U)
   } else {
     svd.res <- svd(G_, nu = m$K, nv = m$K)
     m$U <- svd.res$u

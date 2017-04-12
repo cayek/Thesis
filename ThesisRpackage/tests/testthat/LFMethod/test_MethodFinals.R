@@ -42,7 +42,7 @@ test <- function(m, nickname, classname) {
   expect_equal(missing.index, m.res$missing.index)
   expect_equal(length(m.res$imputed.values), length(missing.index))
 
-  return(NULL)
+  return(m.res)
 }
 
 test_that("lfmm lasso", {
@@ -66,6 +66,13 @@ test_that("sva", {
   test(m, "SVA", "finalSVAMethod")
 })
 
+test_that("cate", {
+  skip_if_not_installed("cate")
+  m <- finalcateMethod(1)
+  test(m, "cate", "finalcateMethod")
+})
+
+
 test_that("refactor", {
   m <- finalRefactorMethod(K = 1)
   test(m, "Refactor", "finalRefactorMethod")
@@ -87,7 +94,16 @@ test_that("PCA+lm", {
 })
 
 test_that("Oracle", {
-  m <- finalOracle(3)
-  test(m, "Oracle", "finalOracle")
+  m <- finalOracle(4)
+  m <- test(m, "Oracle", "finalOracle")
+  expect_equal(dim(m$U), c(10, 3))
+  expect_equal(dim(m$V), c(100, 3))
+  
+  m <- finalOracle(2)
+  m <- test(m, "Oracle", "finalOracle")
+  expect_equal(dim(m$U), c(10, 3))
+  expect_equal(dim(m$V), c(100, 3))
+
+
 })
 

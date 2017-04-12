@@ -464,6 +464,12 @@ find ./Rfigures -size  0 -print0 |xargs -0 rm
 #+END_SRC
 - même si le plot est plus dans Notes.org ilsera encore dans Rfigures/
 - il envoie des path absolus (du coup sur le mac ca passe pas)
+**** Fin de journée
+Entered on [2017-04-12 mer. 17:21]
+
+DEMAIN
+- lancer des comparaison avec cate
+- faire ma liste dobjectif pour la rentré ! 
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -1847,6 +1853,14 @@ plot(1)
 
 ** STARTED Comparaison of methods for 3Article on generative simu :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-12 mer. 16:38] \\
+  Il faut vraiment que je trouve des simulation plus facile, peut etre en
+  augmentant la variance de B. Faut que j'essaie avec d'autre axe corrélé avec X
+  peut être qu'on y verra plus clair !!
+- Note taken on [2017-04-12 mer. 16:33] \\
+  Les resultats avec K over estimated sont pas mal. Au final tout le lfmmLasso est
+  bien robuste ! L'oracle fait comme PCAlm ... il faut que je modifie ca ! Je vais
+  faire un vrai oracle !!
 - Note taken on [2017-04-12 mer. 10:22] \\
   Je pense que ces simulation sont un peut trop dure, mais on voit quand même que
   mes lfmmRidge et lfmmLasso sont pas mal !
@@ -2013,8 +2027,10 @@ Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071vZi.png]]
 
 *** We over estimate K (K+1)
-**** RUNNING Run on krakenator
+**** DONE Run on krakenator
+CLOSED: [2017-04-12 mer. 16:32]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-12 mer. 16:32]
 - State "RUNNING"    from              [2017-04-12 mer. 10:56]
 :END:
 #+begin_src R :results output :session *R* :exports both
@@ -2042,10 +2058,28 @@ exp$description
 
 #+RESULTS:
 : [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds K=4 K.method=5 fast.only=TRUE n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=5 "
+***** AUC
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_AUC(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994ouK.png]]
+
+***** Inflation factor
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_GIF(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-2799414Q.png]]
+
 
 *** We over estimate K (K+3)
-**** RUNNING On krakenator
+**** DONE On krakenator
+CLOSED: [2017-04-12 mer. 16:32]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-12 mer. 16:32]
 - State "RUNNING"    from              [2017-04-12 mer. 10:57]
 :END:
 #+begin_src R :results output :session *R* :exports both
@@ -2065,6 +2099,31 @@ exp$description
 
 
 #+end_src
+**** plots
+#+begin_src R :results output :session *R* :exports both
+exp <- retrieveExperiment(104)
+exp$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds K=4 K.method=7 fast.only=TRUE n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=5 "
+***** AUC
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_AUC(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994PNd.png]]
+***** Inflation factor
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_GIF(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994php.png]]
+
+
+
 
 ** STARTED EWAS for LFMM article                                  :3Article:
 :LOGBOOK:
@@ -2724,3 +2783,42 @@ make Rpackage_install
 
   #+end_src
 
+** DONE Test of [[https://cran.r-project.org/web/packages/cate/index.html][cate]] CRAN package
+CLOSED: [2017-04-12 mer. 16:17]
+:LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-04-12 mer. 16:17]
+- Note taken on [2017-04-12 mer. 16:17] \\
+  Je vais l'ajouter au methodes !!
+- State "STARTED"    from              [2017-04-12 mer. 15:45]
+:END:
+La [[file:Biblio/org-ref-pdfs/cate_vignette.pdf][vignette]]
+#+begin_src R :results output :session *R* :exports both
+  install.packages("cate")
+  library(cate)
+
+  data(gender.sm)
+  names(gender.sm)
+
+  ## compute t test
+  t.stats <- apply(gender.sm$Y, 2, function(y, x) t.test(y~x)$statistic, gender.sm$X)
+  hist(t.stats)
+
+  ## estimation of the number of lattent factor
+  n <- nrow(gender.sm$Y) # number of samples
+  gender.data <- data.frame(gender = gender.sm$X, gender.sm$Z)
+  factor.num <- est.confounder.num(~ gender | . - gender + 0,
+                                   gender.data, gender.sm$Y,
+                                   method = "bcv", bcv.plot = FALSE,
+                                   rmax = 30, nRepeat = 20)
+  factor.num$r
+
+  cate.results <- cate(~ gender | . - gender + 0,
+                       gender.data, gender.sm$Y, r = factor.num$r)
+  names(cate.results)
+
+  ## ....
+
+  ## factor analysis
+  mle <- factor.analysis(gender.sm$Y, r = 5) 
+  names(mle)
+#+end_src
