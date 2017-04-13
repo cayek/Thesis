@@ -13,7 +13,7 @@ test_that("Article3_MethodComparison", {
                                    n = NULL,
                                    L = 500,
                                    K = 2,
-                                   cs = c(0.6),
+                                   cs = list(c(0.6,0.3), c(0.4,0.2)),
                                    nb.rep = 2,
                                    fast.only = TRUE,
                                    cluster.nb = NULL,

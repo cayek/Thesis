@@ -24,7 +24,7 @@ krakenator_deploy:
 	git push krakenator master
 
 krakenator_R: 
-	ssh -X -t cayek@krakenator "cd ~/Projects/Thesis/ThesisRpackage; screen R"
+	ssh -X -t cayek@krakenator "cd ~/Projects/Thesis/; screen R"
 
 ## Data/
 krakenator_mount_data:
@@ -62,7 +62,7 @@ patator_deploy:
 	git push patator master
 
 patator_R: 
-	ssh -X -t cayek@patator "cd ~/Projects/Thesis/ThesisRpackage; screen R"
+	ssh -X -t cayek@patator "cd ~/Projects/Thesis/; screen R"
 
 
 # kimsufi

@@ -2,7 +2,7 @@ Article3_MethodComparison_main <- function(exp) {
   exp$df <- tibble()
   for (p in exp$outlier.props) {
     for (c in exp$cs) {
-      flog.info(paste0("outlier prop=",p, " and c=",c), name = "console")
+      flog.info(paste0("outlier prop=",p, " and c=",c, collapse = " "), name = "console")
       s <- exp$s
       s$prop.outlier <- p
       s$cs <- c
@@ -17,7 +17,7 @@ Article3_MethodComparison_main <- function(exp) {
 
       exp$df <- exp.aux$result$df.pvalue %>%
         dplyr::mutate(outlier.prop = p) %>%
-        dplyr::mutate(`cor(U1,X)` = c) %>%
+        dplyr::mutate(`cor(U,X)` = c) %>%
         rbind(exp$df)
     }
   }

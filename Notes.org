@@ -454,7 +454,7 @@ Demain:
 - on commence a ecrire le papier
 - on regle le pb des plots R
 *** 2017-04-12 mercredi
-**** Outpute plot name
+**** Output plot name
 Entered on [2017-04-12 mer. 10:16]
 
 Problemes: 
@@ -468,8 +468,78 @@ find ./Rfigures -size  0 -print0 |xargs -0 rm
 Entered on [2017-04-12 mer. 17:21]
 
 DEMAIN
-- lancer des comparaison avec cate
-- faire ma liste dobjectif pour la rentré ! 
+- lancer des comparaisons avec cate
+- faire ma liste dobjectif pour la rentré !
+*** 2017-04-13 jeudi
+**** Jury de thèse
+Entered on [2017-04-13 jeu. 11:42]
+Rapporteurs: 
+- [[http://www.math-evry.cnrs.fr/members/cambroise/welcome][Christophe Ambroise]]
+- [[http://w3.mi.parisdescartes.fr/~cbouveyr/][Charles Bouveyron]]
+Examinateurs
+- [[https://scholar.google.fr/citations?hl=fr&user=w-U2SwoAAAAJ&view_op=list_works&sortby=pubdate][Thomas Burger]]
+- Mike Blum
+Invités
+- Olivier Michel
+- Olivier Francois
+**** Cours de stats de Philippe Besse
+Entered on [2017-04-13 jeu. 11:46]
+[[https://www.math.univ-toulouse.fr/~besse/enseignement.html][page perso de Philippe Besse]]
+**** Shortcut
+Entered on [2017-04-13 jeu. 14:56]
+***** R
+- execute code : C-c C-c
+- reload R consol: C-c C-e r
+****** package
+- test: C-c C-w t
+- doc: C-c C-W d
+- install: C-c C-w i
+***** Orgmode
+[[http://orgmode.org/orgcard.pdf][Orgcard]]
+- property: C-c C-x p
+**** R in orgmode and babel 
+Entered on [2017-04-13 jeu. 15:00]
+
+Les problèmes
+- arriver a exporter des notebook html comme etant des parties de ce documents !
+- les chemains absolus des figures c'est la merde ! 
+
+***** Property
+Pour avoir des property pour seulement un subheader ([[http://orgmode.org/manual/Header-arguments-in-Org-mode-properties.html][source]])
+***** Easy template
+Avant j'utilisait ceux de [[http://mescal.imag.fr/membres/arnaud.legrand/misc/init.php][ALegrand]]. Mais ca marche mal avec les file output par
+defaut.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-structure-template-alist
+               '("r" "#+begin_src R :results output :session *R* :exports both\n\n#+end_src" "<src lang=\"R\">\n\n</src>"))
+  (add-to-list 'org-structure-template-alist
+               '("R" "#+begin_src R :results output graphics :file Rplots/Rplots.png :exports both :width 600 :height 400 :session *R* \n\n#+end_src" "<src lang=\"R\">\n\n</src>"))
+  (add-to-list 'org-structure-template-alist
+
+
+#+END_SRC
+
+***** Example
+:PROPERTIES:
+:header-args: :cache no :session *R* :dir ./ :eval no-export
+:END:
+
+#+begin_src R :results output :exports both
+a <- rnorm(100)
+a[1]
+#+end_src
+
+#+RESULTS[04382f8a0bb3af445af630a06be15ceddb4cdb60]:
+: [1] 1.654555
+
+#+begin_src R :results output graphics :file Rplots/Rplots.png :exports both :width 600 :height 400 
+hist(a)
+#+end_src
+
+#+RESULTS[13ef627323823a65c25cf55e5a81b289217fc3af]:
+[[file:Rplots/Rplots.png]]
+
+
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -1836,6 +1906,9 @@ A voir comment on peut faire.
    
  
 * Notebooks
+:PROPERTIES:
+:header-args: :cache no :session *R* :dir ./ :eval no-export
+:END:
 Les autres notebooks de ma thèse sont un peu partout... :D
 ** DONE Premier org notebook
 CLOSED: [2017-04-04 mar. 11:05]
@@ -1844,15 +1917,20 @@ CLOSED: [2017-04-04 mar. 11:05]
 - State "STARTED"    from "TODO"       [2017-04-04 mar. 10:28]
 - State "TODO"       from              [2017-04-04 mar. 10:27]
 :END:
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+#+begin_src R :results output graphics :file Rplots/first_plot.png :exports both :width 600 :height 400 
 plot(1)
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-60719rj.png]]
+[[file:Rplots/first_plot.png]]
 
-** STARTED Comparaison of methods for 3Article on generative simu :3Article:
+** DONE Comparison of methods on generative simu cor(U1,X)=c      :3Article:
+CLOSED: [2017-04-13 jeu. 09:02]
 :LOGBOOK:
+- Note taken on [2017-04-13 jeu. 09:02] \\
+  On a pas lancé sur toutes les méthodes (cate et lea) mais on passe sur des
+  simulation plus dure !!
+- State "DONE"       from "STARTED"    [2017-04-13 jeu. 09:02]
 - Note taken on [2017-04-12 mer. 16:38] \\
   Il faut vraiment que je trouve des simulation plus facile, peut etre en
   augmentant la variance de B. Faut que j'essaie avec d'autre axe corrélé avec X
@@ -1896,14 +1974,21 @@ plot(1)
                                    save = TRUE, bypass = FALSE)
 #+end_src
 **** Plots
+:PROPERTIES:
+:header-args: :cache no :session *R* :dir ./ :eval no-export :with 1000 :height 800
+:END:
+
 We retrieve the experiment
-#+begin_src R :results output :session *R* :exports both
+#+begin_src R :results output :exports both
   exp <- retrieveExperiment(96)
 #+end_src
 
 #+RESULTS:
 
 ***** C = 0.2
+#+begin_src R :results output graphics :file Rplots/Rplots.png :exports both :width 600 :height 400 
+
+#+end_src
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
   Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
 #+end_src
@@ -2783,7 +2868,233 @@ make Rpackage_install
 
   #+end_src
 
-** DONE Test of [[https://cran.r-project.org/web/packages/cate/index.html][cate]] CRAN package
+*** LEA::lfmm
+On krakenator
+**** Install of ThesisRpackage on krakenator
+#+BEGIN_SRC bash :dir /cayek@krakenator.imag.fr:~/Projects/Thesis/
+cd /home/cayek/Projects/Thesis
+make Rpackage_install
+#+END_SRC
+
+**** Simulate data with 0.05 % of outlier
+#+begin_src R :results output :session *tmpR* :exports both :dir TmpNotebook
+  library(ThesisRpackage)
+
+  ## sample data
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
+  K <- 4
+  s <- FromTrueSampler(G.file = G.file,
+                       n = NULL,
+                       L = 1000,
+                       K = K,
+                       prop.outlier = 0.05,
+                       rho = NULL,
+                       cs = 0.4,
+                       round = FALSE)
+
+  dat <- sampl(s)
+  names(dat)
+  saveRDS(dat, "./Data/Simulation_outlier05_cor04.rds")
+#+end_src
+
+#+RESULTS:
+: [1] "G"       "X"       "U"       "V"       "B"       "epsilon" "outlier"
+: [8] "mu"
+
+**** Run LEA::lfmm
+#+begin_src R :results output :session *tmpR* :exports both :dir TmpNotebook
+  library(LEA)
+
+  ## read data
+  dat <- readRDS("./Data/Simulation_outlier05_cor04.rds")
+
+  ## write to lfmm format
+  write.lfmm(dat$G, "./Simulation_outlier05_cor04.lfmm")
+  write.env(dat$X, "./Simulation_outlier05_cor04.env")
+
+  ## run lfmm
+  lfmm.res <- lfmm(input.file="./Simulation_outlier05_cor04.lfmm",
+                   environment.file="./Simulation_outlier05_cor04.env",
+                   K = 4,
+                   project="new",
+                   CPU = 4)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+The project is saved into :
+ Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject 
+
+To load the project, use:
+ project = load.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
+
+To remove the project, use:
+ remove.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
+
+[1] "********************************"
+[1] "* K = 4  repetition 1  d = 1   *"
+[1] "********************************"
+Summary of the options:
+
+        -n (number of individuals)      503
+        -L (number of loci)             1000
+        -K (number of latent factors)   4
+        -o (output file)                Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1
+        -i (number of iterations)       10000
+        -b (burnin)                     5000
+        -s (seed random init)           4405969113
+        -p (number of processes (CPU))  4
+        -x (genotype file)              Simulation_outlier05_cor04.lfmm
+        -v (variable file)              Simulation_outlier05_cor04.env
+        -D (number of covariables)      1
+        -d (the dth covariable)         1
+
+Read variable file:
+ 	Simulation_outlier05_cor04.env		OK.
+
+Read genotype file:
+ 	Simulation_outlier05_cor04.lfmm		OK.
+
+<<<<
+	 Analyse for variable 1
+
+		Start of the Gibbs Sampler algorithm.
+
+	[                                                                           ]
+	[===========================================================================]
+
+		End of the Gibbs Sampler algorithm.
+
+	ED:503000.2127	 DIC: 502994.836 
+
+	The statistics for the run are registered in:
+ 		Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1_s1.4.dic.
+
+	The zscores for variable 1 are registered in:
+ 		Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1_s1.4.zscore.
+	The columns are: zscores, -log10(p-values), p-values.
+
+	-------------------------
+	The execution for variable 1 worked without error.
+>>>>
+
+The project is saved into :
+ Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject 
+
+To load the project, use:
+ project = load.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
+
+To remove the project, use:
+ remove.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
+#+end_example
+
+Histogram
+#+begin_src R :results output graphics :file Rplots/hist_lea.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+## plot
+pvalue <- LEA::p.values(lfmm.res, K = 4)
+hist(pvalue)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/hist_lea.png]]
+
+Manhattan plot
+#+begin_src R :results output graphics :file Rplots/man_lea.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+library(ggplot2)
+index <- seq_along(pvalue)
+qplot(index, -log10(pvalue), color = index %in% dat$outlier)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/man_lea.png]]
+
+**** Run of LassoLFMM
+#+begin_src R :results output :session *tmpR* :exports both :dir TmpNotebook
+  library(ThesisRpackage)
+
+  ## read data
+  dat <- readRDS("./Data/Simulation_outlier05_cor04.rds")
+
+  ## run of lfmmLasso 
+  m <- finalLfmmLassoMethod(K = 4,
+                            sparse.prop = 0.05)
+  m <- run(m, dat)
+#+end_src
+
+#+RESULTS:
+
+Histogram
+#+begin_src R :results output graphics :file Rplots/lasso_hist.png :exports both :dir TmpNotebook :width 600 :height 400 :session *tmpR* 
+  hist(m$pvalue)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/lasso_hist.png]]
+
+Manhattan plot
+#+begin_src R :results output graphics :file Rplots/lasso_man.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+  library(ggplot2)
+  pvalue <- as.numeric(m$pvalue)
+  index <- seq_along(pvalue)
+
+  qplot(x = index, y = -log10(pvalue), color = index %in% dat$outlier)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/lasso_man.png]]
+
+**** Run of lm 
+#+begin_src R :results output :session *tmpR* :exports both :dir TmpNotebook
+  library(ThesisRpackage)
+
+  ## read data
+  dat <- readRDS("./Data/Simulation_outlier05_cor04.rds")
+
+  ## run of lfmmLasso 
+  m <- finalLm()
+  m <- run(m, dat)
+
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output graphics :file Rplots/lm_hist.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+hist(m$pvalue)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/lm_hist.png]]
+
+C'est mal calibré.
+
+Manhattan plot
+#+begin_src R :results output graphics :file Rplots/lm_man.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+  library(ggplot2)
+  pvalue <- as.numeric(m$pvalue)
+  index <- seq_along(pvalue)
+
+  qplot(x = index, y = -log10(pvalue), color = index %in% dat$outlier)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/lm_man.png]]
+
+
+#+begin_src R :results output graphics :session *R* :exports both :file Rfigures/test.png :dir ~/Projects/Thesis/
+plot(1)
+#+end_src
+
+#+RESULTS:
+[[file:Rfigures/test.png]]
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* :dir ~/Projects/Thesis/
+plot(1)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-561064W.png]]
+
+** DONE Test of [[https://cran.r-project.org/web/packages/cate/index.html][cate]] CRAN package                                 :3Article:
 CLOSED: [2017-04-12 mer. 16:17]
 :LOGBOOK:
 - State "DONE"       from "STARTED"    [2017-04-12 mer. 16:17]
@@ -2822,3 +3133,24 @@ La [[file:Biblio/org-ref-pdfs/cate_vignette.pdf][vignette]]
   mle <- factor.analysis(gender.sm$Y, r = 5) 
   names(mle)
 #+end_src
+
+** STARTED Comparison of methods on generative simu cor(U1/2,X)=c :3Article:
+:LOGBOOK:
+- State "STARTED"    from              [2017-04-13 jeu. 09:02]
+:END:
+**** Run on krak
+#+begin_src R :results output :session *R* :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
+  ## run all simulation on the same 10000 loci sample
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.01, 0.05, 0.1),
+                                   n = NULL, L = 10000,
+                                   K = 4,
+                                   cs = c(0.2, 0.4, 0.6, 0.8),
+                                   nb.rep = 10,
+                                   fast.only = FALSE,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
+#+end_src
+
