@@ -459,9 +459,12 @@ Entered on [2017-04-12 mer. 10:16]
 
 Problemes: 
 - a chaque fois que je passe sur le chunk ca creer un plot vide
-#+BEGIN_SRC 
+#+BEGIN_SRC bash
 find ./Rfigures -size  0 -print0 |xargs -0 rm
 #+END_SRC
+
+#+RESULTS:
+
 - même si le plot est plus dans Notes.org ilsera encore dans Rfigures/
 - il envoie des path absolus (du coup sur le mac ca passe pas)
 **** Fin de journée
@@ -538,6 +541,51 @@ hist(a)
 
 #+RESULTS[13ef627323823a65c25cf55e5a81b289217fc3af]:
 [[file:Rplots/Rplots.png]]
+**** De Rfigure à Rplots
+Entered on [2017-04-13 jeu. 15:52]
+
+J'ai changé ma facon de faire des notebook avec orgmode en cours de
+route...encore. Du coup certain note book sont en absolute path => sur le mac ca
+ne amrche pas !! :-(
+**** Comment faire des notebooks pour les donner a quelqu'un ?
+Entered on [2017-04-13 jeu. 15:54]
+
+Soit je fais un nouveau fichier org dans un sous dossier... NON
+
+Je mets tous Data et Rplots dans un sous dossier de ./Data et Rplots et après
+avoir exporté on lance
+#+BEGIN_SRC sh 
+mkdir NOTEBOOK/
+mkdir NOTEBOOK/Data
+mkdir NOTEBOOK/Rplots
+mv Notes.html NOTEBOOK/
+cp -r Data/dir NOTEBOOK/Data
+cp -r Rplots/dir NOTEBOOK/dir
+#+END_SRC
+
+Sinon voir [[*LEA::lfmm][LEA::lfmm]] pour exemple.
+**** Partir en vacance serain ;)
+Entered on [2017-04-13 jeu. 16:46]
+
+LES DEADLINES:
+- finir les resultats de l'article [2017-05-20 sam.]
+- finir l'article [2017-06-15 jeu.]
+- finir la these [2017-07-22 sam.]
+
+C'est impossible a tenir, ou pas !! On verra ! 
+
+Les details des plots dans mon cahier ! 
+**** Layers spacemacs
+Entered on [2017-04-13 jeu. 17:02]
+
+Le [[https://github.com/fernandomayer/spacemacs][github]] d'un mec avec ses layers spacemacs !! 
+***** [[https://github.com/fernandomayer/spacemacs][Polymode]]
+C'est pour faire du Rmd dans emacs. Je vais clone me layer le layer: 
+#+BEGIN_SRC bash :session *bash*
+  mkdir ~/.emacs.d/private/polymode/
+  cd ~/.emacs.d/private/polymode/
+  curl -O https://raw.githubusercontent.com/fernandomayer/spacemacs/master/private/polymode/packages.el
+#+END_SRC
 
 
 * 1Article                                                         :1Article:
@@ -1975,26 +2023,26 @@ CLOSED: [2017-04-13 jeu. 09:02]
 #+end_src
 **** Plots
 :PROPERTIES:
-:header-args: :cache no :session *R* :dir ./ :eval no-export :with 1000 :height 800
+:header-args: :cache no :session *R* :dir ./ :eval no-export :width 1000 :height 800
 :END:
 
 We retrieve the experiment
 #+begin_src R :results output :exports both
   exp <- retrieveExperiment(96)
+  exp$description
 #+end_src
 
 #+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.sample.10000.rds K=4 n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=10 "
 
 ***** C = 0.2
-#+begin_src R :results output graphics :file Rplots/Rplots.png :exports both :width 600 :height 400 
-
-#+end_src
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+#+begin_src R :results output graphics :file Rplots/1000_loci_c02.png :exports both
   Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-4989oTd.png]]
+[[file:Rplots/1000_loci_c02.png]]
+
 ***** C = 0.6
 #+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
   Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.6)
@@ -2212,6 +2260,8 @@ exp$description
 
 ** STARTED EWAS for LFMM article                                  :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-13 jeu. 17:25] \\
+  Je vais essayer de reproduire les resultats que j'avais trouvé pour la pres [[file:3Article/Slides/BCMSeminar/experiments.nb.html][seminarBCM]].
 - Note taken on [2017-04-11 mar. 12:39] \\
   Il y a quelque chose qui ne va pas avec ces données je n'arrive même pas a
   reproduire les resultats des papiers cite:Rahmani_2016 etc... Je voulais
@@ -2544,6 +2594,22 @@ Groups: K, lambda, sparse.prop [?]
 : 3 101455 cg16411857 1.751052e-10 -6.381724  0.00000000 2.154437e-09 lfmmLasso
 
 Ca va jusqu'a $10^{-30}$ ... on ne les a pas detecté.
+
+*** Run of LFMM ridge with K = 6 and glm
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  ## dat
+  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.rds"
+  X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
+  s <- TrueSampler(G.file = G.file,
+                   X.file = X.file,
+                   outlier.file = NULL,
+                   n = NULL,
+                   L = NULL)
+  dat <- sampl(s)
+
+#+end_src
 ** TODO GWAS for LFMM article                                     :3Article:
 :LOGBOOK:
 - State "TODO"       from              [2017-04-04 mar. 12:07]
@@ -2869,6 +2935,9 @@ make Rpackage_install
   #+end_src
 
 *** LEA::lfmm
+:PROPERTIES:
+:header-args: :cache no :session *notebookR* :dir ./ :eval no-export
+:END:
 On krakenator
 **** Install of ThesisRpackage on krakenator
 #+BEGIN_SRC bash :dir /cayek@krakenator.imag.fr:~/Projects/Thesis/
@@ -2877,7 +2946,7 @@ make Rpackage_install
 #+END_SRC
 
 **** Simulate data with 0.05 % of outlier
-#+begin_src R :results output :session *tmpR* :exports both :dir TmpNotebook
+#+begin_src R :results output :exports both
   library(ThesisRpackage)
 
   ## sample data
@@ -2894,7 +2963,7 @@ make Rpackage_install
 
   dat <- sampl(s)
   names(dat)
-  saveRDS(dat, "./Data/Simulation_outlier05_cor04.rds")
+  saveRDS(dat, "./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
 #+end_src
 
 #+RESULTS:
@@ -2902,11 +2971,11 @@ make Rpackage_install
 : [8] "mu"
 
 **** Run LEA::lfmm
-#+begin_src R :results output :session *tmpR* :exports both :dir TmpNotebook
+#+begin_src R :results output :exports both
   library(LEA)
 
   ## read data
-  dat <- readRDS("./Data/Simulation_outlier05_cor04.rds")
+  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
 
   ## write to lfmm format
   write.lfmm(dat$G, "./Simulation_outlier05_cor04.lfmm")
@@ -2919,10 +2988,13 @@ make Rpackage_install
                    project="new",
                    CPU = 4)
 
+
 #+end_src
 
 #+RESULTS:
 #+begin_example
+[1] "./Simulation_outlier05_cor04.lfmm"
+[1] "./Simulation_outlier05_cor04.env"
 The project is saved into :
  Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject 
 
@@ -2943,7 +3015,7 @@ Summary of the options:
         -o (output file)                Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1
         -i (number of iterations)       10000
         -b (burnin)                     5000
-        -s (seed random init)           4405969113
+        -s (seed random init)           61801602730908
         -p (number of processes (CPU))  4
         -x (genotype file)              Simulation_outlier05_cor04.lfmm
         -v (variable file)              Simulation_outlier05_cor04.env
@@ -2966,7 +3038,7 @@ Read genotype file:
 
 		End of the Gibbs Sampler algorithm.
 
-	ED:503000.2127	 DIC: 502994.836 
+	ED:503000.1531	 DIC: 503001.0074 
 
 	The statistics for the run are registered in:
  		Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1_s1.4.dic.
@@ -2990,31 +3062,31 @@ To remove the project, use:
 #+end_example
 
 Histogram
-#+begin_src R :results output graphics :file Rplots/hist_lea.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+#+begin_src R :results output graphics :file Rplots/LEA/lea_histo.png :exports both :width 600 :height 400 
 ## plot
 pvalue <- LEA::p.values(lfmm.res, K = 4)
 hist(pvalue)
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/hist_lea.png]]
+[[file:Rplots/LEA/lea_histo.png]]
 
 Manhattan plot
-#+begin_src R :results output graphics :file Rplots/man_lea.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+#+begin_src R :results output graphics :file Rplots/LEA/lea_man.png :exports both :width 600 :height 400 
 library(ggplot2)
 index <- seq_along(pvalue)
 qplot(index, -log10(pvalue), color = index %in% dat$outlier)
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/man_lea.png]]
+[[file:Rplots/LEA/lea_man.png]]
 
 **** Run of LassoLFMM
-#+begin_src R :results output :session *tmpR* :exports both :dir TmpNotebook
+#+begin_src R :results output :exports both
   library(ThesisRpackage)
 
   ## read data
-  dat <- readRDS("./Data/Simulation_outlier05_cor04.rds")
+  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
 
   ## run of lfmmLasso 
   m <- finalLfmmLassoMethod(K = 4,
@@ -3022,18 +3094,17 @@ qplot(index, -log10(pvalue), color = index %in% dat$outlier)
   m <- run(m, dat)
 #+end_src
 
-#+RESULTS:
 
 Histogram
-#+begin_src R :results output graphics :file Rplots/lasso_hist.png :exports both :dir TmpNotebook :width 600 :height 400 :session *tmpR* 
+#+begin_src R :results output graphics :file Rplots/LEA/lasso_hist.png :exports both :width 600 :height 400 
   hist(m$pvalue)
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/lasso_hist.png]]
+[[file:Rplots/LEA/lasso_hist.png]]
 
 Manhattan plot
-#+begin_src R :results output graphics :file Rplots/lasso_man.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+#+begin_src R :results output graphics :file Rplots/LEA/lasso_man.png :exports both :width 600 :height 400 
   library(ggplot2)
   pvalue <- as.numeric(m$pvalue)
   index <- seq_along(pvalue)
@@ -3042,34 +3113,33 @@ Manhattan plot
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/lasso_man.png]]
+[[file:Rplots/LEA/lasso_man.png]]
 
 **** Run of lm 
-#+begin_src R :results output :session *tmpR* :exports both :dir TmpNotebook
+#+begin_src R :results output :exports both
   library(ThesisRpackage)
 
   ## read data
-  dat <- readRDS("./Data/Simulation_outlier05_cor04.rds")
+  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
 
   ## run of lfmmLasso 
   m <- finalLm()
   m <- run(m, dat)
-
 #+end_src
 
-#+RESULTS:
 
-#+begin_src R :results output graphics :file Rplots/lm_hist.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+Histogram:
+#+begin_src R :results output graphics :file Rplots/LEA/lm_histo.png :exports both :width 600 :height 400 
 hist(m$pvalue)
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/lm_hist.png]]
+[[file:Rplots/LEA/lm_histo.png]]
 
 C'est mal calibré.
 
-Manhattan plot
-#+begin_src R :results output graphics :file Rplots/lm_man.png :exports both :dir ./TmpNotebook :width 600 :height 400 :session *tmpR* 
+Manhattan plot:
+#+begin_src R :results output graphics :file Rplots/LEA/lm_man.png :exports both :width 600 :height 400 
   library(ggplot2)
   pvalue <- as.numeric(m$pvalue)
   index <- seq_along(pvalue)
@@ -3078,21 +3148,26 @@ Manhattan plot
 #+end_src
 
 #+RESULTS:
-[[file:/home/cayek/Projects/Thesis/TmpNotebook/Rplots/lm_man.png]]
+[[file:Rplots/LEA/lm_man.png]]
+
+**** export notebook                                            :noexport:
+:PROPERTIES:
+:header-args: :cache no :session *bash* :dir ./ :eval no-export
+:END:
+#+BEGIN_SRC bash 
+  mkdir NOTEBOOK/
+  mkdir NOTEBOOK/Data
+  mkdir NOTEBOOK/Rplots
+  cp Notes.html NOTEBOOK/
+  cp -r Data/NotebookTMP/ NOTEBOOK/Data/
+  cp -r Rplots/LEA/ NOTEBOOK/Rplots/
+  tar -czvf NOTEBOOK.tar.gz NOTEBOOK
+  rm -rf NOTEBOOK
+  scp NOTEBOOK.tar.gz cayek@krakenator.imag.fr:~/Notebook_LEAdebug.tar.gz
+#+END_SRC
 
 
-#+begin_src R :results output graphics :session *R* :exports both :file Rfigures/test.png :dir ~/Projects/Thesis/
-plot(1)
-#+end_src
 
-#+RESULTS:
-[[file:Rfigures/test.png]]
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* :dir ~/Projects/Thesis/
-plot(1)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-561064W.png]]
 
 ** DONE Test of [[https://cran.r-project.org/web/packages/cate/index.html][cate]] CRAN package                                 :3Article:
 CLOSED: [2017-04-12 mer. 16:17]
