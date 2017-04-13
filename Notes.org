@@ -2260,8 +2260,12 @@ exp$description
 
 ** STARTED EWAS for LFMM article                                  :3Article:
 :LOGBOOK:
+- Note taken on [2017-04-13 jeu. 18:00] \\
+  Ok c'est on va retrouver les même resultats par contre lasso donne pas les même
+  reultats... A voir.
 - Note taken on [2017-04-13 jeu. 17:25] \\
-  Je vais essayer de reproduire les resultats que j'avais trouvé pour la pres [[file:3Article/Slides/BCMSeminar/experiments.nb.html][seminarBCM]].
+  Je vais essayer de reproduire les resultats que j'avais trouvé pour la pres
+  [[file:3Article/Slides/BCMSeminar/experiments.nb.html][seminarBCM]].
 - Note taken on [2017-04-11 mar. 12:39] \\
   Il y a quelque chose qui ne va pas avec ces données je n'arrive même pas a
   reproduire les resultats des papiers cite:Rahmani_2016 etc... Je voulais
@@ -2595,21 +2599,109 @@ Groups: K, lambda, sparse.prop [?]
 
 Ca va jusqu'a $10^{-30}$ ... on ne les a pas detecté.
 
-*** Run of LFMM ridge with K = 6 and glm
+**** Do we find these loci with lfmmLasso and lfmmRidge on betanormalized_metylationlvl.filtered.LMresidu.rds
 #+begin_src R :results output :exports both
-  library(ThesisRpackage)
+exp <- retrieveExperiment(102)
+exp$description
+#+end_src
 
-  ## dat
-  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.rds"
-  X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
-  s <- TrueSampler(G.file = G.file,
-                   X.file = X.file,
-                   outlier.file = NULL,
-                   n = NULL,
-                   L = NULL)
-  dat <- sampl(s)
+#+RESULTS:
+: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0118857550712915|0.00966331357938067|0.00901972710130546 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.LMresidu.rds "
+
+***** Compute of the gif
+
+#+begin_src R :results output :exports both
+  gif.func <- function(score) {
+    score2 <- score ^ 2
+    median(score2) / qchisq(0.5, df = 1)
+  }
+
+  exp$df.res %>%
+    group_by(K, lambda, sparse.prop, method) %>%
+    summarise(gif = gif.func(score))
 
 #+end_src
+
+#+RESULTS:
+#+begin_example
+Source: local data frame [16 x 5]
+Groups: K, lambda, sparse.prop [?]
+
+       K       lambda sparse.prop    method       gif
+   <dbl>        <dbl>       <dbl>     <chr>     <dbl>
+1      2 1.000000e-04          NA lfmmRidge  6.231422
+2      2 1.188576e-02         0.1 lfmmLasso  5.530324
+3      2 1.000000e+00          NA lfmmRidge  6.229777
+4      2 1.000000e+10          NA lfmmRidge  5.689075
+5      2           NA          NA  refactor  7.618795
+6      3 1.000000e-04          NA lfmmRidge  6.383900
+7      3 9.663314e-03         0.1 lfmmLasso  5.923144
+8      3 1.000000e+00          NA lfmmRidge  6.383613
+9      3 1.000000e+10          NA lfmmRidge  5.690365
+10     3           NA          NA  refactor  4.968611
+11     4 1.000000e-04          NA lfmmRidge  2.432270
+12     4 9.019727e-03         0.1 lfmmLasso  2.286301
+13     4 1.000000e+00          NA lfmmRidge  2.431269
+14     4 1.000000e+10          NA lfmmRidge  2.057842
+15     4           NA          NA  refactor  2.409529
+16    NA           NA          NA       glm 17.286869
+#+end_example
+
+***** Methods comparison
+
+****** Ridge LFMM
+#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_ridge.png :exports both :width 600 :height 400 
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  ## lfmm lasso with K = 4
+
+  ridge.df <- exp$df.res %>% dplyr::filter(method == "lfmmRidge", K == 4, lambda == 1e-4)
+
+  ggplot(ridge.df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
+    geom_point()
+
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/GSE42861_LMResidu_rahmani.png]]
+
+Il sortent presque. Dans [[file:3Article/Slides/BCMSeminar/experiments.nb.html][la pres BCM]] on les retrouvait carément bien. Mais je
+pense que avec K = 6 c'est on trouvera comme refactor !!
+
+****** Refactor
+#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_refactor.png :exports both :width 600 :height 400 
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  ## lfmm lasso with K = 4
+
+  df <- exp$df.res %>% dplyr::filter(method == "refactor", K == 4)
+
+  ggplot(df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
+    geom_point()
+
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/GSE42861_LMResidu_rahmani_refactor.png]]
+
+On ne retrouve pas comme dans cite:Rahmani_2016 ca doit être a cause des batch
+effect que l'on a pas !!
+
+****** Lasso LFMM
+#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_lasso.png :exports both :width 600 :height 400 
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  ## lfmm lasso with K = 4
+
+  df <- exp$df.res %>% dplyr::filter(method == "lfmmLasso", K == 4)
+
+  ggplot(df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
+    geom_point()
+
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/GSE42861_LMResidu_rahmani_lasso.png]]
+
+Lasso ne trouve vraiment pas comme les autres ... bizare bizare. Il faudrait
+voir la vrai valeur de K après convergeance.
 ** TODO GWAS for LFMM article                                     :3Article:
 :LOGBOOK:
 - State "TODO"       from              [2017-04-04 mar. 12:07]
@@ -3209,8 +3301,12 @@ La [[file:Biblio/org-ref-pdfs/cate_vignette.pdf][vignette]]
   names(mle)
 #+end_src
 
-** STARTED Comparison of methods on generative simu cor(U1/2,X)=c :3Article:
+** CANCELLED Comparison of methods on generative simu cor(U1/2,X)=c :3Article:
+CLOSED: [2017-04-13 jeu. 18:16]
 :LOGBOOK:
+- Note taken on [2017-04-13 jeu. 18:16] \\
+  On va faire l'experience final pour le papier dirrect !!
+- State "CANCELLED"  from "STARTED"    [2017-04-13 jeu. 18:16]
 - State "STARTED"    from              [2017-04-13 jeu. 09:02]
 :END:
 **** Run on krak
