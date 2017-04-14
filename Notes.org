@@ -588,8 +588,11 @@ C'est pour faire du Rmd dans emacs. Je vais clone me layer le layer:
   cd ~/.emacs.d/private/polymode/
   curl -O https://raw.githubusercontent.com/fernandomayer/spacemacs/master/private/polymode/packages.el
 #+END_SRC
+*** 2017-04-14 vendredi
+**** Emacs for prose
+Entered on [2017-04-14 ven. 15:33]
 
-
+To see: http://proselint.com/
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -3327,14 +3330,21 @@ CLOSED: [2017-04-13 jeu. 18:16]
                                    save = TRUE, bypass = FALSE)
 #+end_src
 
-** STARTED Correction $G - U V^T$ on generative simulations       :3Article:
+** DONE Correction $G - U V^T$ on generative simulations          :3Article:
+CLOSED: [2017-04-14 ven. 14:56]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-04-14 ven. 14:56]
 - State "STARTED"    from "TODO"       [2017-04-14 ven. 10:03]
 - State "TODO"       from              [2017-04-14 ven. 10:01]
 :END:
 
-*** RUNNING On krakenator
+*** DONE On krakenator
+CLOSED: [2017-04-14 ven. 14:49]
+:PROPERTIES:
+:CUSTOM_ID: simu with NA
+:END:
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-14 ven. 14:49]
 - State "RUNNING"    from              [2017-04-14 ven. 10:08]
 :END:
 #+begin_src R :results output :exports both
@@ -3358,7 +3368,7 @@ CLOSED: [2017-04-13 jeu. 18:16]
 
 We retrieve the experiment
 #+begin_src R :results output :exports both
-  exp <- retrieveExperiment(105)
+  exp <- retrieveExperiment(106)
   exp$description
 #+end_src
 
@@ -3378,3 +3388,10 @@ Article3_MethodComparison_plot_GIF(exp)
 #+RESULTS:
 [[file:Rplots/G_UV.gif.png]]
 
+** TODO Check NA in results
+:LOGBOOK:
+- Note taken on [2017-04-14 ven. 14:57] \\
+  Tout est dans le titre, je veux m'assurer que les NA qu'on a en sorti parfois ne
+  sont pas des outlier !! J'en ai observé sur [[#simu with NA][cete simu]].
+- State "TODO"       from              [2017-04-14 ven. 14:57]
+:END:
