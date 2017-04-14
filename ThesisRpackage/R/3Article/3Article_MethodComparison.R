@@ -38,7 +38,7 @@ Article3_MethodComparison <- function(G.file,
                                       K.method = K,
                                       cs = c(0.2, 0.4, 0.6, 0.8),
                                       nb.rep = 5,
-                                      fast.only = FALSE,
+                                      fast.only = TRUE,
                                       cluster.nb = NULL,
                                       save = TRUE, bypass = FALSE) {
 
@@ -142,11 +142,10 @@ Article3_MethodComparison_plot_AUC <- function(exp) {
 #' @export
 Article3_MethodComparison_plot_GIF <- function(exp) {
   assertthat::assert_that(exp$name == "Article3_MethodComparison")
-  TestRequiredPkg("DescTools")
 
   aux.f <- function(pvalue) {
     score2 <- qchisq(pvalue, lower.tail = FALSE, df = 1)
-    median(score2) / qchisq(0.5, df = 1)
+    median(score2, na.rm = TRUE) / qchisq(0.5, df = 1)
   }
 
   ## compute AUC

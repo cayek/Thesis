@@ -3347,29 +3347,34 @@ CLOSED: [2017-04-13 jeu. 18:16]
                                    K = 4,
                                    cs = c(0.4, 0.6),
                                    nb.rep = 5,
-                                   fast.only = FALSE,
                                    cluster.nb = 16,
                                    save = TRUE, bypass = FALSE)
-
 #+end_src
 
 *** plots
 :PROPERTIES:
-:header-args: :cache no :session *R* :dir ./ :eval no-export :width 1000 :height 800
+:header-args: :cache no :session *R* :dir ./ :eval no-export :width 800 :height 600
 :END:
 
 We retrieve the experiment
 #+begin_src R :results output :exports both
-  exp <- retrieveExperiment()
+  exp <- retrieveExperiment(105)
   exp$description
 #+end_src
 
 ***** AUC
-#+begin_src R :results output graphics :file Rplots/Rplots.png :exports both :width 600 :height 400 
-  Article3_MethodComparison_plot_AUC(exp)
+#+begin_src R :results output graphics :file Rplots/G_UV.auc.png :exports both 
+Article3_MethodComparison_plot_AUC(exp)
 #+end_src
 
+#+RESULTS:
+[[file:Rplots/G_UV.auc.png]]
+
 ***** gif
-#+begin_src R :results output graphics :file Rplots/Rplots.png :exports both :width 600 :height 400 
+#+begin_src R :results output graphics :file Rplots/G_UV.gif.png :exports both 
 Article3_MethodComparison_plot_GIF(exp)
 #+end_src
+
+#+RESULTS:
+[[file:Rplots/G_UV.gif.png]]
+
