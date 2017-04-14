@@ -88,14 +88,17 @@ fit.finalLfmmRdigeMethod <- function(m, dat, reuse = FALSE) {
 ################################################################################
 
 #' @export
-finalLfmmLassoMethod <- function(K, sparse.prop, lambda.K = 100, lambda.eps = 0.001, calibrate  = FALSE, nickname = NULL) {
+finalLfmmLassoMethod <- function(K, sparse.prop,
+                                 lambda.K = 100, lambda.eps = 0.001,
+                                 calibrate  = FALSE, nickname = NULL,
+                                 correctionByC = FALSE) {
 
   m <- LassoLFMMMethod(K = K,
                        it.max = 200,
                        err.max = 1e-6,
                        hypothesis.testing.method = lm_zscore(calibrate = calibrate,
                                                              sigma.computation = "lm",
-                                                             correctionByC = FALSE),
+                                                             correctionByC = correctionByC),
                        sparse.prop = sparse.prop,
                        lambda = NULL, # if null regularization path
                        lambda.K = lambda.K, # default value used in Friedman et al. 2010
@@ -148,11 +151,12 @@ finalcateMethod <- function(K) {
 ################################################################################
 
 #' @export
-finalRefactorMethod <- function(K, calibrate = FALSE, t = 500, verbose = FALSE) {
+finalRefactorMethod <- function(K, calibrate = FALSE, t = 500, verbose = FALSE,
+                                correctionByC = FALSE) {
   m <- refractorMethod(K = K,
                        t = t,
                        hypothesis.testing.method = lm_zscore(calibrate = calibrate,
-                                                             correctionByC = FALSE),
+                                                             correctionByC = correctionByC),
                        name = "refactor",
                        nickname = "Refactor",
                        verbose = verbose)
@@ -195,17 +199,12 @@ finalLm <- function(calibrate = FALSE) {
 ################################################################################
 
 #' @export
-finalPcaLm <- function(K, calibrate = FALSE) {
-  if (calibrate) {
-    hypothesis.testing.method <- Zscore(zscorepvalue.functor = FdrtoolsCalibratedZscore() ,
-                                        B.sigma2.functor = AnalyticSigma2Functor())
-  } else {
-    hypothesis.testing.method <- Zscore(zscorepvalue.functor = NormalZscore() ,
-                                        B.sigma2.functor = AnalyticSigma2Functor())
-  }
+finalPcaLm <- function(K, calibrate = FALSE, correctionByC = FALSE) {
+
   m <- PCAClassicLinearMethod(K = K,
-                         nickname = "PcaLm",
-                         hypothesis.testing.method = hypothesis.testing.method)
+                              nickname = "PcaLm",
+                              hypothesis.testing.method = lm_zscore(calibrate = calibrate,
+                                                                    correctionByC = correctionByC))
   class(m) <- c("final", "finalPcaLm", class(m))
   m
 }
@@ -213,11 +212,11 @@ finalPcaLm <- function(K, calibrate = FALSE) {
 ################################################################################
 
 #' @export
-finalOracle <- function(K, calibrate = FALSE) {
+finalOracle <- function(K, calibrate = FALSE, correctionByC = FALSE) {
   m <- PCAClassicLinearMethod(K = K,
                               nickname = "Oracle",
                               hypothesis.testing.method = lm_zscore(calibrate = calibrate,
-                                                                    correctionByC = FALSE),
+                                                                    correctionByC = correctionByC),
                               assumingStructure = TRUE)
   class(m) <- c("final", "finalOracle", class(m))
   m
@@ -227,7 +226,7 @@ finalOracle <- function(K, calibrate = FALSE) {
 
 #' @export
 finalBench <- function(K, lambda, calibrate, sparse.prop,
-                       fast.only = FALSE, with.missing = FALSE) {
+                       fast.only = TRUE, with.missing = FALSE) {
     bench <- list()
     bench$lfmmRidge <- finalLfmmRdigeMethod(K = K,
                                             lambda = lambda,
