@@ -5,6 +5,7 @@ futile.logger::flog.threshold(futile.logger::ERROR, name = "ThesisRpackage")
 futile.logger::flog.threshold(futile.logger::ERROR, name = "console")
 
 test_that("Article3_MethodComparison", {
+
   G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
   skip_if_not(file.exists(G.file))
 
@@ -13,7 +14,7 @@ test_that("Article3_MethodComparison", {
                                    n = NULL,
                                    L = 500,
                                    K = 2,
-                                   cs = list(c(0.6,0.3), c(0.4,0.2)),
+                                   cs = list(c(0.6,0.3)),
                                    nb.rep = 2,
                                    fast.only = TRUE,
                                    cluster.nb = NULL,
@@ -21,7 +22,7 @@ test_that("Article3_MethodComparison", {
 
   expect_equal(dim(exp$df), c(8000, 13))
 
-  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.6)
+  Article3_MethodComparison_plot_pvalueGrid(exp, c = "0.6|0.3")
   Article3_MethodComparison_plot_precisionRecall(exp)
 
   ## AUC

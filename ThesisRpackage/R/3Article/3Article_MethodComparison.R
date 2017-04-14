@@ -2,7 +2,7 @@ Article3_MethodComparison_main <- function(exp) {
   exp$df <- tibble()
   for (p in exp$outlier.props) {
     for (c in exp$cs) {
-      flog.info(paste0("outlier prop=",p, " and c=",c, collapse = " "), name = "console")
+      flog.info(paste0("outlier prop=",p, " and c=",paste0(c, collapse = "|")), name = "console")
       s <- exp$s
       s$prop.outlier <- p
       s$cs <- c
@@ -17,7 +17,7 @@ Article3_MethodComparison_main <- function(exp) {
 
       exp$df <- exp.aux$result$df.pvalue %>%
         dplyr::mutate(outlier.prop = p) %>%
-        dplyr::mutate(`cor(U,X)` = c) %>%
+        dplyr::mutate(`cor(U,X)` = paste0(c, collapse="|")) %>%
         rbind(exp$df)
     }
   }
@@ -81,7 +81,7 @@ Article3_MethodComparison_plot_pvalueGrid <- function(exp, c) {
   assertthat::assert_that(exp$name == "Article3_MethodComparison")
 
   toplot <- exp$df %>%
-    dplyr::filter(`cor(U1,X)` == c)
+    dplyr::filter(`cor(U,X)` == c)
   p <- ggplot(toplot ,
               aes(x = expected.fd, y = true.fd  - expected.fd )) +
     facet_grid(method ~ outlier.prop, scales = "free") +
@@ -94,7 +94,7 @@ Article3_MethodComparison_plot_pvalueGrid <- function(exp, c) {
     ylab("observed false positives – expected false positives") +
     xlab("expected false positives") +
     guides(colour = "none") +
-    ggtitle(paste0("cor(U1,X)=",c))
+    ggtitle(paste0("cor(U,X)=",c))
   p
 }
 
@@ -108,7 +108,7 @@ Article3_MethodComparison_plot_precisionRecall <- function(exp) {
     geom_smooth() +
     ylab("1 - observed false positives rate") +
     xlab("observed power") +
-    facet_grid(`cor(U1,X)` ~ outlier.prop, scales = "free")
+    facet_grid(`cor(U,X)` ~ outlier.prop, scales = "free")
   p
 }
 
@@ -119,19 +119,19 @@ Article3_MethodComparison_plot_AUC <- function(exp) {
 
   ## compute AUC
   toplot <- exp$df %>%
-    group_by(method, outlier.prop, `cor(U1,X)`, rep) %>%
+    group_by(method, outlier.prop, `cor(U,X)`, rep) %>%
     summarise(auc = DescTools::AUC(x = true.power, y = 1 - true.fdr)) %>%
     ungroup()
 
   ## compute mean and standard error
   ## toplot <- toplot %>%
-  ##   group_by(method, outlier.prop, `cor(U1,X)`) %>%
+  ##   group_by(method, outlier.prop, `cor(U,X)`) %>%
   ##   summarise(auc.mean = mean(auc), mean.sd = sd(auc), mean.se = mean.sd / sqrt(length(auc))) %>%
   ##   ungroup()
 
   ggplot(toplot, aes(x = method, y = auc, color = method)) +
     geom_boxplot() +
-    facet_grid(`cor(U1,X)` ~ outlier.prop)
+    facet_grid(`cor(U,X)` ~ outlier.prop)
 
 }
 
@@ -151,12 +151,12 @@ Article3_MethodComparison_plot_GIF <- function(exp) {
 
   ## compute AUC
   toplot <- exp$df %>%
-    group_by(method, outlier.prop, `cor(U1,X)`, rep) %>%
+    group_by(method, outlier.prop, `cor(U,X)`, rep) %>%
     summarise(gif = aux.f(pvalue[!outlier])) %>%
     ungroup()
 
   ggplot(toplot, aes(x = method, y = gif, color = method)) +
     geom_boxplot() +
-    facet_grid(`cor(U1,X)` ~ outlier.prop)
+    facet_grid(`cor(U,X)` ~ outlier.prop)
 
 }

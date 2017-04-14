@@ -491,8 +491,10 @@ Entered on [2017-04-13 jeu. 11:46]
 **** Shortcut
 Entered on [2017-04-13 jeu. 14:56]
 ***** R
-- execute code : C-c C-c
+- execute code: C-c C-c
 - reload R consol: C-c C-e r
+- execute line: C-c C-n
+- execute region: C-c C-r
 ****** package
 - test: C-c C-w t
 - doc: C-c C-W d
@@ -3331,6 +3333,10 @@ CLOSED: [2017-04-13 jeu. 18:16]
 - State "TODO"       from              [2017-04-14 ven. 10:01]
 :END:
 
+*** RUNNING On krakenator
+:LOGBOOK:
+- State "RUNNING"    from              [2017-04-14 ven. 10:08]
+:END:
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
@@ -3345,4 +3351,25 @@ CLOSED: [2017-04-13 jeu. 18:16]
                                    cluster.nb = 16,
                                    save = TRUE, bypass = FALSE)
 
+#+end_src
+
+*** plots
+:PROPERTIES:
+:header-args: :cache no :session *R* :dir ./ :eval no-export :width 1000 :height 800
+:END:
+
+We retrieve the experiment
+#+begin_src R :results output :exports both
+  exp <- retrieveExperiment()
+  exp$description
+#+end_src
+
+***** AUC
+#+begin_src R :results output graphics :file Rplots/Rplots.png :exports both :width 600 :height 400 
+  Article3_MethodComparison_plot_AUC(exp)
+#+end_src
+
+***** gif
+#+begin_src R :results output graphics :file Rplots/Rplots.png :exports both :width 600 :height 400 
+Article3_MethodComparison_plot_GIF(exp)
 #+end_src
