@@ -593,6 +593,13 @@ C'est pour faire du Rmd dans emacs. Je vais clone me layer le layer:
 Entered on [2017-04-14 ven. 15:33]
 
 To see: http://proselint.com/
+** 2017-05 mai
+*** 2017-05-02 mardi
+**** Titre de la thèse
+Entered on [2017-05-02 mar. 11:06]
+
+Méthodes de factorisation matricielle pour la génomique des populations et les
+tests d'association
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -3392,6 +3399,116 @@ Article3_MethodComparison_plot_GIF(exp)
 :LOGBOOK:
 - Note taken on [2017-04-14 ven. 14:57] \\
   Tout est dans le titre, je veux m'assurer que les NA qu'on a en sorti parfois ne
-  sont pas des outlier !! J'en ai observé sur [[#simu with NA][cete simu]].
+  sont pas des outlier !! J'en ai observé sur [[#simu with NA][cette simu]].
 - State "TODO"       from              [2017-04-14 ven. 14:57]
 :END:
+
+** DONE Redundancy Analysis (RDA)
+CLOSED: [2017-05-02 mar. 15:40]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-02 mar. 15:40]
+- Note taken on [2017-05-02 mar. 15:32] \\
+  Il y a tout une litérature des ordination methods... J'ai l'impression que rda
+  est bien une méthode pour faire des association. Mais ca ne prend pas en compte
+  une structure lattente. Ou alors il faut la calculer avec une autre méthode et
+  l'ajouté en covariable dans rda ([[cite:Forester_2017][see page 6]])
+- Note taken on [2017-05-02 mar. 12:00] \\
+  Faut que je comprenne le principe de cette methode ! A table.
+- Note taken on [2017-05-02 mar. 10:20] \\
+  Comment ca réagis sur mes simulations genérative. On l'ajoute dans les méthodes
+  du papier ?
+- State "TODO"       from              [2017-05-02 mar. 09:22]
+:END:
+
+Dans cite:Forester_2015 ils utilisent RDA pour trouver des locus outlier en
+passant par un PCA de XB (dans le modèle G = XB + E). Après ils calculent des
+pvaleur en ces locus plus précisement (avec un lm).
+
+Je comprends que : 
+- il n'y aura pas de correction pour la structure de populations
+- c'est juste un moyen de ne pas passer par le controle du FDR
+*** Sur une simulations
+
+#+begin_src R :results output :exports both
+  ## sampler data with lfmm generative model
+  library(ThesisRpackage)
+  s <- NormalSampler2(n = 100,
+                      L = 1000,
+                      K = 3,
+                      prop.outlier = 0.02,
+                      cs = c(0.6, 0.0, 0.0))
+  dat <- sampl(s)
+
+  ## run rda
+  library(vegan)
+
+  rda.res <- rda(dat$G ~ dat$X)
+  names(rda.res)
+
+#+end_src
+
+#+RESULTS:
+:  [1] "call"        "grand.total" "rowsum"      "colsum"      "tot.chi"    
+:  [6] "pCCA"        "CCA"         "CA"          "method"      "inertia"    
+: [11] "terms"       "terminfo"
+
+#+begin_src R :results output graphics :file Rplots/RDA_1.png :exports both :width 600 :height 400
+  plot(rda.res)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/RDA_1.png]]
+
+A quoi correspond les rouges et les autres ?
+
+#+begin_src R :results output graphics :file Rplots/RDA_2.png :exports both :width 600 :height 400 
+  library(tidyverse)
+
+  toplot <- cbind(as.data.frame(rda.res$CA$v),
+                  as.data.frame(rda.res$CCA$v))
+  toplot <- toplot %>%
+    mutate(index = 1:nrow(toplot),
+           outlier = index %in% dat$outlier)
+
+  ggplot(toplot, aes(x = RDA1, y = PC1, color = outlier)) +
+    geom_point()
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/RDA_2.png]]
+
+Je n'arrive pas a reproduire le graphe précédent.
+
+MAIS on voit que RDA1 ne permet capte la variable lattente.
+
+**** Si on utilise lfmm 
+
+#+begin_src R :results output graphics :file Rplots/RDA_3.png :exports both :width 600 :height 400 
+  ## run of lfmm ridge
+  lfmm.ridge <- finalLfmmRdigeMethod(K = 3,lambda = 1e-1)
+  lfmm.ridge <- run(lfmm.ridge, dat)
+
+  gplot_stat(B = lfmm.ridge$B[1,], outlier = dat$outlier) +
+    geom_point(aes(x = index, y = stat, color = outlier))
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/RDA_3.png]]
+
+On arrive bien a avoir ceux qui sont vraiment associé a X et pas avec la
+variable lattentes.
+
+**** Si on utilise lm
+#+begin_src R :results output graphics :file Rplots/RDA_4.png :exports both :width 600 :height 400 
+  ## run of lfmm ridge
+  lm.res <- finalLm()
+  lm.res <- run(lm.res, dat)
+
+  gplot_stat(B = lm.res$B[1,], outlier = dat$outlier) +
+    geom_point(aes(x = index, y = stat, color = outlier))
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/RDA_4.png]]
+
+C'est comparable a les loadings RDA1
