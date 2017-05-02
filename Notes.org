@@ -609,7 +609,7 @@ pour le papier !!!
 Entered on [2017-05-02 mar. 16:33]
 
 ***** Article "LFMM"
-- générer les resultats <2017-06-01 jeu.>
+- générer les résultats <2017-06-01 jeu.>
 - écrire article <2017-06-30 ven.>
 
 ***** Rédaction thèse
