@@ -600,6 +600,21 @@ Entered on [2017-05-02 mar. 11:06]
 
 Méthodes de factorisation matricielle pour la génomique des populations et les
 tests d'association
+**** fin de journée
+Entered on [2017-05-02 mar. 16:24]
+
+Ok c'était pour se remettre dedans :D. Demain on commence a généré les resultats
+pour le papier !!!
+**** Un planning pour la fin de thèse
+Entered on [2017-05-02 mar. 16:33]
+
+***** Article "LFMM"
+- générer les resultats <2017-06-01 jeu.>
+- écrire article <2017-06-30 ven.>
+
+***** Rédaction thèse
+- Introduction, état de l'art et problématique <2017-09-01 ven.>
+
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
 ** Revisions
@@ -3406,6 +3421,8 @@ Article3_MethodComparison_plot_GIF(exp)
 ** DONE Redundancy Analysis (RDA)
 CLOSED: [2017-05-02 mar. 15:40]
 :LOGBOOK:
+- Note taken on [2017-05-02 mar. 16:07] \\
+  On laisse ca de coté les papiers de Forester sont trop légé sur les méthodes...
 - State "DONE"       from "TODO"       [2017-05-02 mar. 15:40]
 - Note taken on [2017-05-02 mar. 15:32] \\
   Il y a tout une litérature des ordination methods... J'ai l'impression que rda
@@ -3459,7 +3476,7 @@ Je comprends que :
 #+RESULTS:
 [[file:Rplots/RDA_1.png]]
 
-A quoi correspond les rouges et les autres ?
+A quoi correspond les rouges et les autres ? C'est les indiv et les locus...
 
 #+begin_src R :results output graphics :file Rplots/RDA_2.png :exports both :width 600 :height 400 
   library(tidyverse)
