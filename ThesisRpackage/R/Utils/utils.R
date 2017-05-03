@@ -52,7 +52,10 @@ new_nb <- function(dir, name) {
 #' save plot to png format on timc-bcm-15
 #' @export
 save_plot_timc_bcm_15 <- function(pl, filename, width, height) {
-  png(filename, width, height)
+  tmp.file <- tempfile()
+  png(tmp.file, width, height)
   print(pl)
   dev.off()
+  system(paste0("scp ", tmp.file,
+                " cayek@timc-bcm-15:~/Projects/Thesis/Rplots/", filename))
 }

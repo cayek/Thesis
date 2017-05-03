@@ -3609,7 +3609,6 @@ On sample sur tout le 1000Genome et que les européens.
   vars <- svd.res$d / sum(svd.res$d)
 
   ## plot
-  library(ggplot2)
   pl <- qplot(x = seq_along(vars), y = vars, geom='line') +
     geom_point() +
     coord_cartesian(xlim = c(1,20))
