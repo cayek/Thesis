@@ -60,3 +60,14 @@ run.SVAMethod <- function(m, dat) {
   m <- fit(m, dat)
 }
 
+#' @export
+numLatentVarEstimation.SVAMethod <- function(m, dat) {
+  n <- nrow(dat$G)
+  L <- ncol(dat$G)
+  edata <- t(dat$G)
+  one <- matrix(1, n, 1)
+  mod <- cbind(one, dat$X)
+  ## eval num of lattent variable
+  n.sv <- sva::num.sv(edata, mod, method="leek")
+  n.sv
+}

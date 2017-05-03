@@ -40,6 +40,13 @@ name <- function(m){
   UseMethod("name")
 }
 
+#' Estimated the number of latent variable
+#'
+#' @export
+numLatentVarEstimation <- function(m, dat){
+  UseMethod("numLatentVarEstimation")
+}
+
 
 #' Run the association scan method
 #'

@@ -55,3 +55,25 @@ run.FAMTMethod <- function(m, dat) {
   fit(m, dat)
 }
 
+#' @export
+numLatentVarEstimation.FAMTMethod <- function(m, dat) {
+
+  ## bug in FAMT...
+  flog.trace("attaching FAMT")
+  library("FAMT")
+
+
+  n <- nrow(dat$G)
+  L <- ncol(dat$G)
+  expresssion <- as.data.frame(t(dat$G))
+  covariates <- data.frame(array.id = colnames(expresssion),
+                           x = dat$X[,1])
+  out <- capture.output(dat.FAMT <- FAMT::as.FAMTdata(expression = expresssion,
+                                                     covariates = covariates))
+  DebugMessage("FAMT::as.FAMTdata", out)
+
+  out <- capture.output(nbfactor.res <- FAMT::nbfactors(dat.FAMT, x = 2))
+  DebugMessage("FAMT::nbfactors", out)
+
+  nbfactor.res$optimalnbfactors
+}

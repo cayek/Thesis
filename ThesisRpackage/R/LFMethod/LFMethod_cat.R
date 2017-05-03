@@ -40,3 +40,15 @@ run.cateMethod <- function(m, dat) {
   m <- fit(m, dat)
 }
 
+#' @export
+numLatentVarEstimation.cateMethod <- function(m, dat) {
+
+  covar <- as.data.frame(dat$X)
+
+  factor.num <- cate::est.confounder.num(~ V1 | . - V1 + 0,
+                                         covar, dat$G,
+                                         method = "bcv", bcv.plot = TRUE,
+                                         rmax = 30, nRepeat = 20)
+
+  factor.num$r
+}

@@ -495,6 +495,7 @@ Entered on [2017-04-13 jeu. 14:56]
 - reload R consol: C-c C-e r
 - execute line: C-c C-n
 - execute region: C-c C-r
+- C-enter ;-D
 ****** package
 - test: C-c C-w t
 - doc: C-c C-W d
@@ -3575,8 +3576,9 @@ variable lattentes.
 
 C'est comparable a les loadings RDA1
 
-** TODO Validation numérique pour l'article "LFMM"                :3Article:
+** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-03 mer. 09:49]
 - State "TODO"       from              [2017-05-03 mer. 09:05]
 :END:
 *** Sample dataset
@@ -3585,4 +3587,39 @@ On sample sur tout le 1000Genome et que les européens.
 #+begin_src R :results output :exports both
   ## read data, Warning very big file !
   dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.rds")
+
+  ## keep only Eu and sample loci
+  L <- 5e5
+  dat.Eu <- list()
+  Eu.ind <- dat$indiv$super_pop == "EUR"
+  sample.loci <- sample.int(ncol(dat$G), L)
+  dat.Eu$indiv <- dat$indiv[Eu.ind,]
+  dat.Eu$G <- dat$G[Eu.ind,sample.loci]
+
+  ## test
+  dat.Eu$indiv
+  str(dat.Eu$G)
+
+  ## rm for memory
+  rm(dat)
+  gc()
+
+  ## PCA
+  svd.res <- svd(dat.Eu$G, nu = 0, nv = 0)
+  vars <- svd.res$d / sum(svd.res$d)
+
+  ## plot
+  library(ggplot2)
+  pl <- qplot(x = seq_along(vars), y = vars, geom='line') +
+    geom_point() +
+    coord_cartesian(xlim = c(1,20))
+
+  ## save
+  saveRDS(,"~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.rds")
+
 #+end_src
+
+./Rplots/val
+
+***** Choix de K pour les méthodes
+Pour le moment on va prendre le K de la simulation.
