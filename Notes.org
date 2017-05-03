@@ -616,6 +616,21 @@ Entered on [2017-05-02 mar. 16:33]
 
 ***** Rédaction thèse
 - Introduction, état de l'art et problématique <2017-09-01 ven.>
+*** 2017-05-03 mercredi
+**** faim de journée
+Entered on [2017-05-03 mer. 18:11]
+
+Avant d'aller plus loin il faut que je regle les problème de prepocessing:
+- ld prunning
+- maf filtering
+
+ET est ce que je standartise la matrice avant d'appliquer mon algo ???
+(Par exemple dans cite:Rahmani_2016 il standartise...)
+Faut que je fasse de la biblio la dessus: 
+- [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3981753/][Fast Principal Component Analysis of Large-Scale Genome-Wide Data]]
+- [[http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.0020190][Population Structure and Eigenanalysis]]
+
+Je sens qu'il vaut mieux standartiser...
 
 * 1Article                                                         :1Article:
 * 2Article                                                         :2Article:
@@ -3578,6 +3593,8 @@ C'est comparable a les loadings RDA1
 
 ** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
+- Note taken on [2017-05-03 mer. 18:10] \\
+  J'en suis a sample les dataset et faire la svd sur la matrice STANDARDISED !!!!
 - State "STARTED"    from "TODO"       [2017-05-03 mer. 09:49]
 - State "TODO"       from              [2017-05-03 mer. 09:05]
 :END:
@@ -3589,24 +3606,28 @@ On sample sur tout le 1000Genome et que les européens.
   ## read data, Warning very big file !
   dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.rds")
 
-  ## keep only Eu and sample loci
-  L <- 5e5
-  dat.Eu <- list()
+  ## keep only Eu
   Eu.ind <- dat$indiv$super_pop == "EUR"
-  sample.loci <- sample.int(ncol(dat$G), L)
-  dat.Eu$indiv <- dat$indiv[Eu.ind,]
-  dat.Eu$G <- dat$G[Eu.ind,sample.loci]
+  G <- dat$G[Eu.ind,]
 
-  ## test
-  dat.Eu$indiv
-  str(dat.Eu$G)
+  ## filter maf
+  maf <- apply(G, 2, function(l){p <- mean(l) / 2;min(p, 1 - p)})
+  out.index <- which(maf <= 0.5)
+  G <- G[,-out.index]
+  dim(G)
+
 
   ## rm for memory
   rm(dat)
   gc()
 
+  ## sample loci
+  L <- 5e5
+  sample.loci <- sample.int(ncol(dat$G), L)
+  G <- G[, sample.loci]
+
   ## PCA
-  svd.res <- svd(dat.Eu$G, nu = 0, nv = 0)
+  svd.res <- svd(scale(G), nu = 0, nv = 0)
   vars <- svd.res$d / sum(svd.res$d)
 
   ## plot
@@ -3617,7 +3638,7 @@ On sample sur tout le 1000Genome et que les européens.
   save_plot_timc_bcm_15(pl, "faible_struct_pop_vps.png")
 
   ## save
-  saveRDS(dat.Eu, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.rds")
+  saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds")
 #+end_src
 
 [[./Rplots/faible_struct_pop_vps.png]]
@@ -3626,18 +3647,56 @@ On va prendre $K = 2$ variables latentes.
 
 ***** Choix de K pour les méthodes
 Pour le moment on va prendre le K de la simulation.
-***** Run 
+***** Run on krak 
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.rds"
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds"
 
   exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = c(0.01, 0.05, 0.1),
+                                   outlier.props = 0.001,
                                    n = NULL, L = 10000,
                                    K = 2,
-                                   cs = c(0.2, 0.4, 0.6, 0.8),
-                                   nb.rep = 5,
+                                   K.method = 2,
+                                   cs = 0.1,
+                                   cs.sum = TRUE,
+                                   nb.rep = 2,
                                    fast.only = FALSE,
-                                   cluster.nb = 16,
-                                   save = TRUE, bypass = FALSE)
+                                   cluster.nb = 10,
+                                   save = FALSE, bypass = FALSE)
+
+  Article3_MethodComparison_plot_relative_diff_AUC(exp)
 #+end_src
+**** structure de population forte
+On sample sur tout le 1000Genome et que les européens.
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  ## read data, Warning very big file !
+  dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.rds")
+
+  ## keep only Eu and sample loci
+  L <- 5e5
+  sample.loci <- sample.int(ncol(dat$G), L)
+  dat$G <- dat$G[,sample.loci]
+
+  ## test
+  dat$indiv
+  str(dat$G)
+
+  ## PCA
+  svd.res <- svd(scale(dat$G,scale = FALSE), nu = 0, nv = 0)
+  vars <- svd.res$d / sum(svd.res$d)
+
+  ## plot
+  pl <- qplot(x = seq_along(vars), y = vars, geom='line') +
+    geom_point() +
+    coord_cartesian(xlim = c(1,50))
+  pl
+  save_plot_timc_bcm_15(pl, "forte_struct_pop_vps.png")
+
+  ## save
+  saveRDS(dat$G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu_Af_Afam.maf.05.G.rds")
+#+end_src
+
+[[./Rplots/forte_struct_pop_vps.png]]
+
+On va pendre $K = 2$.
