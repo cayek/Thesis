@@ -15,11 +15,12 @@ fit.final <- function(m, dat, reuse = FALSE) {
 ################################################################################
 
 #' @export
-finalLfmmRdigeMethod <- function(K, lambda, calibrate  = FALSE, prior.impute = FALSE, nickname = NULL) {
+finalLfmmRdigeMethod <- function(K, lambda, calibrate  = FALSE, prior.impute = FALSE, nickname = NULL,
+                                 correctionByC = FALSE) {
   m <- RidgeLFMMMethod(K = K,
                        hypothesis.testing.method = lm_zscore(calibrate = calibrate,
                                                              sigma.computation = "lm",
-                                                             correctionByC = FALSE),
+                                                             correctionByC = correctionByC),
                        lambda = lambda,
                        center = TRUE,
                        name = "RidgeLFMMMethod",
@@ -226,21 +227,24 @@ finalOracle <- function(K, calibrate = FALSE, correctionByC = FALSE) {
 
 #' @export
 finalBench <- function(K, lambda, calibrate, sparse.prop,
-                       fast.only = TRUE, with.missing = FALSE) {
+                       fast.only = TRUE, with.missing = FALSE,
+                       correctionByC = FALSE) {
     bench <- list()
     bench$lfmmRidge <- finalLfmmRdigeMethod(K = K,
                                             lambda = lambda,
-                                            calibrate = calibrate)
+                                            calibrate = calibrate,
+                                            correctionByC = correctionByC)
 
     bench$famt <- finalFamtMethod(K = K)
     bench$sva <- finalSVAMethod(K = K)
-    bench$refactor <- finalRefactorMethod(K = K, calibrate = calibrate)
+    ## bench$refactor <- finalRefactorMethod(K = K, calibrate = calibrate)
     bench$lm <- finalLm(calibrate = calibrate)
     bench$pcaLm <- finalPcaLm(K = K, calibrate = calibrate)
-    bench$oracle <- finalOracle(K = K, calibrate = calibrate)
+    bench$oracle <- finalOracle(K = K, calibrate = calibrate, correctionByC = correctionByC)
     bench$lfmmLasso <- finalLfmmLassoMethod(K = K,
                                             sparse.prop = sparse.prop,
-                                            calibrate = calibrate)
+                                            calibrate = calibrate,
+                                            correctionByC = correctionByC)
     if (!fast.only) {
       bench$lea <- finalLEAMethod(K = K)
 
@@ -249,7 +253,8 @@ finalBench <- function(K, lambda, calibrate, sparse.prop,
       bench$lfmm.ridge.impute.first <- finalLfmmRdigeMethod(K = K,
                                                             lambda = lambda,
                                                             calibrate = calibrate,
-                                                            prior.impute = TRUE)
+                                                            prior.impute = TRUE,
+                                                            correctionByC = correctionByC)
     }
     bench
 }

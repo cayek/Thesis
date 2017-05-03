@@ -3585,6 +3585,7 @@ C'est comparable a les loadings RDA1
 **** structure de population faible
 On sample sur tout le 1000Genome et que les européens.
 #+begin_src R :results output :exports both
+  library(ThesisRpackage)
   ## read data, Warning very big file !
   dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.rds")
 
@@ -3612,13 +3613,31 @@ On sample sur tout le 1000Genome et que les européens.
   pl <- qplot(x = seq_along(vars), y = vars, geom='line') +
     geom_point() +
     coord_cartesian(xlim = c(1,20))
+  pl
+  save_plot_timc_bcm_15(pl, "faible_struct_pop_vps.png")
 
   ## save
-  saveRDS(,"~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.rds")
-
+  saveRDS(dat.Eu, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.rds")
 #+end_src
 
-./Rplots/val
+[[./Rplots/faible_struct_pop_vps.png]]
+
+On va prendre $K = 2$ variables latentes.
 
 ***** Choix de K pour les méthodes
 Pour le moment on va prendre le K de la simulation.
+***** Run 
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.rds"
+
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.01, 0.05, 0.1),
+                                   n = NULL, L = 10000,
+                                   K = 2,
+                                   cs = c(0.2, 0.4, 0.6, 0.8),
+                                   nb.rep = 5,
+                                   fast.only = FALSE,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
+#+end_src

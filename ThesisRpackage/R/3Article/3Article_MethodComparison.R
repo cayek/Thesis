@@ -5,12 +5,19 @@ Article3_MethodComparison_main <- function(exp) {
       flog.info(paste0("outlier prop=",p, " and c=",paste0(c, collapse = "|")), name = "console")
       s <- exp$s
       s$prop.outlier <- p
-      s$cs <- c
+      if(exp$cs.sum) {
+        aux <- runif(s$K)
+        aux <- aux / sum(aux) * c
+        s$cs <- aux
+      } else {
+        s$cs <- c
+      }
       bench <- finalBench(K = exp$K.method,
                           lambda = 1e-5,
                           sparse.prop = p,
                           calibrate = FALSE,
-                          fast.only = exp$fast.only, with.missing = FALSE)
+                          fast.only = exp$fast.only, with.missing = FALSE,
+                          correctionByC = exp$correctionByC)
       exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = exp$nb.rep, s = s), bench))
       exp.aux <- runExperiment(exp.aux)
 
@@ -28,7 +35,7 @@ Article3_MethodComparison_main <- function(exp) {
 #' Article3_MethodComparison
 #'
 #' @param outlier.props proportion of outlier simulated
-#' @param cs correlation between PC1 and X
+#' @param cs if cs.sum = FALSE, correlation between PC1 and X. If cs.sum = TRUE, sum(PC,X) = cs
 #'
 #' @export
 Article3_MethodComparison <- function(G.file,
@@ -36,7 +43,9 @@ Article3_MethodComparison <- function(G.file,
                                       n = NULL, L = 10000,
                                       K = 4,
                                       K.method = K,
+                                      correctionByC = FALSE,
                                       cs = c(0.2, 0.4, 0.6, 0.8),
+                                      cs.sum = TRUE,
                                       nb.rep = 5,
                                       fast.only = TRUE,
                                       cluster.nb = NULL,
@@ -52,16 +61,20 @@ Article3_MethodComparison <- function(G.file,
                                      G.file = G.file,
                                      K = K,
                                      K.method = K.method,
+                                     correctionByC = correctionByC,
                                      fast.only = fast.only,
                                      n = n, L = L,
                                      cs = cs,
+                                     cs.sum = cs.sum,
                                      outlier.props = outlier.props,
                                      nb.rep = nb.rep)
   exp$fast.only <- fast.only
   exp$nb.rep <- nb.rep
   exp$outlier.props  <- outlier.props
   exp$cs  <- cs
+  exp$cs.sum  <- cs.sum
   exp$K.method <- K.method
+  exp$correctionByC <- correctionByC
   exp$s <- FromTrueSampler(G.file = G.file,
                            n = n,
                            L = L,
@@ -130,6 +143,38 @@ Article3_MethodComparison_plot_AUC <- function(exp) {
   ##   ungroup()
 
   ggplot(toplot, aes(x = method, y = auc, color = method)) +
+    geom_boxplot() +
+    facet_grid(`cor(U,X)` ~ outlier.prop)
+
+}
+
+#' @export
+Article3_MethodComparison_plot_relative_diff_AUC <- function(exp) {
+  assertthat::assert_that(exp$name == "Article3_MethodComparison")
+  TestRequiredPkg("DescTools")
+
+  ## compute AUC
+  toplot <- exp$df %>%
+    group_by(method, outlier.prop, `cor(U,X)`, rep) %>%
+    summarise(auc = DescTools::AUC(x = true.power, y = 1 - true.fdr)) %>%
+    ungroup()
+
+  ## compute relative diff
+  oracle.auc <- toplot %>%
+    dplyr::filter(method == "Oracle")
+
+  toplot <- dplyr::inner_join(toplot, oracle.auc, by = c("outlier.prop", "cor(U,X)", "rep")) %>%
+    dplyr::mutate(auc.relative.diff = (auc.y - auc.x) / auc.y,
+                  method = method.x) %>%
+    dplyr::filter(method != "Oracle")
+
+  ## compute mean and standard error
+  ## toplot <- toplot %>%
+  ##   group_by(method, outlier.prop, `cor(U,X)`) %>%
+  ##   summarise(auc.mean = mean(auc), mean.sd = sd(auc), mean.se = mean.sd / sqrt(length(auc))) %>%
+  ##   ungroup()
+
+  ggplot(toplot, aes(x = method, y = auc.relative.diff, color = method)) +
     geom_boxplot() +
     facet_grid(`cor(U,X)` ~ outlier.prop)
 
