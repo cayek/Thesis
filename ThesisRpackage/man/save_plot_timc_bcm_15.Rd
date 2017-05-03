@@ -4,7 +4,7 @@
 \alias{save_plot_timc_bcm_15}
 \title{save plot to png format on timc-bcm-15}
 \usage{
-save_plot_timc_bcm_15(pl, filename, width, height)
+save_plot_timc_bcm_15(pl, filename, width = 600, height = 400)
 }
 \description{
 save plot to png format on timc-bcm-15

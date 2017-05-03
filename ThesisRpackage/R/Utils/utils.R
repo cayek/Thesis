@@ -51,7 +51,7 @@ new_nb <- function(dir, name) {
 
 #' save plot to png format on timc-bcm-15
 #' @export
-save_plot_timc_bcm_15 <- function(pl, filename, width, height) {
+save_plot_timc_bcm_15 <- function(pl, filename, width = 600, height = 400) {
   tmp.file <- tempfile()
   png(tmp.file, width, height)
   print(pl)
