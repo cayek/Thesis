@@ -1679,6 +1679,15 @@ On sample sur tout le 1000Genome et que les européens.
 [[./Rplots/faible_struct_pop_vps.png]]
 
 On va prendre $K = 2$ variables latentes.
+#+begin_src R :results output :exports both
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds")
+
+  svd.res <- svd(G, nu = 0, nv = 0)
+  vars <- svd.res$d / sum(svd.res$d)
+
+#+end_src
+
+Var explained with 2 variables: 2.3 %
 
 ***** Choix de K pour les méthodes
 Pour le moment on va prendre le K de la simulation.
@@ -1740,13 +1749,25 @@ On sample sur tout le 1000Genome et que les européens.
   save_plot_timc_bcm_15(pl, "forte_struct_pop_vps.png")
 
   ## save
-  saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds")
+  saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu_Af_Afam.maf.05.G.rds")
 
 #+end_src
 
+#+RESULTS:
 [[./Rplots/forte_struct_pop_vps.png]]
 
 On va pendre $K = 4$.
+
+#+begin_src R :results output :exports both
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu_Af_Afam.maf.05.G.rds")
+
+  svd.res <- svd(G, nu = 0, nv = 0)
+  vars <- svd.res$d / sum(svd.res$d)
+
+  sum(vars[1:4])
+#+end_src
+
+Var explained with 4 variables: 2.3 %
 
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
