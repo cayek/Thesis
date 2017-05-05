@@ -1646,13 +1646,19 @@ On sample sur tout le 1000Genome et que les européens.
   rm(dat)
   gc()
 
+  ## filter sd == 0
+  G <- Preprocessing_filter_sd(G)
+  dim(G)
+
   ## sample loci
   L <- 5e5
   sample.loci <- sample.int(ncol(G), L)
-  G.sample <- G[, sample.loci]
+  G <- G[, sample.loci]
+  dim(G)
 
   ## standartization
-  G.scale <- scale(G.sample)
+  G <- scale(G)
+  anyNA(G)
 
   ## PCA
   svd.res <- svd(G, nu = 0, nv = 0)
@@ -1661,7 +1667,7 @@ On sample sur tout le 1000Genome et que les européens.
   ## plot
   pl <- qplot(x = seq_along(vars), y = vars, geom='line') +
     geom_point() +
-    coord_cartesian(xlim = c(1,20))
+    coord_cartesian(xlim = c(1,100))
   pl
   save_plot_timc_bcm_15(pl, "faible_struct_pop_vps.png")
 
@@ -1669,6 +1675,7 @@ On sample sur tout le 1000Genome et que les européens.
   saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds")
 #+end_src
 
+#+RESULTS:
 [[./Rplots/faible_struct_pop_vps.png]]
 
 On va prendre $K = 2$ variables latentes.
@@ -1701,39 +1708,45 @@ On sample sur tout le 1000Genome et que les européens.
   ## read data, Warning very big file !
   dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.rds")
 
-  ## sample loci
-  L <- 5e5
-  sample.loci <- sample.int(ncol(dat$G), L)
-  G <- dat$G[,sample.loci]
-
-  ## filter maf
-  maf <- apply(G, 2, function(l){p <- mean(l) / 2;min(p, 1 - p)})
-  out.index <- which(maf <= 0.5)
-  G <- G[,-out.index]
-  dim(G)
+  G <- dat$G
 
   ## rm for memory
   rm(dat)
   gc()
 
+  ## filter sd == 0
+  G <- Preprocessing_filter_sd(G)
+  dim(G)
+
+  ## sample loci
+  L <- 5e5
+  sample.loci <- sample.int(ncol(G), L)
+  G <- G[, sample.loci]
+  dim(G)
+
+  ## standartization
+  G <- scale(G)
+  anyNA(G)
+
   ## PCA
-  svd.res <- svd(scale(dat$G,scale = FALSE), nu = 0, nv = 0)
+  svd.res <- svd(G, nu = 0, nv = 0)
   vars <- svd.res$d / sum(svd.res$d)
 
   ## plot
   pl <- qplot(x = seq_along(vars), y = vars, geom='line') +
     geom_point() +
-    coord_cartesian(xlim = c(1,50))
+    coord_cartesian(xlim = c(1,100))
   pl
   save_plot_timc_bcm_15(pl, "forte_struct_pop_vps.png")
 
   ## save
-  saveRDS(dat$G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu_Af_Afam.maf.05.G.rds")
+  saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds")
+
 #+end_src
 
 [[./Rplots/forte_struct_pop_vps.png]]
 
-On va pendre $K = 2$.
+On va pendre $K = 4$.
 
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
