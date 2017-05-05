@@ -1092,7 +1092,7 @@ CLOSED: [2017-05-03 mer. 08:57]
              outlier = dat$outlier) +
     geom_point(aes(x = index, color = outlier, y = -log10(stat)))
 
-  #+end_src
+#+end_src
 
 *** LEA::lfmm
 :PROPERTIES:
@@ -1610,6 +1610,7 @@ C'est comparable a les loadings RDA1
 
 ** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
+CLOCK: [2017-05-05 ven. 09:47]
 - Note taken on [2017-05-03 mer. 18:10] \\
   J'en suis a sample les dataset et faire la svd sur la matrice STANDARDISED !!!!
 - State "STARTED"    from "TODO"       [2017-05-03 mer. 09:49]
@@ -1717,3 +1718,2021 @@ On sample sur tout le 1000Genome et que les européens.
 [[./Rplots/forte_struct_pop_vps.png]]
 
 On va pendre $K = 2$.
+* Articles
+** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
+:PROPERTIES:
+:Custom_ID: yang14_advan_pitfal_applic_mixed_model_assoc_method
+:AUTHOR:   Jian Yang, Noah A Zaitlen, Michael E Goddard, Peter M, Visscher \& Alkes L Price
+:JOURNAL:  Nature Genetics
+:YEAR:     2014
+:VOLUME:   46
+:PAGES:    100-106
+:DOI:      10.1038/ng.2876
+:URL:      https://doi.org/10.1038/ng.2876
+:END:
+
+cite:yang14_advan_pitfal_applic_mixed_model_assoc_method
+*** Abstract
+C'est un article sur les mixed-linear model pour les associations, en
+particulier il s'interesse au GWAS (donc plutot phénotype ~ génotype). Ils
+vont donner des recommendation sur l'utilisation des MLMA methods.
+
+*** Mixed-model association methods prevent false positive associations and increase power
+ok classic quand il y a de la structure d'échatillonage (structure de pop, parenté etc) elle est capté par la partie aléatoire
+le reste est incomprehenssible ....
+
+*** Reducing the computational cost of mixed-model association analysis
+il y a des améliorations computationnelles qui ont été faite et qui permette de passer a l'echelle.
+
+*** Pitfall: loss in power when the candidate marker is included in the GRM (genetic relationship matrix)
+C'est ce qui avait été constaté dans l'article de LFMM. La puissance diminue quand les merker candidats sont expliqué à la fois par les effets fixes et les effets aléatoires
+Après je crois qu'ils font des simultations numérique pour montrer ca.
+   
+*** Pitfall: using a small subset of markers in the GRM can compromise correction for stratification
+Tout est dans le titre... rien de nouveau.
+
+*** Pitfall: loss of power in ascertained case-control studies
+Les phénotype ne sont pas observé au hasard! surtout dans les cas controles, on a pas pris des gens au hasard, il y a surepresentation des malades evidament !! Mais ca fait quoi ?
+OK, ok, en fait c'est dans les étude ascertained qu'il y a un problème, il y a une perte de puissance. Ca me parait logique puisque on a des echantillion petit de malade par exemple. Apparament il y a des méthode qui corrige ca. Mais si on en detecte moins c'est par ce que a un taux d'erreur fixe la méthode ne peut rien dire !! mais c'est normal, il y a moins d'info. On va voir les simulations. 
+**** Tableau 3: file:./org-ref-pdfs/yang14_advan_pitfal_applic_mixed_model_assoc_method.pdf::4
+Ok il report les pvalues des des marker outlier... 
+***** Rmk: 
+On parle de pvaleur mais on enonce jamais les hypothèses. C'est implicite que 
+$H0_j$ : le marker j est neutre
+$H1_j$ : le marker j est associé au phénotype
+Biensur la modélisation n'est pas la même dans le modèle linéaire et MLMe. 
+Mais le raisonnement marche quand même c'est deux modèle sont vu comme des boites et la pvalues c'est la probabilité que sous H0 on observe un truc plus atypique, donc pvalue plus faible veux dire moins de puissance. Mais bon je suis pret a parier que les pvaleur de tous le monde sont plus faible dans le cas de MLMe et que le problème c'est juste l'application des teste d'hypothèse classic !! Je suis persuader qu'il faut quelqueshose de plus robuste pour les test d'hypothèse, avec moins de modèle et plus de logique ;)...
+     
+
+** 2015 - A Practical Guide To Environmental Association Analysis in  Landscape Genomics :LFMM:EAAReviewAndComparison:
+:PROPERTIES:
+:Custom_ID: rellstab15_pract_guide_to_envir_assoc
+:AUTHOR:   Christian Rellstab, Felix Gugerli, Andrew Eckert, , Angela Hancock \& Rolf Holderegger
+:JOURNAL:  Molecular Ecology
+:YEAR:     2015
+:VOLUME:   24
+:PAGES:    4348-4370
+:DOI:      10.1111/mec.13322
+:URL:      https://doi.org/10.1111/mec.13322
+:END:
+
+cite:rellstab15_pract_guide_to_envir_assoc
+*** Abstract
+bon il propose de faire un tableaux des méthodess d'association env, c'est parfait 
+pour lister les concurents à LFMM et voir ou sont les manques :D 
+*** The emergence of landscape genomics
+Il distbigue deux approches pour identifier les genes codant pour des phénotypes
+héritables : 
+- top-down: GWAS and QTL (quantitative trait locus: https://en.wikipedia.org/wiki/Quantitative_trait_locus) mapping. 
+  On mesure un phénotype et on le relie à un QTL ou un locus.
+- bottom-up: population and landscape genomics. On utilise l'information génétique
+  pour detecter les gènes sous selection (donc codant pour un phénotype impliqué dans un 
+  prcessus de selection)
+***** selective sweep                                            :definition:
+
+https://en.wikipedia.org/wiki/Selective_sweep
+Bon deja sweep ca veux dire balayage. C'est l'idée d'une propagation dans la population 
+d'un allele. Et dans ce cas c'est a cause d'une selection
+- hard selective sweep: dés que l'allele adaptatif arrive dans la généalogie il se 
+  propage très vite
+- soft selective sweep: la mutation neutre était déja présente dans la populations et 
+  elle devient adaptative a cause d'un changement de l'environnement.
+
+***** Box 1 file:./LFMM/Method/Bio/article_Rellstab_2015.pdf::2
+<<EAA_schemas>>
+[[./biblioImages/box1.jpg]]
+ 
+***** what is next
+Notations in the pdf.
+Il y a un tableau de méthodes pour l'EAA
+C'est pas un article de comparaison du coup il n'y a pas de dataset ni
+d'experiences. On va aller voir les autre article qu'il cite.
+
+** 2016 - Methods to study local adaptation and application to the context of high elevation in the Alpine plant Arabis alpina :LFMM:
+:PROPERTIES:
+:Custom_ID: thesis_Devillemereuil_2016
+:AUTHOR:   Villemereuil
+:JOURNAL:
+:YEAR:     2016
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:      https://tel.archives-ouvertes.fr/tel-01322336
+:END:
+
+cite:thesis_Devillemereuil_2016
+This the thesis of piere devillemereuil.
+
+*** Introduction Generale
+**** 2.3 Méthodologie statistique - paragraphe 1 file:./Thesis/thesis_Devillemereuil_2016.pdf::24
+Il fait la distinction entre deux types de scan genomique, le premier on ne sait pas si c'est adaptatif
+le deuxieme on le sais.
+Mais je suis pas sur de comprendre, ma disctinction: Genome = X (comme dans lfmm)
+ou X = G (comme dans les GWAS). 
+     
+*** Chapitre 1 : Étude et comparaison des méthodes de scan génomique pour détecter la sélection file:./Thesis/thesis_Devillemereuil_2016.pdf::29
+**** 1 Le problème des scan génomique file:./Thesis/thesis_Devillemereuil_2016.pdf::30
+Il discute du proèblème de définition de l'hypothèse nulle. Et du fait qu'il
+faut prendre en compte la structure de pop !! Interessant, derniere ligne,
+o, est passé a la problèmatique des tests multiples ! avant on ne testait
+que 1 seul locus, maintenant on en a la pelle.
+***** Remark pour ma thèse                                          :MaThese:
+mettre l'accent sur cette transition, on a de plus en plus de données =>
+test multiples. Eric n'a pas l'air dans parler.
+**** 2.3 Le point commun entre ces nouvelles méthodes file:./Thesis/thesis_Devillemereuil_2016.pdf::32
+Il identifie es hypothèses générales des méthodes de detection de la
+selection du type de LFMM cad 
+- beacoups de locus neutre
+- un modèle neutre souple pour s'adapter a toutes les situations
+  Sont premier papier va consister a comparer les méthodes sur des simultations.
+*** Article 1: Genome scan methods against more complex models: when and how much should we trust them?
+C'est l'article que j'ai déja parcouru... avec les resultats qui plantent
+tous le mondes ...
+**** Fig A16 file:./Thesis/thesis_Devillemereuil_2016.pdf::46
+Une reg avec une fausse variable, je comprends son histoire de spurious
+power... Par contre on pourrait faire ca pour tester le FDR observé quand X
+est faux (on en simule un ou on permute les X existants)
+**** Tab A1.2 file:./Thesis/thesis_Devillemereuil_2016.pdf::47      
+c'est une blague ce genre de tableau !! On ne peut pas comparer la
+puissance entre deux méthodes a un seuil fixe (ici 0.05) alors que le FDR
+n'est pas controlé ... La méthode qui renvoie tous le monde aurait le
+meilleur power et la pire puissance ! 
+    
+*** 5 Conclusions principales de l’article file:./Thesis/thesis_Devillemereuil_2016.pdf::51
+Il conclue que le taux de faux positif est non controlé
+Il aborde la combinaison de méthodes pour réduire 
+Il minimise en disant que c'est parce que le gradient env est dans le même
+sens que la structure de population...
+Je comprends pas son mot sur la simultation
+**** Remark perso sur les data de cette article  
+On ne va pas récuperer ces données surtout qu'il ne les utilise même dans
+l'article 2!! En faite si je vais les récuperer par ce que ca ne me coute
+rien mais bon je vais pas trop y croire !!
+*** Article 2 : A new FST-based method to uncover local adaptation using environmental variables file:./Thesis/thesis_Devillemereuil_2016.pdf::57 :BayeScEnv:
+github: http://github.com/devillemereuil/bayescenv
+**** Abstract: 
+Il fait la difference entre les méthodes Fst et avec variable environmental
+Sa methode distinque 2 cause de différenciation dans les disctribution alélique: 
+-divergent selection: cad une différenciation causée par la selection
+-le reste .... cad l'hystoire démographique, la selection de fond 
+(https://en.wikipedia.org/wiki/Background_selection c'est la selection qui reduit 
+la divesité à cause de l'environnement), c'est un des facteur confondants.
+    
+**** Model: 
+- il calcule Fst_ij dans le F model, c'est une Fst local qui décrit la structure 
+  de population. Ca mesure la différenciation génétique entre chaque sous population
+  et le pool de migrant. (voir Fig7: file:./Thesis/thesis_Devillemereuil_2016.pdf::54)
+- et en gros ce que je comprend c'est que après il cherche les locales fst qui sont corrélées
+  avec une mesure de la différenciation environementale.
+- c'est bayesien, il a 3 modèles et une probabilité $P(M2|ai,E)$ ou en gros $a_i$ et $E$ 
+  sont les mesures de la structure de pop et de l'environnement (voir file:./Thesis/thesis_Devillemereuil_2016.pdf::162) et il en déduit une propba d'erreur.
+***** Rmk   
+Ca fait un peu naif comme modèle, on dirrait que les grands concepts on tous été appliqués
+a la lettre (c'est une belle modélisation bayesienne en esperant qu ca va marcher a la fin) 
+mais en fait ca donne un modèle qui a l'arrivé est dure a fitter et qui a surement des problèmes
+mathématiques ...
+*** Pourquoi cette profusion de méthodes ? file:./Thesis/thesis_Devillemereuil_2016.pdf::73
+"course a la méthode idéale ..." 
+on peut justifier ca par le No Free Lunch theorem (https://en.wikipedia.org/wiki/No_free_lunch_theorem) 
+Ca dit que si un algo perform bien sur une classe de problème alors il ne sera pas le
+meilleur sur tous les autres problèmes.
+   
+
+   
+** 2014 - Accounting for Cellular Heterogeneity Is Critical in  Epigenome-Wide Association Studies :EWAS:
+:PROPERTIES:
+:Custom_ID: jaffe14_accoun_cellul_heter_is_critic
+:AUTHOR:   Andrew E Jaffe \& Rafael A Irizarry
+:JOURNAL:  Genome Biology
+:YEAR:     2014
+:VOLUME:   15
+:PAGES:    R31
+:DOI:      10.1186/gb-2014-15-2-r31
+:URL:      https://doi.org/10.1186/gb-2014-15-2-r31
+:END:
+
+cite:jaffe14_accoun_cellul_heter_is_critic
+EWAS data used in this article can be ddl here https://www.ncbi.nlm.nih.gov/gds/?term=GSE20242
+d'après O.F. la méthode est du même genre que dans lfmm. (la strucutre de pop est la composition cellulaire)
+*** Abstract
+Il propose une méthode qui prend en compte la composition cellulaire dans les etudes d'associations entre EWAS et des phénotypes ici l'age.
+
+** 2016 - Epigenome-Wide Association Study of Body Mass Index, and the  Adverse Outcomes of Adiposity :EWAS:
+:PROPERTIES:
+:Custom_ID: wahl16_epigen_wide_assoc_study_body
+:AUTHOR:   Simone Wahl {\it et al.}
+:JOURNAL:  Nature
+:YEAR:     2016
+:VOLUME:   541
+:PAGES:    81-86
+:DOI:      10.1038/nature20784
+:URL:      https://doi.org/10.1038/nature20784
+:END:
+
+cite:wahl16_epigen_wide_assoc_study_body
+ 
+C'est une EWAS avec l'indice de masse corporelle.
+
+
+** 2009 - Regression-based latent factor models               :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: agarwal09_regres
+:AUTHOR:   Deepak Agarwal \& Bee-Chung Chen
+:JOURNAL:
+:YEAR:     2009
+:VOLUME:
+:PAGES:    nil
+:DOI:      10.1145/1557019.1557029
+:URL:      https://doi.org/10.1145/1557019.1557029
+:END:
+
+cite:agarwal09_regres
+*** Domaine d'application
+Système de recommandation.
+data: 
+- MovieLens 943*1M
+*** Modèle 
+[[./biblioImages/2017_01_04_001_2017-01-04_14-21-14.png]]
+*** Algorithme
+Je comprend que c'est un Monte Carlo EM (a voir ce que c'est).
+*** Slides
+[[file:org-ref-pdfs/slides_agarwal09_regres.pdf]]
+** 2008 - High-Dimensional Sparse Factor Modeling: Applications in Gene  Epression Genomics :LFMMLike:
+:PROPERTIES:
+:Custom_ID: carvalho08_high_dimen_spars_factor_model
+:AUTHOR:   Carlos Carvalho, Jeffrey Chang, Joseph Lucas, , Joseph Nevins, Quanli Wang \& Mike West
+:JOURNAL:  Journal of the American Statistical Association
+:YEAR:     2008
+:VOLUME:   103
+:PAGES:    1438-1456
+:DOI:      10.1198/016214508000000869
+:URL:      https://doi.org/10.1198/016214508000000869
+:END:
+
+cite:carvalho08_high_dimen_spars_factor_model
+
+
+** 2013 - A Latent Factor Linear Mixed Model for High-Dimensional  Longitudinal Data Analysis :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: an13_laten_factor_linear_mixed_model
+:AUTHOR:   Xinming An, Qing Yang \& Peter Bentler
+:JOURNAL:  Statistics in Medicine
+:YEAR:     2013
+:VOLUME:   32
+:PAGES:    4229-4239
+:DOI:      10.1002/sim.5825
+:URL:      https://doi.org/10.1002/sim.5825
+:END:
+
+cite:an13_laten_factor_linear_mixed_model
+Le nom de la méthode c'est LFLMM ^^
+*** Application Domain
+High-dimensional longitudinal data analysis. Si je comprends bien c'est pour
+des etudes en médecine. SOn exemple sur des vrais données est la
+décroissance des capacité cognitif avec l'age.
+*** Model
+C'est quand même un peut différent que LFMM, il y un mixed model sur les
+facteurs lattents dans l'acp en gros...
+*** Algorithm
+EM
+*** Remarques
+Je n'arrive pas a bien comprendre l'interet d'un tel modèle dans son cas.
+
+** 2016 - Sparse Multivariate Factor Analysis Regression Models and Its  Applications To Integrative Genomics Analysis :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: zhou16_spars_multiv_factor_analy_regres
+:AUTHOR:   Yan Zhou, Pei Wang, Xianlong Wang, Ji Zhu, Peter \& Song
+:JOURNAL:  Genetic Epidemiology
+:YEAR:     2016
+:VOLUME:   41
+:PAGES:    70-80
+:DOI:      10.1002/gepi.22018
+:URL:      https://doi.org/10.1002/gepi.22018
+:END:
+
+cite:zhou16_spars_multiv_factor_analy_regres 
+
+C'est le même modèle que lfmm sauf que leur algo est un EM et il on une
+regularisation sparse. Par contre je n'ai pas trouvé de code. Mais ca peut
+valoir le coup d'implementer leur méthode.
+
+*Le modèle est très bien décrit dans ce papier !!* 
+*** TODO Remarques
+J'ai pas l'impression qu'ils fasse de test d'hyporhèse par contre.
+Leur B est le V de lfmm
+ 
+ 
+** 2010 - An accelerated proximal gradient algorithm for nuclear norm regularized linear least squares problems :LFMM:NuclearNorm:
+:PROPERTIES:
+:Custom_ID: article_Toh_Yun_2010
+:AUTHOR:   Kim-Chuan Toh \& Sangwoon Yun
+:JOURNAL:  Pacific Journal of Optimization
+:YEAR:     2010
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:article_Toh_Yun_2010
+C'est article est interessant pour file:./org-ref-pdfs/article_Toh_Yun_2010.pdf::9 
+Il donne le lien entre SVD et nuclear norm : 
+#+DOWNLOADED: /tmp/screenshot.png @ 2017-01-06 13:28:59
+[[file:org-download/Articles/screenshot_2017-01-06_13-28-59.png]]  
+   
+
+** 2004 - Generalized Multilevel Structural Equation Modeling :LFMM:LFMMLike:GLLAMM:
+:PROPERTIES:
+:Custom_ID: rabe-hesketh04_gener_multil_struc_equat_model
+:AUTHOR:   Sophia Rabe-Hesketh, Anders Skrondal \& Andrew Pickles
+:JOURNAL:  Psychometrika
+:YEAR:     2004
+:VOLUME:   69
+:PAGES:    167-190
+:DOI:      10.1007/bf02295939
+:URL:      https://doi.org/10.1007/bf02295939
+:END:
+
+cite:rabe-hesketh04_gener_multil_struc_equat_model
+
+** 2010 - A Singular Value Thresholding Algorithm for Matrix Completion :LFMM:NuclearNorm:
+:PROPERTIES:
+:Custom_ID: cai10_singul_value_thres_algor_matrix_compl
+:AUTHOR:   Jian-Feng Cai, Emmanuel Cand\`es \& Zuowei Shen
+:JOURNAL:  SIAM Journal on Optimization
+:YEAR:     2010
+:VOLUME:   20
+:PAGES:    1956-1982
+:DOI:      10.1137/080738970
+:URL:      https://doi.org/10.1137/080738970
+:END:
+
+cite:cai10_singul_value_thres_algor_matrix_compl
+Démo de
+#+DOWNLOADED: /tmp/screenshot.png @ 2017-01-06 14:49:43
+[[file:org-download/Articles/screenshot_2017-01-06_14-49-43.png]]
+Du coup c'est un example de preuve avec la norme nucléaire (donc calcul de subgradient).
+Rmk: dans la preuve il font pas l'analyse, il font que la synthèse. De toute facon ils ont 
+l'unicité car c'est strictement convexe !!!
+
+** 2016 - False Discovery Rates: a New Deal
+:PROPERTIES:
+:Custom_ID: stephens16_false_discov_rates
+:AUTHOR:   Matthew Stephens
+:JOURNAL:  Biostatistics
+:YEAR:     2016
+:VOLUME:   nil
+:PAGES:    kxw041
+:DOI:      10.1093/biostatistics/kxw041
+:URL:      https://doi.org/10.1093/biostatistics/kxw041
+:END:
+
+cite:stephens16_false_discov_rates
+Commentaries in the pdf.
+
+** 2007 - Capturing Heterogeneity in Gene Expression Studies by  Surrogate Variable Analysis :LFMMLike:
+:PROPERTIES:
+:Custom_ID: article_Leek_Storey_2007
+:AUTHOR:   Leek \& Storey
+:JOURNAL:  PLoS Genetics
+:YEAR:     2007
+:VOLUME:   3
+:PAGES:    e161
+:DOI:      10.1371/journal.pgen.0030161
+:URL:      http://dx.doi.org/10.1371/journal.pgen.0030161
+:END:
+
+cite:article_Leek_Storey_2007
+remark as okular commentary !! Supporting information and figure [[http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.0030161#s5][here]].
+ 
+
+*** Gene ranking more accurate and stable
+Le fait de prendre en compte la structure lattente donne un ranking des
+gênes plus stable. Ca pourait être un critere pour le choix de model :D
+*** The R package                                                  :Rpackage:
+http://www.genomine.org/sva/
+[[./org-ref-pdfs/Rpackage_sva.pdf][The SVA manual]]
+**** Overview
+- "Surrogate variables are covariates constructed directly
+  from high-dimensional data (like gene expression/RNA sequencing/
+  *methylation* /brain imaging data" : il propose de l'utiliser sur des
+  données de méthylation !!
+*** Simulations
+Ils en dit plus dans [[ref:article_Leek_Storey_2008][cette article]]
+** 2012 - Cross-Dimensional Inference of Dependent High-Dimensional  Data :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: article_Desai_Storey_2012
+:AUTHOR:   Desai \& Storey
+:JOURNAL:  Journal of the American Statistical Association
+:YEAR:     2012
+:VOLUME:   107
+:PAGES:    135–151
+:DOI:      10.1080/01621459.2011.645777
+:URL:      http://dx.doi.org/10.1080/01621459.2011.645777
+:END:
+
+cite:article_Desai_Storey_2012
+Rmk : notes in the pdf with okular
+
+*** 5.4 Multiple Testing
+Il compare 4 méthodes pour 
+- MLE
+- CDI
+- SVA
+- FAMT
+Je comprends que c'est sur des données simulé de son modèle : 
+
+#+DOWNLOADED: /tmp/screenshot.png @ 2017-01-10 15:04:44
+[[file:org-download/Articles/screenshot_2017-01-10_15-04-44.png]]
+
+avec E une structure de variance particulière, je pense que ca revient au même que mes simulation
+générative de lfmm.
+
+*/Mais quelle sva il utilise ? il y en a plein dans la doc/*
+Il cite cite:article_Leek_Storey_2007 and cite:article_Leek_Storey_2008 c'est les deux papiers
+a citer quand on utilise le package SVA pour enlever les batch effect et autre variation 
+non voulue d'apres file:./org-ref-pdfs/Rpackage_sva.pdf::11 
+
+*** Implementation
+Il n'y a pas de package R mais ils parlent de plusieurs pacakge pour l'implémentation
+    
+** 2008 - A general framework for multiple testing dependence :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: article_Leek_Storey_2008
+:AUTHOR:   Leek \& Storey
+:JOURNAL:  Proceedings of the National Academy of Sciences
+:YEAR:     2008
+:VOLUME:   105
+:PAGES:    18718–18723
+:DOI:      10.1073/pnas.0808709105
+:URL:      http://dx.doi.org/10.1073/pnas.0808709105
+:END:
+
+cite:article_Leek_Storey_2008
+Rmk : note in the pdf with okular
+*** Method
+C'est l'article qui vent le concepte de LFMM, c'est a dire la correction pour
+les fateurs de confusions
+
+#+DOWNLOADED: /tmp/screenshot.png @ 2017-01-10 09:34:10
+[[file:org-download/Articles/screenshot_2017-01-10_09-34-10.png]] 
+
+C'est pas nouveau comme concepte !!
+
+*** Remarques
+Ce qu'il appel G c'est U dans Lfmm et il est éstimé ! Le test est fait
+sashant cette estimation, quel est l'influence sur le tst d'hypothèse ??
+*** Apendix file:./org-ref-pdfs/SI_Leek_Storey_2008.pdf 
+remark in the pdf with okular Il dit que tout a été fait en language R mais
+ou est le code ????
+*** Comment calculer sont G (le V de lfmm)
+Il propose l'algo iteratively re- weighted surrogate variable analysis
+(IRW-SVA) : voir [[file:org-ref-pdfs/Rpackage_sva.pdf][ce R package]]. 
+
+Comme il décrit l'algo dans le [[file:LFMM/Method/StoreyStuff/SI_Leek_Storey_2008.pdf][sup info]] c'est exactement le principe de ce
+que on veut faire dans lfmm. Cad calculer G sans capter la variation causé
+par S : 
+#+BEGIN_QUOTE
+The basic idea when estimating G in this scenario is to identify a subset of
+tests whose data show a strong association with G, but not a strong
+association with S. The estimate of G can then be formed based on the
+right singular vectors of this subset. This approach accomplishes two
+things. -- cite:article_Leek_Storey_2008 
+#+END_QUOTE
+*** Simulations
+Voir le [[file:org-ref-pdfs/SI_Leek_Storey_2008.pdf][SI]]. Ca pourrait valoir le coup de faire ce genre de simulation. En
+tout les simulations son avantagueuse par rapport a l'algo SVA.
+
+
+** 2009 - A Factor Model Approach To Multiple Testing Under Dependence :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: friguet09_factor_model_approac_to_multip
+:AUTHOR:   Chlo\'e Friguet, Maela Kloareg \& David Causeur
+:JOURNAL:  Journal of the American Statistical Association
+:YEAR:     2009
+:VOLUME:   104
+:PAGES:    1406-1415
+:DOI:      10.1198/jasa.2009.tm08332
+:URL:      https://doi.org/10.1198/jasa.2009.tm08332
+:END:
+
+cite:friguet09_factor_model_approac_to_multip
+*** Poster
+file:./org-ref-pdfs/poster_friguet09_factor_model_approac_to_multip.pdf
+On retrouve les même chose que dans tous les papier LFMMLike
+*** R package                                                      :Rpackage:
+http://famt.free.fr/
+   
+** 2010 - Regularization Paths for Generalized Linear Models Via  Coordinate Descent :algorithm:Rpackage:
+:PROPERTIES:
+:Custom_ID: friedman10_regul_paths_gener_linear_model
+:AUTHOR:   Jerome Friedman, Trevor Hastie \& Robert Tibshirani
+:JOURNAL:  Journal of Statistical Software
+:YEAR:     2010
+:VOLUME:   33
+:PAGES:    nil
+:DOI:      10.18637/jss.v033.i01
+:URL:      https://doi.org/10.18637/jss.v033.i01
+:END:
+
+cite:friedman10_regul_paths_gener_linear_model
+C'est l'article vendu dans la doc de [[https://cran.r-project.org/web/packages/glmnet/glmnet.pdf][glmnet]]
+*** 2.5. Pathwise coordinate descent file:./org-ref-pdfs/friedman10_regul_paths_gener_linear_model.pdf:7
+On part du plus grand $\lambda$ et on decroit (en suivant une courbe logistique)
+pour atteindre un $\lambda_{min}$.
+On doit pouvoir faire ca avec les regularisations en nuclear norm.
+*** 3. Regularized logistic regression file:./org-ref-pdfs/friedman10_regul_paths_gener_linear_model.pdf:8
+Il decrit un peut plus l'algo. Avec la perte logistique on a plus la solution
+analytique du pb d'optim, c'est pour ca qu'il y a 3 boucles: 
+#+DOWNLOADED: /tmp/screenshot.png @ 2017-01-11 09:52:54
+[[file:org-download/Articles/screenshot_2017-01-11_09-52-54.png]] 
+**** Idée pour lfmm                                                 :MaThese:
+On n'a pas l'étape d'approximation quadratique (puisque ca l'ai déja). Mais 
+on fait une descente par bloc de coordonnées !! 
+Je pense même que l'on pourrait changer la fonction de perte en la mettant logistique
+et faire cette approximation quadratique. Ca peut faire une bonne ouverture pour la thèse.
+     
+     
+
+** 2015 - Binary Factorization Models for Statistical Relational Learning :LFMM:MaThese:
+:PROPERTIES:
+:Custom_ID: slides_Bouchard_WinterSchool2015
+:AUTHOR:   Guillaume Bouchard
+:JOURNAL:
+:YEAR:     2015
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:slides_Bouchard_WinterSchool2015 Slides présenté par Guillaume Bouchard à
+la winter school à Villard que j'ai fait en 2015 au début de ma thèse. Ce qui
+m'interesse est sur le slide 21. Il parle facteur analysis sur des données
+binaires. Je pense que faire de même avec lfmm est une bonne idée, ca peut
+faire des pistes pour des ouvertures.
+
+** 2016 - Reference-free deconvolution of DNA methylation data and  mediation by cell composition effects :LFMM:EWAS:
+:PROPERTIES:
+:Custom_ID: article_Houseman_2016
+:AUTHOR:   Houseman, Kile, Christiani, , Ince, Kelsey \& Marsit
+:JOURNAL:  BMC Bioinformatics
+:YEAR:     2016
+:VOLUME:   17
+:PAGES:
+:DOI:      10.1186/s12859-016-1140-4
+:URL:      http://dx.doi.org/10.1186/s12859-016-1140-4
+:END:
+
+cite:article_Houseman_2016
+C'est une méthode pour faire des de l'association avec des données de méthylation de l'adn 
+et d'autre facteurs (je comprends que le but des d'identifier les zones du génome exprimé en 
+association avec des co variables).
+La méthode est comme LFMM
+*** Background
+DNA methylation : $Y$  (rmk transposer du sens de LFMM) valeur dans $[0,1]$, c'est la proportion 
+de methylated cytosine molecules à ce locus...
+$Y = M \Hommega^T$ ou $M$ est l'état de méthylation et $\Hommega$ le type des cellules.
+Donc $M$ c'est la base et $\Hommega$ les quantité de chaque echantillon dans cette base.
+Il parle apres d'une méthode que resemble à LFMM. Du coup sa méthode est différente ?
+**** Le méthode    
+Il fait un NMF avec des contrainte en plus sur $\Hommega$ et $M$ ... comme sNMF. Jusque ici c'est classique. Je comprends pas ou intervient $X$ les co-variable??
+*** Methods                                                       :mediation:
+C'est plus detaillé dans le supplementary material S1, c'était un .docx mdrrrrr
+file:./org-ref-pdfs/S1_Houseman_2016.pdf
+Je comprends qu'il fait deux type d'association 
+- dans S4 c'est $\Hommega$ ~ $X$ 
+- et dans S5 c'est Y ~ X + \Hommega
+  Du coup c'est pas du lfmm, dans le sens ou il fait pas tout en une fois, c'est comme faire l'acp 
+  et après le mettre dans lm.
+  Ce que je comprend pas c'est pour il fait les deux associations ? C'est ca la [[https://en.wikipedia.org/wiki/Mediation_(statistics)][mediation]] ? 
+  Dans ce cas : 
+  #+DOWNLOADED: file:///home/cayek/Téléchargements/screenshot_001.jpg @ 2017-01-12 11:03:43
+  [[file:org-download/Articles/screenshot_001_2017-01-12_11-03-43.jpg]]
+
+  Finnalement LFMM est un modèle qui permet de faire de la médiation ...
+*** Implementation
+Dans la doc de [[https://cran.r-project.org/web/packages/RefFreeEWAS/index.html][RefFreeEWAS]] il dit que Houseman 2016 est implementé dans ce package.
+
+** 2014 - Reference-Free Cell Mixture Adjustments in Analysis of Dna  Methylation Data :LFMM:LFMMLike:Rpackage:EWAS:
+:PROPERTIES:
+:Custom_ID: houseman14_refer_free_cell_mixtur_adjus
+:AUTHOR:   Houseman, Molitor \& Marsit
+:JOURNAL:  Bioinformatics
+:YEAR:     2014
+:VOLUME:   30
+:PAGES:    1431-1439
+:DOI:      10.1093/bioinformatics/btu029
+:URL:      https://doi.org/10.1093/bioinformatics/btu029
+:END:
+
+cite:houseman14_refer_free_cell_mixtur_adjus
+Celui la c'est un lfmm like !!
+*** TODO Method
+Il dit que c'est similaire à SVA
+Il y a des notations partout... on va voir le package R [[https://cran.r-project.org/web/packages/RefFreeEWAS/RefFreeEWAS.pdf][RefFreeEWAS]] (il y a pas de vignette...)
+Ok j'y comprend rien...
+
+** TODO - 2015 Testing Mediation with Regression Analysis         :mediation:
+:PROPERTIES:
+:Custom_ID: tuto_mediation_2015
+:AUTHOR:
+:JOURNAL:
+:YEAR:     2015
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:tuto_mediation_2015
+C'est un tuto pour faire des test sur la médiation. 
+Ce que je comprends est que le but est d'identifier le role joué par M dans un lien de 
+causalité. 
+ 
+
+** TODO 2001 - Direct and indirect effects                  :CausalInference:
+:PROPERTIES:
+:Custom_ID: pearl2001direct
+:AUTHOR:   Pearl
+:JOURNAL:
+:YEAR:     2001
+:VOLUME:
+:PAGES:    411--420
+:DOI:
+:URL:
+:END:
+
+cite:pearl2001direct
+D'après of c'est un des papes de l'inference causal
+
+** TODO 2012 - Dna Methylation Arrays As Surrogate Measures of Cell Mixture  Distribution :LFMM:EWAS:
+:PROPERTIES:
+:Custom_ID: houseman12_dna_methy_array_as_surrog
+:AUTHOR:   Eugene Houseman {\it et al.}
+:JOURNAL:  BMC Bioinformatics
+:YEAR:     2012
+:VOLUME:   13
+:PAGES:    86
+:DOI:      10.1186/1471-2105-13-86
+:URL:      https://doi.org/10.1186/1471-2105-13-86
+:END:
+
+cite:houseman12_dna_methy_array_as_surrog
+ 
+** 2013 - Testing for Associations Between Loci and Environmental  Gradients Using Latent Factor Mixed Models :LFMM:
+:PROPERTIES:
+:Custom_ID: frichot13_testin_assoc_between_loci_envir
+:AUTHOR:   Frichot, Schoville, Bouchard, \& Francois
+:JOURNAL:  Molecular Biology and Evolution
+:YEAR:     2013
+:VOLUME:   30
+:PAGES:    1687-1699
+:DOI:      10.1093/molbev/mst063
+:URL:      https://doi.org/10.1093/molbev/mst063
+:END:
+
+cite:frichot13_testin_assoc_between_loci_envir
+C'est l'article d'LFMM
+
+*** Simulations
+Il fait des simulations avec que des H0, il utilise le model de stepping
+stone pour ca. *MAIS* je ne comprend pas comment il fait ses simulations
+avec la seletion. 
+
+** TODO 2008 - Bolasso
+:PROPERTIES:
+:Custom_ID: Bach_2008
+:AUTHOR: Bach
+:JOURNAL: Proceedings of the 25th international conference on Machine
+learning - ICML ’08
+:YEAR: 2008
+:VOLUME: 
+:PAGES: 
+:DOI: 10.1145/1390156.1390161
+:URL: http://dx.doi.org/10.1145/1390156.1390161
+:END:
+
+cite:Bach_2008 
+Je suis tombé sur ce papier en cherchant sur google [[https://www.google.fr/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=bootstrap%20lasso][bootstrap lasso]]
+Comme c'est un papier de ce bon vieux Bach
+
+** TODO 2013 - Low-Rank Optimization with Trace Norm Penalty
+:PROPERTIES:
+:Custom_ID: article_Mishra_Meyer_Bach_Sepulchre_2011
+:AUTHOR:   Mishra, Meyer, Bach \& Sepulchre
+:JOURNAL:  SIAM Journal on Optimization
+:YEAR:     2013
+:VOLUME:   23
+:PAGES:    2124–2149
+:DOI:      10.1137/110859646
+:URL:      http://dx.doi.org/10.1137/110859646
+:END:
+
+cite:article_Mishra_Meyer_Bach_Sepulchre_2011
+
+** TODO 2007 - Size, Power and False Discovery Rates                    :FDR:
+:PROPERTIES:
+:Custom_ID: efron07_size_power_false_discov_rates
+:AUTHOR:   Bradley Efron
+:JOURNAL:  The Annals of Statistics
+:YEAR:     2007
+:VOLUME:   35
+:PAGES:    1351-1377
+:DOI:      10.1214/009053606000001460
+:URL:      https://doi.org/10.1214/009053606000001460
+:END:
+
+cite:efron07_size_power_false_discov_rates
+Un article d'efrond un peu meta je pense.. A LIRE pour la parti sur le FDR pour ma thèse.
+ 
+
+** 2016 - Panning for Gold: Model-free Knockoffs for High-dimensional Controlled Variable Selection :FDR:
+:PROPERTIES:
+:Custom_ID: candes2016panning
+:AUTHOR:   Candes, Fan, Janson \& Lv
+:JOURNAL:  arXiv preprint arXiv:1610.02351
+:YEAR:     2016
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:candes2016panning 
+ 
+C'est le papier qui devellope la théorie des knockoff en détail, il y a aussi
+une revu des méthodes classiques des tests d'hypothèses. 
+ 
+
+** 2015 - Controlling the false discovery rate via knockoffs :HypothesisTesting:MultipleTesting:
+:PROPERTIES:
+:Custom_ID: Barber_2015
+:AUTHOR:   Barber \& Candès
+:JOURNAL:  The Annals of Statistics
+:YEAR:     2015
+:VOLUME:   43
+:PAGES:    2055–2085
+:DOI:      10.1214/15-aos1337
+:URL:      http://dx.doi.org/10.1214/15-aos1337
+:END:
+
+cite:Barber_2015 C'est le premier papier sur les knockoffs. Il décrit la
+méthode et la compare. 
+
+*** TODO Implementation                                            :Rpackage:
+Il y a un pacakge :
+https://cran.r-project.org/web/packages/knockoff/knockoff.pdf
+
+** 2010 - Rank Constrained Matrix Optimization Problems                :LFMM:
+:PROPERTIES:
+:Custom_ID: slides_Rk_Const_Matrix_Optim_2015
+:AUTHOR:   Defeng Sun
+:JOURNAL:
+:YEAR:     2010
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:slides_Rk_Const_Matrix_Optim_2015
+C'est pour le slides 2 ils y a les référence pour montrer que min avec
+contraintes du rank à une solution analytique qui est la svd de rank K.
+
+** TODO 2000 - On the Convergence of the Block Nonlinear Gauss-Seidel Method  Under Convex Constraints :Optimisation:
+:PROPERTIES:
+:Custom_ID: grippo00_conver_block_nonlin_gauss_seidel
+:AUTHOR:   Grippo \& Sciandrone
+:JOURNAL:  Operations Research Letters
+:YEAR:     2000
+:VOLUME:   26
+:PAGES:    127-136
+:DOI:      10.1016/s0167-6377(99)00074-7
+:URL:      https://doi.org/10.1016/s0167-6377(99)00074-7
+:END:
+
+cite:grippo00_conver_block_nonlin_gauss_seidel
+C'est le papier que j'ai cité dans TESS3 article 2 pour justifier la
+convergeance du mon algo.
+ 
+ 
+** 2009 - Genome-wide association analysis by lasso penalized logistic  regression :GWAS:Lasso:
+:PROPERTIES:
+:Custom_ID: Wu_2009
+:AUTHOR:   Wu, Chen, Hastie, Sobel, \& Lange
+:JOURNAL:  Bioinformatics
+:YEAR:     2009
+:VOLUME:   25
+:PAGES:    714–721
+:DOI:      10.1093/bioinformatics/btp041
+:URL:      http://dx.doi.org/10.1093/bioinformatics/btp041
+:END:
+
+cite:Wu_2009
+La partie test d'hypothèse est vraiment mal détaillé !! J'ai l'impression qu'il
+estime des variables avec le lasso et après sur les selectionnés éstime la
+vraisemblance en mettant de coté a chaque fois chacune des vars mais sans lasso.
+Il dit pas comment il obtiend ses pvalue.....
+ 
+** TODO 2014 - A significance test for the lasso                      :Lasso:
+:PROPERTIES:
+:Custom_ID: Lockhart_2014
+:AUTHOR:   Lockhart, Taylor, Tibshirani, \& Tibshirani
+:JOURNAL:  The Annals of Statistics
+:YEAR:     2014
+:VOLUME:   42
+:PAGES:    413–468
+:DOI:      10.1214/13-aos1175
+:URL:      http://dx.doi.org/10.1214/13-aos1175
+:END:
+
+cite:Lockhart_2014
+C'est papier du test stat pour les modèle linéaire avec regularisation lasso. 
+ 
+Voici un présentation qui va avec [[file:MultipleTesting/pres_Tibshirani_2013.pdf]]
+
+** TODO 2016 - Ten Simple Rules for Structuring Papers
+:PROPERTIES:
+:Custom_ID: kording16_ten_simpl_rules_struc_paper
+:AUTHOR:   Kording \& Mensh
+:JOURNAL:
+:YEAR:     2016
+:VOLUME:
+:PAGES:
+:DOI:      10.1101/088278
+:URL:      https://doi.org/10.1101/088278
+:END:
+
+cite:kording16_ten_simpl_rules_struc_paper
+I printed it !!!
+
+** 2016 - Fast Inference of Individual Admixture Coefficients Using  Geographic Data :TESS3_article2:
+:PROPERTIES:
+:Custom_ID: Caye_2016
+:AUTHOR:   Caye, Jay, Michel, Francois \& Olivier
+:JOURNAL:
+:YEAR:     2016
+:VOLUME:
+:PAGES:
+:DOI:      10.1101/080291
+:URL:      http://dx.doi.org/10.1101/080291
+:END:
+
+cite:Caye_2016
+ 
+
+** 2000 - On the convergence of the block nonlinear Gauss–Seidel method  under convex constraints :Optimisation:TESS3_article2:
+:PROPERTIES:
+:Custom_ID: Grippo_2000
+:AUTHOR:   Grippo \& Sciandrone
+:JOURNAL:  Operations Research Letters
+:YEAR:     2000
+:VOLUME:   26
+:PAGES:    127–136
+:DOI:      10.1016/s0167-6377(99)00074-7
+:URL:      http://dx.doi.org/10.1016/s0167-6377(99)00074-7
+:END:
+
+cite:Grippo_2000 C'est le papier por justifier la convergence de l'algo 1 dans
+le papier TESS3_article2.
+
+** 1997 - Nonlinear Programming                 :Optimisation:TESS3_article2:
+:PROPERTIES:
+:Custom_ID: Bertsekas_1997
+:AUTHOR:   Bertsekas
+:JOURNAL:  Journal of the Operational Research Society
+:YEAR:     1997
+:VOLUME:   48
+:PAGES:    334–334
+:DOI:      10.1057/palgrave.jors.2600425
+:URL:      http://dx.doi.org/10.1057/palgrave.jors.2600425
+:END:
+
+cite:Bertsekas_1997 C'est le papier toujours cité pour les [[file:./org-ref-pdfs/bertsekas_1997.pdf:135][block coordinate
+descent]] (voir a la page 135). Le resultat de congergence s'applique sur des
+ensembles convexes fermés.
+
+** 2016 - Recovery guarantee of weighted low-rank approximation via  alternating minimization :Optimisation:
+:PROPERTIES:
+:Custom_ID: li16_recov
+:AUTHOR:   Yuanzhi Li, Yingyu Liang \& Andrej Risteski
+:JOURNAL:
+:YEAR:     2016
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:li16_recov
+Article proposé par flora dans un mail : 
+---
+Pour info
+Un chercheur de mon équipe m'a parlé de whitening pour améliorer l'alternating LS (et surtout pour avoir un résultat théorique  pour avoir des résultats théoriques à propos de la convergence). C'était très rapide donc j'ai pas eu plus d'explications mais un papier : https://arxiv.org/pdf/1602.02262v1.pdf
+---
+ 
+C'est un papier pas mal si je veux faire de la biblio sur les aproximations de
+matrice de rank faible par de l'optimization.
+
+** 2010 - Spectral Regularization Algorithms for Learning Large  Incomplete Matrices :LFMM:Rpackage:
+:PROPERTIES:
+:Custom_ID: mazumder10_spect_regul_algor_learn_large_incom_matric
+:AUTHOR:   Mazumder, Hastie \& Tibshirani
+:JOURNAL:  Journal of machine learning research
+:YEAR:     2010
+:VOLUME:   11
+:PAGES:    2287--2322
+:DOI:
+:URL:
+:END:
+
+cite:mazumder10_spect_regul_algor_learn_large_incom_matric C'est l'article du
+Rpackage SOFT-IMPUTE: [[./LFMM/NuclearNorm/RpackageSoftImpute_Hastie_2015.pdf][doc]] Il propose un algo dit EM pour faire de l'imputation,
+ca m'interesse car ca peut etre un moyen de faire le fit de lfmm sans avoir a
+imputer au préalable !!
+
+
+** 2015 - The Relative Power of Genome Scans To Detect Local Adaptation  Depends on Sampling Design and Statistical Method :LFMM:EAAReviewAndComparison:
+:PROPERTIES:
+:Custom_ID: lotterhos15_relat_power_genom_scans_to
+:AUTHOR:   Katie Lotterhos \& Michael Whitlock
+:JOURNAL:  Molecular Ecology
+:YEAR:     2015
+:VOLUME:   24
+:PAGES:    1031-1046
+:DOI:      10.1111/mec.13100
+:URL:      https://doi.org/10.1111/mec.13100
+:END:
+
+cite:lotterhos15_relat_power_genom_scans_to
+Mdr les graphes de ce papier... ils sont gros et ne disent pas grands choses
+... Mais j'ai du choper une version pas review, il y a plien de trucs qui sont
+pas acceptable (surtout en matiere de graphe je trouve !)
+Bon en tout cas on peut peut ètre choper ses simulations.
+
+** 2011 - Significance testing in ridge regression for genetic data
+:PROPERTIES:
+:Custom_ID: Cule_2011
+:AUTHOR:   Cule, Vineis \& De Iorio
+:JOURNAL:  BMC Bioinformatics
+:YEAR:     2011
+:VOLUME:   12
+:PAGES:    372
+:DOI:      10.1186/1471-2105-12-372
+:URL:      http://dx.doi.org/10.1186/1471-2105-12-372
+:END:
+
+cite:Cule_2011
+Papier dans lequel il developpe le modèle ridge linéaire et logistique. Il font
+des tests d'hypothèse en calculant la variance de B.
+
+** 2016 - Sparse PCA corrects for cell type heterogeneity in  epigenome-wide association studies :LFMM:EWAS:
+:PROPERTIES:
+:Custom_ID: Rahmani_2016
+:AUTHOR:   Rahmani {\it et al.}
+:JOURNAL:  Nature Methods
+:YEAR:     2016
+:VOLUME:   13
+:PAGES:    443–445
+:DOI:      10.1038/nmeth.3809
+:URL:      http://dx.doi.org/10.1038/nmeth.3809
+:END:
+
+cite:Rahmani_2016
+
+C'est la papier qui présente ReFACTor. [[http://www.cs.tau.ac.il/~heran/cozygene/software/refactor.html][Le sowftware ici]]. L'idée est que l'on
+corrige sans connaitre la composition cellulaire à priorie donc on l'apprend
+dans les data. Eux avec l'acp sparse. Comme je le comprend il prenne un sous
+ensemblde de snps pour estimer la structure cellulaire... Ou plutot tous les
+sites de méthylation ne sont pas considérer egualement informatif, c'est pour
+ca qu'il y a une liste rangé de site de méthylation en sorti de leur
+algorithme. 
+ 
+*** Suplementary Information: 
+Un regal :D
+- file:./org-ref-pdfs/ST_Rahmani_2016.pdf
+- file:./org-ref-pdfs/SF_Rahmani_2016.pdf
+*** Software
+C'est un script R... (super TP les gars !!13/20)
+- README: file:./org-ref-pdfs/README_Rahmani_2016.pdf 
+
+*** Rmk perso et comparaison avec lfmm
+En faite c'est juste l'acp fait sur les t (dans le code t = 500 par defaut)
+site les plus proche de la low rank structure... ^_^'
+    
+Du coup ca marche très bien sur mes simulations dites lfmm normales. Normal
+il fait une acp mais pas sur tout le monde. Du coup c'est très simple pour
+moi de le planter, il suffit qu'il y ai beaucoups d'outlier ( 60 % dans mes
+tests ^^). Après je suis pas sur que ca arrive en pratique.
+
+L'idée est pas mauvaise finalement et très simple, et je suis que en
+fouillant je tomberais sur la même idée pour les GWAS. 
+
+** 2014 - Epigenome-wide association studies without the need for  cell-type composition :EWAS:
+:PROPERTIES:
+:Custom_ID: Zou_2014
+:AUTHOR:   Zou, Lippert, Heckerman, , Aryee \& Listgarten
+:JOURNAL:  Nature Methods
+:YEAR:     2014
+:VOLUME:   11
+:PAGES:    309–311
+:DOI:      10.1038/nmeth.2815
+:URL:      http://dx.doi.org/10.1038/nmeth.2815
+:END:
+
+cite:Zou_2014
+Un autre papier qui fait l'étude du dataset ewas RA ([[https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE42861][GSE42861]]).
+
+Suplementary materials: file:./org-ref-pdfs/SM_Zou_2016.pdf
+
+*** Datasets and data processing
+C'est bien mieux détaillé que quand l'article cite:Rahmani_2016 !! On va
+faire le preprocessing de cette aritcle. De toute facon l'objectif est de se
+comparer au papier cite:Zou_2014 avec la méthode qui connait la composition
+cellulaire ! 
+
+*** Simulations
+Ils ont simulé des données a partir du dataset RA cf page 5.
+
+** TODO 2011 - Epigenome-wide association studies for common human diseases :EWAS:
+:PROPERTIES:
+:Custom_ID: Rakyan_2011
+:AUTHOR:   Rakyan, Down, Balding, \& Beck
+:JOURNAL:  Nature Reviews Genetics
+:YEAR:     2011
+:VOLUME:   12
+:PAGES:    529–541
+:DOI:      10.1038/nrg3000
+:URL:      http://dx.doi.org/10.1038/nrg3000
+:END:
+
+cite:Rakyan_2011
+
+C'est article pour présenter le problème des EWAS par rapport au GWAS dans les
+études d'association avec des maladies. Il parle des facteurs de confusions
+dans les données EWAS. Je pense que c'est l'article a citer pour justifier
+l'utilisation de LFMM dans les EWAS. Il a été cité plus de 600 fois.
+
+** 2015 - Testing for genetic associations in arbitrarily structured  populations :GWAS:
+:PROPERTIES:
+:Custom_ID: Song_2015
+:AUTHOR:   Song, Hao \& Storey
+:JOURNAL:  Nature Genetics
+:YEAR:     2015
+:VOLUME:   47
+:PAGES:    550–554
+:DOI:      10.1038/ng.3244
+:URL:      http://dx.doi.org/10.1038/ng.3244
+:END:
+
+cite:Song_2015 C'est la papier qui m'a inspiré les plots de comparaisons. Il y
+a un gros [[file:org-ref-pdfs/SI_Song_2015.pdf][Sup Info]].
+ 
+*** Preprint
+[[file:org-ref-pdfs/preprint_Song_2015.pdf]] Papier trouvé dans la biblio que OF
+m'a donnée en début de thèse.
+
+** 2013 - Epigenome-wide association data implicate DNA methylation as  an intermediary of genetic risk in rheumatoid arthritis :EWAS:
+:PROPERTIES:
+:Custom_ID: Liu_2013
+:AUTHOR:   Liu {\it et al.}
+:JOURNAL:  Nature Biotechnology
+:YEAR:     2013
+:VOLUME:   31
+:PAGES:    142–147
+:DOI:      10.1038/nbt.2487
+:URL:      http://dx.doi.org/10.1038/nbt.2487
+:END:
+
+cite:Liu_2013
+C'est le papier pour présenté les données RA GSE42861 des articles
+cite:Zou_2014,Rahmani_2016.
+ 
+
+** 2008 - Worldwide Human Relationships Inferred from Genome-Wide  Patterns of Variation
+:PROPERTIES:
+:Custom_ID: Li_2008
+:AUTHOR:   Li {\it et al.}
+:JOURNAL:  Science
+:YEAR:     2008
+:VOLUME:   319
+:PAGES:    1100–1104
+:DOI:      10.1126/science.1153717
+:URL:      http://dx.doi.org/10.1126/science.1153717
+:END:
+
+cite:Li_2008
+C'est l'article du dataset HGDP utilisé dans cite:frichot13_testin_assoc_between_loci_envir. 
+
+** 2009 - Gestion des donn{\'e}es manquantes en analyse en composantes principales :LFMM:PCA:
+:PROPERTIES:
+:Custom_ID: josse2009gestion
+:AUTHOR:   Josse, Pages \& Husson
+:JOURNAL:  Journal de la Soci{\'e}t{\'e} Fran{\c{c}}aise de Statistique
+:YEAR:     2009
+:VOLUME:   150
+:PAGES:    28--51
+:DOI:
+:URL:
+:END:
+
+cite:josse2009gestion
+Un article en francais sur les méthodes d'ACP quand il y a des missing value.
+Ca m'interesse parce que pour lfmm avec des missing value je vais alterner ma
+procedure jusqu'a convergeance. Elle a l'aire de dire que ca converge.
+
+** 2015 - Visualizing spatial population structure with estimated  effective migration surfaces :TESS3:MaThese:
+:PROPERTIES:
+:Custom_ID: Petkova_2015
+:AUTHOR:   Petkova, Novembre \& Stephens
+:JOURNAL:  Nature Genetics
+:YEAR:     2015
+:VOLUME:   48
+:PAGES:    94–100
+:DOI:      10.1038/ng.3464
+:URL:      http://dx.doi.org/10.1038/ng.3464
+:END:
+ 
+cite:Petkova_2015
+ 
+Article important pour ma thèse, c'est une méthode qui permet de visualiser une
+stat qu'ils appellent le coefficient de migration sur une carte donc c'est la
+même idée que TESS3. Ca montre que maper les populations sur une carte est
+important ! C'est interessant pour l'intro aussi, pour s'inspirer pour la thèse
+:D
+
+** TODO 2014 - Efficient multivariate linear mixed model algorithms for  genome-wide association studies
+:PROPERTIES:
+:Custom_ID: Zhou_2014
+:AUTHOR:   Zhou \& Stephens
+:JOURNAL:  Nature Methods
+:YEAR:     2014
+:VOLUME:   11
+:PAGES:    407–409
+:DOI:      10.1038/nmeth.2848
+:URL:      http://dx.doi.org/10.1038/nmeth.2848
+:END:
+
+cite:Zhou_2014
+Cette version du papier est très complete et m'a beaucoup inspiré ! 
+
+** 2013 - Polygenic Modeling with Bayesian Sparse Linear Mixed Models :LFMM:GWAS:
+:PROPERTIES:
+:Custom_ID: Zhou_2013
+:AUTHOR:   Zhou, Carbonetto \& Stephens
+:JOURNAL:  PLoS Genetics
+:YEAR:     2013
+:VOLUME:   9
+:PAGES:    e1003264
+:DOI:      10.1371/journal.pgen.1003264
+:URL:      http://dx.doi.org/10.1371/journal.pgen.1003264
+:END:
+ 
+cite:Zhou_2013 C'est la méthode implémenté dans GEMMA pour les GWAS polygenic.
+Se je comprends bien il dit que on sait pas trop quoi choisir entre le linear
+mixed model et la regression sparse => il fait un modèle bayesien qui est
+melange des deux et du coup c'est senser apprendre le meilleur vu que c'est
+bayesien :D comme ca pas d'hypothèse.
+
+*** TODO Pour ma thèse                                              :MaThese:
+Faudrait que je lise l'intro de ce papier, en général les papier avec
+stephens son bien écrit. Le résumé est pas mal ! 
+
+** 1982 - Conflict Among the Criteria Revisited; The W, LR and LM Tests :LFMM:HypothesisTesting:
+:PROPERTIES:
+:Custom_ID: Evans_1982
+:AUTHOR:   Evans \& Savin
+:JOURNAL:  Econometrica
+:YEAR:     1982
+:VOLUME:   50
+:PAGES:    737
+:DOI:      10.2307/1912611
+:URL:      http://dx.doi.org/10.2307/1912611
+:END:
+
+cite:Evans_1982
+Article cité dans [[ref:Zhou_2014][cet article]] pour justifier la calibration des pvalues.
+
+** 1984 - Hypothesis Testing in Linear Models when the Error Covariance  Matrix is Nonscalar :LFMM:HypothesisTesting:
+:PROPERTIES:
+:Custom_ID: Rothenberg_1984
+:AUTHOR:   Rothenberg
+:JOURNAL:  Econometrica
+:YEAR:     1984
+:VOLUME:   52
+:PAGES:    827
+:DOI:      10.2307/1911186
+:URL:      http://dx.doi.org/10.2307/1911186
+:END:
+
+cite:Rothenberg_1984
+Article cité dans [[ref:Zhou_2014][cet article]] pour justifier la calibration des pvalues. La
+matrice de covariance est uen fonction d'un parametre theta. C'est pas tout a
+fait mon problème ! 
+ 
+
+** TODO 2000 - Tests of regression coefficients under ridge regression  models :HypothesisTesting:
+:PROPERTIES:
+:Custom_ID: Halawa_2000
+:AUTHOR:   Halawa \& El Bassiouni
+:JOURNAL:  Journal of Statistical Computation and Simulation
+:YEAR:     2000
+:VOLUME:   65
+:PAGES:    341–356
+:DOI:      10.1080/00949650008812006
+:URL:      http://dx.doi.org/10.1080/00949650008812006
+:END:
+
+cite:Halawa_2000
+Cité dans [[ref:Cule_2011]] pour justifier le test d'hypothèse. 
+
+** 2016 - Controlling false discoveries in genome scans for selection :HypothesisTesting:MaThese:
+:PROPERTIES:
+:Custom_ID: Fran_ois_2016
+:AUTHOR:   François, Martins, Caye, \& Schoville
+:JOURNAL:  Molecular Ecology
+:YEAR:     2016
+:VOLUME:   25
+:PAGES:    454–469
+:DOI:      10.1111/mec.13513
+:URL:      http://dx.doi.org/10.1111/mec.13513
+:END:
+ 
+cite:Fran_ois_2016
+Il faudrat que je comprenne bien cette article pour ma thèse !! 
+
+** 2011 - Parameter estimation and inference in the linear mixed model :LFMM:HypothesisTesting:
+:PROPERTIES:
+:Custom_ID: Gumedze_2011
+:AUTHOR:   Gumedze \& Dunne
+:JOURNAL:  Linear Algebra and its Applications
+:YEAR:     2011
+:VOLUME:   435
+:PAGES:    1920–1944
+:DOI:      10.1016/j.laa.2011.04.015
+:URL:      http://dx.doi.org/10.1016/j.laa.2011.04.015
+:END:
+
+cite:Gumedze_2011
+Un article de théorie sur les modèles mixes linéaire, trouvé dans [[ref:Zhou_2014][cette article]]. 
+
+** TODO 2013 - A Sparse-Group Lasso
+:PROPERTIES:
+:Custom_ID: Simon_2013
+:AUTHOR:   Simon, Friedman, Hastie, \& Tibshirani
+:JOURNAL:  Journal of Computational and Graphical Statistics
+:YEAR:     2013
+:VOLUME:   22
+:PAGES:    231–245
+:DOI:      10.1080/10618600.2012.681250
+:URL:      http://dx.doi.org/10.1080/10618600.2012.681250
+:END:
+
+cite:Simon_2013
+Papier cité dans cite:zhou16_spars_multiv_factor_analy_regres pour l'algo.
+
+** TODO 2004 - Generalized latent variable modeling: Multilevel, longitudinal, and structural equation models :LFMM:LFMMLike:GLLAMM:
+:PROPERTIES:
+:Custom_ID: skrondal2004generalized
+:AUTHOR:   Skrondal \& Rabe-Hesketh
+:JOURNAL:
+:YEAR:     2004
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+ 
+cite:skrondal2004generalized
+
+** 2001 - Factor analysis with (mixed) observed and latent variables in  the exponential family :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: Wedel_2001
+:AUTHOR:   Wedel \& Kamakura
+:JOURNAL:  Psychometrika
+:YEAR:     2001
+:VOLUME:   66
+:PAGES:    515–530
+:DOI:      10.1007/bf02296193
+:URL:      http://dx.doi.org/10.1007/bf02296193
+:END:
+
+cite:Wedel_2001
+ 
+*Remark:* ce pdf était dans un dossier SML, mais je ne me rappel plus pk ? Ok
+c'est pour Simulated Maximum Likelyhood. C'est truc qui a l'aire utilisé en
+econometrie...
+ 
+Contrairement à lfmm il n'y a pas de co-variable, il n'y a que les variables
+latentes. C'est pas vraiment un LFMMLike.
+
+C'est papier super dur a comprendre pour moi, en gros je comprend que c'est un
+GLM avec les facteurs latents. Il propose une méthode de SML pour estimer les
+loadings de son modèle a fateur latents. Ces résultats portent sur des simu de
+son modèle et une étude de cas.
+ 
+Pourtant dans le titre il parle de observed data... je pense que c'est les
+données en sortie du model.
+
+** TODO - How to perform leave-one-out cross-validation for PCA to  determine the number of principal components?
+:PROPERTIES:
+:Custom_ID: crossValidated_PCACrossValidation_2017
+:AUTHOR:   amoeba
+:JOURNAL:
+:YEAR:
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:crossValidated_PCACrossValidation_2017
+Une super reponse trouvée sur Cross Validated quand je cherchais un moyen de
+cross valider une lfmm (j'ai chercher comment cross valider l'acp)
+ 
+
+** 2011 - Finding Structure with Randomness: Probabilistic Algorithms  for Constructing Approximate Matrix Decompositions :LFMM:
+:PROPERTIES:
+:Custom_ID: Halko_2011
+:AUTHOR:   Halko, Martinsson \& Tropp
+:JOURNAL:  SIAM Review
+:YEAR:     2011
+:VOLUME:   53
+:PAGES:    217–288
+:DOI:      10.1137/090771806
+:URL:      http://dx.doi.org/10.1137/090771806
+:END:
+
+cite:Halko_2011
+C'est un papier qui était dans la biblio que OF m'avait envoyé en début de
+thèse. C'est sur les méthode de randomization pour les approximation de rang
+faible. 
+
+Je pense que l'idée c'est de faire des projections aléatoires et trouver a
+décomposition. C'est peut être interessant pour améloirer les perfs de lfmm.
+
+** 2010 - Correction for hidden confounders in the genetic analysis of  gene expression :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: Listgarten_2010
+:AUTHOR:   Listgarten, Kadie, Schadt, Heckerman \&
+:JOURNAL:  Proceedings of the National Academy of Sciences
+:YEAR:     2010
+:VOLUME:   107
+:PAGES:    16465–16470
+:DOI:      10.1073/pnas.1002425107
+:URL:      http://dx.doi.org/10.1073/pnas.1002425107
+:END:
+
+cite:Listgarten_2010
+On est en plein dans la correction de s facteurs de confusion pour l'analyse
+de l'expression des gènes (population structure, batch effects). 
+Il y a un [[file:org-ref-pdfs/SI_Listgarten_2010.pdf][SI Apprendix]].
+Ils vendent une méthode qui prend en compte a la fois la sutructure de pop(PS) et
+Expression Heterogeneity (EH).
+*** Application
+C'est pour des eQTL scan. C'est a dire qu'on cherche les liens entre
+polymophisme et expression des gènes. D'après Magalie, les jeux de données
+sont plus petit dans les eQTLs scan, on fait des croisements d'indiv, c'est
+plus de l'experience a petite echelle. 
+
+Pourtant les application son sur des gros jeux de données !!
+*** Method
+Un mixed model ou la sortie est les gene probes (une mesure de l'expression)
+et la co-variable le SNP. L'hypothèse H0 est il n'y a pas corrélation entre
+SNP et expression du gène, pour la bio ce n'est pas un eQTL. Si on rejète H0
+c'est un eQTL
+*** Experiments
+**** Synthetic dataset
+Il fit leur modèle et utilise le modèle génératif pour simuler des gene
+probe (la sortie du modèle), pour 5% il multiplie les B trouvé par un
+facteur. Ca leur génère 5% loci sous H1.
+*** Remarques
+Leur méthode à le même objectif que lfmm, c'est a dire association avec
+variable lattente. Mais il on une application cible les eQTL scan. Pour moi
+c'est les test d'asssociations plymorphism-var ecologique. Et je veux
+montrer qu'on peut faire des EWAS aussi... enfin si ca marche :D
+*** TODO Aller plus loin
+Le papier est complet, faudrait que je vois leur test d'hypothèse.
+** TODO 2004 - Mixed Models                                            :LFMM:
+:PROPERTIES:
+:Custom_ID: Demidenko_2004
+:AUTHOR:   Demidenko
+:JOURNAL:  Wiley Series in Probability and Statistics
+:YEAR:     2004
+:VOLUME:
+:PAGES:
+:DOI:      10.1002/0471728438
+:URL:      http://dx.doi.org/10.1002/0471728438
+:END:
+
+cite:Demidenko_2004
+C'est le livre qui est cité dans cite:Listgarten_2010 pour citer les Mixed
+Models.
+
+** TODO - Generalized Linear Mixed Model                               :LFMM:
+:PROPERTIES:
+:Custom_ID: GLMM
+:AUTHOR:
+:JOURNAL:
+:YEAR:
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+J'ai trouvé ca dans la bib d'of pour lfmm. cite:GLMM.
+
+C'est un cours sur les modèle mixte généralisé, c'est a dire avec d'autre distribution
+que la loi normale.
+
+** 1996 - Latent Variable Models with Fixed Effects           :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: Sammel_1996
+:AUTHOR:   Sammel \& Ryan
+:JOURNAL:  Biometrics
+:YEAR:     1996
+:VOLUME:   52
+:PAGES:    650
+:DOI:      10.2307/2532903
+:URL:      http://dx.doi.org/10.2307/2532903
+:END:
+
+cite:Sammel_1996 Papier trouvé dans la biblio que OF m'a donnée en début de thèse.
+*** Model 
+Le modèle est comme LFMM avec en plus des co-variable pour modéliser les
+facteurs lattents. Il y a un test d'hypothèse pour test l'effet des covariables
+avec les facteurs lattents.
+*** Experiments
+Sur des données réelles dirrecte
+
+** TODO 2003 - Some applications of generalized linear latent and mixed models in epidemiology: repeated measures, measurement error and multilevel modeling :LFMM:GLLAMM:
+:PROPERTIES:
+:Custom_ID: skrondal2003some
+:AUTHOR:   Skrondal \& Rabe-Hesketh
+:JOURNAL:  Norsk epidemiologi
+:YEAR:     2003
+:VOLUME:   13
+:PAGES:    265--278
+:DOI:
+:URL:
+:END:
+
+cite:skrondal2003some Papier trouvé dans la biblio que OF m'a donnée en début
+de thèse.
+
+** TODO 1981 - The bayesian bootstrap                                  :LFMM:
+:PROPERTIES:
+:Custom_ID: rubin1981bayesian
+:AUTHOR:   Rubin \& others
+:JOURNAL:  The annals of statistics
+:YEAR:     1981
+:VOLUME:   9
+:PAGES:    130--134
+:DOI:
+:URL:
+:END:
+
+cite:rubin1981bayesian Papier trouvé dans la biblio que OF m'a donnée en début
+de thèse.
+
+ 
+
+** TODO 2005 - Structural equation models: a review with applications to environmental epidemiology :LFMM:
+:PROPERTIES:
+:Custom_ID: sanchez2005structural
+:AUTHOR:   Sanchez, Budtz-J\orgensen, Ryan \& Hu
+:JOURNAL:  Journal of the American Statistical Association
+:YEAR:     2005
+:VOLUME:   100
+:PAGES:    1443--1455
+:DOI:
+:URL:
+:END:
+ 
+cite:sanchez2005structural Papier trouvé dans la biblio que OF m'a donnée en
+début de thèse.
+
+** TODO 2007 - Latent Variable Modelling: A Survey*                    :LFMM:
+:PROPERTIES:
+:Custom_ID: SKRONDAL_2007
+:AUTHOR:   SKRONDAL \& RABE-SKETH
+:JOURNAL:  Scandinavian Journal of Statistics
+:YEAR:     2007
+:VOLUME:   34
+:PAGES:    712–745
+:DOI:      10.1111/j.1467-9469.2007.00573.x
+:URL:      http://dx.doi.org/10.1111/j.1467-9469.2007.00573.x
+:END:
+
+cite:SKRONDAL_2007 Papier trouvé dans la biblio que OF m'a donnée en début de
+thèse.
+
+** TODO 2010 - Conditions Under Which Genome-Wide Association Studies Will be  Positively Misleading :LFMM:
+:PROPERTIES:
+:Custom_ID: Platt_2010
+:AUTHOR:   Platt, Vilhjalmsson \& Nordborg
+:JOURNAL:  Genetics
+:YEAR:     2010
+:VOLUME:   186
+:PAGES:    1045–1052
+:DOI:      10.1534/genetics.110.121665
+:URL:      http://dx.doi.org/10.1534/genetics.110.121665
+:END:
+
+cite:Platt_2010 Papier trouvé dans la biblio que OF m'a donnée en début de
+thèse.
+
+** TODO 2007 - Classical latent variable models for medical research   :LFMM:
+:PROPERTIES:
+:Custom_ID: Rabe_Hesketh_2007
+:AUTHOR:   Rabe-Hesketh \& Skrondal
+:JOURNAL:  Statistical Methods in Medical Research
+:YEAR:     2007
+:VOLUME:   17
+:PAGES:    5–32
+:DOI:      10.1177/0962280207081236
+:URL:      http://dx.doi.org/10.1177/0962280207081236
+:END:
+
+cite:Rabe_Hesketh_2007 Papier trouvé dans la biblio que OF m'a donnée en début
+de thèse.
+
+** TODO 2013 - Latent factor regression models for grouped outcomes    :LFMM:
+:PROPERTIES:
+:Custom_ID: Woodard_2013
+:AUTHOR:   Woodard, Love, Thurston, , Ruppert, Sathyanarayana \& Swan
+:JOURNAL:  Biometrics
+:YEAR:     2013
+:VOLUME:   69
+:PAGES:    785–794
+:DOI:      10.1111/biom.12037
+:URL:      http://dx.doi.org/10.1111/biom.12037
+:END:
+
+cite:Woodard_2013 Papier trouvé dans la biblio que OF m'a donnée en début de
+thèse.
+
+** TODO 2004 - GLLAMM manual                                    :LFMM:GLLAMM:
+:PROPERTIES:
+:Custom_ID: rabe2004gllamm
+:AUTHOR:   Rabe-Hesketh, Skrondal \& Pickles
+:JOURNAL:
+:YEAR:     2004
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:rabe2004gllamm Papier trouvé dans la biblio que OF m'a donnée en début de
+thèse.
+
+** 2004 - Convex Optimization                                          :Book:
+:PROPERTIES:
+:Custom_ID: Boyd_2004
+:AUTHOR:   Boyd \& Vandenberghe
+:JOURNAL:
+:YEAR:     2004
+:VOLUME:
+:PAGES:
+:DOI:      10.1017/cbo9780511804441
+:URL:      http://dx.doi.org/10.1017/cbo9780511804441
+:END:
+
+cite:Boyd_2004
+
+** 2009 - Large-Scale Inference                                        :Book:
+:PROPERTIES:
+:Custom_ID: Efron_2009
+:AUTHOR:   Efron
+:JOURNAL:
+:YEAR:     2009
+:VOLUME:
+:PAGES:
+:DOI:      10.1017/cbo9780511761362
+:URL:      http://dx.doi.org/10.1017/cbo9780511761362
+:END:
+
+cite:Efron_2009
+ 
+*** Empirical Null Estimation 
+C'est quand on change l'hypothèse null en fonction de ce qu'on a observé.
+ 
+** 2016 - Computer Age Statistical Inference                           :Book:
+:PROPERTIES:
+:Custom_ID: Efron_2016
+:AUTHOR:   Efron \& Hastie
+:JOURNAL:
+:YEAR:     2016
+:VOLUME:
+:PAGES:
+:DOI:      10.1017/cbo9781316576533
+:URL:      http://dx.doi.org/10.1017/cbo9781316576533
+:END:
+
+cite:Efron_2016
+
+** 1993 - An Introduction to the Bootstrap                             :Book:
+:PROPERTIES:
+:Custom_ID: Efron_1993
+:AUTHOR:   Efron \& Tibshirani
+:JOURNAL:
+:YEAR:     1993
+:VOLUME:
+:PAGES:
+:DOI:      10.1007/978-1-4899-4541-9
+:URL:      http://dx.doi.org/10.1007/978-1-4899-4541-9
+:END:
+ 
+cite:Efron_1993
+
+** 2013 - Genome-Wide Association Studies and Genomic Prediction       :Book:
+:PROPERTIES:
+:Custom_ID: Gondro_2013
+:AUTHOR:
+:JOURNAL:  Methods in Molecular Biology
+:YEAR:     2013
+:VOLUME:
+:PAGES:
+:DOI:      10.1007/978-1-62703-447-0
+:URL:      http://dx.doi.org/10.1007/978-1-62703-447-0
+:END:
+
+cite:Gondro_2013
+
+** 2009 - The Elements of Statistical Learning                         :Book:
+:PROPERTIES:
+:Custom_ID: Hastie_2009
+:AUTHOR:   Hastie, Tibshirani \& Friedman
+:JOURNAL:  Springer Series in Statistics
+:YEAR:     2009
+:VOLUME:
+:PAGES:
+:DOI:      10.1007/978-0-387-84858-7
+:URL:      http://dx.doi.org/10.1007/978-0-387-84858-7
+:END:
+
+cite:Hastie_2009
+
+** 2012 - Machine learning: a probabilistic perspective                :Book:
+:PROPERTIES:
+:Custom_ID: murphy2012machine
+:AUTHOR:   Murphy
+:JOURNAL:
+:YEAR:     2012
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:murphy2012machine
+
+** 2012 - Analysis of Genetic Association Studies                      :Book:
+:PROPERTIES:
+:Custom_ID: Zheng_2012
+:AUTHOR:   Zheng, Yang, Zhu, Elston \& Robert
+:JOURNAL:  Statistics for Biology and Health
+:YEAR:     2012
+:VOLUME:
+:PAGES:
+:DOI:      10.1007/978-1-4614-2245-7
+:URL:      http://dx.doi.org/10.1007/978-1-4614-2245-7
+:END:
+
+cite:Zheng_2012
+
+** TODO 2016 - Controlling the Rate of GWAS False Discoveries :HypothesisTesting:MultipleTesting:
+:PROPERTIES:
+:Custom_ID: Brzyski_2016
+:AUTHOR:   Brzyski, Peterson, Sobczyk, , Candès, Bogdan, Sabatti \& Chiara
+:JOURNAL:  Genetics
+:YEAR:     2016
+:VOLUME:   205
+:PAGES:    61–75
+:DOI:      10.1534/genetics.116.193987
+:URL:      http://dx.doi.org/10.1534/genetics.116.193987
+:END:
+
+cite:Brzyski_2016
+
+** TODO 2016 - Orthogonal Tensor Decompositions Via Two-Mode Higher-Order Svd  (hosvd)
+:PROPERTIES:
+:Custom_ID: wang16_orthog_tensor_decom_via_two
+:AUTHOR:   Wang \& Song
+:JOURNAL:
+:YEAR:     2016
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:      http://arxiv.org/abs/1612.03839v1
+:END:
+
+cite:wang16_orthog_tensor_decom_via_two. Envoyé par OF "ca peut t'interessé".
+C'est papier théorique sur la décomposition matricielle...
+
+** TODO 2015 - The role of regulatory variation in complex traits and  disease
+:PROPERTIES:
+:Custom_ID: Albert_2015
+:AUTHOR:   Albert \& Kruglyak
+:JOURNAL:  Nature Reviews Genetics
+:YEAR:     2015
+:VOLUME:   16
+:PAGES:    197–212
+:DOI:      10.1038/nrg3891
+:URL:      http://dx.doi.org/10.1038/nrg3891
+:END:
+
+cite:Albert_2015. Papier que Magalie m'a envoyé pour comprendre le eQTL stidies.
+
+** TODO 2006 - Principal components analysis corrects for stratification in  genome-wide association studies :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: Price_2006
+:AUTHOR:   Price, Patterson, Plenge, , Weinblatt, Shadick \& Reich
+:JOURNAL:  Nature Genetics
+:YEAR:     2006
+:VOLUME:   38
+:PAGES:    904–909
+:DOI:      10.1038/ng1847
+:URL:      http://dx.doi.org/10.1038/ng1847
+:END:
+
+cite:Price_2006. C'est le papier EIGENSTRAT, c'est l'acp et une stat Armitage.
+ 
+
+** 2012 - The sva package for removing batch effects and other unwanted  variation in high-throughput experiments :LFMM:LFMMLike:Rpackage:
+:PROPERTIES:
+:Custom_ID: Leek_2012
+:AUTHOR:   Leek, Johnson, Parker, Jaffe, \& Storey
+:JOURNAL:  Bioinformatics
+:YEAR:     2012
+:VOLUME:   28
+:PAGES:    882–883
+:DOI:      10.1093/bioinformatics/bts034
+:URL:      http://dx.doi.org/10.1093/bioinformatics/bts034
+:END:
+ 
+cite:Leek_2012 C'est l'article de pacakge sva. La vignette : [[./org-ref-pdfs/Rpackage_sva.pdf][The SVA manual]].
+ 
+
+** TODO 1995 - Controlling the false discovery rate: a practical and powerful approach to multiple testing
+:PROPERTIES:
+:Custom_ID: benjamini1995controlling
+:AUTHOR:   Benjamini \& Hochberg
+:JOURNAL:  Journal of the royal statistical society. Series B (Methodological)
+:YEAR:     1995
+:VOLUME:
+:PAGES:    289--300
+:DOI:
+:URL:
+:END:
+
+cite:benjamini1995controlling Article classic a citer pour the Benjamini-Hochberg procedure
+
+** TODO 2012 - Multiple hypothesis testing adjusted for latent variables,  with an application to the AGEMAP gene expression data :LFMM:LFMMLike:Rpackage:
+:PROPERTIES:
+:Custom_ID: Sun_2012
+:AUTHOR:   Sun, Zhang \& Owen
+:JOURNAL:  The Annals of Applied Statistics
+:YEAR:     2012
+:VOLUME:   6
+:PAGES:    1664–1688
+:DOI:      10.1214/12-aoas561
+:URL:      http://dx.doi.org/10.1214/12-aoas561
+:END:
+
+cite:Sun_2012 C'est très très proche de LFMM encore une fois et il y a un
+[[https://cran.r-project.org/web/packages/leapp/][package R LEAPP]]. Il faut que je lise ca plus en détail. 
+
+** TODO 2015 - Confounder Adjustment in Multiple Hypothesis Testing :LFMM:LFMMLike:
+:PROPERTIES:
+:Custom_ID: wang2015confounder
+:AUTHOR:   Wang, Zhao, Hastie \& Owen
+:JOURNAL:  arXiv preprint arXiv:1508.04178
+:YEAR:     2015
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:wang2015confounder Ok la c'est vraiment du lourd ! C'est de la théorie sur
+LFMM en gros, faut que je le lise ! C'est vraiment sans fin cette biblio...
+Mais c'est rassurant de voir des gens qui travail sur les même chose ! 
+
+*** CRAN R package
+[[https://cran.r-project.org/web/packages/cate/index.html][cate]]
+** TODO 2007 - Correlation and Large-Scale Simultaneous Significance Testing
+:PROPERTIES:
+:Custom_ID: Efron_2007
+:AUTHOR:   Efron
+:JOURNAL:  Journal of the American Statistical Association
+:YEAR:     2007
+:VOLUME:   102
+:PAGES:    93–103
+:DOI:      10.1198/016214506000001211
+:URL:      http://dx.doi.org/10.1198/016214506000001211
+:END:
+
+cite:Efron_2007 Un papier qui justifie que quand on a des hypothèse corrélées,
+la fonction de répartition H0 n'est plus $N(0,1)$
+
+** 2005 - Local False Discovery Rates
+:PROPERTIES:
+:Custom_ID: cours_Efron_2005
+:AUTHOR:   Bradley Efron
+:JOURNAL:
+:YEAR:     2005
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+ 
+cite:cours_Efron_2005 Un pdf pour expliquer le fdr local. Très bien fait ! 
+
+** TODO 2004 - Large-Scale Simultaneous Hypothesis Testing
+:PROPERTIES:
+:Custom_ID: Efron_2004
+:AUTHOR:   Efron
+:JOURNAL:  Journal of the American Statistical Association
+:YEAR:     2004
+:VOLUME:   99
+:PAGES:    96–104
+:DOI:      10.1198/016214504000000089
+:URL:      http://dx.doi.org/10.1198/016214504000000089
+:END:
+
+cite:Efron_2004
+
+*** Introduction
+Il y phrase interessante dans l'intro, en gros: le but des test d'hypothèse
+multiple c'est trouver une liste de candidat qui merite qu'on s'y attarde.
+Moi je comprend que une fois qu'on a creer des zscore (il faut des score car
+les test doivent etre comprable, donc on les normalise) on peut faire
+estimer l'hypothese null sur les données, ca va lisser les erreur, regler
+les problème d'autocorélation, enlever les petits effets sans interet et
+mettre le test au bonne endroit (si la moyenne est non nul par exemple)!
+
+** TODO 1999 - Genomic Control for Association Studies
+:PROPERTIES:
+:Custom_ID: Devlin_1999
+:AUTHOR:   Devlin \& Roeder
+:JOURNAL:  Biometrics
+:YEAR:     1999
+:VOLUME:   55
+:PAGES:    997–1004
+:DOI:      10.1111/j.0006-341x.1999.00997.x
+:URL:      http://dx.doi.org/10.1111/j.0006-341x.1999.00997.x
+:END:
+:LOGBOOK:
+- State "TODO"       from "TODO"       [2017-04-11 mar. 17:51]
+:END:
+
+cite:Devlin_1999 C'est le papier du genomic inflation factor (le gif)
+
+** 2015 - A global reference for human genetic variation
+:PROPERTIES:
+:Custom_ID: 1000Genome_2015
+:AUTHOR:   The 1000 Genomes Project Consortium
+:JOURNAL:  Nature
+:YEAR:     2015
+:VOLUME:   526
+:PAGES:    68--74
+:DOI:      10.1038/nature1539cite:Auton_20153
+:URL:      https://doi.org/10.1038~/Projects/Biblio/org-ref-pdfs/Auton_2015.pdfnature15393
+:END:
+
+cite:Auton_2015 To cite the 1000genomes (found [[http://www.internationalgenome.org/faq/how-do-i-cite-1000-genomes-project/][here]])
+
+** TODO 2008 - Cross-validation of component models: A critical look at  current methods
+:PROPERTIES:
+:Custom_ID: Bro_2008
+:AUTHOR:   Bro, Kjeldahl, Smilde, Kiers \&
+:JOURNAL:  Analytical and Bioanalytical Chemistry
+:YEAR:     2008
+:VOLUME:   390
+:PAGES:    1241–1251
+:DOI:      10.1007/s00216-007-1790-1
+:URL:      http://dx.doi.org/10.1007/s00216-007-1790-1
+:END:
+
+cite:Bro_2008 Plein de méthodes pour la cross validation de l'acp. C'est
+généralisable au méthode non supervisé ! 
+ 
+ 
+** TODO 2016 - The Simons Genome Diversity Project: 300 genomes from 142 diverse populations
+:PROPERTIES:
+:Custom_ID: mallick2016simons
+:AUTHOR:   Mallick {\it et al.}
+:JOURNAL:  Nature
+:YEAR:     2016
+:VOLUME:   538
+:PAGES:    201--206
+:DOI:
+:URL:
+:END:
+
+cite:mallick2016simons Papier du [[https://www.simonsfoundation.org/life-sciences/simons-genome-diversity-project-dataset/][simons diversity project]].
+ 
+
+** TODO 2011 - Detecting Novel Associations in Large Data Sets
+:PROPERTIES:
+:Custom_ID: Reshef_2011
+:AUTHOR:   Reshef {\it et al.}
+:JOURNAL:  Science
+:YEAR:     2011
+:VOLUME:   334
+:PAGES:    1518–1524
+:DOI:      10.1126/science.1205438
+:URL:      http://dx.doi.org/10.1126/science.1205438
+:END:
+
+cite:Reshef_2011
+Pk le R^2 de pearson c'est pas bien ... A lIRE
+
+** TODO 2015 - Seven common mistakes in population genetics and how to avoid  them
+:PROPERTIES:
+:Custom_ID: Meirmans_2015
+:AUTHOR:   Meirmans
+:JOURNAL:  Molecular Ecology
+:YEAR:     2015
+:VOLUME:   24
+:PAGES:    3223–3231
+:DOI:      10.1111/mec.13243
+:URL:      http://dx.doi.org/10.1111/mec.13243
+:END:
+
+cite:Meirmans_2015 Le nombre d'outlier attendu est petit :D
+
+** TODO - Imputation de données manquantes
+:PROPERTIES:
+:Custom_ID: imp_don_manquante
+:AUTHOR:
+:JOURNAL:
+:YEAR:
+:VOLUME:
+:PAGES:
+:DOI:
+:URL:
+:END:
+
+cite:imp_don_manquante
+
+Un cours simple en francais sur les données manquantes. Il liste plien d'algo
+pour l'imputation.
+
+** DONE 2017 - Using genotype-environment associations to identify multilocus  local adaptation :GEA:LFMM:
+CLOSED: [2017-05-02 mar. 16:07]
+:PROPERTIES:
+:Custom_ID: Forester_2017
+:AUTHOR: Forester, Lasky, Wagner, \& Urban
+:JOURNAL: 
+:YEAR: 2017
+:VOLUME: 
+:PAGES: 
+:DOI: 10.1101/129460
+:URL: http://dx.doi.org/10.1101/129460
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-02 mar. 16:07]
+:END:
+
+cite:Forester_2017 
+
+- Une comparaison des méthodes stat et machine learning pour l'association. Il
+parle de la méthode redundancy analysis (RDA).
+- Dans cette article il parle Genotype-environment association (GEA).
+- Le papier est interessant dans la demarche (comparaison  de méthodes sur des
+  simulations). A voir les plots et les simu ! 
+
+
+** DONE 2015 - Detecting spatial genetic signatures of local adaptation in  heterogeneous landscapes :GEA:LFMM:
+CLOSED: [2017-05-02 mar. 14:09]
+:PROPERTIES:
+:Custom_ID: Forester_2015
+:AUTHOR: Forester, Jones, Joost, , Landguth \& Lasky
+:JOURNAL: Molecular Ecology
+:YEAR: 2015
+:VOLUME: 25
+:PAGES: 104–120
+:DOI: 10.1111/mec.13476
+:URL: http://dx.doi.org/10.1111/mec.13476
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-02 mar. 14:09]
+:END:
+
+cite:Forester_2015
+
+- Un autre papier ou ils utilisent RDA pour les GEA
+*** Ordination methods
+Je comprends que c'est comme du clustering mais le long d'un gradient !! ([[http://ordination.okstate.edu/overview.htm][see this page]])
+*** RDA
+En faite cette méthodes ne donnent pas de pvalue.
+Ils trouvent des outlier a partir de leur projection et calcule des pvalue après
+, avec un modèle linéaire.
+
+Mais il n'y a pas de correction pour des quelconce variable lattente ! 
