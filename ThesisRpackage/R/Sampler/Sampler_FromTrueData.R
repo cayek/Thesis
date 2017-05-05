@@ -14,6 +14,7 @@ FromTrueSampler <- function(G.file,
                             rho = NULL,
                             cs = NULL,
                             round = FALSE,
+                            sd.V.rho = 1, ## var of association effect (B) * var of V
                             B.outlier.sampler = function(n, mean, sd) rnorm(n, mean, sd)) {
   structure(list(G.file = G.file,
                  n = n,
@@ -22,6 +23,7 @@ FromTrueSampler <- function(G.file,
                  prop.outlier = prop.outlier,
                  rho = rho,
                  cs = cs,
+                 sd.V.rho = sd.V.rho,
                  round = round,
                  B.outlier.sampler = B.outlier.sampler),
             class = c("FromTrueSampler","Sampler"))
@@ -76,9 +78,9 @@ sampl.FromTrueSampler <- function(s) {
   sd.V <- sd(as.vector(V))
   ## compute a B
   B = matrix(0, 1, L)
-  B[1, outlier] = s$B.outlier.sampler(nb.outlier, 0, sd.V)
+  B[1, outlier] = s$B.outlier.sampler(nb.outlier, 0, sd.V * s$sd.V.rho)
 
-  # variance balancing between structure and co-variable X
+  ## variance balancing between structure and co-variable X
   if (!is.null(s$rho)) {
     a <- (1 - s$rho)
     b <- s$rho

@@ -46,6 +46,7 @@ Article3_MethodComparison <- function(G.file,
                                       correctionByC = FALSE,
                                       cs = c(0.2, 0.4, 0.6, 0.8),
                                       cs.sum = TRUE,
+                                      sd.V.rho = 1.0,
                                       nb.rep = 5,
                                       fast.only = TRUE,
                                       cluster.nb = NULL,
@@ -66,6 +67,7 @@ Article3_MethodComparison <- function(G.file,
                                      n = n, L = L,
                                      cs = cs,
                                      cs.sum = cs.sum,
+                                     sd.V.rho = sd.V.rho,
                                      outlier.props = outlier.props,
                                      nb.rep = nb.rep)
   exp$fast.only <- fast.only
@@ -73,6 +75,7 @@ Article3_MethodComparison <- function(G.file,
   exp$outlier.props  <- outlier.props
   exp$cs  <- cs
   exp$cs.sum  <- cs.sum
+  exp$sd.V.rho <- sd.V.rho
   exp$K.method <- K.method
   exp$correctionByC <- correctionByC
   exp$s <- FromTrueSampler(G.file = G.file,
@@ -82,6 +85,7 @@ Article3_MethodComparison <- function(G.file,
                            prop.outlier = NULL,
                            rho = NULL,
                            cs = NULL,
+                           sd.V.rho = sd.V.rho,
                            round = FALSE)
   exp <- Article3_MethodComparison_main(exp)
 

@@ -1610,7 +1610,11 @@ C'est comparable a les loadings RDA1
 
 ** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
-CLOCK: [2017-05-05 ven. 09:47]
+CLOCK: [2017-05-05 ven. 13:03]
+- Note taken on [2017-05-05 ven. 10:56] \\
+  Je vais travailler sur un dataset centré et normalisé !
+CLOCK: [2017-05-05 ven. 10:48]--[2017-05-05 ven. 11:13] =>  0:25
+CLOCK: [2017-05-05 ven. 09:47]--[2017-05-05 ven. 10:12] =>  0:25
 - Note taken on [2017-05-03 mer. 18:10] \\
   J'en suis a sample les dataset et faire la svd sur la matrice STANDARDISED !!!!
 - State "STARTED"    from "TODO"       [2017-05-03 mer. 09:49]
@@ -1630,10 +1634,13 @@ On sample sur tout le 1000Genome et que les européens.
 
   ## filter maf
   maf <- apply(G, 2, function(l){p <- mean(l) / 2;min(p, 1 - p)})
-  out.index <- which(maf <= 0.5)
+  out.index <- which(maf <= 0.05)
   G <- G[,-out.index]
   dim(G)
 
+  ## save this dataset
+  saveRDS(G, "~/Projects/Thesis/Data/1000Genomes/Phase3/Eu.maf.05.G.rds")
+  ## G <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu.maf.05.G.rds")
 
   ## rm for memory
   rm(dat)
@@ -1641,11 +1648,14 @@ On sample sur tout le 1000Genome et que les européens.
 
   ## sample loci
   L <- 5e5
-  sample.loci <- sample.int(ncol(dat$G), L)
-  G <- G[, sample.loci]
+  sample.loci <- sample.int(ncol(G), L)
+  G.sample <- G[, sample.loci]
+
+  ## standartization
+  G.scale <- scale(G.sample)
 
   ## PCA
-  svd.res <- svd(scale(G), nu = 0, nv = 0)
+  svd.res <- svd(G, nu = 0, nv = 0)
   vars <- svd.res$d / sum(svd.res$d)
 
   ## plot
@@ -1691,14 +1701,20 @@ On sample sur tout le 1000Genome et que les européens.
   ## read data, Warning very big file !
   dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.rds")
 
-  ## keep only Eu and sample loci
+  ## sample loci
   L <- 5e5
   sample.loci <- sample.int(ncol(dat$G), L)
-  dat$G <- dat$G[,sample.loci]
+  G <- dat$G[,sample.loci]
 
-  ## test
-  dat$indiv
-  str(dat$G)
+  ## filter maf
+  maf <- apply(G, 2, function(l){p <- mean(l) / 2;min(p, 1 - p)})
+  out.index <- which(maf <= 0.5)
+  G <- G[,-out.index]
+  dim(G)
+
+  ## rm for memory
+  rm(dat)
+  gc()
 
   ## PCA
   svd.res <- svd(scale(dat$G,scale = FALSE), nu = 0, nv = 0)
@@ -1718,6 +1734,675 @@ On sample sur tout le 1000Genome et que les européens.
 [[./Rplots/forte_struct_pop_vps.png]]
 
 On va pendre $K = 2$.
+
+** Dataset
+How dataset in ./Data/ was generated. Some script and urls...
+*** ./Data/SSMPG2015/ 
+Dataset simulated by Katie Lotterhos for the school SSMPG2015
+*** ./Data/MathieuGautier/
+Dataset used in *Genome scan methods against more complex models: when and how much should we trust them?* of piere de villemereuil et al.
+**** TODO Convert 
+.csv into .RData
+**** =mec12705-sup-0002-Pythonscripts/=
+Python script that generated dataset 
+**** Monogenic
+I find this in an older .Rmd in my first LFMM project of 2016
+#+BEGIN_SRC R
+ outlier = c(546) # for monogenic
+#+END_SRC
+
+**** Polygenic
+I find this in an older .Rmd in my first LFMM project of 2016
+#+BEGIN_SRC R 
+ outlier = c(2793,1850,583,4083,3349,860,4785,706,947,939,1819,925,403,2867,2897,97,3102,2618,708,1190,2471,1533,3924,2395,2690,2926,1511,668,4826,4755,638,4148,1777,1869,2252,4326,397,3416,3171,2451,1233,2055,3013,3202,1055,3484,2984,2145,4547,4831) + 1
+#+END_SRC
+*** ./Data/AthalianaGegMapLines/
+- Data download from: http://bergelson.uchicago.edu/?page_id=790
+- [[http://bergelson.uchicago.edu/wp-content/uploads/2015/04/call_method_75.tar.gz][download the data]]
+  There are data I used in TESS3 second article
+  
+*** ./Data/1000Genomes/
+**** ./Data/1000Genomes/Phase3Chrm22/
+Phase 3 version of the 1000 genome, only the chromosom 22. I ddl the vcf
+file [[ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/][here]]
+- ddl file: 
+  #+BEGIN_SRC bash
+     curl -O ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+     curl -O ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/integrated_call_samples_v3.20130502.ALL.panel
+  #+END_SRC
+    
+  - ddl all chromosom:
+    #+BEGIN_SRC R
+      ids <- 1:22
+      for (i in ids) {
+        url <- paste0("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr", i, ".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz")
+        system(paste("curl -O",url))
+      }
+    #+END_SRC
+
+  - zip and unzip
+    #+BEGIN_SRC bash
+    gzip ALL.chr[0-9]*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+    gzip ALL.chr[0-9]*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf     
+    #+END_SRC
+***** Eu_Af_Afam.maf.05.rds
+
+A dataset with only European, African and Aro-american population. We also fiter
+maf at 5%.
+
+#+begin_src R :results output :exports both
+  ## data set with African European and AfroAmerican
+
+  ## libs
+  library(ThesisRpackage)
+  library(tidyverse)
+  library(crayon)
+  options(ThesisRpackage.debug = "TRUE")
+
+  ## read indiv informations
+  indiv <- read_delim("./integrated_call_samples_v3.20130502.ALL.panel",
+                      delim = "\t",
+                      skip = 1,
+                      col_names = FALSE)
+  names(indiv) <- c("sample", "pop", "super_pop","gender")
+
+  unique(indiv %>% select(super_pop))
+
+  Eu <- c("TSI", "GBR")
+  Af <- c("ASW")
+  Afam <- c("YRI", "LWK")
+
+  ## indiv
+  indiv.index <- which(indiv$pop %in% c(Eu, Af, Afam))
+
+
+  ## read data
+  maf.threshold <- 0.05
+  ploidy <- 2
+  ### list files
+  file.pattern <- "ALL.chr[0-9]*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.maf.05.rds$"
+  files <- list.files()
+  files <- grep(file.pattern, files, value = TRUE)
+
+
+  dat <- list()
+  for (f in files) {
+    cat(green(paste0("== reading ",f,"\n")))
+
+    ## read file
+    dat.aux <- readRDS(f)
+
+    ## filter indiv
+    dat.aux$G <- dat.aux$G[indiv.index,]
+
+    ## filter maf
+    maf <- apply(dat.aux$G, 2, function(locus) {p <- mean(locus, na.rm = TRUE) / ploidy; min(p, 1 - p)})
+    cat(green(paste0("Removing ", mean(maf <= maf.threshold),"% loci\n")))
+    dat.aux$G <- dat.aux$G[,maf > maf.threshold, drop = FALSE]
+    dat.aux$snps.info <- dat.aux$snps.info[maf > maf.threshold,]
+
+
+    ## bind
+    dat$G <- cbind(dat$G, dat.aux$G)
+    dat$snps.info <- rbind(dat$snps.info, dat.aux$snps.info)
+
+    cat(green(paste0("== ncol ",ncol(dat$G),"\n")))
+  }
+
+  ## subsample ?
+
+  ## coord of indiv
+  dat$indiv <- indiv[indiv.index,]
+  dat$coord <- matrix(NA, nrow = nrow(dat$indiv), ncol = 2)
+
+  ## map: https://www.coordonnees-gps.fr/
+  ## pops: http://www.internationalgenome.org/category/population/
+  aux <- function(dat, pop, coord) {
+    aux.indiv <- dat$indiv$pop == pop
+    dat$coord[aux.indiv,] <- matrix(coord,sum(aux.indiv),2, byrow = TRUE)
+    dat
+  }
+  ## Toscani in Italia
+  dat <- aux(dat, "TSI", c(11.25581360000001, 43.7695604)) ## florance
+  ## British in England and Scotland
+  dat <- aux(dat, "GBR", c(-2.2426305000000184, 53.4807593)) ## manchester
+  ## Americans of African Ancestry in SW USA
+  dat <- aux(dat, "ASW", c(-122.41941550000001, 37.7749295)) ## san francisco
+  ## Yoruba in Ibadan, Nigeria
+  dat <- aux(dat, "YRI", c(3.947039600000039,7.377535500000001)) ## Idaban
+  ## Luhya in Webuye, Kenya
+  dat <- aux(dat, "LWK", c(34.77960299999995, 0.5992059)) ## Webuye
+
+  ## check
+  assertthat::assert_that(mean(rownames(dat$G) == dat$indiv$sample) == 1)
+
+  ## compute a W matrix
+  dat$dist.matrix <- geosphere::distm(dat$coord) ## geodesic on hearth
+  sigma <- mean(dat$dist.matrix) * 0.05 ## tess3 default param
+  dat$W <- exp( -dat$dist.matrix ^ 2 / sigma / sigma)
+
+  saveRDS(dat, "Eu_Af_Afam.maf.05.rds")
+
+#+end_src
+***** FromVcfToRds
+
+Conversion of =.vcf= into R data format =.R=.
+
+#+begin_src R :results output :exports both
+  # libs
+  library(ThesisRpackage)
+  library(tidyverse)
+  library(crayon)
+  options(ThesisRpackage.debug = "TRUE")
+
+  ## We filter maf to 0.05%
+  maf.threshold <- 0.05
+
+  ### list files
+  file.pattern <- "ALL.chr[0-9]*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf$"
+  files <- list.files()
+  files <- grep(file.pattern, files, value = TRUE)
+
+
+  for (f in files) {
+    cat(green(paste0("== reading ",f,"\n")))
+
+    ## read file
+    dat.aux <- read_vcf(f = f, maf.threshold = maf.threshold, block.size = 1e5)
+
+    ### save in rds format
+    saveRDS(dat.aux, sub("\\.vcf$", ".maf.05.rds", f))
+    rm(dat.aux)
+    gc()
+  }
+#+end_src
+***** Eu_Af_Afam_to_geno
+
+Create a =.geno= format file.
+
+#+begin_src R :results output :exports both
+  dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds")
+  X <- t(dat$G)
+  rm(dat)
+  gc()
+  file.remove("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.geno")
+  chunks <- split(1:nrow(X), ceiling(1:nrow(X) / 5e5))
+  for (c in chunks) {
+    write.table(X[c,], file = "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.geno",
+                sep = "",
+                row.names = FALSE,
+                col.names = FALSE, append = TRUE)
+  }
+
+  ## write G.geno
+  dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds")
+  dat$G.geno <- "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.geno"
+  saveRDS(dat, "~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/Eu_Af_Afam.maf.05.rds")
+#+end_src
+***** European_Chrm22
+
+A dataset with only European and chromosome 22, maf filter to 5%.
+
+#+begin_src R :results output :exports both
+  # We want to extract a snips matrix with only european
+
+  # libs
+  library(tidyverse)
+
+  # read indiv informations
+  indiv <- read_delim("./integrated_call_samples_v3.20130502.ALL.panel",
+                      delim = "\t",
+                      skip = 1,
+                      col_names = FALSE)
+
+  names(indiv) <- c("sample", "pop", "super_pop","gender")
+
+  unique(indiv %>% select(super_pop))
+  unique(indiv[indiv$super_pop == "EUR","pop"])
+  EUR.index <- which(indiv$super_pop == "EUR")
+  length(EUR.index)
+
+
+  ## read dataset
+  dat <- readRDS("ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.maf.05.rds")
+
+  # keep only europe
+  # geno.EUR <- matrix(as.raw(geno[EUR.index,]),
+  #                    nrow = length(EUR.index),
+  #                    ncol = ncol(geno))
+  G.EUR <- dat$G[EUR.index,]
+
+  # Filter
+  ## maf > 0.05 %
+  maf <- apply(G.EUR, 2, function(locus) {p <- mean(locus) / 2; min(p, 1 - p)})
+  maf.threshold <- 0.05
+  mean(maf <= maf.threshold)
+  filtered.index <- (maf > maf.threshold)
+  G.EUR.filtered <- G.EUR[,filtered.index]
+
+  # names con and row
+  ## already set
+  #rownames(G.EUR.filtered) <- indiv$sample[EUR.index]
+  #colnames(G.EUR.filtered) <- snps.info$X3[filtered.index]
+
+  # save
+  saveRDS(G.EUR.filtered, file = "European_Chrm22.maf.05.rds")
+#+end_src
+*** ./Data/GSE42861/
+Données trouvé ici:
+https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE42861
+Utilisé dans ce papier cite:Rahmani_2016.
+**** Retrieve dataset
+C'est le fichier qu'olivier a utilisé pour pour ddl les données. Ca marche
+pas chez moi...
+#+BEGIN_SRC R
+       ## try http:// if https:// URLs are not supported
+       source("https://bioconductor.org/biocLite.R")
+       biocLite("Biobase")
+
+       ## try http:// if https:// URLs are not supported
+       source("https://bioconductor.org/biocLite.R")
+       biocLite("GEOquery")
+
+
+       require(Biobase)
+       require(GEOquery)
+
+       ## get le jeu de données dans le format biobase
+       obj861 <- getGEO("GSE42861",GSEMatrix = T)
+
+       ## extrait les phenotypes (factors)
+       disease.state <- pData(phenoData(obj861[[1]]))[,11]
+
+       ## extrait les covariables (subject, age, gender, smocking.status)
+       ## age est converti en numeric
+
+       subject <- pData(phenoData(obj861[[1]]))[,12]
+
+       age.f <- pData(phenoData(obj861[[1]]))[,13]
+       write.table(file = "age.txt", as.character(age.f))
+       age <- as.numeric(read.table(file = "age.txt")[,1])
+
+
+       gender <- pData(phenoData(obj861[[1]]))[,14]
+
+       smocking.status <- pData(phenoData(obj861[[1]]))[,15]
+
+       ## download la matrice d'expression. Attention elle est transposée (individus en colonnes)
+       expmat861 <- exprs(obj861[[1]])
+#+END_SRC
+    
+**** ./GSE42861/exp861.RData
+C'est les variables defs dans file:./GSE42861/script_methylome.R. Output par
+olivier.
+**** Format data
+    
+#+BEGIN_SRC R
+       ## load data send by OF
+       load("exp861.RData")
+       ls()
+
+       ## save G and X
+       G <- t(expmat861)
+       ### G
+       rm(expmat861)
+       dim(G)
+       saveRDS(G, "betanormalized_metylationlvl.rds")
+
+       ## we scale and center data
+       X <- data.frame(disease.state = as.numeric(disease.state),
+                       age = as.numeric(age),
+                       gender = as.numeric(gender),
+                       smocking.status = as.numeric(smocking.status))
+       X <- scale(X)
+       X <- as.matrix(X)
+       rownames(X) <- rownames(G)
+       saveRDS(X, "X.rds")
+
+       ## downsample for test
+       sample.row <- sample.int(nrow(G), size = 100)
+       sample.col <- sample.int(ncol(G), size = 2000)
+       saveRDS(G[sample.row, sample.col], "betanormalized_metylationlvl.sample.rds")
+       saveRDS(X[sample.row,], "X.sample.rds")
+
+#+END_SRC
+
+**** Data pre-processing
+CLOSED: [2017-02-22 mer. 10:54]
+Goal: repruduce data processing of paper cite:Zou_2014 
+    
+#+BEGIN_SRC R
+       setwd("~/Projects/Thesis/Data/GSE42861/")
+       X <- readRDS("X.rds")
+       G <- readRDS("betanormalized_metylationlvl.rds")
+
+       ## filter maf !
+       maf <- apply(G, 2, function(l){p <- mean(l);min(p, 1 - p)})
+       out.index <- which(maf <= 0.2)
+
+       G.filtered <- G[,-out.index]
+       dim(G.filtered)
+
+       saveRDS(G.filtered, "betanormalized_metylationlvl.filtered.rds")
+
+       ## linear reg res
+       library(ThesisRpackage)
+       ## G.filtered <- readRDS("betanormalized_metylationlvl.filtered.rds")
+       lm.method <- ClassicLinearMethod()
+       dat <- list(G = G.filtered, X = X[,-1])
+
+       lm.method <- fit(lm.method, dat)
+       saveRDS(lm.method$epsilon, "betanormalized_metylationlvl.filtered.LMresidu.rds")
+
+       ## subsample
+       ## G <- readRDS("betanormalized_metylationlvl.filtered.LMresidu.rds")
+       G <- lm.method$epsilon
+       row.sample <- sample.int(nrow(G), 100)
+       col.sample <- sample.int(ncol(G), 1000)
+       X.sample <- X[row.sample,,drop = FALSE]
+       G.sample <- G[row.sample,col.sample]
+       sds <- apply(G.sample, 2, sd)
+       mean(sds == 0)
+       saveRDS(G.sample, "betanormalized_metylationlvl.filtered.LMresidu.sample.rds")
+       saveRDS(X.sample, "X.sample.rds")
+#+END_SRC
+
+*** ./Data/refractorDemo/
+data found here: https://github.com/cozygene/refactor. There are data used in
+the demo of refractor method.
+*** ./Data/Hgdp_Li/
+Hgdp data used in cite:frichot13_testin_assoc_between_loci_envir anylisis. I
+I found this dataset on patator.imag.fr.
+*** [[file:Data/gwas_riz][Gwas_Riz]]
+Données de riz.
+*** [[file:Data/Simons][Simons]]
+- [[https://www.simonsfoundation.org/life-sciences/simons-genome-diversity-project-dataset/][website]]
+***** to donwload the dataset
+I copy the docx file found [[http://simonsfoundation.s3.amazonaws.com/share/SCDA/datasets/2014_11_12/StepstodownloadtheSGDPdataset_v4.docx][here]]:
+****** Steps to download the SGDP dataset:	
+Get a personal grid x509 certificate to download data using GridFTP from
+Fermi Lab. To get a personal certificate follow the instructions from this
+link: https://fermi.service-now.com/kb_view.do?sysparm_article=KB0010815
+and use the VO as: SCDA Alternatively if you are from an institute
+included in cilogon (other than google) you can use https://cilogon.org
+      
+Once you get your certificate follow the instructions in the email and
+upload it to your browser, and send the subject (which will look something
+like /DC=org/DC=cilogon/C=US/O=Google/CN=User Name A16321) and mail it to
+ifisk@simonsfoundation.org
+
+      
+Follow instructions from the below link if you will be using Globus tools
+for submitting grid jobs from Linux/UNIX:
+https://fermi.service-now.com/kb_view.do?sysparm_article=KB0010815. Make
+sure you do this step as soon as you get your certificate and use the same
+browser window. Note: If you wait too long the certificate is no longer in
+the PKCS#12 format that you need for this step.
+
+Install osg-ca-certs and osg-client on your machine; will probably need
+help from the Systems group to do this. The instructions for this are at:
+https://twiki.grid.iu.edu/bin/view/Documentation/Release3/InstallOSGClient#6_2_Stopping_and_Disabling_Servi
+Note for regular users without root access there is an OSG tarball option:
+https://twiki.grid.iu.edu/bin/view/Documentation/Release3/InstallOSGClientTarball
+
+Send the certificate to Yujun Wu (yujun@fnal.gov) or Dmitry O Litvintsev
+(litvinse@fnal.gov) to ensure that things are set up properly.
+ 
+Run the following command: . /opt/globus-5.2.5/etc/globus-user-env.sh, to
+ensure you are running the correct version of globus
+
+Run the command grid-proxy-init -valid 168:0 (This will allow keep the
+proxy active for a week; after which you will need to renew it again)
+
+Test if the download is working using the following command:
+“globus-url-copy -vb  -dbg –nodcau
+gsiftp://fndca1.fnal.gov:2811//temp/testfnal.txt  file:////tmp/testfile”
+
+
+Copy a file called COMPLETE_FILE_LISTING in your folder using the below
+command: globus-url-copy gsiftp://fndca1.fnal.gov/COMPLETE_FILE_LISTING
+file:////`pwd`/COMPLETE_FILE_LISTING
+
+Copy the script complete.sh (see below) in the same folder as where you
+have the COMPLETE_FILE_LISTING file; and run ./complete.sh to copy all the
+files. Script: complete.sh: #!/bin/bash
+
+
+cat COMPLETE_FILE_LISTING | grep SGDP | while read path size cksum do
+#  echo "globus-url-copy -c gsiftp://fndca1.fnal.gov${path} file:////`pwd`/${path}"
+globus-url-copy -c -vb -nodcau -cd -bs 2000000 -sync
+gsiftp://fndca1.fnal.gov${path} file:////`pwd`/${path} done
+ 
+
+Once you have succeeded, you will find the transfers are much faster if
+parallel streams are enabled. You may need to speak with the local network
+administrator to open ports in the firewall
+
+Two environment variables need to be set export
+GLOBUS_TCP_PORT_RANGE=50000,50100 export
+GLOBUS_HOSTNAME=Name_of_the_external_IP
+
+
+And ports 50000-50100 need to be open in the firewall
+
+Then add “-p 10” to the list of options in the globus-url-copy command
+above
+*** [[file:Data/1001Genomes][1001Genomes]]
+- [[http://1001genomes.org/index.html][Website]]
+- ddl data: 
+  #+BEGIN_SRC bash
+  curl -O http://1001genomes.org/data/GMI-MPI/releases/v3.1/SNP_matrix_imputed_hdf5/1001_SNP_MATRIX.tar.gz
+  #+END_SRC
+**** From h5f to rds
+Very long script....
+#+begin_src python :results output :exports both
+       # from http://stackoverflow.com/questions/28170623/how-to-read-hdf5-files-in-python
+       import h5py
+       import numpy as np
+
+       filename = "./imputed_snps_binary.hdf5"
+       f = h5py.File(filename, 'r')
+
+       # List all groups
+       print("Keys: %s" % f.keys())
+    
+       # Get the data
+       acc = f['accessions'][()]
+       positions = f['positions'][()]
+       # snps = f['snps'][()] ## dangerous
+
+       ## filter maf
+       maf_threshold = 0.05
+       snps = f['snps']
+       L = snps.shape[0]
+       maf = np.zeros(L)
+       snps_matrix = snps[:,:]
+       for i in range(L):
+           p = np.mean(snps_matrix[i,:])
+           maf[i] = min(p, 1-p)
+
+       np.mean(maf > maf_threshold)
+       np.sum(maf > maf_threshold)
+
+       ## max and min ?
+       snps.min() ## 0
+       snps.max() ## 1
+
+
+       ## write the whole dataset
+
+       np.savetxt("sample.txt",snps_matrix[1:10,1:10], "%u")
+       np.savetxt("snps_matrix.txt",snps_matrix, "%u")
+
+       np.savetxt("snps_matrix.maf05.txt",snps_matrix[maf > maf_threshold,:], "%u")
+
+#+end_src
+    
+
+#+begin_src R :results output :session *R* :exports both
+       ## reading snps matrix
+
+       library(tidyverse)
+       snps.matrix <- read_delim("~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/sample.txt",
+                                 delim = " ", col_types = cols(.default = col_logical()),
+                                 col_names = FALSE)
+       data.matrix(snps.matrix)
+
+       dat <- list()
+       ## read by chunck... ugly
+       L = 10709949
+       # L = 9
+       n = 1135
+       # n = 9
+       step = seq.int(1, L, by = 500000)[-1]
+       dat$snps.matrix = NULL ##
+       skip = 0
+       for (s in step) {
+         print(s)
+         n_max <- s - skip
+         aux <- data.matrix(read_delim("~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/snps_matrix.txt",
+                           delim = " ", col_types = cols(.default = col_integer()),
+                           col_names = FALSE, skip = skip, n_max = n_max))
+         dat$snps.matrix <- rbind(dat$snps.matrix, matrix(as.raw(aux), nrow(aux), ncol(aux)))
+         skip <- skip + n_max
+       }
+       ## I miss the end...
+       n_max <- L - skip
+       aux <- data.matrix(read_delim("~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/snps_matrix.txt",
+                                     delim = " ", col_types = cols(.default = col_integer()),
+                                     col_names = FALSE, skip = skip, n_max = n_max))
+       dat$snps.matrix <- rbind(dat$snps.matrix, matrix(as.raw(aux), nrow(aux), ncol(aux)))
+
+
+       assertthat::assert_that(nrow(dat$snps.matrix) == L)
+       assertthat::assert_that(ncol(dat$snps.matrix) == n)
+
+       library(rhdf5)
+       file.h5 <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/imputed_snps_binary.hdf5"
+       h5ls(file.h5)
+
+       ## col.names
+       acc <- h5read(file.h5,"accessions")
+       colnames(dat$snps.matrix) <- acc
+
+       ## row.names
+       pos <- h5read(file.h5,"positions")
+       rownames(dat$snps.matrix) <- pos
+
+       ## retrieve coord
+       dat$accessions <- read_delim("~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/accessions.txt", delim = "\t")
+
+
+
+       ## Save
+       saveRDS(dat, "snps_matrix.rds")
+
+       ## filter maf
+       library(crayon)
+       maf.threshold <- 0.05
+       maf <- apply(dat$snps.matrix, 1, function(r) {p <- mean(as.integer(r)); min(p, 1 - p)})
+       cat(green(paste0("Removing ", mean(maf <= maf.threshold),"% loci\n")))
+       dat.maf <- list()
+       dat.maf$accessions <- dat$accessions
+       dat.maf$maf.threshold <- maf.threshold
+       dat.maf$G <- t(dat$snps.matrix[maf > maf.threshold,])
+       rm(dat)
+       gc()
+       rnames <- rownames(dat.maf$G)
+       cnames <- colnames(dat.maf$G)
+       dat.maf$G <- matrix(as.integer(dat.maf$G), nrow(dat.maf$G), ncol(dat.maf$G))
+       colnames(dat.maf$G) <- cnames
+       rownames(dat.maf$G) <- rnames
+
+       assertthat::assert_that(nrow(dat.maf$G) == n)
+       assertthat::assert_that(ncol(dat.maf$G) == 1783980)
+       assertthat::assert_that(nrow(dat.maf$accession) == nrow(dat.maf$G))
+
+       saveRDS(dat.maf, "snps_matrix_maf05.rds")
+
+
+#+end_src
+**** Subsample
+#+begin_src R :results output :session *R* :exports both
+       dat <- readRDS("~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/snps_matrix_maf05.rds")
+       n <- nrow(dat$G)
+       L <- ncol(dat$G)
+       G.sample <- dat$G[,sample.int(L,100000)]
+       saveRDS(G.sample, "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/snps_matrix_maf05.sample.rds")
+#+end_src
+**** OF GWAS simulations
+#+begin_src R :results output :session *R* :exports both
+       setwd("/home/cayek/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/")
+       library(raster)
+       library(LEA)
+
+       load("/home/francois/Athaliana_1001G/athaliana.Rdata")
+       attach(athaliana)
+
+       climate = getData('worldclim', var='bio', res = 2.5)
+       bio = extract(climate, y = as.matrix(metadata[,6:5]))
+       pc.bio = prcomp(bio,scale = T)
+       env = pc.bio$x[,1]
+
+       write.geno(R = G, output = "G_OF_filtered.geno")
+       pc = pca("G_OF_filtered.geno", K = 995)
+       plot(pc, lwd=5, col="red",xlab=("PCs"),ylab="eigen")
+
+       K = 40
+       sigma = sqrt( sum(pc$sdev^2) - sum(pc$sdev[1:K]^2) )
+       base.effect = sqrt( sum(pc$sdev^2) )
+
+       ##parametres de la simu:
+       J = 10
+       beta = 6*base.effect
+       delta = 0.3*base.effect ##G X E
+
+       ## definition des SNPs ref
+       window = 201
+
+       lch = 0
+
+       ref.set = NULL
+
+       for (i in 1:5){
+         chromosome = which(chr == i)
+         set = seq(lch + 1+(window-1)/2, lch + length(chromosome) , by = window )
+         ref.set = c(ref.set, set)
+         lch = lch + length(chromosome)
+       }
+       loc.J = sort(sample(ref.set, J))
+       table(chr[loc.J])
+
+       ##simu du phenotype
+       x = beta*rowSums(G[,loc.J]) +
+         delta*rowSums(G[,loc.J])*env +
+         rowSums(pc$projections[,1:K]) + rnorm(995, sd = sigma)
+
+       cor(x, G[,loc.J])
+
+       ##associations:
+       r = as.numeric( cor(x, G) )
+       sum( loc.J %in% which(r > 0.3) )
+
+       ## save into RDS
+       saveRDS(G,"G_OF_filtered.rds")
+       sample.loci <- sample.int(ncol(G), 50000)
+       saveRDS(G[,sample.loci],"G_OF_filtered.sample.rds")
+
+
+       ## save chrm
+       saveRDS(chr, "G_OF_filtered.chrm.rds")
+       saveRDS(chr[sample.loci], "G_OF_filtered.sample.chrm.rds")
+
+
+
+       ## save coord
+       coord <- as.matrix(metadata[,c(6,5)])
+       saveRDS(coord, "G_OF_filtered.coord.rds")
+
+       detach(athaliana)
+#+end_src
+
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:

@@ -45,6 +45,7 @@ test_that("Article3_MethodComparison with cs.sum", {
                                    correctionByC = FALSE,
                                    cs = c(0.2),
                                    cs.sum = TRUE,
+                                   sd.V.rho = 1.0,
                                    nb.rep = 2,
                                    fast.only = TRUE,
                                    cluster.nb = NULL,
