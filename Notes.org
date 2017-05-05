@@ -1610,7 +1610,7 @@ C'est comparable a les loadings RDA1
 
 ** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
-CLOCK: [2017-05-05 ven. 13:03]
+CLOCK: [2017-05-05 ven. 13:03]--[2017-05-05 ven. 13:29] =>  0:26
 - Note taken on [2017-05-05 ven. 10:56] \\
   Je vais travailler sur un dataset centré et normalisé !
 CLOCK: [2017-05-05 ven. 10:48]--[2017-05-05 ven. 11:13] =>  0:25
