@@ -213,8 +213,8 @@ finalPcaLm <- function(K, calibrate = FALSE, correctionByC = FALSE) {
 ################################################################################
 
 #' @export
-finalOracle <- function(K, calibrate = FALSE, correctionByC = FALSE) {
-  m <- PCAClassicLinearMethod(K = K,
+finalOracle <- function(calibrate = FALSE, correctionByC = FALSE) {
+  m <- PCAClassicLinearMethod(K = NULL,
                               nickname = "Oracle",
                               hypothesis.testing.method = lm_zscore(calibrate = calibrate,
                                                                     correctionByC = correctionByC),
@@ -240,7 +240,7 @@ finalBench <- function(K, lambda, calibrate, sparse.prop,
     ## bench$refactor <- finalRefactorMethod(K = K, calibrate = calibrate)
     bench$lm <- finalLm(calibrate = calibrate)
     bench$pcaLm <- finalPcaLm(K = K, calibrate = calibrate)
-    bench$oracle <- finalOracle(K = K, calibrate = calibrate, correctionByC = correctionByC)
+    bench$oracle <- finalOracle(calibrate = calibrate, correctionByC = correctionByC)
     if (!fast.only) {
       ## bench$lea <- finalLEAMethod(K = K)
       bench$lfmmLasso <- finalLfmmLassoMethod(K = K,

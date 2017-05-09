@@ -19,5 +19,7 @@
 
 * État de l'art 
 ** Contexte
-** 
+** Structure des données biologique
+** Test d'association
 ** Problématique et plan
+* 

@@ -51,3 +51,32 @@ test_that("run of main exp", {
 
   Article3_MethodComparison_plot_relative_diff_AUC(exp)
 })
+
+test_that("Play with experiment", {
+
+  skip("run and play")
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/ValidationNumerique_EU_L5e+05.G.rds"
+
+  ## methods
+  methods <- finalBench(2, 1e-5, TRUE, 0.01, TRUE)
+  methods$famt <- NULL
+  methods$lfmmRidge <- NULL
+  methods$sva <- NULL
+
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = 0.0005,
+                                   n = NULL, L = 10000,
+                                   K = 2,
+                                   K.method = 2,
+                                   cs = 0.4,
+                                   cs.sum = TRUE,
+                                   sd.V.rho = 2, 
+                                   nb.rep = 5,
+                                   fast.only = TRUE,
+                                   cluster.nb = 20,
+                                   save = FALSE, bypass = TRUE,
+                                   methods = methods)
+
+  Article3_MethodComparison_plot_relative_diff_AUC(exp)
+
+ })

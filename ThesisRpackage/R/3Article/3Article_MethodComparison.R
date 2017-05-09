@@ -12,12 +12,16 @@ Article3_MethodComparison_main <- function(exp) {
       } else {
         s$cs <- c
       }
-      bench <- finalBench(K = exp$K.method,
-                          lambda = 1e-5,
-                          sparse.prop = p,
-                          calibrate = FALSE,
-                          fast.only = exp$fast.only, with.missing = FALSE,
-                          correctionByC = exp$correctionByC)
+      if (is.null(exp$methods)) {
+        bench <- finalBench(K = exp$K.method,
+                            lambda = 1e-5,
+                            sparse.prop = p,
+                            calibrate = FALSE,
+                            fast.only = exp$fast.only, with.missing = FALSE,
+                            correctionByC = exp$correctionByC)
+      } else {
+        bench <- exp$methods
+      }
       exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = exp$nb.rep, s = s), bench))
       exp.aux <- runExperiment(exp.aux)
 
@@ -49,7 +53,8 @@ Article3_MethodComparison <- function(G.file,
                                       nb.rep = 5,
                                       fast.only = TRUE,
                                       cluster.nb = NULL,
-                                      save = TRUE, bypass = FALSE) {
+                                      save = TRUE, bypass = FALSE,
+                                      methods = NULL) {
 
 
   cl <- long_init(cluster.nb,
@@ -86,6 +91,7 @@ Article3_MethodComparison <- function(G.file,
                            cs = NULL,
                            sd.V.rho = sd.V.rho,
                            round = FALSE)
+  exp$methods <- methods
   exp <- Article3_MethodComparison_main(exp)
 
   ## return

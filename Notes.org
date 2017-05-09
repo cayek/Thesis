@@ -1667,19 +1667,20 @@ Pour le moment on va prendre le K de la simulation.
 ***** Run on krak 
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds"
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/ValidationNumerique_EU_L5e+05.G.rds"
 
   exp <- Article3_MethodComparison(G.file,
                                    outlier.props = 0.0005,
                                    n = NULL, L = 10000,
                                    K = 2,
                                    K.method = 2,
-                                   cs = 0.1,
+                                   cs = c(0.1, 0.2, 0.6, 0.8, 1.0),
                                    cs.sum = TRUE,
-                                   nb.rep = 2,
-                                   fast.only = FALSE,
-                                   cluster.nb = 10,
-                                   save = FALSE, bypass = FALSE)
+                                   sd.V.rho = 2, 
+                                   nb.rep = 5,
+                                   fast.only = TRUE,
+                                   cluster.nb = 20,
+                                   save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(exp)
 #+end_src
