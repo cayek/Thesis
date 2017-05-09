@@ -21,7 +21,6 @@ Article3_MethodComparison_main <- function(exp) {
       exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = exp$nb.rep, s = s), bench))
       exp.aux <- runExperiment(exp.aux)
 
-
       exp$df <- exp.aux$result$df.pvalue %>%
         dplyr::mutate(outlier.prop = p) %>%
         dplyr::mutate(`cor(U,X)` = paste0(c, collapse="|")) %>%
@@ -166,6 +165,8 @@ Article3_MethodComparison_plot_relative_diff_AUC <- function(exp) {
   ## compute relative diff
   oracle.auc <- toplot %>%
     dplyr::filter(method == "Oracle")
+
+  print(oracle.auc)
 
   toplot <- dplyr::inner_join(toplot, oracle.auc, by = c("outlier.prop", "cor(U,X)", "rep")) %>%
     dplyr::mutate(auc.relative.diff = (auc.y - auc.x) / auc.y,

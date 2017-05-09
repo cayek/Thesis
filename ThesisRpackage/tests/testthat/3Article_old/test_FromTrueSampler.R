@@ -49,9 +49,10 @@ test_that("From true data set sample, Arabidopsis Thaliana and analyse with lfmm
                        L = 1000,
                        K = 3,
                        prop.outlier = 0.1,
-                       rho = 0.9,
+                       rho = NULL,
                        cs = c(0.5,0,0),
-                       round = TRUE)
+                       sd.V.rho = 10.0,
+                       round = FALSE)
   dat <- sampl(s)
 
   # Ridge lfmm

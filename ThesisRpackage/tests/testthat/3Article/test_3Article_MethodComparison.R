@@ -53,5 +53,5 @@ test_that("Article3_MethodComparison with cs.sum", {
 
   expect_equal(dim(exp$df), c(8400, 13))
 
-  Article3_MethodComparison_plot_relative_diff_AUC(exp)
+  ## Article3_MethodComparison_plot_relative_diff_AUC(exp)
 })

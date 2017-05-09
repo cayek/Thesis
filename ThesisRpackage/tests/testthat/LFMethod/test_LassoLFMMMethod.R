@@ -281,7 +281,7 @@ test_that("lasso lfmm on case2", {
 ## Bug with FDRControlExperiment
 
 
-test_that("lasso lfmm on case2", {
+test_that("lasso lfmm bug with FDRControlExperiment", {
   G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
   skip_if_not(file.exists(G.file))
   K <- 2
@@ -303,3 +303,51 @@ test_that("lasso lfmm on case2", {
   exp <- FDRControlExperiment(nb.rep = 2, sampler = s, m)
   exp <- runExperiment(exp)
 })
+
+################################################################################
+## Bug with FromTrueSampler
+
+test_that("lasso lfmm with from TrueSampler", {
+  
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/ValidationNumerique_EU_L1000.G.rds"
+  skip_if_not(file.exists(G.file))
+
+  ## data
+  c = 0.1
+  s <- FromTrueSampler(G.file = G.file,
+                       n = NULL,
+                       L = 1000,
+                       K = 2,
+                       prop.outlier = 0.001,
+                       rho = NULL,
+                       cs = NULL,
+                       sd.V.rho = 10.0,
+                       round = FALSE)
+  aux <- runif(s$K)
+  aux <- aux / sum(aux) * c
+  s$cs <- aux
+  dat <- sampl(s)
+
+  ## run lasso
+  m <- finalLfmmLassoMethod(K = 2, sparse.prop = 0.001)
+  m <- run(m,dat)
+
+  gplot_stat(b = m$B[1,], outlier = dat$outlier) +
+    geom_point(aes(x = index, y = stat, color = outlier))
+
+  ## bench
+  bench <- finalBench(K = 2,
+                      lambda = 1e-5,
+                      sparse.prop = 0.001,
+                      calibrate = FALSE,
+                      fast.only =  TRUE,
+                      with.missing = FALSE,
+                      correctionByC = FALSE)
+
+  ## test with FDRControlExperiment
+  exp.aux <- do.call(FDRControlExperiment,c(list(nb.rep = 1, s = s), bench))
+  exp.aux <- runExperiment(exp.aux)
+
+})
+
+

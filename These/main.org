@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+# -*- mode: org -*-
+
+#+TITLE: Méthodes de factorisation matricielle pour la génomique des populations et lestests d'association
+#+AUTHOR:      Kevin Caye
+
+#+LANGUAGE:  en
+#+STARTUP: overview indent inlineimages logdrawer
+#+OPTIONS: H:5 author:nil email:nil creator:nil timestamp:nil skip:nil toc:nil ^:nil
+#+TAGS: noexport(n) deprecated(d)
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+# #+LATEX_CLASS: IEEEtran
+#+LaTeX_CLASS: article
+# #+LaTeX_CLASS: acm-proc-article-sp
+
+#+BABEL: :session *R* :cache yes :results output graphics :exports both :tangle yes 
+
+* État de l'art 
+** Contexte
+** 
+** Problématique et plan

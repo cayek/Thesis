@@ -13,6 +13,13 @@ D_thau <- function(m, X) {
   # Sigma <- diag(svd.res$d[svd.res$d > gamma])
   m$K <- ncol(Sigma)
   flog.debug(paste("D_thau: K = ", m$K, "\n"))
+
+  ## test if K = 0
+  if (m$K == 0) {
+    flog.debug(paste("D_thau: taking K = 1 \n"))
+    m$K = 1
+  }
+
   svd.res <- svd(X, nu = m$K, nv = m$K)
   m$U <- svd.res$u %*% Sigma
   m$V <- svd.res$v

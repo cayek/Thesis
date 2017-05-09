@@ -241,13 +241,12 @@ finalBench <- function(K, lambda, calibrate, sparse.prop,
     bench$lm <- finalLm(calibrate = calibrate)
     bench$pcaLm <- finalPcaLm(K = K, calibrate = calibrate)
     bench$oracle <- finalOracle(K = K, calibrate = calibrate, correctionByC = correctionByC)
-    bench$lfmmLasso <- finalLfmmLassoMethod(K = K,
-                                            sparse.prop = sparse.prop,
-                                            calibrate = calibrate,
-                                            correctionByC = correctionByC)
     if (!fast.only) {
-      bench$lea <- finalLEAMethod(K = K)
-
+      ## bench$lea <- finalLEAMethod(K = K)
+      bench$lfmmLasso <- finalLfmmLassoMethod(K = K,
+                                              sparse.prop = sparse.prop,
+                                              calibrate = calibrate,
+                                              correctionByC = correctionByC)
     }
     if (with.missing) {
       bench$lfmm.ridge.impute.first <- finalLfmmRdigeMethod(K = K,

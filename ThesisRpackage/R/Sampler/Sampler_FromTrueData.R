@@ -88,17 +88,17 @@ sampl.FromTrueSampler <- function(s) {
     a <- 1
     b <- 1
   }
-  V[outlier,] <- a * V[outlier,]
-  B[,outlier] <- b * B[,outlier]
+  V[outlier,] <- a * V[outlier,,drop = FALSE]
+  B[,outlier] <- b * B[,outlier, drop = FALSE]
 
   # synthese
-  G[,outlier] <- one %*% mu[, outlier] +
-    tcrossprod(U, V[outlier,]) +
-    X %*% B[,outlier] +
-    E[,outlier]
+  G[,outlier] <- one %*% mu[, outlier, drop = FALSE] +
+    tcrossprod(U, V[outlier,,drop = FALSE]) +
+    X %*% B[,outlier, drop = FALSE] +
+    E[,outlier, drop = FALSE]
 
   if (s$round) {
-    G[,outlier] <- round(G[,outlier])
+    G[,outlier] <- round(G[,outlier, drop = FALSE])
   }
 
   # return
