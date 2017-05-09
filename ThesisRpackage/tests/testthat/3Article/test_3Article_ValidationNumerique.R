@@ -66,16 +66,16 @@ test_that("Play with experiment", {
   methods$sva <- NULL
 
   exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = 0.0005,
-                                   n = NULL, L = 10000,
+                                   outlier.props = 0.1,
+                                   n = NULL, L = 1000,
                                    K = 2,
                                    K.method = 2,
                                    cs = 0.4,
                                    cs.sum = TRUE,
                                    sd.V.rho = 1, 
-                                   nb.rep = 4,
+                                   nb.rep = 1,
                                    fast.only = TRUE,
-                                   cluster.nb = 4,
+                                   cluster.nb = 1,
                                    save = FALSE, bypass = TRUE,
                                    methods = methods)
 

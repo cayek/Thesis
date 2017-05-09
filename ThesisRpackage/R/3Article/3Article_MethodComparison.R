@@ -84,7 +84,7 @@ Article3_MethodComparison <- function(G.file,
   exp$correctionByC <- correctionByC
 
   ## sampler
-  B.outler.sampler <- function(n, mean, sd) {
+  B.outlier.sampler <- function(n, mean, sd) {
     res = 1:n
     for (i in 1:n) {
       res[i] <- rnorm(1, mean, sd)
