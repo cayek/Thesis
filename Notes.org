@@ -2877,7 +2877,7 @@ right singular vectors of this subset. This approach accomplishes two
 things. -- cite:article_Leek_Storey_2008 
 #+END_QUOTE
 *** Simulations
-Voir le [[file:org-ref-pdfs/SI_Leek_Storey_2008.pdf][SI]]. Ca pourrait valoir le coup de faire ce genre de simulation. En
+Voir le [[file:Biblio/org-ref-pdfs/SI_Leek_Storey_2008.pdf][SI]]. Ca pourrait valoir le coup de faire ce genre de simulation. En
 tout les simulations son avantagueuse par rapport a l'algo SVA.
 
 
@@ -3464,7 +3464,7 @@ l'utilisation de LFMM dans les EWAS. Il a été cité plus de 600 fois.
 :END:
 
 cite:Song_2015 C'est la papier qui m'a inspiré les plots de comparaisons. Il y
-a un gros [[file:org-ref-pdfs/SI_Song_2015.pdf][Sup Info]].
+a un gros [[file:Biblio/org-ref-pdfs/SI_Song_2015.pdf][Sup Info]].
  
 *** Preprint
 [[file:org-ref-pdfs/preprint_Song_2015.pdf]] Papier trouvé dans la biblio que OF
