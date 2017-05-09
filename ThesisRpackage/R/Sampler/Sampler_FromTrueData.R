@@ -94,8 +94,9 @@ sampl.FromTrueSampler <- function(s) {
   # synthese
   G[,outlier] <- one %*% mu[, outlier, drop = FALSE] +
     tcrossprod(U, V[outlier,,drop = FALSE]) +
-    X %*% B[,outlier, drop = FALSE] +
-    E[,outlier, drop = FALSE]
+    X %*% B[,outlier, drop = FALSE]
+  #+
+   # E[,outlier, drop = FALSE]
 
   if (s$round) {
     G[,outlier] <- round(G[,outlier, drop = FALSE])
