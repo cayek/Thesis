@@ -101,6 +101,9 @@ sampl.FromTrueSampler <- function(s) {
     G[,outlier] <- round(G[,outlier, drop = FALSE])
   }
 
+  ## we remove variable with no variance
+  G <- Preprocessing_filter_sd(G)
+
   # return
   GenerativeDataSet(G = G,
                     X = X,

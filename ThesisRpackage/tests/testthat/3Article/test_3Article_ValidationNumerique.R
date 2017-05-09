@@ -54,7 +54,7 @@ test_that("run of main exp", {
 
 test_that("Play with experiment", {
 
-  skip("run and play")
+  skip("run and play on krak")
 
   library(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/ValidationNumerique_EU_L5e+05.G.rds"
@@ -66,19 +66,22 @@ test_that("Play with experiment", {
   methods$sva <- NULL
 
   exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = 0.1,
-                                   n = NULL, L = 1000,
+                                   outlier.props = 0.0005,
+                                   n = 100, L = 10000,
                                    K = 2,
                                    K.method = 2,
-                                   cs = 0.4,
-                                   cs.sum = TRUE,
+                                   cs = c(0.2, 0.6),
+                                   cs.sum = FALSE,
                                    sd.V.rho = 1, 
-                                   nb.rep = 1,
+                                   nb.rep = 4,
                                    fast.only = TRUE,
-                                   cluster.nb = 1,
+                                   cluster.nb = 16,
                                    save = FALSE, bypass = TRUE,
                                    methods = methods)
 
   Article3_MethodComparison_plot_relative_diff_AUC(exp)
+  Article3_MethodComparison_plot_precisionRecall(exp)
+  Article3_MethodComparison_plot_AUC(exp)
+  Article3_MethodComparison_plot_GIF(exp)
 
  })
