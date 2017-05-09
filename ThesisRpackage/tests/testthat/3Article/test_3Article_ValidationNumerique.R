@@ -55,6 +55,7 @@ test_that("run of main exp", {
 test_that("Play with experiment", {
 
   skip("run and play")
+  
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/ValidationNumerique_EU_L5e+05.G.rds"
 
   ## methods
@@ -71,9 +72,9 @@ test_that("Play with experiment", {
                                    cs = 0.4,
                                    cs.sum = TRUE,
                                    sd.V.rho = 2, 
-                                   nb.rep = 5,
+                                   nb.rep = 4,
                                    fast.only = TRUE,
-                                   cluster.nb = 20,
+                                   cluster.nb = 4,
                                    save = FALSE, bypass = TRUE,
                                    methods = methods)
 
