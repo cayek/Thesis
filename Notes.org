@@ -1625,60 +1625,16 @@ CLOCK: [2017-05-05 ven. 09:47]--[2017-05-05 ven. 10:12] =>  0:25
 On sample sur tout le 1000Genome et que les européens.
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  ## read data, Warning very big file !
-  dat <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.rds")
 
-  ## keep only Eu
-  Eu.ind <- dat$indiv$super_pop == "EUR"
-  G <- dat$G[Eu.ind,]
-
-  ## filter maf
-  maf <- apply(G, 2, function(l){p <- mean(l) / 2;min(p, 1 - p)})
-  out.index <- which(maf <= 0.05)
-  G <- G[,-out.index]
-  dim(G)
-
-  ## save this dataset
-  saveRDS(G, "~/Projects/Thesis/Data/1000Genomes/Phase3/Eu.maf.05.G.rds")
-  ## G <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/Eu.maf.05.G.rds")
-
-  ## rm for memory
-  rm(dat)
-  gc()
-
-  ## filter sd == 0
-  G <- Preprocessing_filter_sd(G)
-  dim(G)
-
-  ## sample loci
-  L <- 5e5
-  sample.loci <- sample.int(ncol(G), L)
-  G <- G[, sample.loci]
-  dim(G)
-
-  ## standartization
-  G <- scale(G)
-  anyNA(G)
-
-  ## PCA
-  svd.res <- svd(G, nu = 0, nv = 0)
-  vars <- svd.res$d / sum(svd.res$d)
-
-  ## plot
-  pl <- qplot(x = seq_along(vars), y = vars, geom='line') +
-    geom_point() +
-    coord_cartesian(xlim = c(1,100))
-  pl
-  save_plot_timc_bcm_15(pl, "faible_struct_pop_vps.png")
-
-  ## save
-  saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds")
+  file.res <- Article3_ValidationNumerique_Sample(L = 5e5, only.EUR = TRUE,
+                                                  dat.file = "~/Projects/Thesis/Data/1000Genomes/Phase3/Eu_Af_Afam.maf.05.rds")
 #+end_src
 
-#+RESULTS:
-[[./Rplots/faible_struct_pop_vps.png]]
-
 On va prendre $K = 2$ variables latentes.
+#+begin_src R :results output graphics :file Rplots/faible_struct_pop_vps.png :exports both :width 600 :height 400 
+
+#+end_src
+
 #+begin_src R :results output :exports both
   G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/Eu.maf.05.G.rds")
 
@@ -4455,3 +4411,22 @@ Ils trouvent des outlier a partir de leur projection et calcule des pvalue aprè
 , avec un modèle linéaire.
 
 Mais il n'y a pas de correction pour des quelconce variable lattente ! 
+
+** TODO 1921 - Correlation and causation              :CausalInference:LFMM:
+ :PROPERTIES:
+  :Custom_ID: wright1921correlation
+  :AUTHOR: Wright
+  :JOURNAL: Journal of agricultural research
+  :YEAR: 1921
+  :VOLUME: 20
+  :PAGES: 557--585
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:wright1921correlation
+
+Un papier de 1921 qui evoque la diference entre les corrélations et les cause.
+Je n'ai pas l'impression qui parle de variable lattente mais plutot de
+l'influence de lajout de variable au model quand on calcule des correlations. Ca
+fait penser a ce que je connais de l'inference causal ! 

@@ -5,8 +5,9 @@ Preprocessing_filter_maf <- function(G, maf.threshold = 0.05, plot = FALSE) {
   if(plot) {
     hist(maf)
   }
-  out.index <- which(maf <= maf.threshold)
-  G[,-out.index]
+  out <- maf <= maf.threshold
+  flog.trace("proportion of removed loci = ", mean(out))
+  G[,!out]
 }
 
 #' @export 
@@ -15,8 +16,9 @@ Preprocessing_filter_sd <- function(G, sd.threshold = 0, plot = FALSE) {
   if(plot) {
     hist(sds)
   }
-  out.index <- which(sds <= sd.threshold)
-  G[,-out.index]
+  out <- sds <= sd.threshold
+  flog.trace("proportion of removed loci = ", mean(out))
+  G[,!out]
 }
 
 
