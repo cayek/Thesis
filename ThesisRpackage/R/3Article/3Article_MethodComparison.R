@@ -82,6 +82,19 @@ Article3_MethodComparison <- function(G.file,
   exp$sd.V.rho <- sd.V.rho
   exp$K.method <- K.method
   exp$correctionByC <- correctionByC
+
+  ## sampler
+  B.outler.sampler <- function(n, mean, sd) {
+    res = 1:n
+    for (i in 1:n) {
+      res[i] <- rnorm(1, mean, sd)
+      while (abs(res[i]) < 1 * sd) {
+        res[i] <- rnorm(1, mean, sd)
+      }
+    }
+    res
+  }
+
   exp$s <- FromTrueSampler(G.file = G.file,
                            n = n,
                            L = L,
@@ -90,7 +103,8 @@ Article3_MethodComparison <- function(G.file,
                            rho = NULL,
                            cs = NULL,
                            sd.V.rho = sd.V.rho,
-                           round = FALSE)
+                           round = FALSE,
+                           B.outlier.sampler = B.outlier.sampler)
   exp$methods <- methods
   exp <- Article3_MethodComparison_main(exp)
 
