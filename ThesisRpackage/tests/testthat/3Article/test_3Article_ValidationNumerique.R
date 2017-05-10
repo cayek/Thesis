@@ -64,6 +64,17 @@ test_that("Play with experiment", {
   methods$famt <- NULL
   methods$lfmmRidge <- NULL
   methods$sva <- NULL
+  
+  B.outlier.sampler = function(n, mean, sd) {
+    res = 1:n
+    for (i in 1:n) {
+      res[i] <- rnorm(1, mean, sd)
+      while (abs(res[i]) < 1 * sd) {
+        res[i] <- rnorm(1, mean, sd)
+      }
+    }
+    res
+  }
 
   exp <- Article3_MethodComparison(G.file,
                                    outlier.props = 0.001,
@@ -77,6 +88,9 @@ test_that("Play with experiment", {
                                    nb.rep = 4,
                                    fast.only = TRUE,
                                    cluster.nb = 4,
+
+                                   B.outlier.sampler = B.outlier.sampler,
+
                                    save = FALSE, bypass = TRUE,
                                    methods = methods)
 

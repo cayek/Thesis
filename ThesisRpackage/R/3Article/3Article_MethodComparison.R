@@ -54,6 +54,20 @@ Article3_MethodComparison <- function(G.file,
                                       nb.rep = 5,
                                       fast.only = TRUE,
                                       cluster.nb = NULL,
+
+                                      ## sampler
+                                      B.outlier.sampler = function(n, mean, sd) {
+                                        res = 1:n
+                                        for (i in 1:n) {
+                                          res[i] <- rnorm(1, mean, sd)
+                                          while (abs(res[i]) < 1 * sd) {
+                                            res[i] <- rnorm(1, mean, sd)
+                                          }
+                                        }
+                                        res
+                                      },
+
+
                                       save = TRUE, bypass = FALSE,
                                       methods = NULL) {
 
@@ -86,18 +100,7 @@ Article3_MethodComparison <- function(G.file,
   exp$K.method <- K.method
   exp$correctionByC <- correctionByC
 
-  ## sampler
-  B.outlier.sampler <- function(n, mean, sd) {
-    res = 1:n
-    for (i in 1:n) {
-      res[i] <- rnorm(1, mean, sd)
-      while (abs(res[i]) < 2 * sd) {
-        res[i] <- rnorm(1, mean, sd)
-      }
-    }
-    res
-  }
-
+  
   exp$s <- FromTrueSampler(G.file = G.file,
                            n = n,
                            L = L,
