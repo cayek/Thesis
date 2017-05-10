@@ -1610,6 +1610,20 @@ C'est comparable a les loadings RDA1
 
 ** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
+- Note taken on [2017-05-10 mer. 10:55] \\
+  J'ai joué avec les datasets ([[file:ThesisRpackage/tests/testthat/test_3Article_ValidationNumerique.R::test_that("Play%20with%20experiment",%20{][ici]]), avec si outlier.prop < 0.05 on ne voit pas
+  l'avantage de lfmm sur PCA+lm. alors que avec 0.05 c'est bien clair ! Je me
+  demande si avec vraiment beaucoup d'indiv (donc beucoup de puissance) 0.05 c'est
+  si aberrant ? Il faut que j'en parle avec OF. 
+  
+  Aussi, avec ce dataset il y a vraiment paut de structure (1 %), du coup si je
+  baisse pas l'erreur la variance des estimateurs des effets sont du meme ordre
+  que les B. Je peut prendre un dataset avec plus de structure. Ou plus d'indiv
+  
+  To be continued.
+- Note taken on [2017-05-10 mer. 08:55] \\
+  Si l'oracle n'a pas de bonne performance, on trouve n'imp ! C'est des simu trop
+  dure pour dire quoi que ce soit !
 CLOCK: [2017-05-05 ven. 13:03]--[2017-05-05 ven. 13:29] =>  0:26
 - Note taken on [2017-05-05 ven. 10:56] \\
   Je vais travailler sur un dataset centré et normalisé !
@@ -2415,30 +2429,44 @@ particulier il s'interesse au GWAS (donc plutot phénotype ~ génotype). Ils
 vont donner des recommendation sur l'utilisation des MLMA methods.
 
 *** Mixed-model association methods prevent false positive associations and increase power
-ok classic quand il y a de la structure d'échatillonage (structure de pop, parenté etc) elle est capté par la partie aléatoire
-le reste est incomprehenssible ....
+ok classic quand il y a de la structure d'échatillonage (structure de pop,
+parenté etc) elle est capté par la partie aléatoire le reste est
+incomprehenssible ....
 
 *** Reducing the computational cost of mixed-model association analysis
 il y a des améliorations computationnelles qui ont été faite et qui permette de passer a l'echelle.
 
 *** Pitfall: loss in power when the candidate marker is included in the GRM (genetic relationship matrix)
-C'est ce qui avait été constaté dans l'article de LFMM. La puissance diminue quand les merker candidats sont expliqué à la fois par les effets fixes et les effets aléatoires
-Après je crois qu'ils font des simultations numérique pour montrer ca.
+C'est ce qui avait été constaté dans l'article de LFMM. La puissance diminue
+quand les merker candidats sont expliqué à la fois par les effets fixes et les
+effets aléatoires Après je crois qu'ils font des simultations numérique pour
+montrer ca.
    
 *** Pitfall: using a small subset of markers in the GRM can compromise correction for stratification
 Tout est dans le titre... rien de nouveau.
 
 *** Pitfall: loss of power in ascertained case-control studies
-Les phénotype ne sont pas observé au hasard! surtout dans les cas controles, on a pas pris des gens au hasard, il y a surepresentation des malades evidament !! Mais ca fait quoi ?
-OK, ok, en fait c'est dans les étude ascertained qu'il y a un problème, il y a une perte de puissance. Ca me parait logique puisque on a des echantillion petit de malade par exemple. Apparament il y a des méthode qui corrige ca. Mais si on en detecte moins c'est par ce que a un taux d'erreur fixe la méthode ne peut rien dire !! mais c'est normal, il y a moins d'info. On va voir les simulations. 
+Les phénotype ne sont pas observé au hasard! surtout dans les cas controles, on
+a pas pris des gens au hasard, il y a surepresentation des malades evidament !!
+Mais ca fait quoi ? OK, ok, en fait c'est dans les étude ascertained qu'il y a
+un problème, il y a une perte de puissance. Ca me parait logique puisque on a
+des echantillion petit de malade par exemple. Apparament il y a des méthode qui
+corrige ca. Mais si on en detecte moins c'est par ce que a un taux d'erreur fixe
+la méthode ne peut rien dire !! mais c'est normal, il y a moins d'info. On va
+voir les simulations.
 **** Tableau 3: file:./org-ref-pdfs/yang14_advan_pitfal_applic_mixed_model_assoc_method.pdf::4
 Ok il report les pvalues des des marker outlier... 
 ***** Rmk: 
-On parle de pvaleur mais on enonce jamais les hypothèses. C'est implicite que 
-$H0_j$ : le marker j est neutre
-$H1_j$ : le marker j est associé au phénotype
-Biensur la modélisation n'est pas la même dans le modèle linéaire et MLMe. 
-Mais le raisonnement marche quand même c'est deux modèle sont vu comme des boites et la pvalues c'est la probabilité que sous H0 on observe un truc plus atypique, donc pvalue plus faible veux dire moins de puissance. Mais bon je suis pret a parier que les pvaleur de tous le monde sont plus faible dans le cas de MLMe et que le problème c'est juste l'application des teste d'hypothèse classic !! Je suis persuader qu'il faut quelqueshose de plus robuste pour les test d'hypothèse, avec moins de modèle et plus de logique ;)...
+On parle de pvaleur mais on enonce jamais les hypothèses. C'est implicite que
+$H0_j$ : le marker j est neutre $H1_j$ : le marker j est associé au phénotype
+Biensur la modélisation n'est pas la même dans le modèle linéaire et MLMe. Mais
+le raisonnement marche quand même c'est deux modèle sont vu comme des boites et
+la pvalues c'est la probabilité que sous H0 on observe un truc plus atypique,
+donc pvalue plus faible veux dire moins de puissance. Mais bon je suis pret a
+parier que les pvaleur de tous le monde sont plus faible dans le cas de MLMe et
+que le problème c'est juste l'application des teste d'hypothèse classic !! Je
+suis persuader qu'il faut quelqueshose de plus robuste pour les test
+d'hypothèse, avec moins de modèle et plus de logique ;)...
      
 
 ** 2015 - A Practical Guide To Environmental Association Analysis in  Landscape Genomics :LFMM:EAAReviewAndComparison:
@@ -4342,7 +4370,8 @@ Pk le R^2 de pearson c'est pas bien ... A lIRE
 :URL:      http://dx.doi.org/10.1111/mec.13243
 :END:
 
-cite:Meirmans_2015 Le nombre d'outlier attendu est petit :D
+cite:Meirmans_2015 Le nombre d'outlier attendu est petit :D. Pourtant dans
+cite:Abraham_2014 il trouve de l'ordre de 1000 locus pour expliquer la maladie celiac.
 
 ** TODO - Imputation de données manquantes
 :PROPERTIES:
@@ -4432,3 +4461,20 @@ Un papier de 1921 qui evoque la diference entre les corrélations et les cause.
 Je n'ai pas l'impression qui parle de variable lattente mais plutot de
 l'influence de lajout de variable au model quand on calcule des correlations. Ca
 fait penser a ce que je connais de l'inference causal ! 
+
+** TODO 2014 - Accurate and Robust Genomic Prediction of Celiac Disease Using  Statistical Learning :LFMM:GWAS:
+ :PROPERTIES:
+  :Custom_ID: Abraham_2014
+  :AUTHOR: Abraham, Tye-Din, Bhalala, , Kowalczyk, Zobel \& Inouye
+  :JOURNAL: PLoS Genetics
+  :YEAR: 2014
+  :VOLUME: 10
+  :PAGES: e1004137
+  :DOI: 10.1371/journal.pgen.1004137
+  :URL: http://dx.doi.org/10.1371/journal.pgen.1004137
+ :END:
+ 
+cite:Abraham_2014 
+
+Ils font un modèle de prédiction pour la malidie celiac (pour estimer un facteur
+de risque). Dans ce modèle il y a de l'orde du millier de SNIPs causaux ! 

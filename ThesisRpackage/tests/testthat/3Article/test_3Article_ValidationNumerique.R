@@ -62,14 +62,14 @@ test_that("Play with experiment", {
   ## methods
   methods <- finalBench(2, 1e-5, TRUE, 0.01, TRUE)
   methods$famt <- NULL
-  methods$lfmmRidge <- NULL
+  ## methods$lfmmRidge <- NULL
   methods$sva <- NULL
   
   B.outlier.sampler = function(n, mean, sd) {
     res = 1:n
     for (i in 1:n) {
       res[i] <- rnorm(1, mean, sd)
-      while (abs(res[i]) < 1 * sd) {
+      while (abs(res[i]) < 2 * sd) {
         res[i] <- rnorm(1, mean, sd)
       }
     }
@@ -77,11 +77,11 @@ test_that("Play with experiment", {
   }
 
   exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = 0.001,
+                                   outlier.props = 0.05,
                                    n = 100, L = 10000,
                                    K = 2,
                                    K.method = 2,
-                                   cs = list(c(0.8,0.6)),
+                                   cs = list(c(0.6,0.3)),
                                    cs.sum = FALSE,
                                    sd.V.rho = 1, 
                                    rho.E = 0.5, 
