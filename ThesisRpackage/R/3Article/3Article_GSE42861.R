@@ -69,8 +69,7 @@ Article3_GSE42861 <- function(dat, dat.name, cluster.nb,
 #' @export
 Article3_GSE42861_sampler <- function() {
   X <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/X.rds")
-  X <- X[,1]
-  head(X)
+  X <- X[,1, drop = FALSE]
   
   s <- TrueSampler(G.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds",
                    X.file = X,
