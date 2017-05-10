@@ -14,7 +14,8 @@ FromTrueSampler <- function(G.file,
                             rho = NULL,
                             cs = NULL,
                             round = FALSE,
-                            sd.V.rho = 1, ## var of association effect (B) * var of V
+                            sd.V.rho = 1, ## var of association effect (B) * var of V,
+                            rho.E = 1.0, ## coef before E
                             B.outlier.sampler = function(n, mean, sd) rnorm(n, mean, sd)) {
   structure(list(G.file = G.file,
                  n = n,
@@ -24,6 +25,7 @@ FromTrueSampler <- function(G.file,
                  rho = rho,
                  cs = cs,
                  sd.V.rho = sd.V.rho,
+                 rho.E = rho.E,
                  round = round,
                  B.outlier.sampler = B.outlier.sampler),
             class = c("FromTrueSampler","Sampler"))
@@ -92,10 +94,10 @@ sampl.FromTrueSampler <- function(s) {
   B[,outlier] <- b * B[,outlier, drop = FALSE]
 
   # synthese
-  G[,outlier] <- one %*% mu[, outlier, drop = FALSE] +
-    tcrossprod(U, V[outlier,,drop = FALSE]) +
-    X %*% B[,outlier, drop = FALSE] + 
-    E[,outlier, drop = FALSE]
+  G <- one %*% mu +
+    tcrossprod(U, V) +
+    X %*% B +
+    s$rho.E * E
 
   if (s$round) {
     G[,outlier] <- round(G[,outlier, drop = FALSE])
