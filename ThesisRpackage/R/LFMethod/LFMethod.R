@@ -193,3 +193,25 @@ imputation_error.Method <- function(m, dat) {
 UXlink.Method <- function(m, dat, link.stat = function(x, y) abs(cor(x, y)), summary.stat = mean) {
   summary.stat(apply(m$U, 2, function(c) link.stat(dat$X, c)))
 }
+
+
+################################################################################
+## Plots
+
+#' @export
+qqplott <- function(m, ...) {
+  UseMethod("qqplott")
+}
+
+#' @export
+qqplott.Method <- function(m, outlier = c()) {
+  L <- ncol(m$pvalue)
+  toplot <- tibble(pvalue = m$pvalue[1,], outlier = 1:L %in% outlier)
+  color <- rep("blue", L)
+  color[outlier] <- "red"
+  ggplot(toplot, aes(sample = -log10(pvalue))) +
+    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10)),
+            color = color) +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("-log10(pvalue) qqplot")
+}

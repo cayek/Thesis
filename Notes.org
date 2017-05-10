@@ -2481,6 +2481,8 @@ Very long script....
 #+end_src
 **** PCA
 #+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
   s <- Article3_GSE42861_sampler()
   dat <- sampl(s)
   m <- finalPcaLm(K = 25)
