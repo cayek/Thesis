@@ -91,7 +91,7 @@ Article3_MethodComparison <- function(G.file,
     res = 1:n
     for (i in 1:n) {
       res[i] <- rnorm(1, mean, sd)
-      while (abs(res[i]) < 1 * sd) {
+      while (abs(res[i]) < 2 * sd) {
         res[i] <- rnorm(1, mean, sd)
       }
     }
