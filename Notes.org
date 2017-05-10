@@ -2437,24 +2437,56 @@ Very long script....
 
   ## save
   saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
-  saveRDS(X, "~/Projects/Thesis/s/Data/ThesisDataset/3Article/GSE42861/X.rds")
+  saveRDS(X, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/X.rds")
 #+end_src
 *** Choix des parametres
 **** PCA
 #+begin_src R :results output :exports both
+  library(ThesisRpackage)
 
   ## we keep only disease.state
-  X <- readRDS("~/Projects/Thesis/s/Data/ThesisDataset/3Article/GSE42861/X.rds")
+  X <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/X.rds")
   X <- X[,1]
   head(X)
 
-  s <- TrueSampler(G.file = "")
-  expr <- expr
+  s <- TrueSampler(G.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds",
+                   X.file = X,
+                   outlier.file = NULL,
+                   n = NULL,
+                   L = NULL)
+  expr <- PCAExperiment(s = s,
+                        description = "GSE42861 PCA")
+  expr <- runExperiment(expr)
+  dumpExperiment(expr)
+#+end_src
+
+#+begin_src R :results output graphics :file Rplots/GSE42861_pca.png :exports both :width 600 :height 400 
+  expr <- retrieveExperiment(109)
+  variances <- expr$res.df$sdev / sum(expr$res.df$sdev)
+  ## plot
+  pl <- qplot(x = seq_along(variances), y = variances, geom='line') +
+    geom_point() +
+    coord_cartesian(xlim = c(1,100))
+  pl
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/GSE42861_pca.png]]
+
+**** lfmm ridge
+*** Run des méthodes
+**** lfmm lasso 
+#+begin_src R :results output :exports both
 
 #+end_src
-**** 
+**** PCA
+#+begin_src R :results output :exports both
+  s <- Article3_GSE42861_sampler()
+  dat <- sampl(s)
+  m <- finalPcaLm(K = 25)
+  m <- run(m, dat)
 
-
+#+end_src
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:
