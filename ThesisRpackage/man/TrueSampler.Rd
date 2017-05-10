@@ -6,6 +6,17 @@
 \usage{
 TrueSampler(G.file, X.file, outlier.file, n = NULL, L = NULL)
 }
+\arguments{
+\item{G.file}{a file or a matrix}
+
+\item{X.file}{a file or a matrix}
+
+\item{outlier.file}{a file or a matrix}
+
+\item{n}{number of indiv}
+
+\item{L}{number of locus}
+}
 \description{
 sample true data from file
 }

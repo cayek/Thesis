@@ -5,6 +5,11 @@
 #' sample true data from file
 #'
 #' @export
+#' @param G.file a file or a matrix
+#' @param X.file a file or a matrix
+#' @param outlier.file a file or a matrix
+#' @param n number of indiv
+#' @param L number of locus
 TrueSampler <- function(G.file, X.file, outlier.file,n = NULL, L = NULL) {
   structure(list(n = n,
                  L = L,
@@ -21,15 +26,19 @@ TrueSampler <- function(G.file, X.file, outlier.file,n = NULL, L = NULL) {
 sampl.TrueSampler <- function(s) {
 
   # read G
-  if (!is.null(s$G.file)) {
+  if (is.character(s$G.file)) {
    G <- read_G(s$G.file)
+  } else if (is.matrix(s$G.file)) {
+    G <- s$G.file
   } else {
     G <- matrix(NA,1,1)
   }
 
   # read X
-  if (!is.null(s$X.file)) {
+  if (is.character(s$X.file)) {
     X <- read_X(s$X.file)
+  } else if (is.matrix(s$X.file)) {
+    X <- s$X.file
   } else {
     X <- matrix(NA, nrow(G), 1)
   }
