@@ -2413,7 +2413,14 @@ Very long script....
        detach(athaliana)
 #+end_src
 
-** Étude de [[#Liu_2013][GSE42861]]                                              :3Article:
+** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
+:LOGBOOK:
+- Note taken on [2017-05-10 mer. 16:58] \\
+  Il faut que je trouve les locus interessant indentifié dans les papiers qui ont
+  bosser sur GSE42861 et les mettre dans les outlier.
+- State "STARTED"    from "TODO"       [2017-05-10 mer. 16:58]
+- State "TODO"       from              [2017-05-10 mer. 16:58]
+:END:
 *** Data pre-processing
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
@@ -2438,6 +2445,13 @@ Very long script....
   ## save
   saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
   saveRDS(X, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/X.rds")
+#+end_src
+*** Interesting loci 
+Les loci relevé par cite:Rahmani_2016
+#+begin_src R :results output :exports both
+  rahmani.loci <- c("cg05428452",
+                     "cg07839457",
+                     "cg16411857")
 #+end_src
 *** Choix des parametres
 **** PCA
@@ -2484,7 +2498,13 @@ Very long script....
   m <- finalLm()
   m <- run(m, dat)
 
+  pl <- qqplott(m)
+  pl
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_lm.png")
 #+end_src
+
+#+RESULTS:
+[[./Rplots/GSE42861_qqplot_lm.png]]
 **** lfmm lasso 
 #+begin_src R :results output :exports both
 
@@ -2495,10 +2515,18 @@ Very long script....
 
   s <- Article3_GSE42861_sampler()
   dat <- sampl(s)
-  m <- finalPcaLm(K = 25)
+  m <- finalPcaLm(K = 35)
   m <- run(m, dat)
 
+  outlier <- which(colnames(dat$G) %in% rahmani.loci)
+
+  pl <- qqplott(m, outlier)
+  pl
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
 #+end_src
+
+#+RESULTS:
+[[./Rplots/GSE42861_qqplot_PcaLm.png]]
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:
@@ -3508,8 +3536,8 @@ algorithme.
  
 *** Suplementary Information: 
 Un regal :D
-- file:./org-ref-pdfs/ST_Rahmani_2016.pdf
-- file:./org-ref-pdfs/SF_Rahmani_2016.pdf
+- file:./Biblio/org-ref-pdfs/ST_Rahmani_2016.pdf
+- file:./Biblio/org-ref-pdfs/SF_Rahmani_2016.pdf
 *** Software
 C'est un script R... (super TP les gars !!13/20)
 - README: file:./org-ref-pdfs/README_Rahmani_2016.pdf 
