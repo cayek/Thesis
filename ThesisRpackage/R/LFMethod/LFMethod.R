@@ -231,9 +231,14 @@ calibrate <- function(m) {
 calibrate.Method <- function(m) {
   ## compute median
   med <- apply(m$score, 1, median)
+  print("median")
+  print(med)
 
   ## compute mad
   sds <- apply(m$score, 1, mad)
+  print("mad")
+  print(sds)
+
 
   ## center and scale
   score <- sweep(m$score, 1, med)

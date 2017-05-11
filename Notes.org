@@ -2505,10 +2505,6 @@ Les loci relevé par cite:Rahmani_2016
 
 #+RESULTS:
 [[./Rplots/GSE42861_qqplot_lm.png]]
-**** lfmm lasso 
-#+begin_src R :results output :exports both
-
-#+end_src
 **** PCA
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
@@ -2522,11 +2518,40 @@ Les loci relevé par cite:Rahmani_2016
 
   pl <- qqplott(m, outlier)
   pl
+
+
+  m <- calibrate(m)
+  pl <- qqplott(m, outlier)
+  pl
+
   save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
 #+end_src
 
 #+RESULTS:
 [[./Rplots/GSE42861_qqplot_PcaLm.png]]
+**** lfmm lasso
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  s <- Article3_GSE42861_sampler()
+  dat <- sampl(s)
+  m <- finalLfmmLassoMethod(K = 30, sparse.prop = 0.01)
+  m <- run(m, dat)
+
+  outlier <- which(colnames(dat$G) %in% rahmani.loci)
+
+  pl <- qqplott(m, outlier)
+  pl
+
+
+  m <- calibrate(m)
+  pl <- qqplott(m, outlier)
+  pl
+
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
+#+end_src
+
+#+RESULTS:
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:
