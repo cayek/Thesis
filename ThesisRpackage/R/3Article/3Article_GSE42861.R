@@ -93,14 +93,14 @@ Article3_GSE42861_run_method <- function(m, candidates) {
   m <- run(m, dat)
 
   ## no calibration
-  pl <- qqplott(m, canditates)
-  pl
+  expr$pl <- qqplott(m, canditates)
+  expr$pl
 
   ## with calibration
   print("== calibrate")
   print(res.df[candidates, ])
-  pl <- qqplott(m.cal, NULL)
-  pl
+  expr$pl.cal <- qqplott(m.cal, NULL)
+  expr$pl.cal
 
   expr$m <- m
   expr$m.cal <- m.cal
