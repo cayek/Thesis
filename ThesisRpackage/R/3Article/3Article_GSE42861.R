@@ -95,7 +95,14 @@ Article3_GSE42861_run_method <- function(m, plot = TRUE, save.plot = plot, save.
 
   ## no calibration
   expr$pl <- qqplott(m, candidates)
-  
+  if (plot) {
+    x11()
+    print(expr$pl)
+  }
+  if (save.plot) {
+    save_plot_timc_bcm_15(expr$pl, paste0("GSE42861_qqplot_", m$nickname,".png"))
+  }
+
   ## with calibration
   print("== calibrating")
   m.cal <- calibrate(m)

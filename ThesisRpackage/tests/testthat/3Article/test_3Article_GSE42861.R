@@ -82,3 +82,10 @@ test_that("Article3_GSE42861_methods on whole dataset", {
 
 
 })
+
+test_that("Article3_GSE42861_run_method", {
+  skip("too big")
+  m <- finalLm()
+  Article3_GSE42861_run_method(m, plot = TRUE, save.expr = FALSE)
+
+})

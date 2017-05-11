@@ -2523,7 +2523,9 @@ On retrouve les 3 mêmes. On va prend cela
 #+end_src
 
 #+RESULTS:
-[[./Rplots/GSE42861_qqplot_lm.png]]
+ [[./Rplots/GSE42861_qqplot_lm.png]]
+[[./Rplots/GSE42861_calibrated_qqplot_lm.png]]
+
 **** PCA
 #+begin_src R :results output :exports both
    library(ThesisRpackage)
