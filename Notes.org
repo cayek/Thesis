@@ -2646,12 +2646,13 @@ We calibrate
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   method.batch <- paramGrid(finalLfmmRdigeMethod,
-                            'lfmmLasso', K = c(10, 30, 60),
+                            'lfmmRidge', K = c(10, 30, 60),
                             lambda = c(1e-10))
 
   expr <- MethodBatchExperiment("GSE42861",
                                 s = Article3_GSE42861_sampler(),
-                                method.batch = method.batch)
+                                method.batch = method.batch,
+                                cluster.nb = 3)
   expr <- runExperiment(expr, TRUE)
 #+end_src
 ***** plot
@@ -2659,12 +2660,12 @@ We calibrate
 :header-args: :cache no :session *krakenatoR* :eval no-export
 :END:
 #+begin_src R :results output :exports both
-  expr <- retrieveExperiment(112)
+  expr <- retrieveExperiment(113)
   expr$description
 #+end_src
 
 #+RESULTS:
-: [1] "Run on GSE42861 with RidgeLfmm|"
+: [1] "Run on GSE42861 with lfmmLasso|K=10|lambda=1e-10|lfmmLasso|K=30|lambda=1e-10|lfmmLasso|K=60|lambda=1e-10|"
 
 qqplot
 #+begin_src R :results output :exports both

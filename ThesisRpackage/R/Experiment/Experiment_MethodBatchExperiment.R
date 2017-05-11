@@ -38,13 +38,15 @@ runExperiment.MethodBatchExperiment <- function(expr, save = FALSE) {
   expr$outlier <- dat$outlier
 
   start.time <- Sys.time()
-  foreach(i = seq_along(expr$method.batch)) %dopar%
+  res <- foreach(m = expr$method.batch) %dopar%
     {
-      expr$method.batch[[i]] <- run(expr$method.batch[[i]], dat)
+      run(m, dat)
     }
 
   end.time <- Sys.time()
   expr$runtime <- end.time - start.time
+
+  expr$method.batch <- res
 
   long_return(cl, save, expr)
 }
@@ -97,4 +99,19 @@ MethodBatchExperiment_calibrate <- function(expr) {
     expr$method.batch[[i]] <- calibrate(expr$method.batch[[i]])
   }
   expr
+}
+
+#' @export
+MethodBatchExperiment_qvalue <- function(expr, threshold) {
+  assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
+
+  res.df <- tibble()
+  for (m in expr$method.batch) {
+    res.df <- tibble(pvalue = m$pvalue[1,]) %>%
+      mutate(qvalue = qvalue::qvalue(pvalue)$qvalues,
+             method = m$nickname) %>%
+      rbind(res.df)
+  }
+  ## print.data.frame(res.df %>% dplyr::filter(qvalue < threshold))
+  res.df
 }
