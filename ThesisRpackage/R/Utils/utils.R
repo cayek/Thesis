@@ -55,5 +55,6 @@ save_plot_timc_bcm_15 <- function(pl, filename, width = 600, height = 400) {
   print(pl)
   dev.off()
   system(paste0("scp ", tmp.file,
-                " cayek@timc-bcm-15:~/Projects/Thesis/Rplots/", filename))
+                " cayek@timc-bcm-15:~/Projects/Thesis/Rplots/", filename),
+         ignore.stdout = TRUE)
 }
