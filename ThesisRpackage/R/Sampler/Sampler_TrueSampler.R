@@ -52,6 +52,8 @@ sampl.TrueSampler <- function(s) {
                                  col_names = FALSE,
                                  col_types = readr::cols(.default = readr::col_number())) %>%
       as.integer()
+  } else if (tools::file_ext(s$outlier.file) == "rds") {
+    outlier <- readRDS(s$outlier.file)
   }
 
   n <- nrow(G)
