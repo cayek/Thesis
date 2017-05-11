@@ -2596,7 +2596,7 @@ qqplot
 : 2 1.489905e-08  PcaLm  36714    3
 : 3 1.032922e-06  PcaLm 149131   10
 : 4 6.542556e-06  PcaLm 125220   23
-: arguments 'show.output.on.console', 'minimized' and 'invisible' are for Windows only
+[[./Rplots/GSE42861_qqplot_PcaLm.png]]
 
 We calibrate
 #+begin_src R :results output :exports both
@@ -2604,6 +2604,9 @@ We calibrate
   pl <- MethodBatchExperiment_qqplot(expr)
   save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_PcaLm.png")
 #+end_src
+
+#+RESULTS:
+[[./Rplots/GSE42861_calibrated_qqplot_PcaLm.png]]
 
 **** lfmm lasso
 ***** run
@@ -2617,6 +2620,9 @@ We calibrate
   expr <- runExperiment(expr, TRUE)
 #+end_src
 ***** plot
+:PROPERTIES:
+:header-args: :cache no :session *krakenatoR* :eval no-export
+:END:
 #+begin_src R :results output :exports both
   expr <- retrieveExperiment(110)
   expr$description
@@ -2635,20 +2641,84 @@ We calibrate
   save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_LfmmLasso.png")
 #+end_src
 
-
 **** lfmm ridge
 ***** run
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  m <- finalLfmmRdigeMethod(K = 30, lambda = 1e-10)
+  method.batch <- paramGrid(finalLfmmRdigeMethod,
+                            'lfmmLasso', K = c(10, 30, 60),
+                            lambda = c(1e-10))
+
+  expr <- MethodBatchExperiment("GSE42861",
+                                s = Article3_GSE42861_sampler(),
+                                method.batch = method.batch)
+  expr <- runExperiment(expr, TRUE)
+#+end_src
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *krakenatoR* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  expr <- retrieveExperiment(112)
+  expr$description
+#+end_src
+
+#+RESULTS:
+: [1] "Run on GSE42861 with RidgeLfmm|"
+
+qqplot
+#+begin_src R :results output :exports both
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_LfmmRidge.png")
+#+end_src
+
+#+RESULTS:
+:        pvalue1    method     id rank
+: 1 1.928065e-15 RidgeLfmm  36714    1
+: 2 2.825195e-15 RidgeLfmm 101455    2
+: 3 5.270711e-11 RidgeLfmm 125220    4
+: 4 3.622480e-10 RidgeLfmm 149131   12
+[[./Rplots/GSE42861_qqplot_LfmmRidge.png]]
+
+We calibrate
+#+begin_src R :results output :exports both
+  expr <- MethodBatchExperiment_calibrate(expr)
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_LfmmRidge.png")
+#+end_src
+
+
+#+RESULTS:
+[[./Rplots/GSE42861_calibrated_qqplot_LfmmRidge.png]]
+#+begin_example
+[1] "== calibrate: median"
+disease.state 
+   0.01105044 
+[1] "== calibrate: mad"
+disease.state 
+     1.185217
+       pvalue1    method     id rank
+1 1.900259e-11 RidgeLfmm  36714    1
+2 2.499142e-11 RidgeLfmm 101455    2
+3 2.909836e-08 RidgeLfmm 125220    4
+4 1.164002e-07 RidgeLfmm 149131   12
+#+end_example
+**** sva
+***** run
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  m <- finalSVAMethod(30)
   expr <- MethodBatchExperiment("GSE42861",
                                 s = Article3_GSE42861_sampler(),
                                 method.batch = list(m = m))
   expr <- runExperiment(expr, TRUE)
 #+end_src
 ***** plot
+:PROPERTIES:
+:header-args: :cache no :session *krakenatoR* :eval no-export
+:END:
 #+begin_src R :results output :exports both
-  expr <- retrieveExperiment(110)
+  expr <- retrieveExperiment(?)
   expr$description
 #+end_src
 
@@ -2664,7 +2734,6 @@ We calibrate
   pl <- MethodBatchExperiment_qqplot(expr)
   save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_LfmmRidge.png")
 #+end_src
-
 
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
