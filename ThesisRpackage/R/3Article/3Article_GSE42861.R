@@ -81,7 +81,7 @@ Article3_GSE42861_sampler <- function() {
 
 
 #' @export
-Article3_GSE42861_run_method <- function(m, candidates) {
+Article3_GSE42861_run_method <- function(m) {
 
   expr <- Experiment(name = "Article3_GSE42861_run_method",
                     description = make_description("Article3_GSE42861_run_method",
@@ -90,10 +90,11 @@ Article3_GSE42861_run_method <- function(m, candidates) {
   ## run 
   s <- Article3_GSE42861_sampler()
   dat <- sampl(s)
+  candidates <- dat$outlier
   m <- run(m, dat)
 
   ## no calibration
-  expr$pl <- qqplott(m, canditates)
+  expr$pl <- qqplott(m, candidates)
   expr$pl
 
   ## with calibration

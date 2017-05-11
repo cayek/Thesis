@@ -2520,13 +2520,8 @@ On retrouve les 3 mêmes. On va prend cela
   library(ThesisRpackage)
 
   s <- Article3_GSE42861_sampler()
-  dat <- sampl(s)
-  m <- finalLm()
-  m <- run(m, dat)
+  expr <- Article3_GSE42861_run_method(m)
 
-  pl <- qqplott(m)
-  pl
-  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_lm.png")
 #+end_src
 
 #+RESULTS:
