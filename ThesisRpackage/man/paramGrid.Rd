@@ -7,6 +7,6 @@
 paramGrid(method.constructor, nickname.base, ...)
 }
 \description{
-@export
+Make a grid of methods with param
 }
 

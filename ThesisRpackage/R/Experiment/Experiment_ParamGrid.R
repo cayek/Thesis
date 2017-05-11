@@ -1,6 +1,6 @@
 #' Make a grid of methods with param
 #'
-#'  @export
+#' @export
 paramGrid <- function(method.constructor, nickname.base, ...) {
   params <- list(...)
 
