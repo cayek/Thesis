@@ -81,7 +81,7 @@ Article3_GSE42861_sampler <- function() {
 
 
 #' @export
-Article3_GSE42861_run_method <- function(m) {
+Article3_GSE42861_run_method <- function(m, plot = TRUE, save.plot = plot, save.expr = TRUE) {
 
   expr <- Experiment(name = "Article3_GSE42861_run_method",
                     description = make_description("Article3_GSE42861_run_method",
@@ -95,13 +95,18 @@ Article3_GSE42861_run_method <- function(m) {
 
   ## no calibration
   expr$pl <- qqplott(m, candidates)
-  print(expr$pl)
-
+  
   ## with calibration
-  print("== calibrate")
+  print("== calibrating")
   m.cal <- calibrate(m)
   expr$pl.cal <- qqplott(m.cal, candidates)
-  print(expr$pl.cal)
+  if (plot) {
+    x11()
+    print(expr$pl.cal)
+  }
+  if (save.plot) {
+    save_plot_timc_bcm_15(expr$pl.cal, paste0("GSE42861_calibrated_qqplot_", m$nickname,".png"))
+  }
 
   expr$m <- m
   expr$m.cal <- m.cal

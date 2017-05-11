@@ -2521,29 +2521,16 @@ On retrouve les 3 mêmes. On va prend cela
   m <- finalLm()
   expr <- Article3_GSE42861_run_method(m)
 
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
 #+end_src
 
 #+RESULTS:
 [[./Rplots/GSE42861_qqplot_lm.png]]
 **** PCA
 #+begin_src R :results output :exports both
-  library(ThesisRpackage)
-
-  s <- Article3_GSE42861_sampler()
-  dat <- sampl(s)
-  m <- finalPcaLm(K = 50)
-  m <- run(m, dat)
-
-  outlier <- which(colnames(dat$G) %in% rahmani.loci)
-
-  pl <- qqplott(m, outlier)
-  pl
-
-
-  m.cal <- calibrate(m)
-  x11()
-  pl <- qqplott(m.cal, outlier)
-  pl
+   library(ThesisRpackage)
+   m <- finalPcaLm(K = 50)
+   expr <- Article3_GSE42861_run_method(m)
 
   save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
 #+end_src
@@ -2553,23 +2540,8 @@ On retrouve les 3 mêmes. On va prend cela
 **** lfmm lasso
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-
-  s <- Article3_GSE42861_sampler()
-  dat <- sampl(s)
   m <- finalLfmmLassoMethod(K = 30, sparse.prop = 0.01)
-  m <- run(m, dat)
-
-  outlier <- which(colnames(dat$G) %in% rahmani.loci)
-
-  pl <- qqplott(m, outlier)
-  pl
-
-
-  m <- calibrate(m)
-  pl <- qqplott(m, outlier)
-  pl
-
-  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
+  expr <- Article3_GSE42861_run_method(m)
 #+end_src
 
 #+RESULTS:

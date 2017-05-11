@@ -237,14 +237,14 @@ calibrate <- function(m) {
 #' @export
 calibrate.Method <- function(m) {
   ## compute median
-  med <- apply(m$score, 1, median)
-  print("median")
-  print(med)
+  m$med <- apply(m$score, 1, median)
+  print("== calibrate: median")
+  print(m$med)
 
   ## compute mad
-  sds <- apply(m$score, 1, mad)
-  print("mad")
-  print(sds)
+  m$sds <- apply(m$score, 1, mad)
+  print("== calibrate: mad")
+  print(m$sds)
 
 
   ## center and scale
