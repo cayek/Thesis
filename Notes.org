@@ -2515,7 +2515,7 @@ Les loci relevé par cite:Rahmani_2016
 
   s <- Article3_GSE42861_sampler()
   dat <- sampl(s)
-  m <- finalPcaLm(K = 35)
+  m <- finalPcaLm(K = 50)
   m <- run(m, dat)
 
   outlier <- which(colnames(dat$G) %in% rahmani.loci)

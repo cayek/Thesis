@@ -98,8 +98,7 @@ FdrtoolsCalibratedZscore <- function() {
 #' @export
 NormalZscore <- function() {
   Functor(fun = function(score) {
-    score %>%
-      apply(1:2,function(z) 2 * pnorm(abs(z),lower.tail = FALSE))
+    zscoreToPvalue(score)
   },
   name = "NormalZscore")
 }

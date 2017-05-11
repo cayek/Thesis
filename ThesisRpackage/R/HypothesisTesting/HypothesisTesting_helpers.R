@@ -17,8 +17,14 @@ compute_mean_var_B_sample <- function(B.sample) {
   }
   res
 }
-
+#' score are assume to follow student distibution with df degre of freedom
 tscoreToPvalue <- function(score, df) {
   score %>%
     apply(1:2,function(z) 2 * pt(abs(z), df = df, lower.tail = FALSE))
+}
+
+#' score are assume to follow normal distibution
+zscoreToPvalue <- function(score, mean = 0, sd = 1) {
+  score %>%
+    apply(1:2,function(z) 2 * pnorm(abs(z), mean = mean, sd = sd, lower.tail = FALSE))
 }

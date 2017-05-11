@@ -12,3 +12,16 @@ test_that("qqplot", {
   qqplott(m, dat$outlier)
 
 })
+
+test_that("calibrate", {
+
+  s <- NormalSampler2(100, 1000, 3)
+  dat <- sampl(s)
+  dat$X <- cbind(dat$X, rnorm(10))
+  m <- finalPcaLm(3)
+  m <- run(m, dat)
+
+  m <- calibrate(m)
+  qqplott(m, dat$outlier)
+
+})

@@ -206,12 +206,40 @@ qqplott <- function(m, ...) {
 #' @export
 qqplott.Method <- function(m, outlier = c()) {
   L <- ncol(m$pvalue)
-  toplot <- tibble(pvalue = m$pvalue[1,], outlier = 1:L %in% outlier)
-  color <- rep("blue", L)
-  color[outlier] <- "red"
-  ggplot(toplot, aes(sample = -log10(pvalue))) +
-    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10)),
-            color = color) +
+  d <- nrow(m$pvalue)
+  toplot <- as.data.frame(t(m$pvalue)) %>%
+    gather()
+
+  outlier <- print(t(m$pvalue[,outlier]))
+
+  ggplot(toplot, aes(sample = -log10(value))) +
+    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
     geom_abline(slope = 1, intercept = 0) +
+    facet_grid(key~.) + 
     ggtitle("-log10(pvalue) qqplot")
+}
+
+################################################################################
+## pvalue
+
+#' @export
+calibrate <- function(m) {
+  UseMethod("calibrate")
+}
+
+#' @export
+calibrate.Method <- function(m) {
+  ## compute median
+  med <- apply(m$score, 1, median)
+
+  ## compute mad
+  sds <- apply(m$score, 1, mad)
+
+  ## center and scale
+  score <- sweep(m$score, 1, med)
+  score <- sweep(score, 1, sds, FUN = "/")
+
+  ## compute pvalue
+  m$pvalue <- zscoreToPvalue(score)
+  m
 }
