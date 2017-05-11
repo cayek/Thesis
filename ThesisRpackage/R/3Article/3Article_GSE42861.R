@@ -99,6 +99,7 @@ Article3_GSE42861_run_method <- function(m) {
 
   ## with calibration
   print("== calibrate")
+  m.cal <- calibrate(m)
   expr$pl.cal <- qqplott(m.cal, candidates)
   print(expr$pl.cal)
 
