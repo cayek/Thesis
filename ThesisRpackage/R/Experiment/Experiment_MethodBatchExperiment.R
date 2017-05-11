@@ -49,6 +49,7 @@ runExperiment.MethodBatchExperiment <- function(expr, save = FALSE) {
   long_return(cl, save, expr)
 }
 
+#' @export
 MethodBatchExperiment_qqplot <- function(expr) {
   assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
 
@@ -88,6 +89,7 @@ MethodBatchExperiment_qqplot <- function(expr) {
     ggtitle("-log10(pvalue) qqplot")
 }
 
+#' @export
 MethodBatchExperiment_calibrate <- function(expr) {
   assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
 
