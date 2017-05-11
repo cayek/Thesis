@@ -2516,23 +2516,59 @@ On retrouve les 3 mêmes. On va prend cela
 **** lfmm ridge
 *** Run des méthodes
 **** lm
+***** run
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   m <- finalLm()
-  expr <- Article3_GSE42861_run_method(m, plot = TRUE, save.expr = FALSE)
+
+  expr <- MethodBatchExperiment("GSE42861",
+                                s = Article3_GSE42861_sampler(),
+                                method.batch = list(m = m))
+  expr <- runExperiment(expr, TRUE)
+#+end_src
+***** plot
+#+begin_src R :results output :exports both
+  expr <- retrieveExperiment(110)
+#+end_src
+
+qqplot
+#+begin_src R :results output :exports both
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_lm.png")
 #+end_src
 
 #+RESULTS:
- [[./Rplots/GSE42861_qqplot_lm.png]]
+:        pvalue1 method     id  rank
+: 1 1.616133e-24     lm  36714 11881
+: 2 2.028086e-15     lm 149131 22334
+: 3 3.013906e-08     lm 125220 40931
+: 4 1.078110e-02     lm 101455 86961
+[[./Rplots/GSE42861_qqplot_lm.png]]
+
+We calibrate
+#+begin_src R :results output :exports both
+  expr <- MethodBatchExperiment_calibrate(expr)
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_lm.png")
+#+end_src
+
+#+RESULTS:
+: pvalue1 method     id  rank
+: 1 0.01474925     lm  36714 11733
+: 2 0.05785257     lm 149131 21989
+: 3 0.18453007     lm 125220 40388
+: 4 0.53759995     lm 101455 86067
 [[./Rplots/GSE42861_calibrated_qqplot_lm.png]]
 
 **** PCA
+***** run
 #+begin_src R :results output :exports both
-   library(ThesisRpackage)
-   m <- finalPcaLm(K = 50)
-   expr <- Article3_GSE42861_run_method(m)
-
-  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
+  library(ThesisRpackage)
+  m <- finalPcaLm(K = 50)
+  expr <- MethodBatchExperiment("GSE42861",
+                                s = Article3_GSE42861_sampler(),
+                                method.batch = list(m = m))
+  expr <- runExperiment(expr, TRUE)
 #+end_src
 
 #+RESULTS:
