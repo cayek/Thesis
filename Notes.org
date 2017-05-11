@@ -2518,8 +2518,7 @@ On retrouve les 3 mêmes. On va prend cela
 **** lm
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-
-  s <- Article3_GSE42861_sampler()
+  m <- finalLm()
   expr <- Article3_GSE42861_run_method(m)
 
 #+end_src
