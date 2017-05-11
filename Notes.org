@@ -2519,9 +2519,7 @@ On retrouve les 3 mêmes. On va prend cela
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   m <- finalLm()
-  expr <- Article3_GSE42861_run_method(m)
-
-  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
+  expr <- Article3_GSE42861_run_method(m, plot = TRUE, save.plot = plot, save.expr = FALSE)
 #+end_src
 
 #+RESULTS:

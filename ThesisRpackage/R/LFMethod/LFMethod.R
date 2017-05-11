@@ -248,8 +248,8 @@ calibrate.Method <- function(m) {
 
 
   ## center and scale
-  score <- sweep(m$score, 1, med)
-  score <- sweep(score, 1, sds, FUN = "/")
+  score <- sweep(m$score, 1, m$med)
+  score <- sweep(score, 1, m$sds, FUN = "/")
 
   ## compute pvalue
   m$pvalue <- zscoreToPvalue(score)
