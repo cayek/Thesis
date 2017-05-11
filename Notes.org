@@ -2415,6 +2415,13 @@ Very long script....
 
 ** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:
+- Note taken on [2017-05-11 jeu. 16:19] \\
+  Les méthodes sont en train de tourner. On arrive bien a recuperer les locus
+  candidats des autre papiers ! Il reste a esperer que quand on controle le à 5%
+  la liste est pas trop longue ET que toutes les méthode renvoie en gros la même
+  chose. 
+  
+  Sinon c'est cool par ce que c'est la version non corrigé !
 - Note taken on [2017-05-10 mer. 16:58] \\
   Il faut que je trouve les locus interessant indentifié dans les papiers qui ont
   bosser sur GSE42861 et les mettre dans les outlier.
@@ -2660,12 +2667,12 @@ We calibrate
 :header-args: :cache no :session *krakenatoR* :eval no-export
 :END:
 #+begin_src R :results output :exports both
-  expr <- retrieveExperiment(113)
+  expr <- retrieveExperiment(115)
   expr$description
 #+end_src
 
 #+RESULTS:
-: [1] "Run on GSE42861 with lfmmLasso|K=10|lambda=1e-10|lfmmLasso|K=30|lambda=1e-10|lfmmLasso|K=60|lambda=1e-10|"
+: [1] "Run on GSE42861 with lfmmRidge|K=10|lambda=1e-10|lfmmRidge|K=30|lambda=1e-10|lfmmRidge|K=60|lambda=1e-10|"
 
 qqplot
 #+begin_src R :results output :exports both
@@ -2674,11 +2681,22 @@ qqplot
 #+end_src
 
 #+RESULTS:
-:        pvalue1    method     id rank
-: 1 1.928065e-15 RidgeLfmm  36714    1
-: 2 2.825195e-15 RidgeLfmm 101455    2
-: 3 5.270711e-11 RidgeLfmm 125220    4
-: 4 3.622480e-10 RidgeLfmm 149131   12
+#+begin_example
+        pvalue1                      method     id rank
+1  2.268143e-18 lfmmRidge|K=10|lambda=1e-10 101455    1
+2  2.060924e-16 lfmmRidge|K=10|lambda=1e-10  36714    2
+3  1.928065e-15 lfmmRidge|K=30|lambda=1e-10  36714    1
+4  2.825195e-15 lfmmRidge|K=30|lambda=1e-10 101455    2
+5  5.590577e-15 lfmmRidge|K=60|lambda=1e-10 101455    1
+6  4.597272e-13 lfmmRidge|K=60|lambda=1e-10  36714    3
+7  1.577695e-11 lfmmRidge|K=10|lambda=1e-10 125220   11
+8  5.270711e-11 lfmmRidge|K=30|lambda=1e-10 125220    4
+9  1.763606e-10 lfmmRidge|K=10|lambda=1e-10 149131   25
+10 3.622480e-10 lfmmRidge|K=30|lambda=1e-10 149131   12
+11 2.198761e-09 lfmmRidge|K=60|lambda=1e-10 149131    9
+12 4.711237e-09 lfmmRidge|K=60|lambda=1e-10 125220   13
+#+end_example
+
 [[./Rplots/GSE42861_qqplot_LfmmRidge.png]]
 
 We calibrate
@@ -2688,23 +2706,48 @@ We calibrate
   save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_LfmmRidge.png")
 #+end_src
 
-
 #+RESULTS:
-[[./Rplots/GSE42861_calibrated_qqplot_LfmmRidge.png]]
 #+begin_example
+[1] "== calibrate: median"
+disease.state 
+   0.04853954 
+[1] "== calibrate: mad"
+disease.state 
+      1.27457 
 [1] "== calibrate: median"
 disease.state 
    0.01105044 
 [1] "== calibrate: mad"
 disease.state 
-     1.185217
-       pvalue1    method     id rank
-1 1.900259e-11 RidgeLfmm  36714    1
-2 2.499142e-11 RidgeLfmm 101455    2
-3 2.909836e-08 RidgeLfmm 125220    4
-4 1.164002e-07 RidgeLfmm 149131   12
+     1.185217 
+[1] "== calibrate: median"
+disease.state 
+   0.01255809 
+[1] "== calibrate: mad"
+disease.state 
+     1.149169
+        pvalue1                      method     id rank
+1  5.284202e-12 lfmmRidge|K=10|lambda=1e-10 101455    1
+2  9.784903e-12 lfmmRidge|K=60|lambda=1e-10 101455    1
+3  1.900259e-11 lfmmRidge|K=30|lambda=1e-10  36714    1
+4  2.499142e-11 lfmmRidge|K=30|lambda=1e-10 101455    2
+5  8.807053e-11 lfmmRidge|K=10|lambda=1e-10  36714    2
+6  2.821823e-10 lfmmRidge|K=60|lambda=1e-10  36714    3
+7  2.909836e-08 lfmmRidge|K=30|lambda=1e-10 125220    4
+8  1.000757e-07 lfmmRidge|K=10|lambda=1e-10 125220    9
+9  1.164002e-07 lfmmRidge|K=30|lambda=1e-10 149131   12
+10 1.820639e-07 lfmmRidge|K=60|lambda=1e-10 149131    9
+11 3.260855e-07 lfmmRidge|K=60|lambda=1e-10 125220   12
+12 4.554521e-07 lfmmRidge|K=10|lambda=1e-10 149131   22
 #+end_example
+
+
 **** sva
+:LOGBOOK:
+- Note taken on [2017-05-11 jeu. 16:38] \\
+  Vu les résultats, il y a eu un problème quelque part !!! Je ne me suis jamais
+  interessé au autre parame de sva. En plus il y a des NaN dans les pvalue !!
+:END:
 ***** run
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
@@ -2719,23 +2762,56 @@ disease.state
 :header-args: :cache no :session *krakenatoR* :eval no-export
 :END:
 #+begin_src R :results output :exports both
-  expr <- retrieveExperiment(?)
+  expr <- retrieveExperiment(114)
   expr$description
 #+end_src
+
+#+RESULTS:
+: [1] "Run on GSE42861 with SVA|"
 
 qqplot
 #+begin_src R :results output :exports both
   pl <- MethodBatchExperiment_qqplot(expr)
-  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_LfmmRidge.png")
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_sva.png")
 #+end_src
+
+#+RESULTS:
+:        pvalue1 method     id  rank
+: 1 0.000000e+00    SVA  36714  2000
+: 2 3.486322e-12    SVA 149131 12286
+: 3 2.717537e-11    SVA 125220 13277
+: 4 3.686296e-11    SVA 101455 13413
+: Warning message:
+: Removed 8786 rows containing non-finite values (stat_qq).
+[[./Rplots/GSE42861_qqplot_sva.png]]
 
 We calibrate
 #+begin_src R :results output :exports both
   expr <- MethodBatchExperiment_calibrate(expr)
   pl <- MethodBatchExperiment_qqplot(expr)
-  save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_LfmmRidge.png")
+  save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_sva.png")
 #+end_src
 
+#+RESULTS:
+[[./Rplots/GSE42861_calibrated_qqplot_sva.png]]
+#+begin_example
+[1] "== calibrate: median"
+[1] 2.433452
+[1] "== calibrate: mad"
+[1] 3.432042
+        pvalue1 method     id  rank
+1 5.991942e-123    SVA  36714  7683
+2  3.859961e-44    SVA 149131 12286
+3  8.002992e-37    SVA 125220 13277
+4  8.445964e-36    SVA 101455 13413
+Warning message:
+Removed 4362 rows containing non-finite values (stat_qq).
+#+end_example
+
+** TODO Étude de celiac
+:LOGBOOK:
+- State "TODO"       from              [2017-05-11 jeu. 16:35]
+:END:
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:
