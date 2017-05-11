@@ -2446,13 +2446,39 @@ Very long script....
   saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
   saveRDS(X, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/X.rds")
 #+end_src
-*** Interesting loci 
+*** TODO Interesting loci 
+:LOGBOOK:
+- Note taken on [2017-05-11 jeu. 11:20] \\
+  Il me manque 1 cadidat dans G, pk ?
+- State "TODO"       from              [2017-05-11 jeu. 11:20]
+:END:
 Les loci relevé par cite:Rahmani_2016
 #+begin_src R :results output :exports both
   rahmani.loci <- c("cg05428452",
                      "cg07839457",
                      "cg16411857")
 #+end_src
+Ceux de cite:Zou_2014
+#+begin_src R :results output :exports both
+  Zou.loci <- c("cg05428452",
+                "g07839457",
+                "cg16411857",
+                "cg25372449",
+                "cg20821042")
+#+end_src
+
+On retrouve les 3 mêmes. On va prend cela  
+#+begin_src R :results output :exports both
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
+  Zou.loci <- c("cg05428452",
+                  "g07839457",
+                  "cg16411857",
+                  "cg25372449",
+                  "cg20821042")
+  candidates <- which(colnames(dat$G) %in% Zou.loci)
+  saveRDS(candidates, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/candidates.rds")
+#+end_src
+
 *** Choix des parametres
 **** PCA
 #+begin_src R :results output :exports both
@@ -2520,8 +2546,9 @@ Les loci relevé par cite:Rahmani_2016
   pl
 
 
-  m <- calibrate(m)
-  pl <- qqplott(m, outlier)
+  m.cal <- calibrate(m)
+  x11()
+  pl <- qqplott(m.cal, outlier)
   pl
 
   save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
@@ -2552,6 +2579,10 @@ Les loci relevé par cite:Rahmani_2016
 #+end_src
 
 #+RESULTS:
+**** lfmm ridge
+#+begin_src R :results output :exports both
+
+#+end_src
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:
@@ -3594,7 +3625,7 @@ fouillant je tomberais sur la même idée pour les GWAS.
 cite:Zou_2014
 Un autre papier qui fait l'étude du dataset ewas RA ([[https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE42861][GSE42861]]).
 
-Suplementary materials: file:./org-ref-pdfs/SM_Zou_2016.pdf
+Suplementary materials: file:./Biblio/org-ref-pdfs/SM_Zou_2016.pdf
 
 *** Datasets and data processing
 C'est bien mieux détaillé que quand l'article cite:Rahmani_2016 !! On va

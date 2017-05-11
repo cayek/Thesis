@@ -73,8 +73,36 @@ Article3_GSE42861_sampler <- function() {
   
   s <- TrueSampler(G.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds",
                    X.file = X,
-                   outlier.file = NULL,
+                   outlier.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/candidates.rds",
                    n = NULL,
                    L = NULL)
   s
+}
+
+
+#' @export
+Article3_GSE42861_run_method <- function(m, candidates) {
+
+  expr <- Experiment(name = "Article3_GSE42861_run_method",
+                    description = make_description("Article3_GSE42861_run_method",
+                                                   m.name = m$nickname,
+                                                   K = m$K))
+  ## run 
+  s <- Article3_GSE42861_sampler()
+  dat <- sampl(s)
+  m <- run(m, dat)
+
+  ## no calibration
+  pl <- qqplott(m, canditates)
+  pl
+
+  ## with calibration
+  print("== calibrate")
+  print(res.df[candidates, ])
+  pl <- qqplott(m.cal, NULL)
+  pl
+
+  expr$m <- m
+  expr$m.cal <- m.cal
+  expr
 }

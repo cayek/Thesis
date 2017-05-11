@@ -4,7 +4,7 @@ context("LFMethod")
 
 test_that("qqplot", {
 
-  s <- NormalSampler2(10, 100, 3)
+  s <- NormalSampler2(100, 1000, 3)
   dat <- sampl(s)
   m <- finalPcaLm(3)
   m <- run(m, dat)

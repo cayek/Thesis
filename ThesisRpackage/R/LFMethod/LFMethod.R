@@ -210,7 +210,14 @@ qqplott.Method <- function(m, outlier = c()) {
   toplot <- as.data.frame(t(m$pvalue)) %>%
     gather()
 
+  ## plot outlier
+  if (d == 1) {
+  pvalue.df <- tibble(pvalue = m$pvalue[1,]) %>%
+    mutate(rank  = rank(pvalue))
+  print(pvalue.df[outlier, ])
+  } else {
   outlier <- print(t(m$pvalue[,outlier]))
+  }
 
   ggplot(toplot, aes(sample = -log10(value))) +
     stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
