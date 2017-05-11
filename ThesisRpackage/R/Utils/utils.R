@@ -8,8 +8,6 @@
 #' @export
 new_file <- function(dir, name) {
 
-  assertthat::assert_that(getwd() == path.expand("~/Projects/Thesis/ThesisRpackage"))
-
   aux <- function(dir.base, name) {
     dd <- paste0(dir.base, dir,"/")
     if (!dir.exists(dd)) {
@@ -23,10 +21,10 @@ new_file <- function(dir, name) {
   }
 
   ## create file R
-  aux("R/", name = name)
+  aux("~/Projects/Thesis/ThesisRpackage/R/", name = name)
 
   ## create test file
-  aux(dir.base = "tests/testthat/", name = paste0("test_", name))
+  aux(dir.base = "~/Projects/Thesis/ThesisRpackage/tests/testthat/", name = paste0("test_", name))
 
 }
 

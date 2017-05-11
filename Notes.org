@@ -2519,7 +2519,7 @@ On retrouve les 3 mêmes. On va prend cela
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   m <- finalLm()
-  expr <- Article3_GSE42861_run_method(m, plot = TRUE, save.plot = plot, save.expr = FALSE)
+  expr <- Article3_GSE42861_run_method(m, plot = TRUE, save.expr = FALSE)
 #+end_src
 
 #+RESULTS:

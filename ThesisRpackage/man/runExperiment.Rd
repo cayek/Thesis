@@ -4,7 +4,7 @@
 \alias{runExperiment}
 \title{Run the experiment}
 \usage{
-runExperiment(exp)
+runExperiment(exp, ...)
 }
 \description{
 Run the experiment

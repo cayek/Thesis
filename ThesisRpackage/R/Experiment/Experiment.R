@@ -22,7 +22,7 @@ Experiment <- function(name = "Default",
 #' Run the experiment
 #'
 #' @export
-runExperiment <- function(exp){
+runExperiment <- function(exp, ...){
   UseMethod("runExperiment")
 }
 

@@ -216,7 +216,7 @@ qqplott.Method <- function(m, outlier = c()) {
     mutate(rank  = rank(pvalue))
   print(pvalue.df[outlier, ])
   } else {
-  outlier <- print(t(m$pvalue[,outlier]))
+    print(t(m$pvalue[,outlier]))
   }
 
   ggplot(toplot, aes(sample = -log10(value))) +
