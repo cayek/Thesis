@@ -2886,11 +2886,44 @@ Removed 4362 rows containing non-finite values (stat_qq).
 
 ** TODO Étude de celiac
 :LOGBOOK:
+- Note taken on [2017-05-12 Ven 11:02] \\
+  Cf cachier 12/01/2017
 - Note taken on [2017-05-11 jeu. 17:44] \\
   On va partir de ce papier cite:Abraham_2014, ils cite plusieurs papier pour sont
   dataset... Faut que je comprenne plus [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html][cette analyse]].
 - State "TODO"       from              [2017-05-11 jeu. 16:35]
 :END:
+* Sandbox
+** Test of bigsnpr
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  big_univLogReg
+  snp_clumping
+#+end_src
+
+** Test of R5 object in R
+#+begin_src R :results output :exports both
+  Person <- setRefClass("Person", fields = c("a"))
+  p <- Person$new(a = 1)
+
+  hello  <- function(p){
+    UseMethod("hello")
+  }
+
+  hello.Person <- function(p) {
+    print("hello")
+    print(p$a)
+  }
+
+  hello(p)
+  str(p)
+
+  p.bis <- list(a = 2)
+  class(p.bis) <- "Person"
+  hello(p.bis)
+  str(p.bis)
+#+end_src
+
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:
@@ -4961,4 +4994,4 @@ fait penser a ce que je connais de l'inference causal !
 cite:Abraham_2014 
 
 Ils font un modèle de prédiction pour la malidie celiac (pour estimer un facteur
-de risque). Dans ce modèle il y a de l'orde du millier de SNIPs causaux ! 
+de risque). Dans ce modèle il y a de l'orde du millier de SNIPs causaux !
