@@ -17,7 +17,7 @@
 
 * Introduction
 * Materials and methods
-** Model
+** COMMENT Model
 Following the common notations in linear latent factor regression models cite
 here , for an observation $i \in \{1, ..., n\}$, we assume that the random
 vector $G_i = (G_{i 1},..., G_{i L})$ assuming the co-variable $X_i = (X_{i 1},
@@ -25,7 +25,7 @@ vector $G_i = (G_{i 1},..., G_{i L})$ assuming the co-variable $X_i = (X_{i 1},
    
 $$ E[G_i | X_i] = X_i B^T $$
    
-where $B$ is the unknown regression coefficient. Then assuming $K$ lattent
+where $B$ is the unknown regression coefficient. Then assuming $K$ latent
 factors we write the covariance matrix $var(G_i|X_i) = \Sigma$ as follow
  
 $$ \Sigma = D + V V^T $$ 
@@ -39,16 +39,33 @@ $$ G = U V^T + X B^T + E $$
 where $U$ is a $n \times K$ matrix of latent factor scores and $E$ is the error
 matrix distributed with a multivariate normal distribution with the diagonal
 covariance matrix $D$.
-   
+** Model 
+We consider a G matrix which record n observations of a vector $G_i = (G_{i
+1},..., G_{i L})$ of size L. For each observation 
 ** Estimation
-To estimate model parameter we propose the following optimization problem
-$$ min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda r(B) $$
-where $C$ is the latent matrix such that $C = U V^T$, $||.||_F$ the frobenius
-matrix ,$rk(.)$ the function which returns the rank of a matrix and $r$ a
-convex regularization function. In this article we discuss the the ridge
-regularization function $||.||^2_2$ and the lasso regularization function
-$||.||$.
- 
+:LOGBOOK:
+- Note taken on [2017-05-12 Ven 16:35] \\
+  On va plutot faire uen partie pour l'estimateur lasso et un autre pour la ridge
+  et une derniere pour les missing values.
+:END:
+To estimate model parameter we propose the following optimization problem 
+
+$$min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda r(B)$$ 
+
+where
+$C$ is the latent matrix such that $C = U V^T$, $||.||_F$ the Frobenius matrix
+,$rk(.)$ the function which returns the rank of a matrix and $r$ a convex
+regularization function. In this article we discuss the ridge regularization
+function $||.||^2_2$ and the lasso regularization function $||.||$.
+*** A ridge regularized estimator
+**** Analytic solution
+*** A lasso regularized estimator
+We write the following convex problem: 
+
+$$min \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B|| + \gamma ||C||*)$$ 
+
+where ... It is easy to prove that the problem is convex.
+
 ** Algorithm
    
 In this section we propose algorithms to estimate latent matrices $U$ and $V$
@@ -57,10 +74,7 @@ ridge regularized loss function based on analytic solutions of the
 optimization problem. We also present an efficient alternated algorithm for
 data with missing values and a general regularization convex function.
 
-*** Analytic solution
 
-*** Alternated algorithm
-    
 *** Missing values
 It is frequent that there are missing values in the data matrix. A solution
 is to use an imputation algoritm before running the association study. But
