@@ -4,7 +4,8 @@
 \alias{TrueSampler}
 \title{sample true data from file}
 \usage{
-TrueSampler(G.file, X.file, outlier.file, n = NULL, L = NULL)
+TrueSampler(G.file, X.file, outlier.file, n = NULL, L = NULL,
+  reference = FALSE)
 }
 \arguments{
 \item{G.file}{a file or a matrix}
@@ -16,6 +17,8 @@ TrueSampler(G.file, X.file, outlier.file, n = NULL, L = NULL)
 \item{n}{number of indiv}
 
 \item{L}{number of locus}
+
+\item{reference}{if TRUE the sampler retrun R5 object}
 }
 \description{
 sample true data from file

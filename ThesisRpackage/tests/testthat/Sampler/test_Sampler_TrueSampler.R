@@ -2,15 +2,30 @@ library(testthat)
 library(Article3Package)
 context("TrueDataSet")
 
+test_that("TrueDataSet reference", {
+
+  s <- TrueSampler(G.file = matrix(1,3,3),
+                   X.file = matrix(2,3,1),
+                   outlier.file = NULL,
+                   n = NULL,
+                   L = NULL,
+                   reference = TRUE)
+
+  dat <- sampl(s)
+  expect_equal(class(dat)[1], "TrueDataSet")
+  expect_equal(typeof(dat), "S4") ## this is a RC object ! 
+})
+
+
 test_that("TrueDataSet Case3", {
 
-  skip("run it manualy")
+  skip("Work only au labo")
 
   n <- 100
   L <- 3000
-  s <- TrueSampler(G.file = "../../Data2016_2017/SSMPG2015/Case3/Case3.lfmm",
-                   X.file = "../../Data2016_2017/SSMPG2015/Case3/Case3.env",
-                   outlier.file = "../../Data2016_2017/SSMPG2015/Case3/Case3.outlier",
+  s <- TrueSampler(G.file = "./Data/SSMPG2015/Case3/Case3.lfmm",
+                   X.file = "../Data/SSMPG2015/Case3/Case3.env",
+                   outlier.file = "./Data/SSMPG2015/Case3/Case3.outlier",
                    n = n,
                    L = L)
 
@@ -22,7 +37,7 @@ test_that("TrueDataSet Case3", {
 
 test_that("TrueDataSet Case2", {
 
-  skip("run it manualy")
+  skip("Work only au labo")
 
   s <- TrueSampler(G.file = "../../Data2016_2017/SSMPG2015/Case2/Case2.lfmm",
                    X.file = "../../Data2016_2017/SSMPG2015/Case2/Case2.env",

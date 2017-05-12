@@ -1,3 +1,6 @@
+DataSet.builder <- setRefClass("DataSet", fields = c("G",
+                                                         "X"))
+
 #' Sampler class
 #'
 #'

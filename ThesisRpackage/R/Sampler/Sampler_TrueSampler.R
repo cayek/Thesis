@@ -5,16 +5,20 @@
 #' sample true data from file
 #'
 #' @export
-#' @param G.file a file or a matrix
-#' @param X.file a file or a matrix
-#' @param outlier.file a file or a matrix
-#' @param n number of indiv
-#' @param L number of locus
-TrueSampler <- function(G.file, X.file, outlier.file,n = NULL, L = NULL) {
+##' @param G.file a file or a matrix
+##' @param X.file a file or a matrix
+##' @param outlier.file a file or a matrix
+##' @param n number of indiv
+##' @param L number of locus
+##' @param reference if TRUE the sampler retrun R5 object
+TrueSampler <- function(G.file, X.file, outlier.file,
+                        n = NULL, L = NULL,
+                        reference = FALSE) {
   structure(list(n = n,
                  L = L,
                  G.file = G.file,
                  X.file = X.file,
+                 reference = reference,
                  outlier.file = outlier.file), class = c("TrueSampler","Sampler"))
 }
 
@@ -77,5 +81,6 @@ sampl.TrueSampler <- function(s) {
 
   TrueDataSet(G = G,
               X = X,
-              outlier = outlier)
+              outlier = outlier,
+              reference = s$reference)
 }
