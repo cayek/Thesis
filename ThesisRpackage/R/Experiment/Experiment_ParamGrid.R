@@ -19,6 +19,6 @@ paramGrid <- function(method.constructor, nickname.base, ...) {
   nickname <- apply(params, 1, aux.f)
   params <- params %>% dplyr::mutate(nickname = nickname)
 
-  res <- params %>% purrr::invoke_rows(.f = method.constructor)
+  res <- params %>% purrrlyr::invoke_rows(.f = method.constructor)
   res$.out
 }

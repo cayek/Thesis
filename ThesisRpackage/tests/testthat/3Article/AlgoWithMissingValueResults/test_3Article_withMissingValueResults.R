@@ -2,6 +2,7 @@ library(testthat)
 context("3Article_withMissingValueResults")
 
 test_that("3Article_withMissingValueResults with SparseMissingValueSampler", {
+
     s <- NormalSampler2(n = 100,
                         L = 1000,
                         K = 3,
@@ -23,6 +24,7 @@ test_that("3Article_withMissingValueResults with SparseMissingValueSampler", {
 })
 
 test_that("3Article_withMissingValueResults with MissingValueSampler", {
+  
   s <- NormalSampler2(n = 100,
                       L = 1000,
                       K = 3,

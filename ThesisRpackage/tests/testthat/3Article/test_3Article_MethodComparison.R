@@ -22,7 +22,7 @@ test_that("Article3_MethodComparison", {
                                    cluster.nb = NULL,
                                    save = FALSE, bypass = TRUE)
 
-  expect_equal(dim(exp$df), c(8400, 13))
+  expect_equal(dim(exp$df), c(7200, 13))
 
   Article3_MethodComparison_plot_pvalueGrid(exp, c = "0.6|0.3")
   Article3_MethodComparison_plot_precisionRecall(exp)
@@ -51,7 +51,7 @@ test_that("Article3_MethodComparison with cs.sum", {
                                    cluster.nb = NULL,
                                    save = FALSE, bypass = TRUE)
 
-  expect_equal(dim(exp$df), c(8400, 13))
+  expect_equal(dim(exp$df), c(7200, 13))
 
   ## Article3_MethodComparison_plot_relative_diff_AUC(exp)
 })

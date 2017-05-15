@@ -14,8 +14,7 @@ Article3_withMissingValueResults <- function(s,
 
   ## methods
   methods <- list()
-  methods$oracle <- finalOracle(K = K,
-                        calibrate = FALSE)
+  methods$oracle <- finalOracle(calibrate = FALSE)
   methods$lfmm.alternated <- finalLfmmRdigeMethod(K = K,
                                           lambda = lambda,
                                           calibrate = FALSE,

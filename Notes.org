@@ -2410,6 +2410,206 @@ Very long script....
 
        detach(athaliana)
 #+end_src
+*** STARTED ./Data/Celiac/
+:LOGBOOK:
+- State "STARTED"    from              [2017-05-15 lun. 11:07]
+:END:
+Celiac dataset cite:dubois2010multiple
+- ./Data/Celiac/dubois_2010/
+(récupéré de FP)
+**** Pre-processing
+:PROPERTIES:
+:header-args: :cache no :session *celiacR* :dir ./ :eval no-export
+:END:
+From these [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html#28][slides]]
+
+Control quality
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  library(ggplot2)
+
+
+  plink <- "/home/cayek/BiocompSoftware/plink/plink"
+  prefix <- "/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300"
+  bedfileQC <- snp_plinkQC(plink.path = plink,
+                           prefix.in = prefix,
+                           geno = 0.05, ## Maximum proportion of missing values for a SNP to be kept
+                           mind = 0.05, ## Maximum proportion of missing values for a sample to be kept.
+                           maf = 0.05, ## Minimum Minor Allele Frequency (MAF) for a SNP to be kept.
+                           hwe = 1e-10, ## Filters out all variants which have Hardy-Weinberg equilibrium exact test p-value below the provided threshold
+                           autosome.only = TRUE)
+
+  print(bedfileQC)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.log.
+Options in effect:
+  --autosome
+  --bfile /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC
+
+7761 MB RAM detected; reserving 3880 MB for main workspace.
+287385 out of 295453 variants loaded from .bim file.
+15283 people (6713 males, 8570 females) loaded from .fam.
+15283 phenotype values loaded from .fam.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 15283 founders and 0 nonfounders present.
+Total genotyping rate is 0.999579.
+67 variants removed due to missing genotype data (--geno).
+--hwe: 17 variants removed due to Hardy-Weinberg exact test.
+6179 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+281122 variants and 15283 people pass filters and QC.
+Among remaining phenotypes, 4533 are cases and 10750 are controls.
+--make-bed to
+/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.bed
++
+/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.bim
++
+/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.fam
+[1] "/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.bed"
+#+end_example
+
+Remove correlated indiv
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  plink <- "/home/cayek/BiocompSoftware/plink/plink"
+  bedfileQC <- "/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.bed"
+  rel <- snp_plinkIBDQC(plink, bedfileQC, ncores = 4, 
+                        do.blind.QC = FALSE)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to /tmp/Rtmpx3IbX5/file5479304015c0.log.
+Options in effect:
+  --bfile /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC
+  --indep-pairwise 100 1 0.2
+  --out /tmp/Rtmpx3IbX5/file5479304015c0
+
+7761 MB RAM detected; reserving 3880 MB for main workspace.
+281122 variants loaded from .bim file.
+15283 people (6713 males, 8570 females) loaded from .fam.
+15283 phenotype values loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 15283 founders and 0 nonfounders present.
+Total genotyping rate is 0.999596.
+281122 variants and 15283 people pass filters and QC.
+Among remaining phenotypes, 4533 are cases and 10750 are controls.
+Pruning complete.  200847 of 281122 variants removed.
+Writing...Marker lists written to /tmp/Rtmpx3IbX5/file5479304015c0.prune.in and
+/tmp/Rtmpx3IbX5/file5479304015c0.prune.out .
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.log.
+Options in effect:
+  --bfile /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC
+  --extract /tmp/Rtmpx3IbX5/file5479304015c0.prune.in
+  --genome
+  --min 0.08
+  --out /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC
+  --threads 4
+
+7761 MB RAM detected; reserving 3880 MB for main workspace.
+281122 variants loaded from .bim file.
+15283 people (6713 males, 8570 females) loaded from .fam.
+15283 phenotype values loaded from .fam.
+--extract: 80275 variants remaining.
+Using up to 4 threads (change this with --threads).
+Before main variant filters, 15283 founders and 0 nonfounders present.
+Total genotyping rate is 0.999591.
+80275 variants and 15283 people pass filters and QC.
+Among remaining phenotypes, 4533 are cases and 10750 are controls.
+Writing... 99%Finished writing
+/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.genome
+.
+#+end_example
+
+plot (0.08 adviced by FP)
+#+begin_src R :results output graphics :file Rplots/celiac_rel.png :exports both :width 600 :height 400 
+MY_THEME <- bigstatsr:::MY_THEME
+
+MY_THEME(qplot(y = PI_HAT, data = rel)) + 
+  geom_hline(yintercept = 0.08) # visual inspection threshold
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/celiac_rel.png]]
+
+generate bed file without correlated indiv
+#+begin_src R :results output :exports both
+bedfileQC2 <- snp_plinkRmSamples(
+  plink, 
+  bedfile.in = bedfileQC, 
+  bedfile.out = sub("\\.bed$", "_norel.bed", bedfileQC), 
+  df.or.files = subset(rel, PI_HAT > 0.08)
+)
+print(bedfileQC2)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC_norel.log.
+Options in effect:
+  --bfile /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC
+  --make-bed
+  --out /home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC_norel
+  --remove /tmp/Rtmpx3IbX5/file547977caa73d
+
+7761 MB RAM detected; reserving 3880 MB for main workspace.
+281122 variants loaded from .bim file.
+15283 people (6713 males, 8570 females) loaded from .fam.
+15283 phenotype values loaded from .fam.
+--remove: 15155 people remaining.
+Warning: At least 1 duplicate ID in --remove file.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 15155 founders and 0 nonfounders present.
+Calculating allele frequencies...  done.
+Total genotyping rate in remaining samples is 0.999597.
+281122 variants and 15155 people pass filters and QC.
+Among remaining phenotypes, 4496 are cases and 10659 are controls.
+--make-bed to
+/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC_norel.bed
++
+/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC_norel.bim
++
+/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC_norel.fam
+... 0%done.
+[1] "/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC_norel.bed"
+#+end_example
+
+Convert the dataset into bigmatrix
+#+begin_src R :results output :exports both
+snp_readBed(bedfileQC2, "celiacQC")
+#+end_src
+
+#+RESULTS:
+: Creating directory "backingfiles" which didn't exist..
+: [1] "backingfiles/celiacQC.rds"
+
+Test to attach
+#+begin_src R :results output :exports both
+  # Then, just attach the data
+  celiac <- snp_attach("./Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
+  dim(celiac$genotype)
+#+end_src
+
+#+RESULTS:
+: [1]  15155 281122
 
 ** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:
@@ -5008,3 +5208,17 @@ cite:Abraham_2014
 
 Ils font un modèle de prédiction pour la malidie celiac (pour estimer un facteur
 de risque). Dans ce modèle il y a de l'orde du millier de SNIPs causaux !
+
+** TODO 2010 - Multiple common variants for celiac disease influencing immune gene expression
+ :PROPERTIES:
+  :Custom_ID: dubois2010multiple
+  :AUTHOR: Dubois {\it et al.}
+  :JOURNAL: Nature genetics
+  :YEAR: 2010
+  :VOLUME: 42
+  :PAGES: 295--302
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:dubois2010multiple C'est l'article du dataset Celiac

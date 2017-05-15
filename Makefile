@@ -14,6 +14,9 @@ Rpackage_install_nodep:
 Rpackage_install:
 	R CMD INSTALL --no-multiarch --with-keep.source ThesisRpackage
 
+Rpackage_test:
+	R -e 'devtools::test(pkg = "./ThesisRpackage/")'
+
 # krakenator 
 krakenator_push_hook:
 	scp ./hooks/post-receive.sh cayek@krakenator:/home/cayek/Gits/2017/Thesis.git/hooks/post-receive
