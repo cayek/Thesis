@@ -79,4 +79,9 @@ Article3_GSE42861_sampler <- function() {
   s
 }
 
+#' @export
+Article3_GSE42861_dat <- function() {
+  Article3_GSE42861_sampler() %>%
+    sampl()
+}
 

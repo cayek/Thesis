@@ -2731,6 +2731,19 @@ On retrouve les 3 mêmes. On va prend cela
 [[file:Rplots/GSE42861_pca.png]]
 
 **** lfmm ridge
+ 
+**** sva
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  dat <- Article3_GSE42861_dat()
+
+  sva.m <- finalSVAMethod(K = NULL)
+  numLatentVarEstimation.SVAMethod(sva.m, dat)
+#+end_src
+**** famt
+
+**** cate
 *** Run des méthodes
 **** lm
 ***** run
@@ -2846,11 +2859,22 @@ We calibrate
   expr$description
 #+end_src
 
+#+RESULTS:
+: [1] "Run on GSE42861 with LassoLfmm|"
+
 qqplot
 #+begin_src R :results output :exports both
   pl <- MethodBatchExperiment_qqplot(expr)
   save_plot_timc_bcm_15(pl, "GSE42861_qqplot_LfmmLasso.png")
 #+end_src
+
+#+RESULTS:
+:        pvalue1    method     id rank
+: 1 7.735380e-14 LassoLfmm 101455    1
+: 2 5.356916e-13 LassoLfmm  36714    3
+: 3 2.482284e-09 LassoLfmm 125220    5
+: 4 5.031122e-09 LassoLfmm 149131    9
+[[./Rplots/GSE42861_qqplot_LfmmLasso.png]]
 
 We calibrate
 #+begin_src R :results output :exports both
@@ -2858,6 +2882,22 @@ We calibrate
   pl <- MethodBatchExperiment_qqplot(expr)
   save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_LfmmLasso.png")
 #+end_src
+
+#+RESULTS:
+[[./Rplots/GSE42861_calibrated_qqplot_LfmmLasso.png]]
+#+begin_example
+[1] "== calibrate: median"
+disease.state 
+ -0.003189651 
+[1] "== calibrate: mad"
+disease.state 
+     1.122399
+       pvalue1    method     id rank
+1 2.799044e-11 LassoLfmm 101455    1
+2 1.308532e-10 LassoLfmm  36714    3
+3 1.098989e-07 LassoLfmm 125220    5
+4 1.931946e-07 LassoLfmm 149131    9
+#+end_example
 
 **** lfmm ridge
 ***** run
