@@ -2741,6 +2741,12 @@ On retrouve les 3 mêmes. On va prend cela
   sva.m <- finalSVAMethod(K = NULL)
   numLatentVarEstimation(sva.m, dat)
 #+end_src
+
+#+RESULTS:
+: 687
+
+Il doit y avoir un probleme
+
 **** famt
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
@@ -3148,6 +3154,17 @@ We calibrate
 Warning message:
 Removed 4362 rows containing non-finite values (stat_qq).
 #+end_example
+
+**** cate
+***** run 
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  m <- finalcateMethod(30)
+  expr <- MethodBatchExperiment("GSE42861",
+                                s = Article3_GSE42861_sampler(),
+                                method.batch = list(m = m))
+  expr <- runExperiment(expr, TRUE)
+#+end_src
 
 ** TODO Étude de celiac                                           :3Article:
 :LOGBOOK:
@@ -4966,7 +4983,7 @@ cite:Price_2006. C'est le papier EIGENSTRAT, c'est l'acp et une stat Armitage.
 :URL:      http://dx.doi.org/10.1093/bioinformatics/bts034
 :END:
  
-cite:Leek_2012 C'est l'article de pacakge sva. La vignette : [[./org-ref-pdfs/Rpackage_sva.pdf][The SVA manual]].
+cite:Leek_2012 C'est l'article de pacakge sva. La vignette : [[./Biblio/org-ref-pdfs/Rpackage_sva.pdf][The SVA manual]].
  
 
 ** TODO 1995 - Controlling the false discovery rate: a practical and powerful approach to multiple testing
