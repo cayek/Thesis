@@ -36,6 +36,11 @@ runExperiment.MethodBatchExperiment <- function(expr, save = FALSE) {
   ## dataset
   dat <- sampl(expr$s)
   expr$outlier <- dat$outlier
+  expr$G.colnames <- colnames(dat$G)
+  if (is.null(expr$G.colnames)) {
+    expr$G.colnames <- sapply(1:ncol(dat$G), function(i) paste0('V',i))
+  }
+
 
   start.time <- Sys.time()
   res <- foreach(m = expr$method.batch) %dopar%
@@ -109,9 +114,32 @@ MethodBatchExperiment_qvalue <- function(expr, threshold) {
   for (m in expr$method.batch) {
     res.df <- tibble(pvalue = m$pvalue[1,]) %>%
       mutate(qvalue = qvalue::qvalue(pvalue)$qvalues,
-             method = m$nickname) %>%
+             method = m$nickname,
+             varnames = expr$G.colnames) %>%
       rbind(res.df)
   }
   ## print.data.frame(res.df %>% dplyr::filter(qvalue < threshold))
+  res.df
+}
+
+#' @export
+MethodBatchExperiment_candidates <- function(expr, top, maf.threshold) {
+  assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
+
+  res.df <- MethodBatchExperiment_qvalue(expr, NULL)
+
+  if(!is.null(maf.threshold)) {
+    res.df <- res.df %>%
+      dplyr::filter(qvalue <= maf.threshold)
+  }
+
+  if(!is.null(top)) {
+    res.df <- res.df %>%
+      dplyr::group_by(method) %>%
+      dplyr::mutate(id = row_number()) %>%
+      dplyr::arrange(pvalue) %>%
+      dplyr::filter()
+  } 
+
   res.df
 }

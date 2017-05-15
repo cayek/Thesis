@@ -2663,8 +2663,12 @@ Test to attach
   saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
   saveRDS(X, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/X.rds")
 #+end_src
-*** TODO Interesting loci 
+*** DONE Interesting loci 
+CLOSED: [2017-05-15 lun. 17:26]
 :LOGBOOK:
+- Note taken on [2017-05-15 lun. 17:26] \\
+  faute de frappe
+- State "DONE"       from "TODO"       [2017-05-15 lun. 17:26]
 - Note taken on [2017-05-11 jeu. 11:20] \\
   Il me manque 1 cadidat dans G, pk ?
 - State "TODO"       from              [2017-05-11 jeu. 11:20]
@@ -2678,25 +2682,37 @@ Les loci relevé par cite:Rahmani_2016
 Ceux de cite:Zou_2014
 #+begin_src R :results output :exports both
   Zou.loci <- c("cg05428452",
-                "g07839457",
+                "cg07839457",
                 "cg16411857",
                 "cg25372449",
                 "cg20821042")
 #+end_src
 
 On retrouve les 3 mêmes. On va prend cela  
-#+begin_src R :results output :exports both
+#+begin_src R :results output :exports both :session *ssh krakenator*
   G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
   Zou.loci <- c("cg05428452",
-                  "g07839457",
-                  "cg16411857",
-                  "cg25372449",
-                  "cg20821042")
-  candidates <- which(colnames(dat$G) %in% Zou.loci)
+                "cg07839457",
+                "cg16411857",
+                "cg25372449",
+                "cg20821042")
+  cols <- colnames(G)
+  candidates <- which(colnames(G) %in% Zou.loci)
+  cols[candidates]
   saveRDS(candidates, "~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/candidates.rds")
 #+end_src
 
-*** Choix des parametres
+#+RESULTS:
+: [1] "cg05428452" "cg07839457" "cg16411857" "cg20821042" "cg25372449"
+
+#+begin_src R :results output :exports both :session *ssh krakenator*
+candidates
+#+end_src
+
+#+RESULTS:
+: [1]  36714  51546 101455 125220 149131
+
+*** Choix des paramètres
 **** PCA
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
@@ -2756,6 +2772,45 @@ Il doit y avoir un probleme
   famt.m <- finalFamtMethod(K = NULL)
   numLatentVarEstimation(famt.m, dat)
 #+end_src
+
+#+RESULTS:
+#+begin_example
+TRACE [2017-05-15 16:03:12] attaching FAMT
+Loading required package: mnormt
+Loading required package: impute
+DEBUG [2017-05-15 16:03:33] FAMT::as.FAMTdata said:
+--------------------------------
+$`Rows with missing values`
+integer(0)
+
+$`Columns with missing values`
+integer(0)
+
+--------------------------------
+DEBUG [2017-05-15 17:40:01] FAMT::nbfactors said:
+--------------------------------
+[1] "Fitting Factor Analysis Model with 1 factors"
+[1] "Fitting Factor Analysis Model with 2 factors"
+[1] "Fitting Factor Analysis Model with 3 factors"
+[1] "Fitting Factor Analysis Model with 4 factors"
+[1] "Fitting Factor Analysis Model with 5 factors"
+[1] "Fitting Factor Analysis Model with 6 factors"
+[1] "Fitting Factor Analysis Model with 7 factors"
+[1] "Fitting Factor Analysis Model with 8 factors"
+[1] "Calculating criterion for the model with 0 factors"
+[1] "Calculating criterion for the model with 1 factors"
+[1] "Calculating criterion for the model with 2 factors"
+[1] "Calculating criterion for the model with 3 factors"
+[1] "Calculating criterion for the model with 4 factors"
+[1] "Calculating criterion for the model with 5 factors"
+[1] "Calculating criterion for the model with 6 factors"
+[1] "Calculating criterion for the model with 7 factors"
+[1] "Calculating criterion for the model with 8 factors"
+--------------------------------
+[1] 8
+#+end_example
+
+Il a juste atteint son max, il faudra le relancer...
 
 **** cate
 #+begin_src R :results output :exports both
@@ -2825,13 +2880,14 @@ We calibrate
 #+end_src
 ***** plot
 :PROPERTIES:
-:header-args: :cache no :session *krakenatoR* :eval no-export
+:header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   expr <- retrieveExperiment(111)
   expr$description
+  expr$outlier <- c(36714,51546, 101455, 125220, 149131)
 #+end_src
 
 #+RESULTS:
@@ -2846,9 +2902,10 @@ qqplot
 #+RESULTS:
 :        pvalue1 method     id rank
 : 1 1.123330e-10  PcaLm 101455    1
-: 2 1.489905e-08  PcaLm  36714    3
-: 3 1.032922e-06  PcaLm 149131   10
-: 4 6.542556e-06  PcaLm 125220   23
+: 2 9.501988e-10  PcaLm  51546    2
+: 3 1.489905e-08  PcaLm  36714    3
+: 4 1.032922e-06  PcaLm 149131   10
+: 5 6.542556e-06  PcaLm 125220   23
 [[./Rplots/GSE42861_qqplot_PcaLm.png]]
 
 We calibrate
@@ -2859,6 +2916,20 @@ We calibrate
 #+end_src
 
 #+RESULTS:
+#+begin_example
+[1] "== calibrate: median"
+disease.state 
+   0.01235354 
+[1] "== calibrate: mad"
+disease.state 
+      1.07909
+       pvalue1 method     id rank
+1 2.123029e-09  PcaLm 101455    1
+2 1.341980e-08  PcaLm  51546    2
+3 1.447372e-07  PcaLm  36714    3
+4 5.661476e-06  PcaLm 149131   10
+5 2.800740e-05  PcaLm 125220   23
+#+end_example
 [[./Rplots/GSE42861_calibrated_qqplot_PcaLm.png]]
 
 **** lfmm lasso
@@ -2874,12 +2945,13 @@ We calibrate
 #+end_src
 ***** plot
 :PROPERTIES:
-:header-args: :cache no :session *krakenatoR* :eval no-export
+:header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   expr <- retrieveExperiment(116)
   expr$description
+  expr$outlier <- c(36714,51546, 101455, 125220, 149131)
 #+end_src
 
 #+RESULTS:
@@ -2894,9 +2966,10 @@ qqplot
 #+RESULTS:
 :        pvalue1    method     id rank
 : 1 7.735380e-14 LassoLfmm 101455    1
-: 2 5.356916e-13 LassoLfmm  36714    3
-: 3 2.482284e-09 LassoLfmm 125220    5
-: 4 5.031122e-09 LassoLfmm 149131    9
+: 2 2.967146e-13 LassoLfmm  51546    2
+: 3 5.356916e-13 LassoLfmm  36714    3
+: 4 2.482284e-09 LassoLfmm 125220    5
+: 5 5.031122e-09 LassoLfmm 149131    9
 [[./Rplots/GSE42861_qqplot_LfmmLasso.png]]
 
 We calibrate
@@ -2938,7 +3011,7 @@ disease.state
 #+end_src
 ***** plot
 :PROPERTIES:
-:header-args: :cache no :session *krakenatoR* :eval no-export
+:header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
@@ -3165,6 +3238,121 @@ Removed 4362 rows containing non-finite values (stat_qq).
                                 method.batch = list(m = m))
   expr <- runExperiment(expr, TRUE)
 #+end_src
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(117)
+  expr$description
+  expr$outlier <- c(36714,51546, 101455, 125220, 149131)
+#+end_src
+
+#+RESULTS:
+: [1] "Run on GSE42861 with cate|"
+
+qqplot
+#+begin_src R :results output :exports both
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_cate.png")
+#+end_src
+
+#+RESULTS:
+:        pvalue1 method     id rank
+: 1 2.220446e-16   cate 101455    1
+: 2 3.108624e-15   cate  51546    2
+: 3 4.884981e-15   cate  36714    3
+: 4 1.077418e-10   cate 125220    5
+: 5 6.509535e-10   cate 149131   15
+[[./Rplots/GSE42861_qqplot_cate.png]]
+
+We calibrate
+#+begin_src R :results output :exports both
+  expr <- MethodBatchExperiment_calibrate(expr)
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_cate.png")
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[1] "== calibrate: median"
+[1] 0.01657819
+[1] "== calibrate: mad"
+[1] 1.163034
+       pvalue1 method     id rank
+1 1.729877e-12   cate 101455    1
+2 1.055260e-11   cate  51546    2
+3 1.523298e-11   cate  36714    3
+4 2.622003e-08   cate 125220    5
+5 1.004800e-07   cate 149131   15
+#+end_example
+[[./Rplots/GSE42861_calibrated_qqplot_cate.png]]
+
+
+**** famt
+***** run 
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  m <- finalFamtMethod(30)
+  expr <- MethodBatchExperiment("GSE42861",
+                                s = Article3_GSE42861_sampler(),
+                                method.batch = list(m = m))
+  expr <- runExperiment(expr, TRUE)
+#+end_src
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(118)
+  expr$description
+  expr$outlier <- c(36714,51546, 101455, 125220, 149131)
+#+end_src
+
+#+RESULTS:
+: [1] "Run on GSE42861 with FAMT|"
+
+qqplot
+#+begin_src R :results output :exports both
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_famt.png")
+#+end_src
+
+#+RESULTS:
+:        pvalue1 method     id  rank
+: 1 1.398055e-23   FAMT  36714 10023
+: 2 3.516649e-15   FAMT 149131 16026
+: 3 5.583005e-13   FAMT 125220 18697
+: 4 2.712504e-12   FAMT 101455 19712
+: 5 1.481923e-09   FAMT  51546 24802
+[[./Rplots/GSE42861_qqplot_famt.png]]
+
+We calibrate
+#+begin_src R :results output :exports both
+  expr <- MethodBatchExperiment_calibrate(expr)
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_famt.png")
+#+end_src
+
+#+RESULTS:
+[[./Rplots/GSE42861_calibrated_qqplot_famt.png]]
+#+begin_example
+[1] "== calibrate: median"
+[1] 4.119201
+[1] "== calibrate: mad"
+[1] 6.004386
+       pvalue1 method     id  rank
+1 5.754391e-67   FAMT  36714 10023
+2 4.517393e-24   FAMT 149131 16026
+3 9.163019e-17   FAMT 125220 18697
+4 8.579049e-15   FAMT 101455 19712
+5 2.517192e-08   FAMT  51546 24802
+Warning message:
+Removed 3948 rows containing non-finite values (stat_qq).
+#+end_example
+
 
 ** TODO Étude de celiac                                           :3Article:
 :LOGBOOK:
