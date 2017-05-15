@@ -44,6 +44,7 @@ run.cateMethod <- function(m, dat) {
 numLatentVarEstimation.cateMethod <- function(m, dat) {
 
   covar <- as.data.frame(dat$X)
+  colnames(covar)[1] <- "V1"
 
   factor.num <- cate::est.confounder.num(~ V1 | . - V1 + 0,
                                          covar, dat$G,

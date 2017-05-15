@@ -2739,11 +2739,28 @@ On retrouve les 3 mêmes. On va prend cela
   dat <- Article3_GSE42861_dat()
 
   sva.m <- finalSVAMethod(K = NULL)
-  numLatentVarEstimation.SVAMethod(sva.m, dat)
+  numLatentVarEstimation(sva.m, dat)
 #+end_src
 **** famt
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  dat <- Article3_GSE42861_dat()
+
+  famt.m <- finalFamtMethod(K = NULL)
+  numLatentVarEstimation(famt.m, dat)
+#+end_src
 
 **** cate
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  dat <- Article3_GSE42861_dat()
+
+  cate.m <- finalcateMethod(K = NULL)
+  numLatentVarEstimation(cate.m, dat)
+#+end_src
+
 *** Run des méthodes
 **** lm
 ***** run
