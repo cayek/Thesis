@@ -101,6 +101,7 @@ MethodBatchExperiment_calibrate <- function(expr) {
   assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
 
   for (i in seq_along(expr$method.batch)) {
+    print(expr$method.batch[[i]]$nickname)
     expr$method.batch[[i]] <- calibrate(expr$method.batch[[i]])
   }
   expr
