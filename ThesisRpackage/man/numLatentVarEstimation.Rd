@@ -4,7 +4,7 @@
 \alias{numLatentVarEstimation}
 \title{Estimated the number of latent variable}
 \usage{
-numLatentVarEstimation(m, dat)
+numLatentVarEstimation(m, dat, ...)
 }
 \description{
 Estimated the number of latent variable

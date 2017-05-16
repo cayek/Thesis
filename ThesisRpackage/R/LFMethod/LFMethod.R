@@ -43,7 +43,7 @@ name <- function(m){
 #' Estimated the number of latent variable
 #'
 #' @export
-numLatentVarEstimation <- function(m, dat){
+numLatentVarEstimation <- function(m, dat, ...){
   UseMethod("numLatentVarEstimation")
 }
 

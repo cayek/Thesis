@@ -41,14 +41,15 @@ run.cateMethod <- function(m, dat) {
 }
 
 #' @export
-numLatentVarEstimation.cateMethod <- function(m, dat) {
+numLatentVarEstimation.cateMethod <- function(m, dat, bcv.plot = FALSE) {
 
   covar <- as.data.frame(dat$X)
   colnames(covar)[1] <- "V1"
 
   factor.num <- cate::est.confounder.num(~ V1 | . - V1 + 0,
                                          covar, dat$G,
-                                         method = "bcv", bcv.plot = TRUE,
+                                         method = "bcv",
+                                         bcv.plot = bcv.plot,
                                          rmax = 30, nRepeat = 20)
 
   factor.num$r

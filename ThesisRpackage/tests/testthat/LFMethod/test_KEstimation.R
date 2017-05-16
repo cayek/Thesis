@@ -49,7 +49,7 @@ test_that("K estimation with cate", {
 
   m <- finalcateMethod(3)
 
-  expect_equal(numLatentVarEstimation(m, dat),4) ## return 4 ? why ? long ! 
+  expect_equal(numLatentVarEstimation(m, dat, bcv.plot = TRUE), 4) ## return 4 ? why ? long ! 
 
 })
 
