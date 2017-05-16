@@ -123,14 +123,14 @@ MethodBatchExperiment_qvalue <- function(expr, threshold) {
 }
 
 #' @export
-MethodBatchExperiment_candidates <- function(expr, top, maf.threshold) {
+MethodBatchExperiment_candidates <- function(expr, top = NULL, fdr.threshold = NULL) {
   assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
 
   res.df <- MethodBatchExperiment_qvalue(expr, NULL)
 
-  if(!is.null(maf.threshold)) {
+  if(!is.null(fdr.threshold)) {
     res.df <- res.df %>%
-      dplyr::filter(qvalue <= maf.threshold)
+      dplyr::filter(qvalue <= fdr.threshold)
   }
 
   if(!is.null(top)) {
@@ -138,8 +138,19 @@ MethodBatchExperiment_candidates <- function(expr, top, maf.threshold) {
       dplyr::group_by(method) %>%
       dplyr::mutate(id = row_number()) %>%
       dplyr::arrange(pvalue) %>%
-      dplyr::filter()
-  } 
+      dplyr::filter(row_number() <= top) %>%
+      dplyr::ungroup()
+  }
 
   res.df
+}
+
+#' @export
+MethodBatchExperiment_count_intersect <- function(expr, top = NULL, fdr.threshold = NULL) {
+  assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
+
+  aux <- MethodBatchExperiment_candidates(expr, top, fdr.threshold)
+    dplyr::inner_join(x = aux, y = aux, by = 'varnames') %>%
+    group_by(method.x, method.y) %>%
+    summarise(count = n())
 }

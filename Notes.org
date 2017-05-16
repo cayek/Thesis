@@ -3353,7 +3353,34 @@ Warning message:
 Removed 3948 rows containing non-finite values (stat_qq).
 #+end_example
 
+**** All
+***** run 
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  method.batch <- list()
+  K = 30
+  ## famt
+  method.batch$m.famt <- finalFamtMethod(K)
+  ## cate
+  method.batch$m.sva <- finalcateMethod(K)
+  ## lm
+  method.batch$m.lm <- finalLm()
+  ## pca
+  method.batch$m.pca <- finalPcaLm(K)
+  ## lfmm lasso
+  method.batch$m.lfmmLasso <- finalLfmmLassoMethod(K, 0.01)
+  ## lfmm ridge
+  method.batch$m.lfmmRidge <- finalLfmmRdigeMethod(K, 1e-10)
+  ## sva
+  method.batch$m.cate <- finalSVAMethod(K)
 
+  expr <- MethodBatchExperiment("GSE42861",
+                                s = Article3_GSE42861_sampler(),
+                                method.batch = list(m = m),
+                                cluster.nb = 7)
+
+  expr <- runExperiment(expr, TRUE)
+#+end_src
 ** TODO Étude de celiac                                           :3Article:
 :LOGBOOK:
 - Note taken on [2017-05-12 Ven 14:53] \\
