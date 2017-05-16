@@ -75,9 +75,11 @@ test_that("MethodBatchExperiment list", {
 
   ## coutn intersect
   fdr.threshold <- 0.01
-  res.df <- MethodBatchExperiment_count_intersect(expr, fdr.threshold = fdr.threshold)
+  res.df <- MethodBatchExperiment_count_intersect(expr, fdr.threshold = fdr.threshold,
+                                                  plot = NULL)
 
-  top <- 10
-  res.df <- MethodBatchExperiment_count_intersect(expr, top = top)
-
+  top <- 30
+  MethodBatchExperiment_count_intersect(expr, top = top, plot = "point")
+  MethodBatchExperiment_count_intersect(expr, top = top, plot = "tile")
+  MethodBatchExperiment_count_intersect(expr, fdr.threshold = 0.05, plot = "point")
 })

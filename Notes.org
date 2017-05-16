@@ -2419,11 +2419,11 @@ Celiac dataset cite:dubois2010multiple
 (récupéré de FP)
 **** Pre-processing
 :PROPERTIES:
-:header-args: :cache no :session *celiacR* :dir ./ :eval no-export
+:header-args: :cache no :session *R* :dir ./ :eval no-export
 :END:
 From these [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html#28][slides]]
 
-Control quality
+***** Control quality
 #+begin_src R :results output :exports both
   library(bigsnpr)
   library(ggplot2)
@@ -2480,7 +2480,7 @@ Among remaining phenotypes, 4533 are cases and 10750 are controls.
 [1] "/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC.bed"
 #+end_example
 
-Remove correlated indiv
+***** Remove correlated indiv
 #+begin_src R :results output :exports both
   library(bigsnpr)
   plink <- "/home/cayek/BiocompSoftware/plink/plink"
@@ -2592,7 +2592,7 @@ Among remaining phenotypes, 4496 are cases and 10659 are controls.
 [1] "/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_QC_norel.bed"
 #+end_example
 
-Convert the dataset into bigmatrix
+***** Convert the dataset into bigmatrix
 #+begin_src R :results output :exports both
 snp_readBed(bedfileQC2, "celiacQC")
 #+end_src
@@ -2603,7 +2603,7 @@ snp_readBed(bedfileQC2, "celiacQC")
 
 Test to attach
 #+begin_src R :results output :exports both
-  # Then, just attach the data
+  ## Then, just attach the data
   celiac <- snp_attach("./Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
   dim(celiac$genotype)
 #+end_src
@@ -2611,6 +2611,42 @@ Test to attach
 #+RESULTS:
 : [1]  15155 281122
 
+***** TODO LD pruning/clumping
+:LOGBOOK:
+- Note taken on [2017-05-16 mar. 12:36] \\
+  il faut que j'impute avant d'après la doc. A voir si je peux pas le faire
+  dirrect avec plink !!
+- State "TODO"       from              [2017-05-16 mar. 12:26]
+:END:
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  library(ggplot2)
+
+
+  plink <- "/home/cayek/BiocompSoftware/plink/plink"
+  prefix <- "/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300"
+
+  celiac <- snp_attach("./Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
+
+  ## pruning / clumping with MAF
+  ind.keep <- snp_pruning(G, infos.chr = test$map$chromosome, thr.r2 = 0.1)
+  # keep most of them -> not much LD in this simulated dataset
+  length(ind.keep) / m
+  #> [1] 0.9817261
+
+  ind.keep2 <- snp_clumping(G, infos.chr = test$map$chromosome, thr.r2 = 0.1)
+#+end_src
+***** TODO From big matrix to matrix
+:LOGBOOK:
+- State "TODO"       from              [2017-05-16 mar. 12:27]
+:END:
+#+begin_src R :results output :exports both
+  celiac <- readRDS("./Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
+  ## G
+  G <- celiac$genotypes[]
+  ## X
+  X <- 
+#+end_src
 ** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:
 - Note taken on [2017-05-12 Ven 15:05] \\
@@ -3376,10 +3412,20 @@ Removed 3948 rows containing non-finite values (stat_qq).
 
   expr <- MethodBatchExperiment("GSE42861",
                                 s = Article3_GSE42861_sampler(),
-                                method.batch = list(m = m),
+                                method.batch = method.batch,
                                 cluster.nb = 7)
 
   expr <- runExperiment(expr, TRUE)
+#+end_src
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(119)
+  expr$description
+  expr$outlier
 #+end_src
 ** TODO Étude de celiac                                           :3Article:
 :LOGBOOK:

@@ -146,11 +146,34 @@ MethodBatchExperiment_candidates <- function(expr, top = NULL, fdr.threshold = N
 }
 
 #' @export
-MethodBatchExperiment_count_intersect <- function(expr, top = NULL, fdr.threshold = NULL) {
+MethodBatchExperiment_count_intersect <- function(expr, top = NULL, fdr.threshold = NULL,
+                                                  plot = c("point", "tile")) {
   assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
 
   aux <- MethodBatchExperiment_candidates(expr, top, fdr.threshold)
-    dplyr::inner_join(x = aux, y = aux, by = 'varnames') %>%
-    group_by(method.x, method.y) %>%
-    summarise(count = n())
+  aux <- dplyr::inner_join(x = aux, y = aux, by = 'varnames') %>%
+    dplyr::group_by(method.x, method.y) %>%
+    dplyr::summarise(count = n())
+
+  if (!is.null(plot) && plot == "point") {
+    ## from http://stackoverflow.com/questions/32743004/improved-mosaic-plot-like-heatmap-or-bubbles-in-r
+    ggplot(aux, aes(method.x, method.y)) +
+      geom_point(aes(size = count), alpha=0.8, color="darkgreen", show.legend = FALSE) +
+      geom_text(aes(label = count), color="white") +
+      scale_size(range = c(15,50)) +
+      theme_bw()
+  } else if (!is.null(plot) && plot == "tile") {
+    ggplot(aux, aes(method.x, method.y)) +
+      geom_tile(aes(fill = count)) +
+      geom_text(aes(label = count), color="white") +
+      scale_x_discrete(expand = c(0,0)) +
+      scale_y_discrete(expand = c(0,0)) +
+      scale_fill_gradient("Legend label", low = "lightblue", high = "blue") +
+      theme_bw()
+  } else {
+    aux %>%
+      tidyr::spread("method.x", "count") %>%
+      dplyr::rename(method = method.y)
+  }
+
 }
