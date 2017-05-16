@@ -2923,11 +2923,9 @@ We calibrate
   library(ThesisRpackage)
   expr <- retrieveExperiment(111)
   expr$description
-  expr$outlier <- c(36714,51546, 101455, 125220, 149131)
+  expr$outlier
 #+end_src
 
-#+RESULTS:
-: [1] "Run on GSE42861 with PcaLm|"
 
 qqplot
 #+begin_src R :results output :exports both
@@ -2935,14 +2933,6 @@ qqplot
   save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
 #+end_src
 
-#+RESULTS:
-:        pvalue1 method     id rank
-: 1 1.123330e-10  PcaLm 101455    1
-: 2 9.501988e-10  PcaLm  51546    2
-: 3 1.489905e-08  PcaLm  36714    3
-: 4 1.032922e-06  PcaLm 149131   10
-: 5 6.542556e-06  PcaLm 125220   23
-[[./Rplots/GSE42861_qqplot_PcaLm.png]]
 
 We calibrate
 #+begin_src R :results output :exports both
@@ -2951,22 +2941,6 @@ We calibrate
   save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_PcaLm.png")
 #+end_src
 
-#+RESULTS:
-#+begin_example
-[1] "== calibrate: median"
-disease.state 
-   0.01235354 
-[1] "== calibrate: mad"
-disease.state 
-      1.07909
-       pvalue1 method     id rank
-1 2.123029e-09  PcaLm 101455    1
-2 1.341980e-08  PcaLm  51546    2
-3 1.447372e-07  PcaLm  36714    3
-4 5.661476e-06  PcaLm 149131   10
-5 2.800740e-05  PcaLm 125220   23
-#+end_example
-[[./Rplots/GSE42861_calibrated_qqplot_PcaLm.png]]
 
 **** lfmm lasso
 ***** run
@@ -3125,7 +3099,7 @@ disease.state
 #+end_example
 [[./Rplots/GSE42861_calibrated_qqplot_LfmmRidge.png]]
 
-A cadidate list: 
+A candidate list: 
 #+begin_src R :results output :exports both
   qvalue.df <- MethodBatchExperiment_qvalue(expr, 0.05)
   print.data.frame(qvalue.df %>% dplyr::filter(qvalue < 0.005))
@@ -3404,7 +3378,7 @@ Removed 3948 rows containing non-finite values (stat_qq).
   ## pca
   method.batch$m.pca <- finalPcaLm(K)
   ## lfmm lasso
-  method.batch$m.lfmmLasso <- finalLfmmLassoMethod(K, 0.01)
+  method.batch$m.lfmmLasso <- finalLfmmLassoMethod(K, 0.05)
   ## lfmm ridge
   method.batch$m.lfmmRidge <- finalLfmmRdigeMethod(K, 1e-10)
   ## sva
