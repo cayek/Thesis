@@ -2858,6 +2858,9 @@ Il a juste atteint son max, il faudra le relancer...
   numLatentVarEstimation(cate.m, dat)
 #+end_src
 
+#+RESULTS:
+: [1] 28
+
 *** Run des méthodes
 **** lm
 ***** run
@@ -2921,10 +2924,14 @@ We calibrate
 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  expr <- retrieveExperiment(111)
+  expr <- retrieveExperiment(120)
   expr$description
   expr$outlier
 #+end_src
+
+#+RESULTS:
+: [1] "Run on GSE42861 with PcaLm|"
+: [1]  36714  51546 101455 125220 149131
 
 
 qqplot
@@ -2933,6 +2940,15 @@ qqplot
   save_plot_timc_bcm_15(pl, "GSE42861_qqplot_PcaLm.png")
 #+end_src
 
+#+RESULTS:
+:        pvalue1 method     id rank
+: 1 1.088531e-13  PcaLm 101455    1
+: 2 4.101541e-13  PcaLm  51546    2
+: 3 1.362223e-12  PcaLm  36714    3
+: 4 4.834266e-09  PcaLm 125220    6
+: 5 8.449928e-09  PcaLm 149131    9
+[[./Rplots/GSE42861_qqplot_PcaLm.png]]
+
 
 We calibrate
 #+begin_src R :results output :exports both
@@ -2940,6 +2956,24 @@ We calibrate
   pl <- MethodBatchExperiment_qqplot(expr)
   save_plot_timc_bcm_15(pl, "GSE42861_calibrated_qqplot_PcaLm.png")
 #+end_src
+
+#+RESULTS:
+#+begin_example
+[1] "PcaLm"
+[1] "== calibrate: median"
+disease.state 
+ -0.003446807 
+[1] "== calibrate: mad"
+disease.state 
+     1.119271
+       pvalue1 method     id rank
+1 3.247347e-11  PcaLm 101455    1
+2 9.400547e-11  PcaLm  51546    2
+3 2.460012e-10  PcaLm  36714    3
+4 1.731964e-07  PcaLm 125220    6
+5 2.711935e-07  PcaLm 149131    9
+#+end_example
+[[./Rplots/GSE42861_calibrated_qqplot_PcaLm.png]]
 
 
 **** lfmm lasso
@@ -3299,7 +3333,6 @@ We calibrate
 #+end_example
 [[./Rplots/GSE42861_calibrated_qqplot_cate.png]]
 
-
 **** famt
 ***** run 
 #+begin_src R :results output :exports both
@@ -3368,7 +3401,7 @@ Removed 3948 rows containing non-finite values (stat_qq).
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   method.batch <- list()
-  K = 30
+  K = 28
   ## famt
   method.batch$m.famt <- finalFamtMethod(K)
   ## cate
@@ -3481,7 +3514,6 @@ disease.state
 
 #+RESULTS:
 [[./Rplots/GSE42861_count_intersect_fdr01.png]]
-
 
 ** TODO Étude de celiac                                           :3Article:
 :LOGBOOK:

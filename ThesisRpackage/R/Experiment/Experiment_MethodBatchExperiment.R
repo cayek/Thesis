@@ -116,15 +116,24 @@ MethodBatchExperiment_qvalue <- function(expr, threshold) {
     res.df <- tibble(pvalue = m$pvalue[1,]) %>%
       mutate(qvalue = qvalue::qvalue(pvalue)$qvalues,
              method = m$nickname,
-             varnames = expr$G.colnames) %>%
+             varnames = expr$G.colnames,
+             index = row_number()) %>%
       rbind(res.df)
   }
+
+  if (!is.null(expr$outlier)) {
+    res.df <- res.df %>%
+      dplyr::group_by(method) %>%
+      dplyr::mutate(outlier = index %in% expr$outlier) %>%
+      dplyr::ungroup()
+  }
+
   ## print.data.frame(res.df %>% dplyr::filter(qvalue < threshold))
   res.df
 }
 
 #' @export
-MethodBatchExperiment_candidates <- function(expr, top = NULL, fdr.threshold = NULL) {
+MethodBatchExperiment_candidates <- function(expr, top = NULL, fdr.threshold = NULL, print = TRUE) {
   assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
 
   res.df <- MethodBatchExperiment_qvalue(expr, NULL)
@@ -137,10 +146,18 @@ MethodBatchExperiment_candidates <- function(expr, top = NULL, fdr.threshold = N
   if(!is.null(top)) {
     res.df <- res.df %>%
       dplyr::group_by(method) %>%
-      dplyr::mutate(id = row_number()) %>%
       dplyr::arrange(pvalue) %>%
       dplyr::filter(row_number() <= top) %>%
       dplyr::ungroup()
+  }
+
+  ## print
+  if (print && !is.null(expr$outlier)) {
+  res.df %>%
+    group_by(method) %>%
+    summarise(nb = n(), observed.fdr = 1 - mean(outlier),
+              observed.puissance = sum(outlier) / length(expr$outlier)) %>%
+    print.data.frame()
   }
 
   res.df

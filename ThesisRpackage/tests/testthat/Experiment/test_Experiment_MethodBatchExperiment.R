@@ -66,8 +66,8 @@ test_that("MethodBatchExperiment list", {
 
   ## candidate top
   top <- 30 
-  res.df <- MethodBatchExperiment_candidates(expr, top = top)
-  expect_equal(dim(res.df), c(top * 2, 5))
+  res.df <- MethodBatchExperiment_candidates(expr, top = top, print = TRUE)
+  expect_equal(dim(res.df), c(top * 2, 6))
 
   ## candidate fdr
   fdr.threshold <- 0.05
@@ -82,4 +82,5 @@ test_that("MethodBatchExperiment list", {
   MethodBatchExperiment_count_intersect(expr, top = top, plot = "point")
   MethodBatchExperiment_count_intersect(expr, top = top, plot = "tile")
   MethodBatchExperiment_count_intersect(expr, fdr.threshold = 0.05, plot = "point")
+
 })
