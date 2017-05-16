@@ -2908,7 +2908,7 @@ We calibrate
 ***** run
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  m <- finalPcaLm(K = 50)
+  m <- finalPcaLm(K = 30)
   expr <- MethodBatchExperiment("GSE42861",
                                 s = Article3_GSE42861_sampler(),
                                 method.batch = list(m = m))
@@ -3433,38 +3433,45 @@ Removed 3948 rows containing non-finite values (stat_qq).
 #+begin_example
 [1] "Run on GSE42861 with FAMT|cate|lm|PcaLm|LassoLfmm|RidgeLfmm|SVA|"
 [1]  36714  51546 101455 125220 149131
+[1] "FAMT"
 [1] "== calibrate: median"
 [1] 4.119201
 [1] "== calibrate: mad"
 [1] 6.004386
+[1] "cate"
 [1] "== calibrate: median"
 [1] 0.01657819
 [1] "== calibrate: mad"
 [1] 1.163034
+[1] "lm"
 [1] "== calibrate: median"
 disease.state 
    0.04531018 
 [1] "== calibrate: mad"
 disease.state 
      4.209653 
+[1] "PcaLm"
 [1] "== calibrate: median"
 disease.state 
  -0.003446807 
 [1] "== calibrate: mad"
 disease.state 
      1.119271 
+[1] "LassoLfmm"
 [1] "== calibrate: median"
 disease.state 
  -0.003189651 
 [1] "== calibrate: mad"
 disease.state 
      1.122399 
+[1] "RidgeLfmm"
 [1] "== calibrate: median"
 disease.state 
    0.01105044 
 [1] "== calibrate: mad"
 disease.state 
      1.185217 
+[1] "SVA"
 [1] "== calibrate: median"
 [1] 2.433452
 [1] "== calibrate: mad"
