@@ -2410,8 +2410,12 @@ Very long script....
 
        detach(athaliana)
 #+end_src
-*** STARTED ./Data/Celiac/
+*** DONE ./Data/Celiac/
+CLOSED: [2017-05-17 mer. 14:59]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-17 mer. 14:59]
+- Note taken on [2017-05-17 mer. 14:58] \\
+  J'ai un dataset clumpé, il y a plus qu'a faire les analyse.
 - State "STARTED"    from              [2017-05-15 lun. 11:07]
 :END:
 Celiac dataset cite:dubois2010multiple
@@ -2644,7 +2648,6 @@ CLOSED: [2017-05-17 mer. 13:30]
 On pars d'un dataset deja imputé pour trouver une liste d'indice a garder ! 
 #+begin_src R :results output :exports both
   library(bigsnpr)
-  library(ggplot2)
   celiac <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/backingfiles/celiacQC_flo.rds")
   ind.keep2 <- snp_clumping(G = celiac$genotypes,
                             infos.chr = celiac$map$chromosome,
@@ -2654,17 +2657,44 @@ On pars d'un dataset deja imputé pour trouver une liste d'indice a garder !
 
 #+RESULTS:
 
-**** TODO From big matrix to matrix
+**** DONE From big matrix to matrix and scalling
+CLOSED: [2017-05-17 mer. 14:58]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-17 mer. 14:58]
 - State "TODO"       from              [2017-05-16 mar. 12:27]
 :END:
-#+begin_src R :results output :exports both
-  celiac <- readRDS("./Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
+#+begin_src R :results output :exports both :session *ssh krakenator*
+  library(bigsnpr)
+  celiac <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/backingfiles/celiacQC_flo.rds")
+  ind.clumping <- readRDS("./Data/Celiac/dubois_2010/celiacQC_flo/celiacQC_clumping_ind.rds")
+
+  ## filter correlated indiv to  0.08
+  celiac.aux <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
+  ind.indiv <- which(celiac$fam$sample.ID %in% celiac.aux$fam$sample.ID)
+
+
   ## G
-  G <- celiac$genotypes[]
+  G <- attach.BM(celiac$genotypes)[ind.indiv,ind.clumping]
+  rownames(G) <- celiac$fam$sample.ID[ind.indiv]
+  colnames(G) <- celiac$map$marker.ID[ind.clumping]
+  n <- nrow(G)
+  L <- ncol(G)
+  G <- scale(G)
+  saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_clumped.rds")
+  dim(G)
+
   ## X
-  X <- 
+  X <- matrix(celiac$fam$affection[ind.indiv], n, 1)
+  X <- scale(X)
+  rownames(X) <- celiac$fam$sample.ID[ind.indiv]
+  saveRDS(X, "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/X.rds")
+  dim(X)
 #+end_src
+
+#+RESULTS:
+: [1] 15155 94497
+: [1] 15155     1
+
 ** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:
 - Note taken on [2017-05-16 mar. 16:32] \\
@@ -3581,6 +3611,37 @@ disease.state
   dataset... Faut que je comprenne plus [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html][cette analyse]].
 - State "TODO"       from              [2017-05-11 jeu. 16:35]
 :END:
+*** choix des paramètres
+**** PCA
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  ## we keep only disease.state
+  X <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/X.rds")
+  head(X)
+
+  s <- TrueSampler(G.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_clumped.rds",
+                   X.file = X,
+                   outlier.file = NULL,
+                   n = NULL,
+                   L = NULL)
+  expr <- PCAExperiment(s = s,
+                        description = "celiac clumped PCA")
+  expr <- runExperiment(expr)
+  dumpExperiment(expr)
+#+end_src
+
+#+begin_src R :results output graphics :file Rplots/GSE42861_pca.png :exports both :width 600 :height 400 
+  expr <- retrieveExperiment(?)
+  variances <- expr$res.df$sdev / sum(expr$res.df$sdev)
+  ## plot
+  pl <- qplot(x = seq_along(variances), y = variances, geom='line') +
+    geom_point() +
+    coord_cartesian(xlim = c(1,100))
+  pl
+#+end_src
+
+
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both
