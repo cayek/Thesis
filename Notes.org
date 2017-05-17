@@ -2627,8 +2627,10 @@ Avec:
   celiac <- snp_attach("./Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
   dim(celiac$genotype)
 #+end_src
-**** TODO LD pruning/clumping
+**** DONE LD pruning/clumping
+CLOSED: [2017-05-17 mer. 13:30]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-17 mer. 13:30]
 - Note taken on [2017-05-17 mer. 11:02] \\
   On va utiliser sa fonction.
 - Note taken on [2017-05-16 mar. 16:36] \\
@@ -2647,7 +2649,11 @@ On pars d'un dataset deja imputé pour trouver une liste d'indice a garder !
   ind.keep2 <- snp_clumping(G = celiac$genotypes,
                             infos.chr = celiac$map$chromosome,
                             thr.r2 = 0.2)
+  saveRDS(ind.keep2, "~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/celiacQC_clumping_ind.rds")
 #+end_src
+
+#+RESULTS:
+
 **** TODO From big matrix to matrix
 :LOGBOOK:
 - State "TODO"       from              [2017-05-16 mar. 12:27]
