@@ -2419,11 +2419,12 @@ Celiac dataset cite:dubois2010multiple
 (récupéré de FP)
 **** Pre-processing
 :PROPERTIES:
-:header-args: :cache no :session *R* :dir ./ :eval no-export
+:header-args: :cache no :session *ssh krakenator* :dir ./ :eval no-export
 :END:
-From these [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html#28][slides]]
+FromTrueSampler these [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html#28][slides]]
 
 ***** Control quality
+
 #+begin_src R :results output :exports both
   library(bigsnpr)
   library(ggplot2)
@@ -2550,13 +2551,13 @@ MY_THEME(qplot(y = PI_HAT, data = rel)) +
 
 generate bed file without correlated indiv
 #+begin_src R :results output :exports both
-bedfileQC2 <- snp_plinkRmSamples(
-  plink, 
-  bedfile.in = bedfileQC, 
-  bedfile.out = sub("\\.bed$", "_norel.bed", bedfileQC), 
-  df.or.files = subset(rel, PI_HAT > 0.08)
-)
-print(bedfileQC2)
+  bedfileQC2 <- snp_plinkRmSamples(
+    plink, 
+    bedfile.in = bedfileQC, 
+    bedfile.out = sub("\\.bed$", "_norel.bed", bedfileQC), 
+    df.or.files = subset(rel, PI_HAT > 0.08)
+  )
+  print(bedfileQC2)
 #+end_src
 
 #+RESULTS:
@@ -2610,33 +2611,44 @@ Test to attach
 
 #+RESULTS:
 : [1]  15155 281122
+**** Formated dataset by FP
+Avec:
+- param de [[*Control quality][Control quality]] 
+- indiv parenté à 0.2
+- sans missing value (imputation with xgboost)
 
-***** TODO LD pruning/clumping
+#+begin_src R :results output :exports both
+  setwd("~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/")
+#+end_src
+
+#+begin_src R :results output :exports both
+  snp_readBed("celiacQC.bed",
+              "celiacQC_flo")
+  celiac <- snp_attach("./Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
+  dim(celiac$genotype)
+#+end_src
+**** TODO LD pruning/clumping
 :LOGBOOK:
+- Note taken on [2017-05-17 mer. 11:02] \\
+  On va utiliser sa fonction.
+- Note taken on [2017-05-16 mar. 16:36] \\
+  Il me faut les data de FP
 - Note taken on [2017-05-16 mar. 12:36] \\
   il faut que j'impute avant d'après la doc. A voir si je peux pas le faire
   dirrect avec plink !!
 - State "TODO"       from              [2017-05-16 mar. 12:26]
 :END:
+
+On pars d'un dataset deja imputé pour trouver une liste d'indice a garder ! 
 #+begin_src R :results output :exports both
   library(bigsnpr)
   library(ggplot2)
-
-
-  plink <- "/home/cayek/BiocompSoftware/plink/plink"
-  prefix <- "/home/cayek/Projects/Thesis/Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300"
-
-  celiac <- snp_attach("./Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
-
-  ## pruning / clumping with MAF
-  ind.keep <- snp_pruning(G, infos.chr = test$map$chromosome, thr.r2 = 0.1)
-  # keep most of them -> not much LD in this simulated dataset
-  length(ind.keep) / m
-  #> [1] 0.9817261
-
-  ind.keep2 <- snp_clumping(G, infos.chr = test$map$chromosome, thr.r2 = 0.1)
+  celiac <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/backingfiles/celiacQC_flo.rds")
+  ind.keep2 <- snp_clumping(G = celiac$genotypes,
+                            infos.chr = celiac$map$chromosome,
+                            thr.r2 = 0.2)
 #+end_src
-***** TODO From big matrix to matrix
+**** TODO From big matrix to matrix
 :LOGBOOK:
 - State "TODO"       from              [2017-05-16 mar. 12:27]
 :END:
@@ -2649,6 +2661,15 @@ Test to attach
 #+end_src
 ** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:
+- Note taken on [2017-05-16 mar. 16:32] \\
+  Au passage, tous le monde detecte les outlier des autres papier. PCA detect que
+  ceux la, c'est normal les autre méthodes sons sencé avoir plus de puissance :D
+- Note taken on [2017-05-16 mar. 16:31] \\
+  Il va falloir étudier la liste des candidats. Et justifier K = 28 pour tous le monde.
+- Note taken on [2017-05-16 mar. 16:30] \\
+  Il y a all qui tourne ! Pour le moment, on voit bien que plus la contrainte sur
+  B est petite plus on a de puissance a detecter des outlier. C'est PCA qui
+  detecte le moins de monde.
 - Note taken on [2017-05-12 Ven 15:05] \\
   J'espere montrer:
         - ma méthodes a plus de puissance (il trouve des liste plus longue pour un fdr
@@ -3430,7 +3451,7 @@ Removed 3948 rows containing non-finite values (stat_qq).
 :END:
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  expr <- retrieveExperiment(119)
+  expr <- retrieveExperiment(121)
   expr$description
   expr$outlier
   expr <- MethodBatchExperiment_calibrate(expr)
@@ -3442,14 +3463,14 @@ Removed 3948 rows containing non-finite values (stat_qq).
 [1]  36714  51546 101455 125220 149131
 [1] "FAMT"
 [1] "== calibrate: median"
-[1] 4.119201
+[1] 4.045254
 [1] "== calibrate: mad"
-[1] 6.004386
+[1] 5.895885
 [1] "cate"
 [1] "== calibrate: median"
-[1] 0.01657819
+[1] 0.01449029
 [1] "== calibrate: mad"
-[1] 1.163034
+[1] 1.16504
 [1] "lm"
 [1] "== calibrate: median"
 disease.state 
@@ -3460,29 +3481,29 @@ disease.state
 [1] "PcaLm"
 [1] "== calibrate: median"
 disease.state 
- -0.003446807 
+ -0.004352184 
 [1] "== calibrate: mad"
 disease.state 
-     1.119271 
+     1.123469 
 [1] "LassoLfmm"
 [1] "== calibrate: median"
 disease.state 
- -0.003189651 
+  -0.01364105 
 [1] "== calibrate: mad"
 disease.state 
-     1.122399 
+     1.139065 
 [1] "RidgeLfmm"
 [1] "== calibrate: median"
 disease.state 
-   0.01105044 
+   0.01155879 
 [1] "== calibrate: mad"
 disease.state 
-     1.185217 
+     1.183109 
 [1] "SVA"
 [1] "== calibrate: median"
-[1] 2.433452
+[1] 2.502576
 [1] "== calibrate: mad"
-[1] 3.432042
+[1] 3.530778
 #+end_example
 
 #+begin_src R :results output :exports both
@@ -3490,14 +3511,24 @@ disease.state
 #+end_src
 
 #+RESULTS:
-:      method cate FAMT LassoLfmm lm PcaLm RidgeLfmm SVA
-: 1      cate   10   NA         5  1     5         7  NA
-: 2      FAMT   NA   10        NA NA    NA        NA  10
-: 3 LassoLfmm    5   NA        10 NA    10         7  NA
-: 4        lm    1   NA        NA 10    NA         1  NA
-: 5     PcaLm    5   NA        10 NA    10         7  NA
-: 6 RidgeLfmm    7   NA         7  1     7        10  NA
-: 7       SVA   NA   10        NA NA    NA        NA  10
+#+begin_example
+     method nb observed.fdr observed.puissance
+1      cate 10          0.6                0.8
+2      FAMT 10          1.0                0.0
+3 LassoLfmm 10          0.6                0.8
+4        lm 10          1.0                0.0
+5     PcaLm 10          0.5                1.0
+6 RidgeLfmm 10          0.6                0.8
+7       SVA 10          1.0                0.0
+     method cate FAMT LassoLfmm lm PcaLm RidgeLfmm SVA
+1      cate   10   NA         5  1     5         7  NA
+2      FAMT   NA   10        NA NA    NA        NA  10
+3 LassoLfmm    5   NA        10 NA     9         8  NA
+4        lm    1   NA        NA 10    NA         1  NA
+5     PcaLm    5   NA         9 NA    10         7  NA
+6 RidgeLfmm    7   NA         8  1     7        10  NA
+7       SVA   NA   10        NA NA    NA        NA  10
+#+end_example
 
 #+begin_src R :results output :exports both
   pl <- MethodBatchExperiment_count_intersect(expr, top = 100, plot = "tile")
@@ -3505,6 +3536,14 @@ disease.state
 #+end_src
 
 #+RESULTS:
+:      method  nb observed.fdr observed.puissance
+: 1      cate 100         0.95                  1
+: 2      FAMT 100         1.00                  0
+: 3 LassoLfmm 100         0.95                  1
+: 4        lm 100         1.00                  0
+: 5     PcaLm 100         0.95                  1
+: 6 RidgeLfmm 100         0.95                  1
+: 7       SVA 100         1.00                  0
 [[./Rplots/GSE42861_count_intersect_top100.png]]
 
 #+begin_src R :results output :exports both
@@ -3513,6 +3552,13 @@ disease.state
 #+end_src
 
 #+RESULTS:
+:      method    nb observed.fdr observed.puissance
+: 1      cate    46    0.8913043                  1
+: 2      FAMT 37487    0.9998666                  1
+: 3 LassoLfmm    30    0.8333333                  1
+: 4     PcaLm    12    0.5833333                  1
+: 5 RidgeLfmm    44    0.8863636                  1
+: 6       SVA 34404    0.9998547                  1
 [[./Rplots/GSE42861_count_intersect_fdr01.png]]
 
 ** TODO Étude de celiac                                           :3Article:
@@ -3559,6 +3605,71 @@ disease.state
   hello(p.bis)
   str(p.bis)
 #+end_src
+
+** Plink
+*** Extract a sample
+See [[http://zzz.bwh.harvard.edu/plink/dataman.shtml#extract][doc]]
+
+#+begin_src shell :results output :exports both 
+  cd ~/Projects/Thesis/Data/Celiac/dubois_2010/
+  plink --bfile FinnuncorrNLITUK1UK3hap300 --chr 1 --from-kb 1 --to-kb 10000 --make-bed --out FinnuncorrNLITUK1UK3hap300_sample
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to FinnuncorrNLITUK1UK3hap300_sample.log.
+Options in effect:
+  --bfile FinnuncorrNLITUK1UK3hap300
+  --chr 1
+  --from-kb 1
+  --make-bed
+  --out FinnuncorrNLITUK1UK3hap300_sample
+  --to-kb 10000
+
+7761 MB RAM detected; reserving 3880 MB for main workspace.
+1024 out of 295453 variants loaded from .bim file.
+15283 people (6713 males, 8570 females) loaded from .fam.
+15283 phenotype values loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 15283 founders and 0 nonfounders present.
+Total genotyping rate is 0.999556.
+1024 variants and 15283 people pass filters and QC.
+Among remaining phenotypes, 4533 are cases and 10750 are controls.
+--make-bed to FinnuncorrNLITUK1UK3hap300_sample.bed +
+FinnuncorrNLITUK1UK3hap300_sample.bim + FinnuncorrNLITUK1UK3hap300_sample.fam
+#+end_example
+
+#+begin_src shell :results output :exports both 
+  cd ~/Projects/Thesis/Data/Celiac/dubois_2010/
+  plink --bfile FinnuncorrNLITUK1UK3hap300 --thin 0.1 --make-bed --out FinnuncorrNLITUK1UK3hap300_sample
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to FinnuncorrNLITUK1UK3hap300_sample.log.
+Options in effect:
+  --bfile FinnuncorrNLITUK1UK3hap300
+  --make-bed
+  --out FinnuncorrNLITUK1UK3hap300_sample
+  --thin 0.1
+
+7761 MB RAM detected; reserving 3880 MB for main workspace.
+295453 variants loaded from .bim file.
+15283 people (6713 males, 8570 females) loaded from .fam.
+15283 phenotype values loaded from .fam.
+--thin: 265860 variants removed (29593 remaining).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 15283 founders and 0 nonfounders present.
+Total genotyping rate is 0.999583.
+29593 variants and 15283 people pass filters and QC.
+Among remaining phenotypes, 4533 are cases and 10750 are controls.
+--make-bed to FinnuncorrNLITUK1UK3hap300_sample.bed +
+FinnuncorrNLITUK1UK3hap300_sample.bim + FinnuncorrNLITUK1UK3hap300_sample.fam
+#+end_example
 
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
