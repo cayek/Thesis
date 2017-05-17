@@ -1749,7 +1749,11 @@ How dataset in ./Data/ was generated. Some script and urls...
 Dataset simulated by Katie Lotterhos for the school SSMPG2015
 *** ./Data/MathieuGautier/
 Dataset used in *Genome scan methods against more complex models: when and how much should we trust them?* of piere de villemereuil et al.
-**** TODO Convert 
+**** CANCELLED Convert 
+CLOSED: [2017-05-17 mer. 15:40]
+:LOGBOOK:
+- State "CANCELLED"  from "TODO"       [2017-05-17 mer. 15:40]
+:END:
 .csv into .RData
 **** =mec12705-sup-0002-Pythonscripts/=
 Python script that generated dataset 
@@ -1996,6 +2000,119 @@ A dataset with only European and chromosome 22, maf filter to 5%.
   # save
   saveRDS(G.EUR.filtered, file = "European_Chrm22.maf.05.rds")
 #+end_src
+***** STARTED Data preprocessing with plink
+:LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-17 mer. 15:38]
+- Note taken on [2017-05-17 mer. 15:37] \\
+  On va faire les chose proprement avec plink ! ca a l'air de bien tourner, du
+  coup tout le preprocess on va le faire a vec plink et bigsnpr :D
+- State "TODO"       from              [2017-05-17 mer. 15:32]
+:END:
+****** RUNNING Quality controle
+:LOGBOOK:
+- Note taken on [2017-05-17 mer. 16:52] \\
+  14722.pts-1.krakenator
+- State "RUNNING"    from              [2017-05-17 mer. 16:52]
+:END:
+#+begin_src R :results output :exports both
+  ## file list
+  setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/")
+
+  file.pattern <- "ALL.chr[0-9]*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz$"
+  files <- list.files()
+  files <- grep(file.pattern, files, value = TRUE)
+
+  maf <- 0.05
+  mind <- 0.05
+  hwe <- 1e-10
+  geno <- 0.05
+  for (f in files) {
+    cmd <- paste("plink",
+                 "--vcf", f,
+                 "--maf", maf,
+                 "--mind", mind,
+                 "--geno", geno,
+                 "--hwe", hwe,
+                 "--snps-only",
+                 "--autosome",
+                 "--make-bed",
+                 "--out", paste0("./plink/", sub(".vcf.gz", "",f)),
+                 ">> plink_GC.out")
+
+    system("rm -f plink_QC.out")
+    system(cmd)
+
+  }
+#+end_src
+****** TODO Merge bep file
+:LOGBOOK:
+- State "TODO"       from              [2017-05-17 mer. 17:05]
+:END:
+#+begin_src R :results output :exports both
+  setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/plink/")
+
+  file.pattern <- "ALL.chr[0-9]*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed$"
+  files <- list.files()
+  files <- grep(file.pattern, files, value = TRUE)
+  prefix <- sub(pattern = ".bed", replacement = "", files)
+
+  cmd <- paste("plink",
+               "--bmerge", prefix,
+               "--make-bed --out", "1000GenomePhase3_QC",
+               ">> plink_merge.out")
+
+  system("rm -f plink_merge.out")
+  system(cmd)
+#+end_src
+****** TODO Remove correlated indiv
+:LOGBOOK:
+- State "TODO"       from              [2017-05-17 mer. 17:05]
+:END:
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/plink")
+  plink <- "/home/cayek/BiocompSoftware/plink/plink"
+  bedfileQC <- "1000GenomePhase3_QC.bed"
+  rel <- snp_plinkIBDQC(plink, bedfileQC, ncores = 4, 
+                        do.blind.QC = FALSE)
+
+  bedfileQC2 <- snp_plinkRmSamples(
+    plink, 
+    bedfile.in = bedfileQC, 
+    bedfile.out = sub("\\.bed$", "_norel.bed", bedfileQC), 
+    df.or.files = subset(rel, PI_HAT > 0.08)
+    )
+  print(bedfileQC2)
+#+end_src
+****** TODO Convert the dataset into bigmatrix
+:LOGBOOK:
+- State "TODO"       from              [2017-05-17 mer. 17:13]
+:END:
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/plink")
+  plink <- "/home/cayek/BiocompSoftware/plink/plink"
+  bedfileQC2 <- "1000GenomePhase3_QC_norel.bed"
+
+  snp_readBed(bedfileQC2, "1000GenomePhase3")
+#+end_src
+****** TODO LD prunning/clumping
+:LOGBOOK:
+- State "TODO"       from              [2017-05-17 mer. 17:06]
+:END:
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  genome1000 <- snp_attach("~/Projects/Thesis/Data/1000Genomes/Phase3/plink/backingfiles/1000GenomePhase3.rds")
+  ind.keep <- snp_clumping(G = genome1000$genotypes,
+                            infos.chr = genome1000$map$chromosome,
+                            thr.r2 = 0.2)
+  saveRDS(ind.keep, "~/Projects/Thesis/Data/1000Genomes/Phase3/plink/1000GenomesPhase3_clumping_ind.rds")
+
+#+end_src
+****** TODO Convert into R matrix
+:LOGBOOK:
+- State "TODO"       from              [2017-05-17 mer. 17:07]
+:END:
 *** ./Data/GSE42861/
 Données trouvé ici:
 https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE42861
@@ -3611,8 +3728,18 @@ disease.state
   dataset... Faut que je comprenne plus [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html][cette analyse]].
 - State "TODO"       from              [2017-05-11 jeu. 16:35]
 :END:
+*** Data preprocessing
+see [[*From big matrix to matrix and scalling][here]] 
+
 *** choix des paramètres
-**** PCA
+**** RUNNING PCA
+:LOGBOOK:
+- Note taken on [2017-05-17 mer. 15:07] \\
+  sreen: =4016.pts-8.krakenator=
+- State "RUNNING"    from "TODO"       [2017-05-17 mer. 15:06]
+- State "TODO"       from              [2017-05-17 mer. 15:06]
+:END:
+
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
 
@@ -3640,7 +3767,6 @@ disease.state
     coord_cartesian(xlim = c(1,100))
   pl
 #+end_src
-
 
 * Sandbox
 ** Test of bigsnpr
