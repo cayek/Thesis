@@ -1752,26 +1752,122 @@ Var explained with 4 variables:
 :LOGBOOK:
 - State "TODO"       from              [2017-05-18 jeu. 10:52]
 :END:
-**** 1000Genome dataset
+**** DONE 1000Genome dataset
+CLOSED: [2017-05-18 jeu. 13:09]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-18 jeu. 13:09]
+- State "RUNNING"    from              [2017-05-18 jeu. 11:43]
+:END:
 We scale the dataset
 #+begin_src R :results output :exports both
+  library(ThesisRpackage)
   G <- readRDS("./Data/1000Genomes/Phase3/plink/1000GenomePhase3_QC_norel_prunned.rds")
   G <- scale(G)
 
   pl <- plotable(function() {hist(G)})
   print(pl)
-  save_plot_timc_bcm_15(pl, "1000Genome_scale")
+  save_plot_timc_bcm_15(pl, "1000Genome_scale.png")
 
-  saveRDS("./Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled.rds")
+  saveRDS(G, "./Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled.rds")
+
 #+end_src
 
-**** PCA 
+#+RESULTS:
+[[./Rplots/1000Genome_scale.png]]
+
+Some filter
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  G <- readRDS("./Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled.rds")
+  G.filtered <- Preprocessing_filter_sd(G, 0)
+  G.filtered <- Preprocessing_filter_maf(G.filtered, 0.05)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  > G.filtered <- Preprocessing_filter_sd(G, 0)
+  TRACE [2017-05-18 13:13:52] proportion of removed loci =  NA
+  > dim(G.filtered)
+  [1]    919 345156
+  > dim(G)
+  [1]    919 345156
+  > G.filtered <- Preprocessing_filter_maf(G.filtered, 0.05)
+  TRACE [2017-05-18 13:15:29] proportion of removed loci =  NA
+  > 
+#+end_example
+
+There is nothing to remove.
+
+**** DONE PCA 
+CLOSED: [2017-05-18 jeu. 14:10]
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-18 jeu. 14:10]
+- State "RUNNING"    from "TODO"       [2017-05-18 jeu. 13:13]
+- State "TODO"       from              [2017-05-18 jeu. 11:45]
+:END:
+
+Run: 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
 
-  s <- TrueSampler("./Data/")
+  s <- TrueSampler("./Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled.rds", NULL, NULL)
 
-  expr <- PCAExperiment()
+  expr <- PCAExperiment(s,
+                        description = "PCA on 1000GenomesPhase3_QC_norel_prunned_scaled.rds")
+  expr <- runExperiment(expr)
+  dumpExperiment(expr)
+#+end_src
+
+Plot: 
+#+begin_src R :results output graphics :file Rplots/1000Genome_pca.png :exports both :width 600 :height 400 
+  expr <- retrieveExperiment(122)
+  variances <- expr$res.df$sdev / sum(expr$res.df$sdev)
+  ## plot
+  pl <- qplot(x = seq_along(variances), y = variances, geom='line') +
+    geom_point() +
+    coord_cartesian(xlim = c(1,100))
+  pl
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/1000Genome_pca.png]]
+
+Remark: la structure est bien partagé entre axe contrairement à [[*structure de population forte][ce plot]]. C'est a
+cause du LD prunning ?? 
+
+Var explained with 10 variables:
+#+begin_src R :results output :exports both
+  print(sum(variances[1:8]))
+  print(sum(variances[1:10]))
+#+end_src
+
+#+RESULTS:
+: [1] 0.02160972
+: [1] 0.02424479
+
+**** RUNNING Run on krakenator
+:LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-05-18 jeu. 15:18]
+:END:
+
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled.rds"
+
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = 0.05,
+                                   n = NULL, L = 10000,
+                                   K = 2,
+                                   K.method = 2,
+                                   cs = c(0.1, 0.2, 0.6, 0.8),
+                                   cs.sum = TRUE,
+                                   sd.V.rho = 1, 
+                                   nb.rep = 5,
+                                   fast.only = TRUE,
+                                   cluster.nb = 20,
+                                   save = TRUE, bypass = FALSE)
+
+  Article3_MethodComparison_plot_relative_diff_AUC(exp)
 #+end_src
 
 ** Dataset
@@ -3401,8 +3497,10 @@ CLOSED: [2017-05-18 jeu. 10:43]
 #+end_example
 Remark: Il des duplica dans le fichier des idiv a enlever, pk?
 
-****** RUNNING LD prunning/clumping
+****** DONE LD prunning/clumping
+CLOSED: [2017-05-18 jeu. 13:10]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-18 jeu. 13:10]
 - Note taken on [2017-05-18 jeu. 11:15] \\
   ATTENTION: j'ai merdé j'ai ecrasé 1000GenomePhase3_QC !!
 - State "RUNNING"    from "TODO"       [2017-05-18 jeu. 10:46]
@@ -3494,16 +3592,6 @@ Note: No phenotypes present.
 ... done.
 
 #+end_example
-
-#+begin_src R :results output :exports both
-  library(bigsnpr)
-  genome1000 <- snp_attach("~/Projects/Thesis/Data/1000Genomes/Phase3/plink/backingfiles/1000GenomePhase3.rds")
-  ind.keep <- snp_clumping(G = genome1000$genotypes,
-                            infos.chr = genome1000$map$chromosome,
-                            thr.r2 = 0.2)
-  saveRDS(ind.keep, "~/Projects/Thesis/Data/1000Genomes/Phase3/plink/1000GenomesPhase3_clumping_ind.rds")
-
-#+end_src
 
 ****** DONE Convert the dataset into bigmatrix
 CLOSED: [2017-05-18 jeu. 11:17]
@@ -4229,8 +4317,10 @@ On pars d'un dataset deja imputé pour trouver une liste d'indice a garder !
 #+RESULTS:
 
 **** DONE From big matrix to matrix and scalling
-CLOSED: [2017-05-17 mer. 14:58]
+CLOSED: [2017-05-18 jeu. 13:12]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-18 jeu. 13:12]
+- State "RUNNING"    from "DONE"       [2017-05-18 jeu. 11:53]
 - State "DONE"       from "TODO"       [2017-05-17 mer. 14:58]
 - State "TODO"       from              [2017-05-16 mar. 12:27]
 :END:

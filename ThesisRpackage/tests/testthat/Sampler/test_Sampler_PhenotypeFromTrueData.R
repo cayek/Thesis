@@ -2,7 +2,9 @@ library(testthat)
 context("Sampler_PhenotypeFromTrueData")
 
 test_that("PhenotypeFromTrueSampler", {
+
   skip("Play with files...")
+
   G.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.sample.rds"
   skip_if_not(file.exists(G.file))
   env.file <- "~/Projects/Thesis/Data/1001Genomes/1001_SNP_MATRIX/G_OF_filtered.env.rds"

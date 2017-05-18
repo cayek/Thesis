@@ -5,8 +5,8 @@
 \title{see my notebook (18/01/2017), sample a generative model from
 true dataset.}
 \usage{
-FromTrueSampler(G.file, n, L, K, prop.outlier, rho = NULL, cs = NULL,
-  round = FALSE, sd.V.rho = 1, rho.E = 1,
+FromTrueSampler(G.file, n, L, K, prop.outlier, pca.file = NULL, rho = NULL,
+  cs = NULL, round = FALSE, sd.V.rho = 1, rho.E = 1,
   B.outlier.sampler = function(n, mean, sd) rnorm(n, mean, sd))
 }
 \arguments{

@@ -56,3 +56,20 @@ sample_not_null_rnorm <- function(n, sd, rho) {
   }
   res
 }
+
+#' run prcomp or load a file
+#'
+compute_PCA <- function(s, G) {
+  if (!is.null(s$pca.file) && file.exists(s$pca.file)) {
+      flog.trace("Reading pca from", s$pca.file)
+      pca <- read_all(s$pca.file)
+  } else {
+    flog.trace("Compute PCA")
+    pca <- prcomp(G)
+    if (!is.null(s$pca.file)) {
+      flog.trace("Writting file", s$pca.file)
+      saveRDS(pca, s$pca.file)
+    }
+  }
+  pca
+}
