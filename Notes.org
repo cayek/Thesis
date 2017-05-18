@@ -1748,8 +1748,9 @@ Var explained with 4 variables:
 #+RESULTS:
 : [1] 0.02006896
 : [1] 0.02561421
-*** TODO Sample dataset
+*** STARTED Sample dataset
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-18 jeu. 15:44]
 - State "TODO"       from              [2017-05-18 jeu. 10:52]
 :END:
 **** DONE 1000Genome dataset

@@ -55,7 +55,7 @@ sampl.FromTrueSampler <- function(s) {
   }
 
   ## remove NA
-  G <- preprocessing_filter_na(G, 0)
+  G <- Preprocessing_filter_na(G, 0)
 
   ## center
   one <- matrix(1, n, 1)
