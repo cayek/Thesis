@@ -16,7 +16,7 @@ Preprocessing_filter_na <- function(G, na.threshold = 0, plot = FALSE) {
   if(plot) {
     hist(nas)
   }
-  out <- nas <= na.threshold
+  out <- nas > na.threshold
   flog.trace("proportion of removed loci = ", mean(out))
   G[,!out]
 }

@@ -67,7 +67,7 @@ Article3_MethodComparison <- function(G.file,
                                         res
                                       },
 
-
+                                      compute.pca = TRUE,
                                       save = TRUE, bypass = FALSE,
                                       methods = NULL) {
 
@@ -100,12 +100,19 @@ Article3_MethodComparison <- function(G.file,
   exp$K.method <- K.method
   exp$correctionByC <- correctionByC
 
-  
+
+  ## test compute.pca
+
   exp$s <- FromTrueSampler(G.file = G.file,
                            n = n,
                            L = L,
                            K = K,
-                           pca.file = sub("\\.rds", "_PCA.rds", G.file),
+
+                           pca.file = if(compute.pca)
+                                        NULL
+                                      else
+                                        sub("\\.rds", "_PCA.rds", G.file),
+
                            prop.outlier = NULL,
                            rho = NULL,
                            cs = NULL,
@@ -113,6 +120,7 @@ Article3_MethodComparison <- function(G.file,
                            rho.E = rho.E,
                            round = FALSE,
                            B.outlier.sampler = B.outlier.sampler)
+  
   exp$methods <- methods
   exp <- Article3_MethodComparison_main(exp)
 

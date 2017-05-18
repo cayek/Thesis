@@ -1858,14 +1858,15 @@ Var explained with 10 variables:
   exp <- Article3_MethodComparison(G.file,
                                    outlier.props = 0.05,
                                    n = NULL, L = 10000,
-                                   K = 2,
+                                   K = 10,
                                    K.method = 2,
                                    cs = c(0.1, 0.2, 0.6, 0.8),
-                                   cs.sum = TRUE,
+                                   cs.sum = FALSE,
                                    sd.V.rho = 1, 
                                    nb.rep = 5,
                                    fast.only = TRUE,
                                    cluster.nb = 20,
+                                   compute.pca = TRUE,
                                    save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(exp)
