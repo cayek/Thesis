@@ -54,6 +54,9 @@ sampl.FromTrueSampler <- function(s) {
     L <- s$L
   }
 
+  ## remove NA
+  G <- preprocessing_filter_na(G, 0)
+
   ## center
   one <- matrix(1, n, 1)
   mu <- matrix(G %>% purrr::array_branch(2) %>%
