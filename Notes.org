@@ -1610,6 +1610,8 @@ C'est comparable a les loadings RDA1
 
 ** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
+- Note taken on [2017-05-18 jeu. 10:49] \\
+  Ok on part du 1000 genome bien netoyé avec plink :D
 - Note taken on [2017-05-11 jeu. 17:46] \\
   On va utiliser le simons dataset par cohérence ! cf cahier le 10/05/2017
 - Note taken on [2017-05-10 mer. 10:55] \\
@@ -1636,7 +1638,13 @@ CLOCK: [2017-05-05 ven. 09:47]--[2017-05-05 ven. 10:12] =>  0:25
 - State "STARTED"    from "TODO"       [2017-05-03 mer. 09:49]
 - State "TODO"       from              [2017-05-03 mer. 09:05]
 :END:
-*** Sample dataset
+*** CANCELLED COMMENT Sample dataset
+CLOSED: [2017-05-18 jeu. 10:50]
+:LOGBOOK:
+- Note taken on [2017-05-18 jeu. 10:50] \\
+  on recommence au propre
+- State "CANCELLED"  from              [2017-05-18 jeu. 10:50]
+:END:
 **** structure de population faible
 On sample sur tout le 1000Genome et que les européens.
 #+begin_src R :results output :exports both
@@ -1740,8 +1748,31 @@ Var explained with 4 variables:
 #+RESULTS:
 : [1] 0.02006896
 : [1] 0.02561421
+*** TODO Sample dataset
+:LOGBOOK:
+- State "TODO"       from              [2017-05-18 jeu. 10:52]
+:END:
+**** 1000Genome dataset
+We scale the dataset
+#+begin_src R :results output :exports both
+  G <- readRDS("./Data/1000Genomes/Phase3/plink/1000GenomePhase3_QC_norel_prunned.rds")
+  G <- scale(G)
 
+  pl <- plotable(function() {hist(G)})
+  print(pl)
+  save_plot_timc_bcm_15(pl, "1000Genome_scale")
 
+  saveRDS("./Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled.rds")
+#+end_src
+
+**** PCA 
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  s <- TrueSampler("./Data/")
+
+  expr <- PCAExperiment()
+#+end_src
 
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
@@ -2008,8 +2039,10 @@ A dataset with only European and chromosome 22, maf filter to 5%.
   coup tout le preprocess on va le faire a vec plink et bigsnpr :D
 - State "TODO"       from              [2017-05-17 mer. 15:32]
 :END:
-****** RUNNING Quality controle
+****** DONE Quality controle
+CLOSED: [2017-05-18 jeu. 09:12]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-18 jeu. 09:12]
 - Note taken on [2017-05-17 mer. 16:52] \\
   14722.pts-1.krakenator
 - State "RUNNING"    from              [2017-05-17 mer. 16:52]
@@ -2044,28 +2077,1259 @@ A dataset with only European and chromosome 22, maf filter to 5%.
 
   }
 #+end_src
-****** TODO Merge bep file
+
+#+begin_src shell :session *ssh krakenator* :results output :exports both 
+  cd ~/Projects/Thesis/Data/1000Genomes/Phase3/plink/
+  for f in ALL.chr*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log
+  do
+      echo "=====FILE:$f====="
+      cat "$f"
+  done
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+> > > > =====FILE:ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 16:51:39 2017
+
+Random number seed: 1495032699
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+3837178 out of 3992219 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999945.
+806 variants removed due to missing genotype data (--geno).
+--hwe: 75986 variants removed due to Hardy-Weinberg exact test.
+3481563 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+278823 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr10.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 16:55:55 2017
+=====FILE:ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 16:55:55 2017
+
+Random number seed: 1495032955
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+3891530 out of 4045628 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999947.
+747 variants removed due to missing genotype data (--geno).
+--hwe: 74342 variants removed due to Hardy-Weinberg exact test.
+3548109 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+268332 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr11.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:00:10 2017
+=====FILE:ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:00:10 2017
+
+Random number seed: 1495033210
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+3710299 out of 3868428 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999954.
+657 variants removed due to missing genotype data (--geno).
+--hwe: 73200 variants removed due to Hardy-Weinberg exact test.
+3377092 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+259350 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr12.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:04:16 2017
+=====FILE:ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:04:16 2017
+
+Random number seed: 1495033456
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+2737034 out of 2857916 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999951.
+497 variants removed due to missing genotype data (--geno).
+--hwe: 52494 variants removed due to Hardy-Weinberg exact test.
+2484161 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+199882 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr13.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:07:18 2017
+=====FILE:ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:07:18 2017
+
+Random number seed: 1495033638
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+2548064 out of 2655067 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999952.
+479 variants removed due to missing genotype data (--geno).
+--hwe: 53291 variants removed due to Hardy-Weinberg exact test.
+2320025 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+174269 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr14.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:10:07 2017
+=====FILE:ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:10:07 2017
+
+Random number seed: 1495033807
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+2328557 out of 2424689 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999948.
+434 variants removed due to missing genotype data (--geno).
+--hwe: 51148 variants removed due to Hardy-Weinberg exact test.
+2123668 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+153307 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr15.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:12:41 2017
+=====FILE:ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:12:41 2017
+
+Random number seed: 1495033961
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+2607034 out of 2697949 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999947.
+518 variants removed due to missing genotype data (--geno).
+--hwe: 51346 variants removed due to Hardy-Weinberg exact test.
+2387326 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+167844 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:15:30 2017
+=====FILE:ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:15:30 2017
+
+Random number seed: 1495034130
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+2234710 out of 2329288 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999951.
+413 variants removed due to missing genotype data (--geno).
+--hwe: 46649 variants removed due to Hardy-Weinberg exact test.
+2044443 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+143205 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr17.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:17:58 2017
+=====FILE:ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:17:58 2017
+
+Random number seed: 1495034278
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+2178759 out of 2267185 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999949.
+392 variants removed due to missing genotype data (--geno).
+--hwe: 39690 variants removed due to Hardy-Weinberg exact test.
+1980142 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+158535 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr18.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:20:20 2017
+=====FILE:ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:20:20 2017
+
+Random number seed: 1495034420
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+1758443 out of 1832506 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999942.
+402 variants removed due to missing genotype data (--geno).
+--hwe: 36837 variants removed due to Hardy-Weinberg exact test.
+1591671 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+129533 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:22:17 2017
+=====FILE:ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 16:44:50 2017
+
+Random number seed: 1495032290
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+6216035 out of 6468094 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999953.
+1033 variants removed due to missing genotype data (--geno).
+--hwe: 128213 variants removed due to Hardy-Weinberg exact test.
+5676255 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+410534 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 16:51:39 2017
+=====FILE:ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:29:40 2017
+
+Random number seed: 1495034980
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+1745171 out of 1812841 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999959.
+278 variants removed due to missing genotype data (--geno).
+--hwe: 35426 variants removed due to Hardy-Weinberg exact test.
+1592817 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+116650 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr20.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:31:43 2017
+=====FILE:ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:31:43 2017
+
+Random number seed: 1495035103
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+1058549 out of 1105538 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999928.
+279 variants removed due to missing genotype data (--geno).
+--hwe: 23191 variants removed due to Hardy-Weinberg exact test.
+956556 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+78523 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:32:53 2017
+=====FILE:ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:32:53 2017
+
+Random number seed: 1495035173
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+1059735 out of 1103547 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999946.
+222 variants removed due to missing genotype data (--geno).
+--hwe: 25833 variants removed due to Hardy-Weinberg exact test.
+960163 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+73517 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:34:01 2017
+=====FILE:ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:22:17 2017
+
+Random number seed: 1495034537
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+6808742 out of 7081600 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999954.
+1184 variants removed due to missing genotype data (--geno).
+--hwe: 138884 variants removed due to Hardy-Weinberg exact test.
+6233305 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+435369 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:29:40 2017
+=====FILE:ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:34:01 2017
+
+Random number seed: 1495035241
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+5603261 out of 5832276 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999949.
+1069 variants removed due to missing genotype data (--geno).
+--hwe: 111493 variants removed due to Hardy-Weinberg exact test.
+5104864 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+385835 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:40:14 2017
+=====FILE:ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:40:14 2017
+
+Random number seed: 1495035614
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+5500093 out of 5732585 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999948.
+1080 variants removed due to missing genotype data (--geno).
+--hwe: 115329 variants removed due to Hardy-Weinberg exact test.
+4985272 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+398412 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:46:21 2017
+=====FILE:ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:46:21 2017
+
+Random number seed: 1495035981
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+5055536 out of 5265763 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999953.
+909 variants removed due to missing genotype data (--geno).
+--hwe: 91958 variants removed due to Hardy-Weinberg exact test.
+4620648 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+342021 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:51:47 2017
+=====FILE:ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:51:47 2017
+
+Random number seed: 1495036307
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+4816881 out of 5024119 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999935.
+1292 variants removed due to missing genotype data (--geno).
+--hwe: 101026 variants removed due to Hardy-Weinberg exact test.
+4346787 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+367776 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 17:57:03 2017
+=====FILE:ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 17:57:03 2017
+
+Random number seed: 1495036623
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+4533180 out of 4716715 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.99995.
+842 variants removed due to missing genotype data (--geno).
+--hwe: 87612 variants removed due to Hardy-Weinberg exact test.
+4119828 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+324898 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 18:01:58 2017
+=====FILE:ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 18:01:58 2017
+
+Random number seed: 1495036918
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+4434371 out of 4597105 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999944.
+921 variants removed due to missing genotype data (--geno).
+--hwe: 90154 variants removed due to Hardy-Weinberg exact test.
+4048413 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+294883 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 18:06:48 2017
+=====FILE:ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.log=====
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --autosome
+  --geno 0.05
+  --hwe 1e-10
+  --maf 0.05
+  --make-bed
+  --mind 0.05
+  --out ./plink/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes
+  --snps-only
+  --vcf ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3
+Start time: Wed May 17 18:06:48 2017
+
+Random number seed: 1495037208
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+--vcf:
+./plink/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bed
++
+./plink/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.bim
++
+./plink/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes-temporary.fam
+written.
+3427241 out of 3560687 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+./plink/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.nosex
+.
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999948.
+689 variants removed due to missing genotype data (--geno).
+--hwe: 68557 variants removed due to Hardy-Weinberg exact test.
+3121045 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+236950 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+./plink/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed
++
+./plink/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bim
++
+./plink/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.fam
+... done.
+
+End time: Wed May 17 18:10:32 2017
+#+end_example
+
+****** DONE Merge bep file
+CLOSED: [2017-05-18 jeu. 10:10]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-18 jeu. 10:10]
+- Note taken on [2017-05-18 jeu. 09:22] \\
+  see: http://zzz.bwh.harvard.edu/plink/dataman.shtml#merge
 - State "TODO"       from              [2017-05-17 mer. 17:05]
 :END:
+
+******* Remove multiple allele name
 #+begin_src R :results output :exports both
   setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/plink/")
 
+  ## list prefix
   file.pattern <- "ALL.chr[0-9]*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bed$"
   files <- list.files()
   files <- grep(file.pattern, files, value = TRUE)
   prefix <- sub(pattern = ".bed", replacement = "", files)
 
-  cmd <- paste("plink",
-               "--bmerge", prefix,
-               "--make-bed --out", "1000GenomePhase3_QC",
-               ">> plink_merge.out")
+  ## exclude variant
+  write("rs6658405\n.\nrs145926341\nrs141927528" , file = "excluded_variant.txt")
 
-  system("rm -f plink_merge.out")
+  for (f in prefix) {
+    cmd <- paste("plink",
+                 "--bfile", f,
+                 "--exclude excluded_variant.txt",
+                   "--make-bed",
+                 "--out", paste0(f, "_excluded"))
+    system(cmd)
+  }
+#+end_src
+
+#+begin_src shell :session *ssh krakenator* :results output :exports both 
+  grep "rs6658405" -R *_excluded.bim
+  grep "\." -R *_excluded.bim
+  grep "rs145926341" -R *_excluded.bim
+  grep "rs141927528" -R *_excluded.bim
+#+end_src
+
+#+RESULTS:
+: ALL.chr16.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes_excluded.bim:16	rs66584058	0	25445314	G	A
+: ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes_excluded.bim:5	rs66584056	0	36516119	T	A
+
+
+******* Merge
+#+begin_src R :results output :exports both
+  setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/plink/")
+
+  ## list prefix
+  file.pattern <- "ALL.chr[0-9]*.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes_excluded.bed$"
+  files <- list.files()
+  files <- grep(file.pattern, files, value = TRUE)
+  prefix <- sub(pattern = ".bed", replacement = "", files)
+
+
+  ## create list of file
+  prefix1 <- prefix[1]
+  prefix <- prefix[-1]
+  list.file <- tempfile(tmpdir=".", fileext=".txt")
+  for (p in prefix) {
+    line <- paste(paste0(p, ".bed"), paste0(p, ".bim"), paste0(p, ".fam"))
+    write(line, list.file, append = TRUE)
+  }
+
+    ## cmd
+  cmd <- paste("plink",
+               "--bfile",
+               prefix1,
+               "--merge-list",
+               list.file,
+               "--make-bed --out", "1000GenomePhase3_QC")
+
   system(cmd)
 #+end_src
-****** TODO Remove correlated indiv
+
+#+begin_src shell :session *ssh krakenator* :results output :exports both 
+  cat 1000GenomePhase3_QC.log
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --bfile ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes_excluded
+  --make-bed
+  --merge-list ./file290c4546eae6.txt
+  --out 1000GenomePhase3_QC
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3/plink
+Start time: Thu May 18 09:55:14 2017
+
+Random number seed: 1495094114
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+Performing single-pass merge (2504 people, 5398440 variants).
+Merged fileset written to 1000GenomePhase3_QC-merge.bed +
+1000GenomePhase3_QC-merge.bim + 1000GenomePhase3_QC-merge.fam .
+5398440 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to 1000GenomePhase3_QC.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999922.
+5398440 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to 1000GenomePhase3_QC.bed + 1000GenomePhase3_QC.bim +
+1000GenomePhase3_QC.fam ... done.
+
+End time: Thu May 18 09:57:32 2017
+#+end_example
+
+****** DONE Remove correlated indiv
+CLOSED: [2017-05-18 jeu. 10:43]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-18 jeu. 10:43]
 - State "TODO"       from              [2017-05-17 mer. 17:05]
 :END:
 #+begin_src R :results output :exports both
@@ -2073,8 +3337,10 @@ A dataset with only European and chromosome 22, maf filter to 5%.
   setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/plink")
   plink <- "/home/cayek/BiocompSoftware/plink/plink"
   bedfileQC <- "1000GenomePhase3_QC.bed"
-  rel <- snp_plinkIBDQC(plink, bedfileQC, ncores = 4, 
-                        do.blind.QC = FALSE)
+  rel <- snp_plinkIBDQC(plink, bedfileQC, ncores = 4,
+                        bedfile.out = sub("\\.bed$", "_norel.bed", bedfileQC),
+                        pruning.args = NULL,
+                        do.blind.QC = TRUE)
 
   bedfileQC2 <- snp_plinkRmSamples(
     plink, 
@@ -2084,22 +3350,151 @@ A dataset with only European and chromosome 22, maf filter to 5%.
     )
   print(bedfileQC2)
 #+end_src
-****** TODO Convert the dataset into bigmatrix
-:LOGBOOK:
-- State "TODO"       from              [2017-05-17 mer. 17:13]
-:END:
-#+begin_src R :results output :exports both
-  library(bigsnpr)
-  setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/plink")
-  plink <- "/home/cayek/BiocompSoftware/plink/plink"
-  bedfileQC2 <- "1000GenomePhase3_QC_norel.bed"
 
-  snp_readBed(bedfileQC2, "1000GenomePhase3")
-#+end_src
-****** TODO LD prunning/clumping
+#+RESULTS:
+#+begin_example
+  PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+  (C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+  Logging to 1000GenomePhase3_QC.log.
+  Options in effect:
+    --bfile 1000GenomePhase3_QC
+    --genome
+    --min 0.08
+    --out 1000GenomePhase3_QC
+    --threads 4
+
+  193793 MB RAM detected; reserving 96896 MB for main workspace.
+  5398440 variants loaded from .bim file.
+  2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+  Ambiguous sex IDs written to 1000GenomePhase3_QC.nosex .
+  Using up to 4 threads (change this with --threads).
+  Before main variant filters, 2504 founders and 0 nonfounders present.
+  Calculating allele frequencies... done.
+  Total genotyping rate is 0.999922.
+  5398440 variants and 2504 people pass filters and QC.
+  Note: No phenotypes present.
+  IBD calculations complete.  
+  Finished writing 1000GenomePhase3_QC.genome .
+  PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+  (C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+  Logging to 1000GenomePhase3_QC_norel.log.
+  Options in effect:
+    --bfile 1000GenomePhase3_QC
+    --make-bed
+    --out 1000GenomePhase3_QC_norel
+    --remove /home/cayek/tmp/RtmpVBcWMh/file577662272180
+
+  193793 MB RAM detected; reserving 96896 MB for main workspace.
+  5398440 variants loaded from .bim file.
+  2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+  Ambiguous sex IDs written to 1000GenomePhase3_QC_norel.nosex .
+  --remove: 919 people remaining.
+  Warning: At least 146315 duplicate IDs in --remove file.
+  Using 1 thread (no multithreaded calculations invoked).
+  Before main variant filters, 919 founders and 0 nonfounders present.
+  Calculating allele frequencies... done.
+  Total genotyping rate in remaining samples is 0.999923.
+  5398440 variants and 919 people pass filters and QC.
+  Note: No phenotypes present.
+  --make-bed to 1000GenomePhase3_QC_norel.bed + 1000GenomePhase3_QC_norel.bim +
+  1000GenomePhase3_QC_norel.fam ... done.
+#+end_example
+Remark: Il des duplica dans le fichier des idiv a enlever, pk?
+
+****** RUNNING LD prunning/clumping
 :LOGBOOK:
+- Note taken on [2017-05-18 jeu. 11:15] \\
+  ATTENTION: j'ai merdé j'ai ecrasé 1000GenomePhase3_QC !!
+- State "RUNNING"    from "TODO"       [2017-05-18 jeu. 10:46]
 - State "TODO"       from              [2017-05-17 mer. 17:06]
 :END:
+
+LD prunning with plink
+#+begin_src shell :results output :exports both 
+  cd ~/Projects/Thesis/Data/1000Genomes/Phase3/plink/
+  plink --bfile 1000GenomePhase3_QC_norel --indep-pairwise 100 1 0.2 --out 1000GenomePhase3_QC_norel --threads 8
+  plink --bfile 1000GenomePhase3_QC_norel --extract 1000GenomePhase3_QC_norel.prune.in --make-bed --out 1000GenomePhase3_QC_norel_prunned --threads 8
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)
+Options in effect:
+  --bfile 1000GenomePhase3_QC_norel
+  --indep-pairwise 100 1 0.2
+  --out 1000GenomePhase3_QC_norel
+  --threads 8
+
+Hostname: krakenator.imag.fr
+Working directory: /home/cayek/Projects/Thesis/Data/1000Genomes/Phase3/plink
+Start time: Thu May 18 10:54:56 2017
+
+Random number seed: 1495097696
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+5398440 variants loaded from .bim file.
+919 people (0 males, 0 females, 919 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to 1000GenomePhase3_QC_norel.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 919 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999923.
+5398440 variants and 919 people pass filters and QC.
+Note: No phenotypes present.
+Pruned 383736 variants from chromosome 1, leaving 26796.
+Pruned 409231 variants from chromosome 2, leaving 26138.
+Pruned 362671 variants from chromosome 3, leaving 23164.
+Pruned 376046 variants from chromosome 4, leaving 22366.
+Pruned 321739 variants from chromosome 5, leaving 20282.
+Pruned 346793 variants from chromosome 6, leaving 20983.
+Pruned 305297 variants from chromosome 7, leaving 19601.
+Pruned 277248 variants from chromosome 8, leaving 17633.
+Pruned 221055 variants from chromosome 9, leaving 15895.
+Pruned 261309 variants from chromosome 10, leaving 17514.
+Pruned 252249 variants from chromosome 11, leaving 16083.
+Pruned 242441 variants from chromosome 12, leaving 16907.
+Pruned 187619 variants from chromosome 13, leaving 12263.
+Pruned 162678 variants from chromosome 14, leaving 11591.
+Pruned 141956 variants from chromosome 15, leaving 11349.
+Pruned 155359 variants from chromosome 16, leaving 12485.
+Pruned 131431 variants from chromosome 17, leaving 11774.
+Pruned 147368 variants from chromosome 18, leaving 11167.
+Pruned 119426 variants from chromosome 19, leaving 10107.
+Pruned 107554 variants from chromosome 20, leaving 9096.
+Pruned 72900 variants from chromosome 21, leaving 5623.
+Pruned 67178 variants from chromosome 22, leaving 6339.
+Pruning complete.  5053284 of 5398440 variants removed.
+Marker lists written to 1000GenomePhase3_QC_norel.prune.in and
+1000GenomePhase3_QC_norel.prune.out .
+
+End time: Thu May 18 10:55:08 2017
+
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to 1000GenomePhase3_QC_norel_prunned.log.
+Options in effect:
+  --bfile 1000GenomePhase3_QC_norel
+  --extract 1000GenomePhase3_QC_norel.prune.in
+  --make-bed
+  --out 1000GenomePhase3_QC_norel_prunned
+  --threads 8
+
+193793 MB RAM detected; reserving 96896 MB for main workspace.
+5398440 variants loaded from .bim file.
+919 people (0 males, 0 females, 919 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to 1000GenomePhase3_QC_norel_prunned.nosex .
+--extract: 345156 variants remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 919 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999904.
+345156 variants and 919 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to 1000GenomePhase3_QC_norel_prunned.bed +
+1000GenomePhase3_QC_norel_prunned.bim + 1000GenomePhase3_QC_norel_prunned.fam
+... done.
+
+#+end_example
+
 #+begin_src R :results output :exports both
   library(bigsnpr)
   genome1000 <- snp_attach("~/Projects/Thesis/Data/1000Genomes/Phase3/plink/backingfiles/1000GenomePhase3.rds")
@@ -2109,10 +3504,69 @@ A dataset with only European and chromosome 22, maf filter to 5%.
   saveRDS(ind.keep, "~/Projects/Thesis/Data/1000Genomes/Phase3/plink/1000GenomesPhase3_clumping_ind.rds")
 
 #+end_src
-****** TODO Convert into R matrix
+
+****** DONE Convert the dataset into bigmatrix
+CLOSED: [2017-05-18 jeu. 11:17]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-18 jeu. 11:17]
+- State "TODO"       from "DONE"       [2017-05-18 jeu. 10:57]
+- State "DONE"       from "STARTED"    [2017-05-18 jeu. 10:45]
+- State "STARTED"    from "DONE"       [2017-05-18 jeu. 10:43]
+- State "TODO"       from              [2017-05-17 mer. 17:13]
+:END:
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  setwd("~/Projects/Thesis/Data/1000Genomes/Phase3/plink")
+  bedfile <- "1000GenomePhase3_QC_norel_prunned.bed"
+
+  snp_readBed(bedfile, "1000GenomePhase3")
+#+end_src
+
+****** DONE Convert into R matrix
+CLOSED: [2017-05-18 jeu. 11:23]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-18 jeu. 11:23]
 - State "TODO"       from              [2017-05-17 mer. 17:07]
 :END:
+
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  genome1000 <- snp_attach("backingfiles/1000GenomePhase3.rds")
+
+  names(genome1000)
+  dim(genome1000$genotypes)
+
+  ## G
+  G <- attach.BM(genome1000$genotypes)[]
+  rownames(G) <- genome1000$fam$sample.ID
+  colnames(G) <- genome1000$map$marker.ID
+  n <- nrow(G)
+  L <- ncol(G)
+  saveRDS(G, "1000GenomePhase3_QC_norel_prunned.rds")
+  dim(G)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  > library(bigsnpr)
+  > genome1000 <- snp_attach("backingfiles/1000GenomePhase3.rds")
+  > 
+  > names(genome1000)
+  [1] "genotypes" "fam"       "map"       "savedIn"  
+  > dim(genome1000$genotypes)
+  [1]    919 345156
+  > 
+  > ## G
+  > G <- attach.BM(genome1000$genotypes)[]
+  > rownames(G) <- genome1000$fam$sample.ID
+  > colnames(G) <- genome1000$map$marker.ID
+  > n <- nrow(G)
+  > L <- ncol(G)
+  > saveRDS(G, "1000GenomePhase3_QC_norel_prunned.rds")
+  > dim(G)
+  [1]    919 345156
+#+end_example
+
 *** ./Data/GSE42861/
 Données trouvé ici:
 https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE42861

@@ -46,6 +46,17 @@ new_nb <- function(dir, name) {
 
 }
 
+#' @export
+print.plotable <- function(pl) {
+  pl$toplot()
+}
+
+#' @export
+plotable<- function(toplot) {
+  pl <- list(toplot = toplot)
+  class(pl) <- "plotable"
+  pl
+}
 
 #' save plot to png format on timc-bcm-15
 #' @export
