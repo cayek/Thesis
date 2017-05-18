@@ -47,15 +47,17 @@ sampl.FromTrueSampler <- function(s) {
   ## sample row an col
   if (!is.null(s$n) && s$n <= n) {
     G <- G[sample(n, s$n),]
-    n <- s$n
   }
   if (!is.null(s$L) && s$L <= L) {
     G <- G[,sample(L, s$L)]
-    L <- s$L
   }
 
   ## remove NA
   G <- Preprocessing_filter_na(G, 0)
+
+  ## recompute L and n
+  n <- nrow(G)
+  L <- ncol(G)
 
   ## center
   one <- matrix(1, n, 1)
