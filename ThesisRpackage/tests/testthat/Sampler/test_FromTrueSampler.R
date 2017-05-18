@@ -3,6 +3,8 @@ context("FromTrueSampler")
 
 test_that("From true data set sample, Arabidopsis Thaliana", {
 
+  skip("load the whole G matrix => a lil big")
+
   G.file <- "~/Projects/Data2016_2017/AthalianaGegMapLines/call_method_75/call_method_75_TAIR9.G.rds"
   skip_if_not(file.exists(G.file))
 

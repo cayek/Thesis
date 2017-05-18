@@ -1870,7 +1870,7 @@ Var explained with 10 variables:
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
-  exp <- Article3_MethodComparison(G.file,
+  expr <- Article3_MethodComparison(G.file,
                                    outlier.props = 0.05,
                                    n = NULL, L = 10000,
                                    K = 10,
@@ -1884,7 +1884,8 @@ Var explained with 10 variables:
                                    compute.pca = TRUE,
                                    save = TRUE, bypass = FALSE)
 
-  Article3_MethodComparison_plot_relative_diff_AUC(exp)
+  Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  Article3_MethodComparison_plot_GIF(expr)
 #+end_src
 
 ** Dataset

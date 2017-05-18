@@ -20,6 +20,14 @@ sampl <- function(x){
 
 #' Title
 #'
+#' @export
+Sampler_load <- function(s){
+  UseMethod("Sampler_load")
+}
+
+
+#' Title
+#'
 #'
 #' @export
 print.Sampler <- function(x) {

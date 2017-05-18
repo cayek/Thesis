@@ -29,9 +29,28 @@ FromTrueSampler <- function(G.file,
                  sd.V.rho = sd.V.rho,
                  rho.E = rho.E,
                  round = round,
-                 B.outlier.sampler = B.outlier.sampler),
+                 B.outlier.sampler = B.outlier.sampler,
+                 loaded = FALSE),
             class = c("FromTrueSampler","Sampler"))
 }
+
+#' @export
+Sampler_load.FromTrueSampler <- function(s) {
+  if (!s$loaded) {
+    s$G <- read_G(s$G.file)
+    ## remove NA
+    s$G <- Preprocessing_filter_na(s$G, 0)
+    pca <- compute_PCA(s, s$G)
+    s$U <- pca$x[,1:s$K]
+    s$V <- pca$rotation[,1:s$K]
+    s$mu <- matrix(pca$center, 1, ncol(s$G))
+    s$one <- matrix(1, nrow(s$G), 1)
+    s$E <- s$G - s$one %*% s$mu - tcrossprod(s$U, s$V)
+    s$loaded <- TRUE
+  }
+  s
+}
+
 
 #' Sample data from true dataset
 #'
@@ -39,39 +58,38 @@ FromTrueSampler <- function(G.file,
 #' @export
 sampl.FromTrueSampler <- function(s) {
 
-  ## read file
-  G <- read_G(s$G.file)
-  n <- nrow(G)
-  L <- ncol(G)
+  ## load the sampler
+  s <- Sampler_load(s)
+
 
   ## sample row an col
+  n <- nrow(G)
+  L <- ncol(G)
   if (!is.null(s$n) && s$n <= n) {
-    G <- G[sample(n, s$n),]
+    sample.ind <- sample(n, s$n)
+  } else {
+    ## all
+    sample.ind <- 1:n
   }
   if (!is.null(s$L) && s$L <= L) {
-    G <- G[,sample(L, s$L)]
+    sample.loc <- sample(L, s$L)
+  } else {
+    ## all
+    sample.loc <- 1:L
   }
 
-  ## remove NA
-  G <- Preprocessing_filter_na(G, 0)
-
-  ## recompute L and n
+  
+  ## G
+  G <- s$G[sample.ind, sample.loc]
   n <- nrow(G)
   L <- ncol(G)
 
-  ## center
-  one <- matrix(1, n, 1)
-  mu <- matrix(G %>% purrr::array_branch(2) %>%
-                   purrr::map_dbl(mean, na.rm = TRUE),
-                 1, L)
-  G_ <- G - one %*% mu
-
-  ## compute svd: G = C + E (C = U Sigma V^T)
-  pca <- compute_PCA(s, G_)
-  U <- pca$x[,1:s$K]
-  V <- pca$rotation[,1:s$K]
-  E <- G_ - tcrossprod(U,
-                       V)
+  ## U V mu
+  U <- s$U[sample.ind,]
+  V <- s$V[sample.loc,]
+  mu <- s$mu[,sample.loc]
+  one <- s$one[sample.ind,]
+  E <- s$E[sample.ind, sample.loc]
 
   ## compute X
   if (is.null(s$cs)) {
