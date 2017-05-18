@@ -1799,6 +1799,21 @@ Some filter
 
 There is nothing to remove.
 
+Si les na :D
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  G <- readRDS("./Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled.rds")
+  G <- Preprocessing_filter_na(G)
+  saveRDS(G, "./Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds")
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  TRACE [2017-05-18 16:19:27] proportion of removed loci =  0.00775881050887135
+  > dim(G)
+  [1]    919 342478
+#+end_example
+
 **** DONE PCA 
 CLOSED: [2017-05-18 jeu. 14:10]
 :LOGBOOK:
@@ -1853,13 +1868,13 @@ Var explained with 10 variables:
 
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled.rds"
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
   exp <- Article3_MethodComparison(G.file,
                                    outlier.props = 0.05,
                                    n = NULL, L = 10000,
                                    K = 10,
-                                   K.method = 2,
+                                   K.method = 10,
                                    cs = c(0.1, 0.2, 0.6, 0.8),
                                    cs.sum = FALSE,
                                    sd.V.rho = 1, 
