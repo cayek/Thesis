@@ -20,7 +20,6 @@ test_that("Article3_MethodComparison", {
                                    nb.rep = 2,
                                    fast.only = TRUE,
                                    cluster.nb = NULL,
-                                   compute.pca = TRUE,
                                    save = FALSE, bypass = TRUE)
 
   expect_equal(dim(exp$df), c(7200, 13))

@@ -67,7 +67,6 @@ Article3_MethodComparison <- function(G.file,
                                         res
                                       },
 
-                                      compute.pca = TRUE,
                                       save = TRUE, bypass = FALSE,
                                       methods = NULL) {
 
@@ -108,10 +107,7 @@ Article3_MethodComparison <- function(G.file,
                            L = L,
                            K = K,
 
-                           pca.file = if(compute.pca)
-                                        NULL
-                                      else
-                                        sub("\\.rds", "_PCA.rds", G.file),
+                           pca.file = sub("\\.rds", "_PCA.rds", G.file),
 
                            prop.outlier = NULL,
                            rho = NULL,

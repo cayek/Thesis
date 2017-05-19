@@ -1866,6 +1866,25 @@ Var explained with 10 variables:
 - State "RUNNING"    from "TODO"       [2017-05-18 jeu. 15:18]
 :END:
 
+We first load the sampler to compute pca.
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+  FromTrueSampler(G.file = G.file,
+                  n = 1,
+                  L = 1,
+                  K = 1,
+                  pca.file = sub("\\.rds", "_PCA.rds", G.file),
+                  prop.outlier = NULL,
+                  rho = NULL,
+                  cs = NULL,
+                  sd.V.rho = 1,
+                  rho.E = 1,
+                  round = FALSE)
+
+
+#+end_src
+
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
@@ -5320,8 +5339,9 @@ see [[*From big matrix to matrix and scalling][here]]
   dumpExperiment(expr)
 #+end_src
 
-#+begin_src R :results output graphics :file Rplots/GSE42861_pca.png :exports both :width 600 :height 400 
-  expr <- retrieveExperiment(?)
+#+begin_src R :results output graphics :file Rplots/celiac_pca.png :exports both :width 600 :height 400 
+  expr <- retrieveExperiment(124)
+  expr$description
   variances <- expr$res.df$sdev / sum(expr$res.df$sdev)
   ## plot
   pl <- qplot(x = seq_along(variances), y = variances, geom='line') +
@@ -5329,6 +5349,11 @@ see [[*From big matrix to matrix and scalling][here]]
     coord_cartesian(xlim = c(1,100))
   pl
 #+end_src
+
+#+RESULTS:
+[[file:Rplots/celiac_pca.png]]
+
+On prend K = 9 variables lattentes.
 
 * Sandbox
 ** Test of bigsnpr
