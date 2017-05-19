@@ -107,3 +107,19 @@ test_that("Oracle", {
 
 })
 
+test_that("clumped data") {
+
+  skip("too long")
+
+  K <- 3
+  s <- NormalSampler2(100,1000,K)
+
+  expr <- MethodBatchExperiment("test",
+                                s = s,
+                                method.batch = finalBench(K = K,
+                                                          lambda = 1e-5,
+                                                          calibrate = FALSE,
+                                                          sparse.prop = 0.1,
+                                                          fast.only = FALSE))
+
+})

@@ -9,6 +9,12 @@ fit.final <- function(m, dat, reuse = FALSE) {
     dat <- imputeMeanDataSet(dat)
     m$imputed.values <- dat$G[m$missing.index]
   }
+
+  ## ind.clumping
+  if (!is.null(dat$ind.clumping)) {
+    dat$G <- dat$G[,dat$ind.clumping]
+  }
+
   NextMethod()
 }
 
