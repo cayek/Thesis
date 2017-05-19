@@ -237,6 +237,7 @@ finalBench <- function(K, lambda, calibrate, sparse.prop,
 
     bench$famt <- finalFamtMethod(K = K)
     bench$sva <- finalSVAMethod(K = K)
+    bench$cate <- finalcateMethod(K = K)
     ## bench$refactor <- finalRefactorMethod(K = K, calibrate = calibrate)
     bench$lm <- finalLm(calibrate = calibrate)
     bench$pcaLm <- finalPcaLm(K = K, calibrate = calibrate)

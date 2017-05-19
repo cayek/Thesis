@@ -1861,8 +1861,18 @@ Var explained with 10 variables:
 : [1] 0.02160972
 : [1] 0.02424479
 
-**** RUNNING Run on krakenator
+**** STARTED Run on krakenator
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
 :LOGBOOK:
+- Note taken on [2017-05-19 ven. 13:24] \\
+  Je pense que je met trop de variable lattentes pour l'acp et pour je ne sais
+  quelle raison il capte X.... De toute facon j'utilise un critère objectif pour
+  trouver le nombre de variable lattentes... SI l'acp se plante ! tant mieux !
+- Note taken on [2017-05-19 ven. 13:03] \\
+  C'est bizare pour PCA + lm et il manque cate
+- State "STARTED"    from "RUNNING"    [2017-05-19 ven. 11:45]
 - State "RUNNING"    from "TODO"       [2017-05-18 jeu. 15:18]
 :END:
 
@@ -1884,7 +1894,63 @@ We first load the sampler to compute pca.
   s <- Sampler_load(s)
 #+end_src
 
+***** TODO with 0.05 % outlier
+:LOGBOOK:
+- State "TODO"       from              [2017-05-19 ven. 11:41]
+:END:
 Run method
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                   outlier.props = 0.0005,
+                                   n = NULL, L = 10000,
+                                   K = 10,
+                                   K.method = 10,
+                                   cs = c(0.1, 0.2, 0.6, 0.8),
+                                   cs.sum = FALSE,
+                                   sd.V.rho = 1, 
+                                   nb.rep = 5,
+                                   fast.only = FALSE,
+                                   cluster.nb = 20,
+                                   save = TRUE, bypass = FALSE)
+
+  Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  Article3_MethodComparison_plot_GIF(expr)
+#+end_src
+***** TODO with 0.5 % outlier
+:LOGBOOK:
+- State "TODO"       from              [2017-05-19 ven. 11:41]
+:END:
+Run method
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                   outlier.props = 0.005,
+                                   n = NULL, L = 10000,
+                                   K = 10,
+                                   K.method = 10,
+                                   cs = c(0.1, 0.2, 0.6, 0.8),
+                                   cs.sum = FALSE,
+                                   sd.V.rho = 1, 
+                                   nb.rep = 5,
+                                   fast.only = TRUE,
+                                   cluster.nb = 20,
+                                   save = TRUE, bypass = FALSE)
+
+  Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  Article3_MethodComparison_plot_GIF(expr)
+#+end_src
+***** STARTED with 1 % outlier
+:LOGBOOK:
+- State "STARTED"    from "DONE"       [2017-05-19 ven. 13:03]
+- State "DONE"       from "RUNNING"    [2017-05-19 ven. 13:03]
+- State "RUNNING"    from              [2017-05-19 ven. 11:41]
+:END:
+****** Run
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
@@ -1902,10 +1968,80 @@ Run method
                                    cluster.nb = 20,
                                    save = TRUE, bypass = FALSE)
 
-  Article3_MethodComparison_plot_relative_diff_AUC(expr)
   Article3_MethodComparison_plot_GIF(expr)
 #+end_src
 
+****** plot
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(125)
+  expr$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=10 K.method=10 correctionByC=FALSE fast.only=TRUE n= L=10000 cs=0.1|0.2|0.6|0.8 cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=0.01 nb.rep=5 "
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_1.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_1.png")
+#+end_src
+
+#+RESULTS:
+[[./Rplots/NumericVal_gif_1.png]]
+[[./Rplots/NumericVal_auc_1.png]]
+#+begin_example
+# A tibble: 20 × 5
+   method outlier.prop `cor(U,X)`   rep       auc
+    <chr>        <dbl>      <chr> <dbl>     <dbl>
+1  Oracle         0.01        0.1     1 0.9850510
+2  Oracle         0.01        0.1     2 0.9851842
+3  Oracle         0.01        0.1     3 0.9852716
+4  Oracle         0.01        0.1     4 0.9852063
+5  Oracle         0.01        0.1     5 0.9850772
+6  Oracle         0.01        0.2     1 0.9850568
+7  Oracle         0.01        0.2     2 0.9851064
+8  Oracle         0.01        0.2     3 0.9850596
+9  Oracle         0.01        0.2     4 0.9854058
+10 Oracle         0.01        0.2     5 0.9850795
+11 Oracle         0.01        0.6     1 0.9852875
+12 Oracle         0.01        0.6     2 0.9854125
+13 Oracle         0.01        0.6     3 0.9850586
+14 Oracle         0.01        0.6     4 0.9878571
+15 Oracle         0.01        0.6     5 0.9851148
+16 Oracle         0.01        0.8     1 0.9787368
+17 Oracle         0.01        0.8     2 0.9756866
+18 Oracle         0.01        0.8     3 0.9826669
+19 Oracle         0.01        0.8     4 0.9847617
+20 Oracle         0.01        0.8     5 0.9834062
+#+end_example
+
+***** TODO with 5 % outlier
+:LOGBOOK:
+- State "TODO"       from              [2017-05-19 ven. 11:41]
+:END:
+
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                   outlier.props = 0.05,
+                                   n = NULL, L = 10000,
+                                   K = 10,
+                                   K.method = 10,
+                                   cs = c(0.1, 0.2, 0.6, 0.8),
+                                   cs.sum = FALSE,
+                                   sd.V.rho = 1, 
+                                   nb.rep = 5,
+                                   fast.only = TRUE,
+                                   cluster.nb = 20,
+                                   save = TRUE, bypass = FALSE)
+
+  Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  Article3_MethodComparison_plot_GIF(expr)
+#+end_src
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
 *** ./Data/SSMPG2015/ 
@@ -4352,8 +4488,14 @@ On part d'un dataset deja imputé pour trouver une liste d'indice a garder !
 
 #+RESULTS:
 
-**** RUNNING From big matrix to matrix and scalling
+**** DONE From big matrix to matrix and scalling
+CLOSED: [2017-05-19 ven. 11:39]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-19 ven. 11:39]
+- Note taken on [2017-05-19 ven. 11:38] \\
+  ca a l'aire bon
+- Note taken on [2017-05-19 ven. 11:30] \\
+  le test
 - Note taken on [2017-05-19 ven. 10:10] \\
   juste la partie sans le clumping.
 - State "RUNNING"    from "STARTED"    [2017-05-19 ven. 10:09]
@@ -4421,17 +4563,23 @@ On part d'un dataset deja imputé pour trouver une liste d'indice a garder !
 #+end_src
 
 #+RESULTS:
+: [1]  15155 281122
 : [1] 15155 94497
 : [1] 15155     1
 
 A lil'test
 #+begin_src R :results output :exports both
-  G <- saveRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
-  G.clumped <- saveRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_clumped.rds")
-  ind.clumping <- saveRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/ind.clumpling.rds")
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+  G.clumped <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_clumped.rds")
+  ind.clumping <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/ind.clumpling.rds")
 
-  mean(abs(G[,ind.clumpling.rds] - G))
+  mean(abs(G[,ind.clumping] - G.clumped))
 #+end_src
+
+#+RESULTS:
+#+begin_example
+  [1] 2.356696e-17
+#+end_example
 
 ** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:

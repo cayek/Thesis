@@ -20,6 +20,7 @@ TrueSampler <- function(G.file, X.file, outlier.file,
                  L = L,
                  G.file = G.file,
                  X.file = X.file,
+                 ind.clumping = ind.clumping,
                  reference = reference,
                  outlier.file = outlier.file), class = c("TrueSampler","Sampler"))
 }
@@ -63,8 +64,15 @@ sampl.TrueSampler <- function(s) {
   }
 
   ## read ind.clumping
-  if (!is.null(s$ind.clumping)) {
+  if (!is.null(s$)) {HERE
     ind.clumping <- read_all(s$ind.clumping)
+  }
+  if (is.character(s$ind.clumping)) {
+    X <- read_X(s$X.file)
+  } else if (is.matrix(s$X.file)) {
+    X <- s$X.file
+  } else {
+    X <- matrix(NA, nrow(G), 1)
   }
 
 
