@@ -4,7 +4,8 @@
 \alias{MethodBatchExperiment}
 \title{Run a batch of method on a dataset}
 \usage{
-MethodBatchExperiment(data.name, s, method.batch, cluster.nb = NULL)
+MethodBatchExperiment(data.name, s, method.batch, func = run,
+  cluster.nb = NULL)
 }
 \description{
 Run a batch of method on a dataset

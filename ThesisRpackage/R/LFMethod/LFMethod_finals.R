@@ -19,7 +19,7 @@ fit.final <- function(m, dat, reuse = FALSE) {
     m$imputed.values <- dat$G[m$missing.index]
   }
 
-  dat <- data_clumping(dat)
+  ## dat <- data_clumping(dat)
 
   NextMethod()
 }

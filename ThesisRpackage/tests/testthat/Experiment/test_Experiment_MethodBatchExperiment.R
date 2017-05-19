@@ -13,7 +13,7 @@ test_that("MethodBatchExperiment run", {
                                 s,
                                 method.batch,
                                 cluster.nb = NULL)
-  expect_equal(expr$description, "Run on normal with lm|RidgeLfmm|")
+  expect_equal(expr$description, "Run on normal with lm|RidgeLfmm|func=run")
 
 
   expr <- runExperiment(expr)

@@ -12,7 +12,7 @@
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
 #+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
-#+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) RUNNING(r!) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
+#+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) RUNNING(r!) DEBUG(D!) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
 
 * Notebooks
 :PROPERTIES:
@@ -1894,8 +1894,10 @@ We first load the sampler to compute pca.
   s <- Sampler_load(s)
 #+end_src
 
-***** STARTED with 0.05 % outlier
+***** DEBUG with 0.05 % outlier
 :LOGBOOK:
+- State "DEBUG"      from              [2017-05-19 ven. 15:41]
+- State ""           from "STARTED"    [2017-05-19 ven. 15:40]
 - State "STARTED"    from "RUNNING"    [2017-05-19 ven. 15:13]
 - State "RUNNING"    from "RUNNING"    [2017-05-19 ven. 15:13]
 - Note taken on [2017-05-19 ven. 15:13] \\
@@ -1925,7 +1927,7 @@ Run method
                                     sd.V.rho = 1,
                                     nb.rep = 5,
                                     fast.only = TRUE,
-                                    cluster.nb = 10,
+                                    cluster.nb = NULL,
                                     save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
@@ -5513,8 +5515,10 @@ disease.state
 see [[*From big matrix to matrix and scalling][here]] 
 
 *** choix des paramètres
-**** RUNNING PCA
+**** DONE PCA
+CLOSED: [2017-05-19 ven. 15:36]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-19 ven. 15:36]
 - Note taken on [2017-05-17 mer. 15:07] \\
   sreen: =4016.pts-8.krakenator=
 - State "RUNNING"    from "TODO"       [2017-05-17 mer. 15:06]
@@ -5554,7 +5558,37 @@ see [[*From big matrix to matrix and scalling][here]]
 [[file:Rplots/celiac_pca.png]]
 
 On prend K = 9 variables lattentes.
+*** STARTED Run 
+:LOGBOOK:
+- State "STARTED"    from              [2017-05-19 ven. 15:37]
+:END:
+**** Only on clumpled data
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  method.batch <- list()
+  K <- 9
+  ## famt
+  method.batch$m.famt <- finalFamtMethod(K)
+  ## cate
+  method.batch$m.sva <- finalcateMethod(K)
+  ## lm
+  method.batch$m.lm <- finalLm()
+  ## pca
+  method.batch$m.pca <- finalPcaLm(K)
+  ## lfmm lasso
+  method.batch$m.lfmmLasso <- finalLfmmLassoMethod(K, 0.05)
+  ## lfmm ridge
+  method.batch$m.lfmmRidge <- finalLfmmRdigeMethod(K, 1e-10)
+  ## sva
+  method.batch$m.cate <- finalSVAMethod(K)
 
+  expr <- MethodBatchExperiment("GSE42861",
+                                s = Article3_Celiac_sampler(clumped = TRUE),
+                                method.batch = method.batch,
+                                cluster.nb = NULL)
+
+  expr <- runExperiment(expr, TRUE)
+#+end_src
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both

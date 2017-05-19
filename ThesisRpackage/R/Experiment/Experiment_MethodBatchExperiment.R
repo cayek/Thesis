@@ -4,11 +4,13 @@
 MethodBatchExperiment <- function(data.name,
                                   s,
                                   method.batch,
+                                  func = run,
                                   cluster.nb = NULL) {
   description <- paste0("Run on ", data.name, " with ")
   for(m in method.batch) {
     description <- paste0(description, m$nickname, "|")
   }
+  description <- paste0(description, "func=", deparse(substitute(func)))
 
   expr <- Experiment(name = "MethodBatchExperiment",
                      description = description)
@@ -16,6 +18,7 @@ MethodBatchExperiment <- function(data.name,
   expr$method.batch <- method.batch
   expr$s <- s
   expr$cluster.nb <- cluster.nb
+  expr$func <- func
   expr
 }
 
@@ -45,7 +48,7 @@ runExperiment.MethodBatchExperiment <- function(expr, save = FALSE) {
   start.time <- Sys.time()
   res <- foreach(m = expr$method.batch) %dopar%
     {
-      run(m, dat)
+      expr$func(m, dat)
     }
 
   end.time <- Sys.time()
