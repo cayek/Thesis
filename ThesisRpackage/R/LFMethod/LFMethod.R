@@ -51,7 +51,7 @@ numLatentVarEstimation <- function(m, dat, ...){
 #' Run the association scan method
 #'
 #' @export
-run <- function(m, dat){
+run <- function(m, dat, ...){
   UseMethod("run")
 }
 

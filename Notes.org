@@ -769,6 +769,8 @@ Lasso ne trouve vraiment pas comme les autres ... bizare bizare. Il faudrait
 voir la vrai valeur de K après convergeance.
 ** TODO EAS for LFMM article                                      :3Article:
 :LOGBOOK:
+- Note taken on [2017-05-19 ven. 16:04] \\
+  1000  genome + climat
 - State "TODO"       from              [2017-04-04 mar. 12:09]
 :END:
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
@@ -5558,11 +5560,14 @@ CLOSED: [2017-05-19 ven. 15:36]
 [[file:Rplots/celiac_pca.png]]
 
 On prend K = 9 variables lattentes.
-*** STARTED Run 
+*** STARTED Run only on clumped data
 :LOGBOOK:
 - State "STARTED"    from              [2017-05-19 ven. 15:37]
 :END:
-**** Only on clumpled data
+**** TODO lfmmRidge
+:LOGBOOK:
+- State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
+:END:
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   method.batch <- list()
@@ -5588,6 +5593,26 @@ On prend K = 9 variables lattentes.
                                 cluster.nb = NULL)
 
   expr <- runExperiment(expr, TRUE)
+  dumpExperiment(expr)
+#+end_src
+**** TODO all
+:LOGBOOK:
+- State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  method.batch <- list()
+  K <- 9
+  ## lfmm ridge
+  method.batch$m.lfmmRidge <- finalLfmmRdigeMethod(K, 1e-10)
+
+  expr <- MethodBatchExperiment("GSE42861",
+                                s = Article3_Celiac_sampler(clumped = TRUE),
+                                method.batch = method.batch,
+                                cluster.nb = NULL)
+
+  expr <- runExperiment(expr, TRUE)
+  dumpExperiment(expr)
 #+end_src
 * Sandbox
 ** Test of bigsnpr
