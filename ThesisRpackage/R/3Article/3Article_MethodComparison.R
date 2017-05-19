@@ -18,8 +18,8 @@ Article3_MethodComparison_main <- function(exp) {
       }
       if (is.null(exp$methods)) {
         bench <- finalBench(K = exp$K.method,
-                            lambda = 1e-5,
-                            sparse.prop = p,
+                            lambda = exp$ridge.lambda,
+                            sparse.prop = exp$lasso.sparse.prop,
                             calibrate = FALSE,
                             fast.only = exp$fast.only, with.missing = FALSE,
                             correctionByC = exp$correctionByC)
@@ -56,6 +56,8 @@ Article3_MethodComparison <- function(G.file,
                                       sd.V.rho = 1.0,
                                       rho.E = 1.0,
                                       nb.rep = 5,
+                                      lasso.sparse.prop = 0.1,
+                                      ridge.lambda = 1e-5,
                                       fast.only = TRUE,
                                       cluster.nb = NULL,
 
@@ -92,8 +94,12 @@ Article3_MethodComparison <- function(G.file,
                                      sd.V.rho = sd.V.rho,
                                      rho.E = rho.E,
                                      outlier.props = outlier.props,
+                                     ridge.lambda = ridge.lambda,
+                                     lasso.sparse.prop = lasso.sparse.prop,
                                      nb.rep = nb.rep)
   exp$fast.only <- fast.only
+  exp$lasso.sparse.prop <- lasso.sparse.prop
+  exp$ridge.lambda <- ridge.lambda
   exp$nb.rep <- nb.rep
   exp$outlier.props  <- outlier.props
   exp$cs  <- cs

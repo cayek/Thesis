@@ -7,11 +7,12 @@
 Article3_MethodComparison(G.file, outlier.props = c(0.01, 0.05, 0.1),
   n = NULL, L = 10000, K = 4, K.method = K, correctionByC = FALSE,
   cs = c(0.2, 0.4, 0.6, 0.8), cs.sum = TRUE, sd.V.rho = 1, rho.E = 1,
-  nb.rep = 5, fast.only = TRUE, cluster.nb = NULL,
-  B.outlier.sampler = function(n, mean, sd) {     res = 1:n     for (i in 1:n)
-  {         res[i] <- rnorm(1, mean, sd)         while (abs(res[i]) < 1 * sd) { 
-             res[i] <- rnorm(1, mean, sd)         }     }     res },
-  save = TRUE, bypass = FALSE, methods = NULL)
+  nb.rep = 5, lasso.sparse.prop = 0.1, ridge.lambda = 1e-05,
+  fast.only = TRUE, cluster.nb = NULL, B.outlier.sampler = function(n,
+  mean, sd) {     res = 1:n     for (i in 1:n) {         res[i] <- rnorm(1,
+  mean, sd)         while (abs(res[i]) < 1 * sd) {             res[i] <-
+  rnorm(1, mean, sd)         }     }     res }, save = TRUE, bypass = FALSE,
+  methods = NULL)
 }
 \arguments{
 \item{outlier.props}{proportion of outlier simulated}
