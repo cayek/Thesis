@@ -64,15 +64,12 @@ sampl.TrueSampler <- function(s) {
   }
 
   ## read ind.clumping
-  if (!is.null(s$)) {HERE
-    ind.clumping <- read_all(s$ind.clumping)
-  }
   if (is.character(s$ind.clumping)) {
-    X <- read_X(s$X.file)
-  } else if (is.matrix(s$X.file)) {
-    X <- s$X.file
+    ind.clumping <- read_all(s$ind.clumping)
+  } else if (is.numeric(s$ind.clumping)) {
+    ind.clumping <- s$ind.clumping
   } else {
-    X <- matrix(NA, nrow(G), 1)
+    ind.clumping <- NULL
   }
 
 

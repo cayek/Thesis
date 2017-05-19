@@ -2,18 +2,16 @@ library(testthat)
 library(Article3Package)
 context("TrueDataSet")
 
-test_that("TrueDataSet reference ind.clumping", {
+test_that("TrueDataSet ind.clumping", {
 
   s <- TrueSampler(G.file = matrix(1,3,3),
                    X.file = matrix(2,3,1),
                    outlier.file = NULL,
+                   ind.clumping = c(2,3),
                    n = NULL,
-                   L = NULL,
-                   reference = TRUE)
+                   L = NULL)
 
   dat <- sampl(s)
-  expect_equal(class(dat)[1], "TrueDataSet")
-  expect_equal(typeof(dat), "S4") ## this is a RC object ! 
 })
 
 test_that("TrueDataSet reference", {
