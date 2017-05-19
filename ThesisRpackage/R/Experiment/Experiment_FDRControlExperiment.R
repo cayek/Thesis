@@ -28,7 +28,10 @@ runExperiment.FDRControlExperiment <- function(exp) {
   ## compute dat
   dats <- list()
   for (i in 1:exp$nb.rep) {
-    dats[[i]] <- c(sampl(exp$sampler), list(rep = i))
+    s <- Sampler_load(exp$sampler)
+    dats[[i]] <- c(sampl(s), list(rep = i))
+    rm(s)
+    gc()
   }
 
   ## main loop

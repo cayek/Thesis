@@ -2,6 +2,7 @@
 
 S3method(Predict_row,LFMMMethod)
 S3method(Sampler_load,FromTrueSampler)
+S3method(Sampler_load,Sampler)
 S3method(UXlink,Method)
 S3method(calibrate,Method)
 S3method(clean,Method)

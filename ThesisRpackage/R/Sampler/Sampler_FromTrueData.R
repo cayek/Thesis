@@ -61,10 +61,9 @@ sampl.FromTrueSampler <- function(s) {
   ## load the sampler
   s <- Sampler_load(s)
 
-
   ## sample row an col
-  n <- nrow(G)
-  L <- ncol(G)
+  n <- nrow(s$G)
+  L <- ncol(s$G)
   if (!is.null(s$n) && s$n <= n) {
     sample.ind <- sample(n, s$n)
   } else {
@@ -85,11 +84,11 @@ sampl.FromTrueSampler <- function(s) {
   L <- ncol(G)
 
   ## U V mu
-  U <- s$U[sample.ind,]
-  V <- s$V[sample.loc,]
-  mu <- s$mu[,sample.loc]
-  one <- s$one[sample.ind,]
-  E <- s$E[sample.ind, sample.loc]
+  U <- s$U[sample.ind,, drop = FALSE]
+  V <- s$V[sample.loc,, drop = FALSE]
+  mu <- s$mu[,sample.loc, drop = FALSE]
+  one <- s$one[sample.ind,, drop = FALSE]
+  E <- s$E[sample.ind, sample.loc, drop = FALSE]
 
   ## compute X
   if (is.null(s$cs)) {
