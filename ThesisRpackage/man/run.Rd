@@ -4,7 +4,7 @@
 \alias{run}
 \title{Run the association scan method}
 \usage{
-run(m, dat)
+run(m, dat, ...)
 }
 \description{
 Run the association scan method

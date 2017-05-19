@@ -1896,72 +1896,10 @@ We first load the sampler to compute pca.
   s <- Sampler_load(s)
 #+end_src
 
-***** DEBUG with 0.05 % outlier
+***** DONE with 1 % outlier
+CLOSED: [2017-05-19 ven. 16:42]
 :LOGBOOK:
-- State "DEBUG"      from              [2017-05-19 ven. 15:41]
-- State ""           from "STARTED"    [2017-05-19 ven. 15:40]
-- State "STARTED"    from "RUNNING"    [2017-05-19 ven. 15:13]
-- State "RUNNING"    from "RUNNING"    [2017-05-19 ven. 15:13]
-- Note taken on [2017-05-19 ven. 15:13] \\
-  Ok il y a un truc qui merde !!
-- Note taken on [2017-05-19 ven. 15:01] \\
-  Avec 20 process c'est viré par krak... Il faudrait que je gere mieux la memoire..
-- Note taken on [2017-05-19 ven. 13:54] \\
-  C'est partie !! : 29005.pts-4.krakenator Ca devrait prendre pas mal de temps !
-  On vera lundi
-- State "RUNNING"    from "TODO"       [2017-05-19 ven. 13:47]
-- State "TODO"       from              [2017-05-19 ven. 11:41]
-:END:
-Run method
-#+begin_src R :results output :exports both
-  require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
-
-  expr <- Article3_MethodComparison(G.file,
-                                    outlier.props = 0.0005,
-                                    n = NULL, L = NULL,
-                                    K = 10,
-                                    K.method = 10,
-                                    lasso.sparse.prop = 0.01,
-                                    ridge.lambda = 1e-5,
-                                    cs = c(0.1, 0.2, 0.6, 0.8),
-                                    cs.sum = FALSE,
-                                    sd.V.rho = 1,
-                                    nb.rep = 5,
-                                    fast.only = TRUE,
-                                    cluster.nb = NULL,
-                                    save = TRUE, bypass = FALSE)
-
-  Article3_MethodComparison_plot_relative_diff_AUC(expr)
-  Article3_MethodComparison_plot_GIF(expr)
-#+end_src
-***** TODO with 0.5 % outlier
-:LOGBOOK:
-- State "TODO"       from              [2017-05-19 ven. 11:41]
-:END:
-Run method
-#+begin_src R :results output :exports both
-  require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
-
-  expr <- Article3_MethodComparison(G.file,
-                                   outlier.props = 0.005,
-                                   n = NULL, L = 10000,
-                                   K = 10,
-                                   K.method = 10,
-                                   cs = c(0.1, 0.2, 0.6, 0.8),
-                                   cs.sum = FALSE,
-                                   sd.V.rho = 1, 
-                                   nb.rep = 5,
-                                   fast.only = TRUE,
-                                   cluster.nb = 20,
-                                   save = TRUE, bypass = FALSE)
-
-  Article3_MethodComparison_plot_relative_diff_AUC(expr)
-  Article3_MethodComparison_plot_GIF(expr)
-#+end_src
-***** STARTED with 1 % outlier
-:LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-19 ven. 16:42]
 - State "STARTED"    from "DONE"       [2017-05-19 ven. 13:03]
 - State "DONE"       from "RUNNING"    [2017-05-19 ven. 13:03]
 - State "RUNNING"    from              [2017-05-19 ven. 11:41]
@@ -2033,27 +1971,43 @@ Run method
 20 Oracle         0.01        0.8     5 0.9834062
 #+end_example
 
-***** TODO with 5 % outlier
+***** DEBUG with 0.05 0.5 1 5 % outlier and L = 100 000
 :LOGBOOK:
+- Note taken on [2017-05-19 ven. 16:43] \\
+  Ca sert a rien de lancer avec plus de locus ! pour les gross donné on a celiac :D
+- State "DEBUG"      from              [2017-05-19 ven. 15:41]
+- State ""           from "STARTED"    [2017-05-19 ven. 15:40]
+- State "STARTED"    from "RUNNING"    [2017-05-19 ven. 15:13]
+- State "RUNNING"    from "RUNNING"    [2017-05-19 ven. 15:13]
+- Note taken on [2017-05-19 ven. 15:13] \\
+  Ok il y a un truc qui merde !!
+- Note taken on [2017-05-19 ven. 15:01] \\
+  Avec 20 process c'est viré par krak... Il faudrait que je gere mieux la memoire..
+- Note taken on [2017-05-19 ven. 13:54] \\
+  C'est partie !! : 29005.pts-4.krakenator Ca devrait prendre pas mal de temps !
+  On vera lundi
+- State "RUNNING"    from "TODO"       [2017-05-19 ven. 13:47]
 - State "TODO"       from              [2017-05-19 ven. 11:41]
 :END:
-
+Run method
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
   expr <- Article3_MethodComparison(G.file,
-                                   outlier.props = 0.05,
-                                   n = NULL, L = 10000,
-                                   K = 10,
-                                   K.method = 10,
-                                   cs = c(0.1, 0.2, 0.6, 0.8),
-                                   cs.sum = FALSE,
-                                   sd.V.rho = 1, 
-                                   nb.rep = 5,
-                                   fast.only = TRUE,
-                                   cluster.nb = 20,
-                                   save = TRUE, bypass = FALSE)
+                                    outlier.props = c(0.0005, 0.005, 0.01, 0.05),
+                                    n = NULL, L = 100000,
+                                    K = 10,
+                                    K.method = 10,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c(0.1, 0.2, 0.4, 0.6, 0.8),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 5,
+                                    fast.only = TRUE,
+                                    cluster.nb = 10,
+                                    save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
   Article3_MethodComparison_plot_GIF(expr)
@@ -5564,7 +5518,27 @@ On prend K = 9 variables lattentes.
 :LOGBOOK:
 - State "STARTED"    from              [2017-05-19 ven. 15:37]
 :END:
-**** TODO lfmmRidge
+**** RUNNING lfmmRidge
+:LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-05-19 ven. 16:21]
+- State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  method.batch <- list()
+  K <- 9
+  ## lfmm ridge
+  method.batch$m.lfmmRidge <- finalLfmmRdigeMethod(K, 1e-10)
+
+  expr <- MethodBatchExperiment("celiac",
+                                s = Article3_Celiac_sampler(clumped = TRUE),
+                                method.batch = method.batch,
+                                cluster.nb = NULL)
+
+  expr <- runExperiment(expr, TRUE)
+  dumpExperiment(expr)
+#+end_src
+**** TODO all
 :LOGBOOK:
 - State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
 :END:
@@ -5587,26 +5561,7 @@ On prend K = 9 variables lattentes.
   ## sva
   method.batch$m.cate <- finalSVAMethod(K)
 
-  expr <- MethodBatchExperiment("GSE42861",
-                                s = Article3_Celiac_sampler(clumped = TRUE),
-                                method.batch = method.batch,
-                                cluster.nb = NULL)
-
-  expr <- runExperiment(expr, TRUE)
-  dumpExperiment(expr)
-#+end_src
-**** TODO all
-:LOGBOOK:
-- State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
-:END:
-#+begin_src R :results output :exports both
-  library(ThesisRpackage)
-  method.batch <- list()
-  K <- 9
-  ## lfmm ridge
-  method.batch$m.lfmmRidge <- finalLfmmRdigeMethod(K, 1e-10)
-
-  expr <- MethodBatchExperiment("GSE42861",
+  expr <- MethodBatchExperiment("celiac",
                                 s = Article3_Celiac_sampler(clumped = TRUE),
                                 method.batch = method.batch,
                                 cluster.nb = NULL)
