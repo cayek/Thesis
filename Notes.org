@@ -1971,10 +1971,14 @@ CLOSED: [2017-05-19 ven. 16:42]
 20 Oracle         0.01        0.8     5 0.9834062
 #+end_example
 
-***** DEBUG with 0.05 0.5 1 5 % outlier and L = 100 000
+***** RUNNING with 0.05 0.5 1 5 % outlier and L = 100 000
 :LOGBOOK:
+- Note taken on [2017-05-19 ven. 17:06] \\
+  En esperant que ca tienne le coup :D : 25452.pts-1.patator et =tail -f
+  Article3_MethodComparison.log=
+- State "RUNNING"    from "DEBUG"      [2017-05-19 ven. 16:46]
 - Note taken on [2017-05-19 ven. 16:43] \\
-  Ca sert a rien de lancer avec plus de locus ! pour les gross donné on a celiac :D
+  Ca sert a rien de lancer avec plus de locus ! pour les grosses données on a celiac :D
 - State "DEBUG"      from              [2017-05-19 ven. 15:41]
 - State ""           from "STARTED"    [2017-05-19 ven. 15:40]
 - State "STARTED"    from "RUNNING"    [2017-05-19 ven. 15:13]
@@ -2004,9 +2008,9 @@ Run method
                                     cs = c(0.1, 0.2, 0.4, 0.6, 0.8),
                                     cs.sum = FALSE,
                                     sd.V.rho = 1,
-                                    nb.rep = 5,
+                                    nb.rep = 4,
                                     fast.only = TRUE,
-                                    cluster.nb = 10,
+                                    cluster.nb = 2,
                                     save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
@@ -5520,6 +5524,8 @@ On prend K = 9 variables lattentes.
 :END:
 **** RUNNING lfmmRidge
 :LOGBOOK:
+- Note taken on [2017-05-19 ven. 16:46] \\
+  18255.pts-4.krakenator
 - State "RUNNING"    from "TODO"       [2017-05-19 ven. 16:21]
 - State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
 :END:
