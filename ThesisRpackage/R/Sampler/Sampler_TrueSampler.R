@@ -50,19 +50,15 @@ sampl.TrueSampler <- function(s) {
     X <- matrix(NA, nrow(G), 1)
   }
 
-  # read outlier
-  if (is.null(s$outlier.file)) {
+  ## read outlier
+if (is.character(s$outlier.file)) {
+    outlier <- read_all(s$outlier.file)
+  } else if (is.numeric(s$outlier.file)) {
+    outlier <- s$outlier.file
+  } else {
     outlier <- c()
-
-  } else if (tools::file_ext(s$outlier.file) == "outlier") {
-    outlier <- readr::read_delim(s$outlier.file, delim = ",",
-                                 col_names = FALSE,
-                                 col_types = readr::cols(.default = readr::col_number())) %>%
-      as.integer()
-  } else if (tools::file_ext(s$outlier.file) == "rds") {
-    outlier <- readRDS(s$outlier.file)
   }
-
+  
   ## read ind.clumping
   if (is.character(s$ind.clumping)) {
     ind.clumping <- read_all(s$ind.clumping)

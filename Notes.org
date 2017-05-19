@@ -1894,8 +1894,14 @@ We first load the sampler to compute pca.
   s <- Sampler_load(s)
 #+end_src
 
-***** RUNNING with 0.05 % outlier
+***** STARTED with 0.05 % outlier
 :LOGBOOK:
+- State "STARTED"    from "RUNNING"    [2017-05-19 ven. 15:13]
+- State "RUNNING"    from "RUNNING"    [2017-05-19 ven. 15:13]
+- Note taken on [2017-05-19 ven. 15:13] \\
+  Ok il y a un truc qui merde !!
+- Note taken on [2017-05-19 ven. 15:01] \\
+  Avec 20 process c'est viré par krak... Il faudrait que je gere mieux la memoire..
 - Note taken on [2017-05-19 ven. 13:54] \\
   C'est partie !! : 29005.pts-4.krakenator Ca devrait prendre pas mal de temps !
   On vera lundi
@@ -1918,8 +1924,8 @@ Run method
                                     cs.sum = FALSE,
                                     sd.V.rho = 1,
                                     nb.rep = 5,
-                                    fast.only = FALSE,
-                                    cluster.nb = 20,
+                                    fast.only = TRUE,
+                                    cluster.nb = 10,
                                     save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(expr)

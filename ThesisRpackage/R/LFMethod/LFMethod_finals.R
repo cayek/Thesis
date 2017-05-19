@@ -1,6 +1,15 @@
 ################################################################################
 # helpers
 
+data_clumping <- function(dat) {
+  ## ind.clumping
+  if (!is.null(dat$ind.clumping)) {
+    flog.debug("fit.final: clumping")
+    dat$G[,dat$ind.clumping]
+  }
+  dat
+}
+
 fit.final <- function(m, dat, reuse = FALSE) {
   ## impute
   if (anyNA(dat$G)) {
@@ -10,10 +19,7 @@ fit.final <- function(m, dat, reuse = FALSE) {
     m$imputed.values <- dat$G[m$missing.index]
   }
 
-  ## ind.clumping
-  if (!is.null(dat$ind.clumping)) {
-    dat$G <- dat$G[,dat$ind.clumping]
-  }
+  dat <- data_clumping(dat)
 
   NextMethod()
 }

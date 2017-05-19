@@ -109,17 +109,47 @@ test_that("Oracle", {
 
 test_that("clumped data") {
 
-  skip("too long")
-
   K <- 3
-  s <- NormalSampler2(100,1000,K)
+  n <- 100
+  L <- 1000
+  s <- TrueSampler(G.file = matrix(rnorm(n  * L), n, L),
+                   X.file = matrix(rnorm(n), n, 1),
+                   outlier.file = 1:10,
+                   ind.clumping = sample.int(L, 0.5 * L))
+  dat <- sampl(s)
 
+  ms <- finalBench(K = K,
+                   lambda = 1e-5,
+                   calibrate = FALSE,
+                   sparse.prop = 0.1,
+                   fast.only = FALSE)
+  ms$oracle <- NULL
+
+  ## test with 1
+  m <- run(ms$L, dat)
+
+  ## test with all
   expr <- MethodBatchExperiment("test",
                                 s = s,
-                                method.batch = finalBench(K = K,
-                                                          lambda = 1e-5,
-                                                          calibrate = FALSE,
-                                                          sparse.prop = 0.1,
-                                                          fast.only = FALSE))
+                                method.batch = ms)
+
+  expr <- runExperiment(expr)
+
+  m <- expr$method.batch[[1]] ## to test
+  for (m in expr$method.batch) {
+    if(!is.null(ms$U)) {
+      expect_equal(dim(ms$V), c(n, K))
+    }
+    if(!is.null(ms$V)) {
+      expect_equal(dim(ms$V), c(0.5 * L, K))
+    }
+    if(!is.null(ms$B)) {
+      expect_equal(dim(ms$B), c(1, L))
+    }
+    if(!is.null(ms$pvalue)) {
+      expect_equal(dim(ms$pvalue), c(1, L))
+    }
+    
+  }
 
 })
