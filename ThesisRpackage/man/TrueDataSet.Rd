@@ -5,7 +5,7 @@
 \title{TrueDataSet class}
 \usage{
 TrueDataSet(G = matrix(0, 1, 10), X = matrix(0, 2, 1), outlier = c(),
-  reference = FALSE)
+  ind.clumping = NULL, reference = FALSE)
 }
 \description{
 TrueDataSet class

@@ -1,9 +1,13 @@
 Article3_MethodComparison_main <- function(exp) {
   exp$df <- tibble()
+
+  ## load the sampler
+  s <- Sampler_load(exp$s)
+
+  ## main loop
   for (p in exp$outlier.props) {
     for (c in exp$cs) {
       flog.info(paste0("outlier prop=",p, " and c=",paste0(c, collapse = "|")), name = "console")
-      s <- exp$s
       s$prop.outlier <- p
       if(exp$cs.sum) {
         aux <- runif(s$K)
@@ -115,7 +119,8 @@ Article3_MethodComparison <- function(G.file,
                            sd.V.rho = sd.V.rho,
                            rho.E = rho.E,
                            round = FALSE,
-                           B.outlier.sampler = B.outlier.sampler)
+                           B.outlier.sampler = B.outlier.sampler,
+                           reference = TRUE)
   
   exp$methods <- methods
   exp <- Article3_MethodComparison_main(exp)

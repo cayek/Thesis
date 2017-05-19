@@ -4,8 +4,8 @@
 \alias{TrueSampler}
 \title{sample true data from file}
 \usage{
-TrueSampler(G.file, X.file, outlier.file, n = NULL, L = NULL,
-  reference = FALSE)
+TrueSampler(G.file, X.file, outlier.file, ind.clumping = NULL, n = NULL,
+  L = NULL, reference = FALSE)
 }
 \arguments{
 \item{G.file}{a file or a matrix}

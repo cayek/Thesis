@@ -1870,7 +1870,7 @@ We first load the sampler to compute pca.
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
-  FromTrueSampler(G.file = G.file,
+  s <- FromTrueSampler(G.file = G.file,
                   n = 1,
                   L = 1,
                   K = 1,
@@ -1881,16 +1881,16 @@ We first load the sampler to compute pca.
                   sd.V.rho = 1,
                   rho.E = 1,
                   round = FALSE)
-
-
+  s <- Sampler_load(s)
 #+end_src
 
+Run method
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
   expr <- Article3_MethodComparison(G.file,
-                                   outlier.props = 0.05,
+                                   outlier.props = 0.01,
                                    n = NULL, L = 10000,
                                    K = 10,
                                    K.method = 10,
@@ -1900,7 +1900,6 @@ We first load the sampler to compute pca.
                                    nb.rep = 5,
                                    fast.only = TRUE,
                                    cluster.nb = 20,
-                                   compute.pca = TRUE,
                                    save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
@@ -4341,7 +4340,7 @@ CLOSED: [2017-05-17 mer. 13:30]
 - State "TODO"       from              [2017-05-16 mar. 12:26]
 :END:
 
-On pars d'un dataset deja imputé pour trouver une liste d'indice a garder ! 
+On part d'un dataset deja imputé pour trouver une liste d'indice a garder ! 
 #+begin_src R :results output :exports both
   library(bigsnpr)
   celiac <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/backingfiles/celiacQC_flo.rds")
@@ -4353,9 +4352,12 @@ On pars d'un dataset deja imputé pour trouver une liste d'indice a garder !
 
 #+RESULTS:
 
-**** DONE From big matrix to matrix and scalling
-CLOSED: [2017-05-18 jeu. 13:12]
+**** RUNNING From big matrix to matrix and scalling
 :LOGBOOK:
+- Note taken on [2017-05-19 ven. 10:10] \\
+  juste la partie sans le clumping.
+- State "RUNNING"    from "STARTED"    [2017-05-19 ven. 10:09]
+- State "STARTED"    from "DONE"       [2017-05-19 ven. 10:06]
 - State "DONE"       from "RUNNING"    [2017-05-18 jeu. 13:12]
 - State "RUNNING"    from "DONE"       [2017-05-18 jeu. 11:53]
 - State "DONE"       from "TODO"       [2017-05-17 mer. 14:58]
@@ -4366,12 +4368,41 @@ CLOSED: [2017-05-18 jeu. 13:12]
   celiac <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/backingfiles/celiacQC_flo.rds")
   ind.clumping <- readRDS("./Data/Celiac/dubois_2010/celiacQC_flo/celiacQC_clumping_ind.rds")
 
+  ## save clumped loci
+  saveRDS(ind.clumping, "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/ind.clumpling.rds")
+
   ## filter correlated indiv to  0.08
   celiac.aux <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/backingfiles/celiacQC.rds")
   ind.indiv <- which(celiac$fam$sample.ID %in% celiac.aux$fam$sample.ID)
 
-
   ## G
+  G <- attach.BM(celiac$genotypes)[ind.indiv,]
+  rownames(G) <- celiac$fam$sample.ID[ind.indiv]
+  colnames(G) <- celiac$map$marker.ID
+  n <- nrow(G)
+  L <- ncol(G)
+
+  ## memory cleaning
+  rm(celiac)
+  rm(celiac.aux)
+  gc()
+
+  ## G <- scale(G) ## too much memory used...
+  mu <- apply(G, 2, mean)
+  sigma <- apply(G,2,sd)
+  gc()
+  G <- sweep(G, 2, mu)
+  rm(mu)
+  gc()
+  G <- sweep(G, 2, sigma, FUN = "/")
+  rm(sigma)
+  gc()
+
+  saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+  dim(G)
+
+
+  ## G clumped
   G <- attach.BM(celiac$genotypes)[ind.indiv,ind.clumping]
   rownames(G) <- celiac$fam$sample.ID[ind.indiv]
   colnames(G) <- celiac$map$marker.ID[ind.clumping]
@@ -4392,6 +4423,15 @@ CLOSED: [2017-05-18 jeu. 13:12]
 #+RESULTS:
 : [1] 15155 94497
 : [1] 15155     1
+
+A lil'test
+#+begin_src R :results output :exports both
+  G <- saveRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+  G.clumped <- saveRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_clumped.rds")
+  ind.clumping <- saveRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/ind.clumpling.rds")
+
+  mean(abs(G[,ind.clumpling.rds] - G))
+#+end_src
 
 ** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:

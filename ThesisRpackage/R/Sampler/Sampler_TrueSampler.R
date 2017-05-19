@@ -12,8 +12,10 @@
 ##' @param L number of locus
 ##' @param reference if TRUE the sampler retrun R5 object
 TrueSampler <- function(G.file, X.file, outlier.file,
+                        ind.clumping = NULL,
                         n = NULL, L = NULL,
                         reference = FALSE) {
+
   structure(list(n = n,
                  L = L,
                  G.file = G.file,
@@ -60,6 +62,12 @@ sampl.TrueSampler <- function(s) {
     outlier <- readRDS(s$outlier.file)
   }
 
+  ## read ind.clumping
+  if (!is.null(s$ind.clumping)) {
+    ind.clumping <- read_all(s$ind.clumping)
+  }
+
+
   n <- nrow(G)
   L <- ncol(G)
 
@@ -82,5 +90,6 @@ sampl.TrueSampler <- function(s) {
   TrueDataSet(G = G,
               X = X,
               outlier = outlier,
+              ind.clumping = ind.clumping,
               reference = s$reference)
 }

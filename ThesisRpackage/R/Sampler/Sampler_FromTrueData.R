@@ -1,3 +1,29 @@
+FromTrueSampler.builder <- setRefClass("FromTrueSampler", contains = "Sampler",
+                                       fields = c("G.file",
+                                                  "pca.file",
+                                                  "n",
+                                                  "L",
+                                                  "K",
+                                                  "prop.outlier",
+                                                  "rho",
+                                                  "cs",
+                                                  "round",
+                                                  "sd.V.rho",
+                                                  "rho.E",
+                                                  "B.outlier.sampler",
+                                                  "G",
+                                                  "U",
+                                                  "V",
+                                                  "one",
+                                                  "mu",
+                                                  "E"
+                                                  ))
+
+
+
+
+
+
 ################################################################################
 # FromTrueSampler
 
@@ -17,21 +43,39 @@ FromTrueSampler <- function(G.file,
                             round = FALSE,
                             sd.V.rho = 1, ## var of association effect (B) * var of V,
                             rho.E = 1.0, ## coef before E
-                            B.outlier.sampler = function(n, mean, sd) rnorm(n, mean, sd)) {
-  structure(list(G.file = G.file,
-                 pca.file = pca.file,
-                 n = n,
-                 L = L,
-                 K = K,
-                 prop.outlier = prop.outlier,
-                 rho = rho,
-                 cs = cs,
-                 sd.V.rho = sd.V.rho,
-                 rho.E = rho.E,
-                 round = round,
-                 B.outlier.sampler = B.outlier.sampler,
-                 loaded = FALSE),
-            class = c("FromTrueSampler","Sampler"))
+                            B.outlier.sampler = function(n, mean, sd) rnorm(n, mean, sd),
+                            reference = FALSE) {
+
+  if (reference) {
+    FromTrueSampler.builder$new(G.file = G.file,
+                                pca.file = pca.file,
+                                n = n,
+                                L = L,
+                                K = K,
+                                prop.outlier = prop.outlier,
+                                rho = rho,
+                                cs = cs,
+                                sd.V.rho = sd.V.rho,
+                                rho.E = rho.E,
+                                round = round,
+                                B.outlier.sampler = B.outlier.sampler,
+                                loaded = FALSE)
+  } else {
+    structure(list(G.file = G.file,
+                   pca.file = pca.file,
+                   n = n,
+                   L = L,
+                   K = K,
+                   prop.outlier = prop.outlier,
+                   rho = rho,
+                   cs = cs,
+                   sd.V.rho = sd.V.rho,
+                   rho.E = rho.E,
+                   round = round,
+                   B.outlier.sampler = B.outlier.sampler,
+                   loaded = FALSE),
+              class = c("FromTrueSampler","Sampler"))
+  }
 }
 
 #' @export

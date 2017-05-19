@@ -1,3 +1,6 @@
+Sampler.builder <- setRefClass("Sampler", fields = c("loaded"))
+
+
 #' Sampler class
 #'
 #'

@@ -7,7 +7,8 @@ true dataset.}
 \usage{
 FromTrueSampler(G.file, n, L, K, prop.outlier, pca.file = NULL, rho = NULL,
   cs = NULL, round = FALSE, sd.V.rho = 1, rho.E = 1,
-  B.outlier.sampler = function(n, mean, sd) rnorm(n, mean, sd))
+  B.outlier.sampler = function(n, mean, sd) rnorm(n, mean, sd),
+  reference = FALSE)
 }
 \arguments{
 \item{rho}{must be between 0 and 1. the proportion of variance explained by X.
