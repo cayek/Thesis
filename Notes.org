@@ -5457,8 +5457,9 @@ disease.state
 : 6       SVA 34404    0.9998547                  1
 [[./Rplots/GSE42861_count_intersect_fdr01.png]]
 
-** TODO Étude de celiac                                           :3Article:
+** STARTED Étude de celiac                                        :3Article:
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-19 ven. 17:29]
 - Note taken on [2017-05-12 Ven 14:53] \\
   Bon, tout changer le code pour reduire la mémoire utilisé ca risque d'etre
   cassse %$ù^%¨. On va deja lancer sur le dataset apres clumping, quitte a
@@ -5544,8 +5545,11 @@ On prend K = 9 variables lattentes.
   expr <- runExperiment(expr, TRUE)
   dumpExperiment(expr)
 #+end_src
-**** TODO all
+**** RUNNING all
 :LOGBOOK:
+- Note taken on [2017-05-19 ven. 17:33] \\
+  32600.pts-3.krakenator
+- State "RUNNING"    from "TODO"       [2017-05-19 ven. 17:32]
 - State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
 :END:
 #+begin_src R :results output :exports both
