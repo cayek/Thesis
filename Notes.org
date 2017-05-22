@@ -1971,8 +1971,9 @@ CLOSED: [2017-05-19 ven. 16:42]
 20 Oracle         0.01        0.8     5 0.9834062
 #+end_example
 
-***** RUNNING with 0.05 0.5 1 5 % outlier and L = 100 000
+***** DEBUG with 0.05 0.5 1 5 % outlier and L = 100 000
 :LOGBOOK:
+- State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
 - Note taken on [2017-05-19 ven. 17:06] \\
   En esperant que ca tienne le coup :D : 25452.pts-1.patator et =tail -f
   Article3_MethodComparison.log=
@@ -5545,8 +5546,9 @@ On prend K = 9 variables lattentes.
   expr <- runExperiment(expr, TRUE)
   dumpExperiment(expr)
 #+end_src
-**** RUNNING all
+**** DEBUG all
 :LOGBOOK:
+- State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
 - Note taken on [2017-05-19 ven. 17:33] \\
   32600.pts-3.krakenator
 - State "RUNNING"    from "TODO"       [2017-05-19 ven. 17:32]
