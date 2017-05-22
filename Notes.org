@@ -773,6 +773,7 @@ voir la vrai valeur de K après convergeance.
   1000  genome + climat
 - State "TODO"       from              [2017-04-04 mar. 12:09]
 :END:
+
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
 - Note taken on [2017-05-03 mer. 09:03] \\
@@ -1750,8 +1751,10 @@ Var explained with 4 variables:
 #+RESULTS:
 : [1] 0.02006896
 : [1] 0.02561421
-*** STARTED Sample dataset
+*** DONE Sample dataset
+CLOSED: [2017-05-22 lun. 10:59]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-22 lun. 10:59]
 - State "STARTED"    from "TODO"       [2017-05-18 jeu. 15:44]
 - State "TODO"       from              [2017-05-18 jeu. 10:52]
 :END:
@@ -1863,8 +1866,10 @@ Var explained with 10 variables:
 : [1] 0.02160972
 : [1] 0.02424479
 
-**** STARTED Run on a sample on patator
+*** DONE Run on a sample on patator
+CLOSED: [2017-05-22 lun. 18:36]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-22 lun. 18:36]
 - State "STARTED"    from "TODO"       [2017-05-22 lun. 09:44]
 - State "TODO"       from              [2017-05-22 lun. 09:44]
 :END:
@@ -1873,6 +1878,18 @@ We first sample the big dataset and compute pca.
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  G <- readRDS(G.file)
+
+  L <- ncol(G)
+  n <- nrow(G)
+  ## sample
+  sample.locus <- sample.int(L, 100000)
+  G.sample <- G[,sample.locus]
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000.rds"
+  saveRDS(G.sample, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000.rds")
+
+  ## load sampler
   s <- FromTrueSampler(G.file = G.file,
                   n = 1,
                   L = 1,
@@ -1888,34 +1905,135 @@ We first sample the big dataset and compute pca.
 #+end_src
 
 
-***** TODO LIL' with 0.05 0.5 1 5 % outlier and L = 100 000
+**** DONE LIL' with 0.05 0.5 1 5 % outlier and L = 100 000
+CLOSED: [2017-05-22 lun. 10:53]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-22 lun. 10:53]
 - State "TODO"       from              [2017-05-22 lun. 09:41]
 :END:
-****** Run
+***** Run
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000.rds"
 
   expr <- Article3_MethodComparison(G.file,
                                     outlier.props = c(0.0005, 0.005),
-                                    n = NULL, L = 100000,
+                                    n = NULL, L = 10000,
                                     K = 10,
                                     K.method = 10,
                                     lasso.sparse.prop = 0.05,
                                     ridge.lambda = 1e-5,
-                                    cs = c(0.1, 0.2, 0.4, 0.6),
+                                    cs = c( 0.2, 0.6),
                                     cs.sum = FALSE,
                                     sd.V.rho = 1,
-                                    nb.rep = 4,
+                                    nb.rep = 1,
                                     fast.only = TRUE,
-                                    cluster.nb = 8,
+                                    cluster.nb = 2,
                                     save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
   Article3_MethodComparison_plot_GIF(expr)
 #+end_src
-**** STARTED Run on krakenator
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(128)
+  expr$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000.rds K=10 K.method=10 correctionByC=FALSE fast.only=TRUE n= L=10000 cs=0.2|0.6 cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=5e-04|0.005 ridge.lambda=1e-05 lasso.sparse.prop=0.05 nb.rep=1 "
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "LilNumericVal_auc.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "LilNumericVal_gif.png")
+#+end_src
+
+#+RESULTS:
+: # A tibble: 4 × 5
+:   method outlier.prop `cor(U,X)`   rep       auc
+:    <chr>        <dbl>      <chr> <dbl>     <dbl>
+: 1 Oracle        5e-04        0.2     1 0.7001983
+: 2 Oracle        5e-04        0.6     1 0.7000757
+: 3 Oracle        5e-03        0.2     1 0.9712594
+: 4 Oracle        5e-03        0.6     1 0.9700619
+[[./Rplots/LilNumericVal_auc.png]]
+[[./Rplots/LilNumericVal_gif.png]]
+
+Attendu: 
+- gif de lm de plus en plus quand, plus on est corrélé
+- plus il y a de d'outlier plus PCALm a un mauvais auc
+Inattendu
+- famt pas comme les autres
+- PcaLm est meilleur quand c est grand... je pense que le hasard si on augment
+  K, ca devrait desavantager PcaLm.
+**** DONE LIL' with 0.05 0.5 1 5 % outlier and L = 100 000 with lfmm lasso
+CLOSED: [2017-05-22 lun. 15:06]
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-22 lun. 15:06]
+- State "RUNNING"    from "TODO"       [2017-05-22 lun. 10:56]
+- State "TODO"       from "DONE"       [2017-05-22 lun. 10:54]
+:END:
+***** Run
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.0005, 0.005),
+                                    n = NULL, L = 10000,
+                                    K = 10,
+                                    K.method = 10,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c( 0.2, 0.6),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 1,
+                                    fast.only = FALSE,
+                                    cluster.nb = 2,
+                                    save = TRUE, bypass = FALSE)
+#+end_src
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(129)
+  expr$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000.rds K=10 K.method=10 correctionByC=FALSE fast.only=FALSE n= L=10000 cs=0.2|0.6 cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=5e-04|0.005 ridge.lambda=1e-05 lasso.sparse.prop=0.05 nb.rep=1 "
+
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "LilNumericVal_withLasso_auc.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "LilNumericVal_withLasso_gif.png")
+#+end_src
+
+#+RESULTS:
+: # A tibble: 4 × 5
+:   method outlier.prop `cor(U,X)`   rep       auc
+:    <chr>        <dbl>      <chr> <dbl>     <dbl>
+: 1 Oracle        5e-04        0.2     1 0.7006266
+: 2 Oracle        5e-04        0.6     1 0.7001076
+: 3 Oracle        5e-03        0.2     1 0.9700533
+: 4 Oracle        5e-03        0.6     1 0.9700517
+[[./Rplots/LilNumericVal_withLasso_auc.png]]
+[[./Rplots/LilNumericVal_withLasso_gif.png]]
+
+lfmm lasso donne bien comme l'oracle. Il y a toujours ce truc bizare avec l'ACP
+mais je pense que c'est une particularité des data.
+*** STARTED Run on krakenator
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
@@ -1948,7 +2066,7 @@ We first load the sampler to compute pca.
   s <- Sampler_load(s)
 #+end_src
 
-***** DONE with 1 % outlier
+**** DONE with 1 % outlier
 CLOSED: [2017-05-19 ven. 16:42]
 :LOGBOOK:
 - State "DONE"       from "STARTED"    [2017-05-19 ven. 16:42]
@@ -1956,7 +2074,7 @@ CLOSED: [2017-05-19 ven. 16:42]
 - State "DONE"       from "RUNNING"    [2017-05-19 ven. 13:03]
 - State "RUNNING"    from              [2017-05-19 ven. 11:41]
 :END:
-****** Run
+***** Run
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
@@ -1977,7 +2095,7 @@ CLOSED: [2017-05-19 ven. 16:42]
   Article3_MethodComparison_plot_GIF(expr)
 #+end_src
 
-****** plot
+***** plot
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   expr <- retrieveExperiment(125)
@@ -2023,7 +2141,7 @@ CLOSED: [2017-05-19 ven. 16:42]
 20 Oracle         0.01        0.8     5 0.9834062
 #+end_example
 
-***** RUNNING with 0.05 0.5 1 5 % outlier and L = 100 000
+**** RUNNING with 0.05 0.5 1 5 % outlier and L = 100 000
 :LOGBOOK:
 - State "RUNNING"    from "DEBUG"      [2017-05-22 lun. 09:32]
 - State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
@@ -4516,6 +4634,34 @@ On part d'un dataset deja imputé pour trouver une liste d'indice a garder !
 
 #+RESULTS:
 
+**** DONE vep annotation
+CLOSED: [2017-05-22 lun. 17:31]
+:LOGBOOK:
+- Note taken on [2017-05-22 lun. 17:31] \\
+  un peut fait main, mais c'est bon c''est bien dans ce fichier !
+- State "DONE"       from "RUNNING"    [2017-05-22 lun. 17:31]
+- State "RUNNING"    from "TODO"       [2017-05-22 lun. 15:36]
+- State "TODO"       from              [2017-05-22 lun. 15:24]
+:END:
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+
+  celiac <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/backingfiles/celiacQC_flo.rds")
+
+  ## run of vep
+  celiac.vcf <- celiac$map %>%
+    transmute(chromosome = chromosome,
+              start = physical.pos,
+              end = physical.pos,
+              allele = paste0(allele1,"/",allele2),
+              strand = NA,
+              identifier = marker.ID)
+  head(celiac.vcf)
+
+
+  celiac.vep <- variant_effect_predictor(celiac.vcf)
+  save(celiac.vep, file = "~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/celiacQC_flo_vep.rds")
+#+end_src
 **** DONE From big matrix to matrix and scalling
 CLOSED: [2017-05-19 ven. 11:39]
 :LOGBOOK:
@@ -4609,6 +4755,40 @@ A lil'test
   [1] 2.356696e-17
 #+end_example
 
+*** DONE GWAS catalog
+CLOSED: [2017-05-22 lun. 18:32]
+:LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-22 lun. 18:32]
+- State "STARTED"    from              [2017-05-22 lun. 14:40]
+:END:
+I download all association from [[https://www.ebi.ac.uk/gwas/home][gwas catalogue]]
+#+begin_src R :results output :exports both
+  library(tidyverse)
+  df <- read_delim("~/Projects/Thesis/Data/GWASCatalog/gwas_catalog_v1.0.1-associations_e88_r2017-04-24.tsv",
+                   delim = "\t",
+                   col_types = cols(
+                     .default = col_character(),
+                     `DATE ADDED TO CATALOG` = col_date(format = ""),
+                     PUBMEDID = col_integer(),
+                     DATE = col_character(),
+                     UPSTREAM_GENE_ID = col_integer(),
+                     DOWNSTREAM_GENE_ID = col_integer(),
+                     UPSTREAM_GENE_DISTANCE = col_integer(),
+                     DOWNSTREAM_GENE_DISTANCE = col_integer(),
+                     MERGED = col_integer(),
+                     SNP_ID_CURRENT = col_character(),
+                     INTERGENIC = col_integer(),
+                     `P-VALUE` = col_double(),
+                     PVALUE_MLOG = col_double(),
+                     `OR or BETA` = col_double()
+                   ))
+
+  trait <- df %>%
+    select(`DISEASE/TRAIT`) %>%
+           unique()
+
+  saveRDS(df, "~/Projects/Thesis/Data/GWASCatalog/gwas_catalog_v1.0.1-associations_e88_r2017-04-24.rds")
+#+end_src
 ** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:
 - Note taken on [2017-05-16 mar. 16:32] \\
@@ -5528,6 +5708,102 @@ disease.state
 :END:
 *** Data preprocessing
 see [[*From big matrix to matrix and scalling][here]] 
+**** DEBUG GWAS catalogue
+:LOGBOOK:
+- Note taken on [2017-05-22 lun. 18:22] \\
+  c'est pas les même position ... pourant c'est les meme non rs.... Est ce que les
+  nom reste les même d'un release a une autre des génome ???
+- State "DEBUG"      from "DONE"       [2017-05-22 lun. 18:22]
+- State "DONE"       from "TODO"       [2017-05-22 lun. 18:22]
+- State "TODO"       from              [2017-05-22 lun. 18:22]
+:END:
+We retrieve SNPs associated with Celiac disease in GWAS catalogue.
+#+begin_src R :results output :exports both
+  GWAS.catalog <- readRDS("~/Projects/Thesis/Data/GWASCatalog/gwas_catalog_v1.0.1-associations_e88_r2017-04-24.rds")
+
+  celiac.catalog <- GWAS.catalog %>%
+    dplyr::filter(grepl(".*[cC]eliac.*", `DISEASE/TRAIT`)) %>%
+    mutate(marker.ID = SNPS)
+
+  library(bigsnpr)
+  celiac <- snp_attach("~/Projects/Thesis/Data/Celiac/dubois_2010/celiacQC_flo/backingfiles/celiacQC_flo.rds")
+
+
+  ## join by marker_ID
+  celiac.outlier <- celiac$map %>%
+    inner_join(celiac.catalog) %>%
+    as_tibble()
+
+  celiac.outlier %>%
+    select(chromosome, physical.pos, CHR_ID, CHR_POS) %>%
+    print.data.frame()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Joining, by = "marker.ID"
+   chromosome physical.pos CHR_ID   CHR_POS
+1           1      2516606      1   2595307
+2           1      7969259      1   7986612
+3           1     25176163      1  24977085
+4           1     61564451      1  61326191
+5           1    165678008      1 167442147
+6           1    165678008      1 167442147
+7           1    170977623      1 172741860
+8           1    171130571      1 172894808
+9           1    190803436      1 192567683
+10          1    190803436      1 192567683
+11          1    199158760      1 200923009
+12          2     61040333      2  60959694
+13          2     61071046      2  60990407
+14          2    102338297      2 102355405
+15          2    102437000      2 102454108
+16          2    181704290      2 181131318
+17          2    191672878      2 191099907
+18          2    204510823      2 203937855
+19          3     46210205      3  46193709
+20          3     46327388      3  46310893
+21          3    161147744      3 159947262
+22          3    161147744      3 159947262
+23          3    170974795      3 169774313
+24          3    189595248      3 188394766
+25          3    189595248      3 188394766
+26          4    123334952      4 122194347
+27          4    123334952      4 122194347
+28          5     55595784      5  56264200
+29          6       328546      6    383546
+30          6     32713862      6  32638107
+31          6     32713862      6  32638107
+32          6     90936756      6  90170316
+33          6     90983333      6  90216893
+34          6    124785206      6 124422361
+35          6    128320491      6 127957653
+36          6    138014761      6 137651931
+37          6    159385965      6 159044945
+38          6    159385965      6 159044945
+39          6    159392283      6 159051263
+40          6    159410424      6 159069404
+41          7     37341035      7  37334906
+42          8    129333771      8 128252343
+43          8    129385196      8 128303768
+44          9    122680321      9 120878222
+45         10     80728033     10  79298270
+46         12     56348934     12  57668884
+47         12    110492139     12 111569952
+48         12    110492139     12 111569952
+49         12    110492139     12 111569952
+50         13     49733716     13  50261579
+51         14     33914127     14  34375170
+52         14     68347957     14  68811487
+53         16     11311394     16  11310036
+54         17     42220599     17  46788073
+55         18     12799340     18  12809341
+56         18     12799340     18  12809341
+57         20     52847946     20  54798000
+58         21     44471849     21  44227538
+59         22     20312892     22  21628603
+60         22     20312892     22  21628603
+#+end_example
 
 *** choix des paramètres
 **** DONE PCA
@@ -5788,6 +6064,15 @@ Among remaining phenotypes, 4533 are cases and 10750 are controls.
 FinnuncorrNLITUK1UK3hap300_sample.bim + FinnuncorrNLITUK1UK3hap300_sample.fam
 #+end_example
 
+** rsnps
+[[https://cran.r-project.org/web/packages/rsnps/rsnps.pdf][Doc]]
+#+begin_src R :results output :exports both
+  library(rsnps)
+  ld_search('rs2836443')
+  ncbi_snp_query("rs420358")
+  ncbi_snp_query2("rs420358")
+#+end_src
+Ca sert a rien il y a pas les genes.
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:

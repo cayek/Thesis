@@ -136,7 +136,9 @@ MethodBatchExperiment_qvalue <- function(expr, threshold) {
 }
 
 #' @export
-MethodBatchExperiment_candidates <- function(expr, top = NULL, fdr.threshold = NULL, print = TRUE) {
+MethodBatchExperiment_candidates <- function(expr, top = NULL, fdr.threshold = NULL,
+                                             print = TRUE,
+                                             vep.file = NULL) {
   assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
 
   res.df <- MethodBatchExperiment_qvalue(expr, NULL)
@@ -161,6 +163,13 @@ MethodBatchExperiment_candidates <- function(expr, top = NULL, fdr.threshold = N
     summarise(nb = n(), observed.fdr = 1 - mean(outlier),
               observed.puissance = sum(outlier) / length(expr$outlier)) %>%
     print.data.frame()
+  }
+
+  ## anotation
+  if (!is.null(vep.file)) {
+    vep.df <- readRDS(vep.file)
+  ##   res.df <- res.df %>%
+  ##     dplyr::inner_join()
   }
 
   res.df

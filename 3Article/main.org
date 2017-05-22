@@ -84,7 +84,7 @@ preliminary imputation method.
 
 ** Hypothesis testing
 
-** Simulations and dataset
+** Simulations and data
 
 *** Generative model simulation
 We used equation to generate generative model dataset. The latent factor
@@ -94,25 +94,32 @@ matrix where is the number of latent factor. The error matrix $E$ was
 generated using a multivariate gaussian distribution with a zero mean and a
 $L$ identity matrix for the covariance matrix where $L$ is the number of
 variables. The co-variable $X$ was generated with a normal distribution with
-the mean egual to zero and the standard deviation egual to one such that the
+the mean equal to zero and the standard deviation equal to one such that the
 Pearson linear correlation between $X$ and $U_1$ the first latent score
 matrix equal to $c$.
+
+*** Real data example
+In to evaluate our methods on real data we chose realized a genome-wide
+association study (GWAS), an genome-wide association study (EWAS) and an ecological
+association study (EAS). 
+**** Association study of DNA methylation with rheumatoid arthritis (EWAS)
+In order to evaluate the ability to our method to correct for unobserved
+confounding variable we used data from a recent association study of DNA
+methylation with rheumatoid arthritis (RA) cite:Liu_2013. For this data set
+confounding variables (batch effect, age, gender, smoking status, cell-type
+composition). Thus, we can compare our method result with result of method
+considering explicitly these variables cite:Rahmani_2016,Zou_2014. We retrieve
+the RA data from Gene Expression Omnibus (GEO) database (accession number
+GSE42861). Following cite:Zou_2014 we filtered out site if its average probe
+$\beta$ value was above 0.8 are below 0.2. Then, the $\beta$ values was centered
+and normalized with standard deviation.
+
+**** Association study of genetic variants with Celiac disease (GWAS)
+
+**** Association study of genetic variants with climatic data (EAS)
 
 * Results
 * Discussion
 * Figures and tables
-** Comparison of method
-#+begin_src R :results output :session *RArticle* :exports none
-require(ThesisRpackage)
-exp <- retrieveExperiment(100)
-#+end_src
-
-#+begin_src R :results output graphics :file Rplots/Rplots.png :exports none :width 600 :height 400 :session *RArticle* 
-Article3_MethodComparison_plot_AUC(exp)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/Rplots.png]]
-
-
+** Numerical validation
 
