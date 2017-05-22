@@ -1863,6 +1863,58 @@ Var explained with 10 variables:
 : [1] 0.02160972
 : [1] 0.02424479
 
+**** STARTED Run on a sample on patator
+:LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-22 lun. 09:44]
+- State "TODO"       from              [2017-05-22 lun. 09:44]
+:END:
+
+We first sample the big dataset and compute pca.
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+  s <- FromTrueSampler(G.file = G.file,
+                  n = 1,
+                  L = 1,
+                  K = 1,
+                  pca.file = sub("\\.rds", "_PCA.rds", G.file),
+                  prop.outlier = NULL,
+                  rho = NULL,
+                  cs = NULL,
+                  sd.V.rho = 1,
+                  rho.E = 1,
+                  round = FALSE)
+  s <- Sampler_load(s)
+#+end_src
+
+
+***** TODO LIL' with 0.05 0.5 1 5 % outlier and L = 100 000
+:LOGBOOK:
+- State "TODO"       from              [2017-05-22 lun. 09:41]
+:END:
+****** Run
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.0005, 0.005),
+                                    n = NULL, L = 100000,
+                                    K = 10,
+                                    K.method = 10,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c(0.1, 0.2, 0.4, 0.6),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 4,
+                                    fast.only = TRUE,
+                                    cluster.nb = 8,
+                                    save = TRUE, bypass = FALSE)
+
+  Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  Article3_MethodComparison_plot_GIF(expr)
+#+end_src
 **** STARTED Run on krakenator
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
@@ -1971,8 +2023,9 @@ CLOSED: [2017-05-19 ven. 16:42]
 20 Oracle         0.01        0.8     5 0.9834062
 #+end_example
 
-***** DEBUG with 0.05 0.5 1 5 % outlier and L = 100 000
+***** RUNNING with 0.05 0.5 1 5 % outlier and L = 100 000
 :LOGBOOK:
+- State "RUNNING"    from "DEBUG"      [2017-05-22 lun. 09:32]
 - State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
 - Note taken on [2017-05-19 ven. 17:06] \\
   En esperant que ca tienne le coup :D : 25452.pts-1.patator et =tail -f
@@ -2011,7 +2064,7 @@ Run method
                                     sd.V.rho = 1,
                                     nb.rep = 4,
                                     fast.only = TRUE,
-                                    cluster.nb = 2,
+                                    cluster.nb = 8,
                                     save = TRUE, bypass = FALSE)
 
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
@@ -5524,12 +5577,18 @@ On prend K = 9 variables lattentes.
 :LOGBOOK:
 - State "STARTED"    from              [2017-05-19 ven. 15:37]
 :END:
-**** RUNNING lfmmRidge
+**** DONE lfmmRidge
+CLOSED: [2017-05-22 lun. 08:55]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-22 lun. 08:55]
 - Note taken on [2017-05-19 ven. 16:46] \\
   18255.pts-4.krakenator
 - State "RUNNING"    from "TODO"       [2017-05-19 ven. 16:21]
 - State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
+:END:
+***** run
+:LOGBOOK:
+- State "TODO"       from              [2017-05-22 lun. 08:55]
 :END:
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
@@ -5546,8 +5605,60 @@ On prend K = 9 variables lattentes.
   expr <- runExperiment(expr, TRUE)
   dumpExperiment(expr)
 #+end_src
+
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(127)
+  expr$description
+  expr$outlier
+  expr <- MethodBatchExperiment_calibrate(expr)
+#+end_src
+
+#+RESULTS:
+: [1] "Run on GSE42861 with RidgeLfmm|func=run"
+: NULL
+: [1] "RidgeLfmm"
+: [1] "== calibrate: median"
+: [1] 0.001673503
+: [1] "== calibrate: mad"
+: [1] 1.050637
+
+
+#+begin_src R :results output :exports both
+  print.data.frame(MethodBatchExperiment_count_intersect(expr, top = 10, plot = NULL))
+#+end_src
+
+#+RESULTS:
+:      method RidgeLfmm
+: 1 RidgeLfmm        10
+
+
+#+begin_src R :results output :exports both
+  pl <- MethodBatchExperiment_count_intersect(expr, top = 100, plot = "tile")
+  save_plot_timc_bcm_15(pl, "celiac_lfmmridge_count_intersect_top100.png")
+#+end_src
+
+#+RESULTS:
+[[./Rplots/celiac_lfmmridge_count_intersect_top100.png]]
+
+
+#+begin_src R :results output :exports both
+  pl <- MethodBatchExperiment_count_intersect(expr, fdr.threshold = 0.01, plot = "point")
+  save_plot_timc_bcm_15(pl, "celiac_lfmmridge_count_intersect_fdr01.png")
+#+end_src
+
+#+RESULTS:
+[[./Rplots/celiac_lfmmridge_count_intersect_fdr01.png]]
+
+
 **** DEBUG all
 :LOGBOOK:
+- Note taken on [2017-05-22 lun. 09:05] \\
+  Ca a planté, je pense que ca prennait trop de mémoire...
 - State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
 - Note taken on [2017-05-19 ven. 17:33] \\
   32600.pts-3.krakenator
