@@ -5968,6 +5968,110 @@ CLOSED: [2017-05-22 lun. 08:55]
   expr <- runExperiment(expr, TRUE)
   dumpExperiment(expr)
 #+end_src
+
+** TODO LEA lfmm tuto                                             :3Article:
+:LOGBOOK:
+- State "TODO"       from              [2017-05-23 mar. 09:44]
+:END:
+#+begin_src R :results output :exports both :session *ssh krakenator*
+  library(LEA)
+  library(ThesisRpackage)
+
+  ## sampler
+  data("tutorial")
+  G <- scale(tutorial.R)
+  X <- scale(tutorial.C)
+  s <- TrueSampler(G.file = G,
+                   X.file = X,
+                   outlier.file = 350:400)
+
+  ## run batch
+  method.batch <- list()
+  method.batch$lea <- finalLEAMethod(4)
+  method.batch$lfmm.ridge <- finalLfmmRdigeMethod(4, 1e-5)
+  method.batch$lfmm.lasso <- finalLfmmLassoMethod(4, 0.1)
+  method.batch$lm.pca <- finalPcaLm(4)
+  method.batch$lm <- finalLm()
+  method.batch$cate <- finalcateMethod(4)
+  expr <- MethodBatchExperiment("LEA tuto", s,
+                                method.batch)
+  expr <- runExperiment(expr)
+
+  ## plot
+  pl <- MethodBatchExperiment_count_intersect(expr, top = 50, plot = "tile")
+  save_plot_timc_bcm_15(pl, "lea_tuto_top05.png")
+
+  ## fdr
+  pl <- MethodBatchExperiment_count_intersect(expr, fdr.threshold = 0.05, plot = "tile")
+  save_plot_timc_bcm_15(pl, "lea_tuto_fdr05.png")
+
+  ## calibrate
+  expr.calibrate <- MethodBatchExperiment_calibrate(expr)
+  pl <- MethodBatchExperiment_count_intersect(expr.calibrate, fdr.threshold = 0.05, plot = "tile")
+  save_plot_timc_bcm_15(pl, "lea_tuto_calibraed_fdr05.png")
+
+#+end_src
+
+#+RESULTS:
+[[./Rplots/lea_tuto_top05.png]]
+[[./Rplots/lea_tuto_fdr05.png]]
+#+begin_example
+     method nb observed.fdr observed.puissance
+1      cate 50         0.24          0.7450980
+2 LassoLfmm 50         0.28          0.7058824
+3       LEA 50         0.10          0.8823529
+4        lm 50         0.12          0.8627451
+5     PcaLm 50         0.86          0.1372549
+6 RidgeLfmm 50         0.28          0.7058824
+     method  nb observed.fdr observed.puissance
+1      cate 109    0.5412844          0.9803922
+2 LassoLfmm  98    0.5000000          0.9607843
+3        lm 125    0.6000000          0.9803922
+4 RidgeLfmm 102    0.5196078          0.9607843
+[1] "LEA"
+[1] "== calibrate: median"
+   run 1 
+0.435759 
+[1] "== calibrate: mad"
+   run 1 
+1.017892 
+[1] "RidgeLfmm"
+[1] "== calibrate: median"
+[1] 0.6040863
+[1] "== calibrate: mad"
+[1] 1.639835
+[1] "LassoLfmm"
+[1] "== calibrate: median"
+[1] 0.6677491
+[1] "== calibrate: mad"
+[1] 1.655878
+[1] "PcaLm"
+[1] "== calibrate: median"
+[1] 0.05019761
+[1] "== calibrate: mad"
+[1] 0.9895817
+[1] "lm"
+[1] "== calibrate: median"
+[1] 0.7437392
+[1] "== calibrate: mad"
+[1] 1.912658
+[1] "cate"
+[1] "== calibrate: median"
+[1] 0.6620739
+[1] "== calibrate: mad"
+[1] 1.636655
+     method  nb observed.fdr observed.puissance
+1      cate 109    0.5412844          0.9803922
+2 LassoLfmm  98    0.5000000          0.9607843
+3        lm 125    0.6000000          0.9803922
+4 RidgeLfmm 102    0.5196078          0.9607843
+#+end_example
+
+Le jeux de donnée à 12.5 % d'outlier. Ca ne peut pas être considéré comme des
+outliers. C'est pour ca que la calibration par maf et mad echoue.
+
+
+
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both
@@ -6073,6 +6177,40 @@ FinnuncorrNLITUK1UK3hap300_sample.bim + FinnuncorrNLITUK1UK3hap300_sample.fam
   ncbi_snp_query2("rs420358")
 #+end_src
 Ca sert a rien il y a pas les genes.
+
+** biomaRt
+#+begin_src R :results output :exports both
+  library(biomaRt) # biomaRt_2.30.0, R version 3.3.2 (2016-10-31)
+
+  ## list db
+  listMarts()
+
+  ## test on a celiac snps
+  snp.db <- useMart("ENSEMBL_MART_SNP", dataset="hsapiens_snp")
+
+
+  listFilters(snp.db)
+  att <- listAttributes(snp.db)
+  att
+
+  the.snps <- c("rs2187668", "rs1464510")
+
+  nt.biomart <- getBM(c("refsnp_id",
+                        "refsnp_source",
+                        "chr_name",
+                        "chrom_start",
+                        'phenotype_name',
+                        "phenotype_description"),
+                      filters="snp_filter",
+                      values=the.snps,
+                      mart=snp.db)
+  nt.biomart[1:10,]
+#+end_src
+
+Ce que je comprends c'est que le top pour faire des annotation de SNP c'est
+[[http://www.ensembl.org/index.html][ensembl]] (voir ce [[https://www.biostars.org/p/1332/][topic]]). Ensembl lui prend les info de dbSNP. MAIS je ne sais
+pas si les rs sont les même d'une release a l'autre... [2017-05-23 mar.] on est
+a la release 88.
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:

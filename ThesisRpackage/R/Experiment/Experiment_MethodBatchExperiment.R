@@ -60,6 +60,30 @@ runExperiment.MethodBatchExperiment <- function(expr, save = FALSE) {
 }
 
 #' @export
+MethodBatchExperiment_plot <- function(expr, stat.name, id = 1) {
+  assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
+
+  L <- ncol(expr$method.batch[[1]]$pvalue)
+  d <- nrow(expr$method.batch[[1]]$pvalue)
+
+  toplot <- tibble()
+  for (m in expr$method.batch) {
+    if (!is.null(m[[stat.name]])) {
+      toplot <- tibble(stat = m[[stat.name]][id,],
+                       index = 1:L,
+                       outlier = 1:L %in% expr$outlier,
+                       method = m$nickname) %>%
+        rbind(toplot)
+    }
+  }
+
+  ggplot2::ggplot(toplot ) +
+    ggplot2::facet_grid(method~.) + 
+      ggplot2::ggtitle(stat.name)
+
+}
+
+#' @export
 MethodBatchExperiment_qqplot <- function(expr) {
   assertthat::assert_that(class(expr)[1] == "MethodBatchExperiment")
 

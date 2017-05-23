@@ -84,3 +84,24 @@ test_that("MethodBatchExperiment list", {
   MethodBatchExperiment_count_intersect(expr, fdr.threshold = 0.05, plot = "point")
 
 })
+
+test_that("MethodBatchExperiment plot", {
+
+  s <- NormalSampler(50, 500, 5)
+  method.batch <- list()
+  method.batch$m1 <- finalLm()
+  method.batch$m2 <- finalLfmmRdigeMethod(K = 6,
+                                          1e-1)
+  expr <- MethodBatchExperiment("normal",
+                                s,
+                                method.batch,
+                                cluster.nb = NULL)
+
+  expr <- runExperiment(expr)
+
+  ## plot
+  MethodBatchExperiment_plot(expr, "score") +
+    geom_point(aes(x = index, y = stat, color = outlier))
+  MethodBatchExperiment_plot(expr, "score") +
+    geom_histogram(aes(stat))
+})

@@ -4,7 +4,7 @@
 \alias{plot.Method}
 \title{Title}
 \usage{
-\method{plot}{Method}(m, dat, d = 1)
+plot.Method(m, dat, d = 1)
 }
 \description{
 Title
