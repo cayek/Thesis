@@ -78,7 +78,7 @@ MethodBatchExperiment_plot <- function(expr, stat.name, id = 1) {
   }
 
   ggplot2::ggplot(toplot ) +
-    ggplot2::facet_grid(method~.) + 
+    ggplot2::facet_grid(method~., scale = "free") + 
       ggplot2::ggtitle(stat.name)
 
 }

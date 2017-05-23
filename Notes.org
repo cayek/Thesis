@@ -6070,7 +6070,10 @@ CLOSED: [2017-05-22 lun. 08:55]
 Le jeux de donnée à 12.5 % d'outlier. Ca ne peut pas être considéré comme des
 outliers. C'est pour ca que la calibration par maf et mad echoue.
 
-
+#+begin_src R :results output :exports both :session *ssh krakenator*
+  pl <- MethodBatchExperiment_qqplot(expr)
+  pl
+#+end_src
 
 * Sandbox
 ** Test of bigsnpr
