@@ -6134,8 +6134,9 @@ We only run the computation of lattent factor score
 :LOGBOOK:
 - State "TODO"       from              [2017-05-23 mar. 15:12]
 :END:
-**** TODO lfmmRidge
+**** RUNNING lfmmRidge
 :LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-05-23 Tue 23:37]
 - State "TODO"       from              [2017-05-23 mar. 15:35]
 :END:
 We use computed score in G ~ X + U
