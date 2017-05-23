@@ -5718,7 +5718,7 @@ see [[*From big matrix to matrix and scalling][here]]
 - State "TODO"       from              [2017-05-22 lun. 18:22]
 :END:
 We retrieve SNPs associated with Celiac disease in GWAS catalogue.
-#+begin_src R :results output :exports both
+#+begin_src R :results output :exports both :session *ssh krakenator*
   GWAS.catalog <- readRDS("~/Projects/Thesis/Data/GWASCatalog/gwas_catalog_v1.0.1-associations_e88_r2017-04-24.rds")
 
   celiac.catalog <- GWAS.catalog %>%
@@ -5734,76 +5734,37 @@ We retrieve SNPs associated with Celiac disease in GWAS catalogue.
     inner_join(celiac.catalog) %>%
     as_tibble()
 
-  celiac.outlier %>%
-    select(chromosome, physical.pos, CHR_ID, CHR_POS) %>%
-    print.data.frame()
+  ## not same pos
+  ## celiac.outlier %>%
+  ##   dplyr::select(marker.ID, chromosome, physical.pos, CHR_ID, CHR_POS) %>%
+  ##   print.data.frame()
+
+  ## a candidate list
+  cat("nb of candidates:", nrow(celiac.outlier), "\n")
+  celiac.outlier$SNPS
+  candidates <- which(celiac$map$marker.ID %in% celiac.outlier$SNPS)
+  saveRDS(candidates,
+          "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/gwas_catalog_candidates.rds")
 #+end_src
 
-#+RESULTS:
-#+begin_example
-Joining, by = "marker.ID"
-   chromosome physical.pos CHR_ID   CHR_POS
-1           1      2516606      1   2595307
-2           1      7969259      1   7986612
-3           1     25176163      1  24977085
-4           1     61564451      1  61326191
-5           1    165678008      1 167442147
-6           1    165678008      1 167442147
-7           1    170977623      1 172741860
-8           1    171130571      1 172894808
-9           1    190803436      1 192567683
-10          1    190803436      1 192567683
-11          1    199158760      1 200923009
-12          2     61040333      2  60959694
-13          2     61071046      2  60990407
-14          2    102338297      2 102355405
-15          2    102437000      2 102454108
-16          2    181704290      2 181131318
-17          2    191672878      2 191099907
-18          2    204510823      2 203937855
-19          3     46210205      3  46193709
-20          3     46327388      3  46310893
-21          3    161147744      3 159947262
-22          3    161147744      3 159947262
-23          3    170974795      3 169774313
-24          3    189595248      3 188394766
-25          3    189595248      3 188394766
-26          4    123334952      4 122194347
-27          4    123334952      4 122194347
-28          5     55595784      5  56264200
-29          6       328546      6    383546
-30          6     32713862      6  32638107
-31          6     32713862      6  32638107
-32          6     90936756      6  90170316
-33          6     90983333      6  90216893
-34          6    124785206      6 124422361
-35          6    128320491      6 127957653
-36          6    138014761      6 137651931
-37          6    159385965      6 159044945
-38          6    159385965      6 159044945
-39          6    159392283      6 159051263
-40          6    159410424      6 159069404
-41          7     37341035      7  37334906
-42          8    129333771      8 128252343
-43          8    129385196      8 128303768
-44          9    122680321      9 120878222
-45         10     80728033     10  79298270
-46         12     56348934     12  57668884
-47         12    110492139     12 111569952
-48         12    110492139     12 111569952
-49         12    110492139     12 111569952
-50         13     49733716     13  50261579
-51         14     33914127     14  34375170
-52         14     68347957     14  68811487
-53         16     11311394     16  11310036
-54         17     42220599     17  46788073
-55         18     12799340     18  12809341
-56         18     12799340     18  12809341
-57         20     52847946     20  54798000
-58         21     44471849     21  44227538
-59         22     20312892     22  21628603
-60         22     20312892     22  21628603
-#+end_example
+
+Je ne sais pas ou Flo a récupéré ces datas mais c'est surement que la release du
+genome humain est GRCh37, alors que ce que j'ai ddl sur gwas catalog repose sur
+GRCh38. 
+
+*Ccl*: on va prendre ces outliers car les rs reste les mêmes d'après Thomas K.
+
+*Candidtes for G_clumped*:
+#+begin_src R :results output :exports both
+
+#+end_src
+
+*TEST*:
+#+begin_src R :results output :exports both :session *ssh krakenator*
+  candidates <- 
+
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+#+end_src
 
 *** choix des paramètres
 **** DONE PCA
@@ -5969,8 +5930,11 @@ CLOSED: [2017-05-22 lun. 08:55]
   dumpExperiment(expr)
 #+end_src
 
-** TODO LEA lfmm tuto                                             :3Article:
+** DONE LEA lfmm tuto                                             :3Article:
+CLOSED: [2017-05-23 mar. 11:11]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-23 mar. 11:11]
+- State "STARTED"    from "TODO"       [2017-05-23 mar. 11:10]
 - State "TODO"       from              [2017-05-23 mar. 09:44]
 :END:
 #+begin_src R :results output :exports both :session *ssh krakenator*
@@ -5989,7 +5953,7 @@ CLOSED: [2017-05-22 lun. 08:55]
   method.batch <- list()
   method.batch$lea <- finalLEAMethod(4)
   method.batch$lfmm.ridge <- finalLfmmRdigeMethod(4, 1e-5)
-  method.batch$lfmm.lasso <- finalLfmmLassoMethod(4, 0.1)
+  method.batch$lfmm.lasso <- finalLfmmLassoMethod(4, 0.01)
   method.batch$lm.pca <- finalPcaLm(4)
   method.batch$lm <- finalLm()
   method.batch$cate <- finalcateMethod(4)
@@ -6071,9 +6035,27 @@ Le jeux de donnée à 12.5 % d'outlier. Ca ne peut pas être considéré comme d
 outliers. C'est pour ca que la calibration par maf et mad echoue.
 
 #+begin_src R :results output :exports both :session *ssh krakenator*
-  pl <- MethodBatchExperiment_qqplot(expr)
+  pl <- MethodBatchExperiment_plot(expr, "pvalue") +
+    geom_point(aes(x = index, y = -log10(stat), color = outlier))
   pl
+  save_plot_timc_bcm_15(pl, "LEA_tuto_manhattanplot.png")
+
 #+end_src
+
+#+RESULTS:
+[[./Rplots/LEA_tuto_manhattanplot.png]]
+
+#+begin_src R :results output :exports both :session *ssh krakenator*
+  pl <- MethodBatchExperiment_plot(expr, "pvalue") +
+    geom_histogram(aes(stat, fill = outlier))
+  save_plot_timc_bcm_15(pl, "LEA_tuto_hist.png")
+#+end_src
+
+#+RESULTS:
+[[./Rplots/LEA_tuto_hist.png]]
+
+C'est juste que l'on ne peut pas recalibré car il y a 12.5 % d'outlier mais
+sinon tout le monde a les mêmes resultats y compris lm.
 
 * Sandbox
 ** Test of bigsnpr
@@ -6214,6 +6196,10 @@ Ce que je comprends c'est que le top pour faire des annotation de SNP c'est
 [[http://www.ensembl.org/index.html][ensembl]] (voir ce [[https://www.biostars.org/p/1332/][topic]]). Ensembl lui prend les info de dbSNP. MAIS je ne sais
 pas si les rs sont les même d'une release a l'autre... [2017-05-23 mar.] on est
 a la release 88.
+
+D'après Thomas d'un release a l'autre les rs sont les mêmes ! Il y a de forte
+chance de celiac soit en GRCh37. Faudrait aller voir ca
+
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:
