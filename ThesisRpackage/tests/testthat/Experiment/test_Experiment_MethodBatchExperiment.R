@@ -105,3 +105,31 @@ test_that("MethodBatchExperiment plot", {
   MethodBatchExperiment_plot(expr, "score") +
     geom_histogram(aes(stat))
 })
+
+test_that("MethodBatchExperiment fit and run", {
+
+
+  method.batch <- list()
+  method.batch$m1 <- finalPcaLm(6)
+  method.batch$m2 <- finalLfmmRdigeMethod(K = 6,
+                                          1e-1)
+  s <- NormalSampler(50, 500, 5)
+  ## fit
+  expr <- MethodBatchExperiment("normal",
+                                s,
+                                method.batch,
+                                cluster.nb = NULL,
+                                func = fit)
+  expr <- runExperiment(expr)
+
+  ## hypothesis testing
+  func <- lm_zscore()$fun
+  expr <- MethodBatchExperiment("normal",
+                                s,
+                                expr$method.batch,
+                                cluster.nb = NULL,
+                                func = func)
+  expr <- runExperiment(expr)
+  expect_equal(dim(expr$method.batch[[1]]$pvalue), c(1, 500))
+  expect_equal(dim(expr$method.batch[[2]]$pvalue), c(1, 500))
+})

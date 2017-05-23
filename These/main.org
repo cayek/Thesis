@@ -23,5 +23,5 @@
 ** Test d'association
 ** Problématique et plan
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
-* 
+* lfmm
 * Conclusion

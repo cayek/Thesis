@@ -103,3 +103,8 @@ GO: biblio_sync krakenator_mount_OUTPUT krakenator_mount_data
 	git status
 	echo "${green}===== git pull ======${reset}"
 	git pull
+
+## backup
+backup_to_password:
+	 echo `date -u` >> backup.log
+	rsync -aP --delete ./ /run/media/cayek/My\ Passport/Thesis

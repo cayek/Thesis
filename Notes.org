@@ -767,13 +767,71 @@ effect que l'on a pas !!
 
 Lasso ne trouve vraiment pas comme les autres ... bizare bizare. Il faudrait
 voir la vrai valeur de K après convergeance.
-** TODO EAS for LFMM article                                      :3Article:
+** STARTED EAS for LFMM article                                   :3Article:
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-23 mar. 15:59]
 - Note taken on [2017-05-19 ven. 16:04] \\
   1000  genome + climat
 - State "TODO"       from              [2017-04-04 mar. 12:09]
 :END:
+*** STARTED Preprocessing genotype data
+:LOGBOOK:
+- Note taken on [2017-05-23 mar. 16:52] \\
+  ask to OF
+- State "STARTED"    from "TODO"       [2017-05-23 mar. 16:52]
+- State "TODO"       from              [2017-05-23 mar. 16:34]
+- Note taken on [2017-05-23 mar. 16:31] \\
+  On garde qui ???? Il y 3 pops ancestrals pour les humains: asie européen et
+  affricain. Mais ca c'est a une echelle de temps !! Tout le monde est metisse en
+  faite. Il faut que je sache a quelle echelle de temps je cherche a detecter de
+  l'adaptation causé par la présssion environmental que j'ai choisie.
+:END:
 
+We remove admxed individual (see [[http://www.internationalgenome.org/category/population/][1000genome pops]]). IL nous faut ceux qui vivent
+dans leur milieu depuis longtemps. Je vais garder les européens, africain et
+asiatique.
+
+#+begin_src R :results output :exports both :session *ssh patator*
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds")
+
+  ## indiv metadata
+  indiv.df <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/indiv_df.rds")
+  indiv.df <- indiv.df %>%
+    dplyr::filter(super_pop %in% c("EUR", "SAS", "AFR", "EAS"))
+  indiv.df <- indiv.df %>%
+    dplyr::filter(!(pop %in% c("ASW")))
+  indiv.df
+
+  G <- G[rownames(G) %in% indiv.df$sample,]
+  dim(G)
+
+  saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS.rds")
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  > dim(G)
+  [1]    670 342478
+#+end_example
+*** STARTED Compute of X
+:LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-23 mar. 16:52]
+- State "TODO"       from              [2017-05-23 mar. 16:52]
+:END:
+
+On prend les données climatique de worldclim et on fait l'acp ;-)
+#+begin_src R :results output :exports both
+  library(raster)
+
+  ## compute coodinates for each indiv
+  TODO
+
+  ## compute X
+  climate <- getData('worldclim', var='bio', res = 2.5)
+  bio <- extract(climate, y = as.matrix(coordinates))
+  pc.bio <- prcomp(bio,scale = T)
+  X <- pc.bio$x[,1]
+#+end_src
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
 - Note taken on [2017-05-03 mer. 09:03] \\
@@ -2141,8 +2199,9 @@ CLOSED: [2017-05-19 ven. 16:42]
 20 Oracle         0.01        0.8     5 0.9834062
 #+end_example
 
-**** RUNNING with 0.05 0.5 1 5 % outlier and L = 100 000
+**** STARTED with 0.05 0.5 1 5 % outlier and L = 100 000
 :LOGBOOK:
+- State "STARTED"    from "RUNNING"    [2017-05-23 mar. 15:47]
 - State "RUNNING"    from "DEBUG"      [2017-05-22 lun. 09:32]
 - State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
 - Note taken on [2017-05-19 ven. 17:06] \\
@@ -2165,7 +2224,10 @@ CLOSED: [2017-05-19 ven. 16:42]
 - State "RUNNING"    from "TODO"       [2017-05-19 ven. 13:47]
 - State "TODO"       from              [2017-05-19 ven. 11:41]
 :END:
-Run method
+***** RUNNING Run without lfmm Lasso
+:LOGBOOK:
+- State "RUNNING"    from              [2017-05-23 mar. 15:47]
+:END:
 #+begin_src R :results output :exports both
   require(ThesisRpackage)
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
@@ -2188,6 +2250,52 @@ Run method
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
   Article3_MethodComparison_plot_GIF(expr)
 #+end_src
+***** TODO Run with lfmm lasso
+:LOGBOOK:
+- Note taken on [2017-05-23 mar. 17:15] \\
+  hahaha je vais etre obligé de tout relancer....pour etre sur les même dataset...
+- State "TODO"       from              [2017-05-23 mar. 17:14]
+:END:
+
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.0005, 0.005, 0.01, 0.05),
+                                    n = NULL, L = 100000,
+                                    K = 10,
+                                    K.method = 10,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c(0.1, 0.2, 0.4, 0.6, 0.8),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 4,
+                                    fast.only = FALSE,
+                                    cluster.nb = 8,
+                                    save = TRUE, bypass = FALSE)
+
+  Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  Article3_MethodComparison_plot_GIF(expr)
+#+end_src
+***** WAITING plot
+:LOGBOOK:
+- State "WAITING"    from              [2017-05-23 mar. 15:47]
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(?)
+  expr$description
+#+end_src
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_without_lasso.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_without_lasso.png")
+#+end_src
+
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
 *** ./Data/SSMPG2015/ 
@@ -2257,11 +2365,13 @@ maf at 5%.
   options(ThesisRpackage.debug = "TRUE")
 
   ## read indiv informations
-  indiv <- read_delim("./integrated_call_samples_v3.20130502.ALL.panel",
+  indiv <- read_delim("~/Projects/Thesis/Data/1000Genomes/Phase3/integrated_call_samples_v3.20130502.ALL.panel",
                       delim = "\t",
                       skip = 1,
                       col_names = FALSE)
   names(indiv) <- c("sample", "pop", "super_pop","gender")
+
+  ## saveRDS(indiv, "~/Projects/Thesis/Data/1000Genomes/Phase3/indiv_df.rds")
 
   unique(indiv %>% select(super_pop))
 
@@ -4789,8 +4899,10 @@ I download all association from [[https://www.ebi.ac.uk/gwas/home][gwas catalogu
 
   saveRDS(df, "~/Projects/Thesis/Data/GWASCatalog/gwas_catalog_v1.0.1-associations_e88_r2017-04-24.rds")
 #+end_src
-** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
+** DONE Étude de [[#Liu_2013][GSE42861]]                                         :3Article:
+CLOSED: [2017-05-23 mar. 15:56]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-23 mar. 15:56]
 - Note taken on [2017-05-16 mar. 16:32] \\
   Au passage, tous le monde detecte les outlier des autres papier. PCA detect que
   ceux la, c'est normal les autre méthodes sons sencé avoir plus de puissance :D
@@ -5708,8 +5820,10 @@ disease.state
 :END:
 *** Data preprocessing
 see [[*From big matrix to matrix and scalling][here]] 
-**** DEBUG GWAS catalogue
+**** DONE GWAS catalogue
+CLOSED: [2017-05-23 mar. 14:23]
 :LOGBOOK:
+- State "DONE"       from "DEBUG"      [2017-05-23 mar. 14:23]
 - Note taken on [2017-05-22 lun. 18:22] \\
   c'est pas les même position ... pourant c'est les meme non rs.... Est ce que les
   nom reste les même d'un release a une autre des génome ???
@@ -5747,6 +5861,34 @@ We retrieve SNPs associated with Celiac disease in GWAS catalogue.
           "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/gwas_catalog_candidates.rds")
 #+end_src
 
+#+RESULTS:
+#+begin_example
+Le chargement a nécessité le package : bigmemory
+Le chargement a nécessité le package : bigmemory.sri
+
+Attachement du package : ‘bigmemory.sri’
+
+The following object is masked from ‘package:testthat’:
+
+    describe
+
+Le chargement a nécessité le package : bigstatsr
+Joining, by = "marker.ID"
+nb of candidates: 60
+ [1] "rs3748816"  "rs12727642" "rs10903122" "rs6691768"  "rs864537"  
+ [6] "rs864537"   "rs859637"   "rs2157453"  "rs2816316"  "rs2816316" 
+[11] "rs296547"   "rs13003464" "rs10188217" "rs13015714" "rs917997"  
+[16] "rs13010713" "rs7574865"  "rs4675374"  "rs13098911" "rs6441961" 
+[21] "rs17810546" "rs17810546" "rs10936599" "rs1464510"  "rs1464510" 
+[26] "rs13151961" "rs13151961" "rs1020388"  "rs1033180"  "rs2187668" 
+[31] "rs2187668"  "rs2474619"  "rs10806425" "rs531930"   "rs802734"  
+[36] "rs2327832"  "rs1738074"  "rs1738074"  "rs212402"   "rs212388"  
+[41] "rs6974491"  "rs9792269"  "rs975730"   "rs1953126"  "rs1250552" 
+[46] "rs10876993" "rs653178"   "rs653178"   "rs653178"   "rs2762051" 
+[51] "rs1958589"  "rs4899260"  "rs12928822" "rs2074404"  "rs1893217" 
+[56] "rs1893217"  "rs157640"   "rs4819388"  "rs2298428"  "rs2298428"
+#+end_example
+
 
 Je ne sais pas ou Flo a récupéré ces datas mais c'est surement que la release du
 genome humain est GRCh37, alors que ce que j'ai ddl sur gwas catalog repose sur
@@ -5754,17 +5896,48 @@ GRCh38.
 
 *Ccl*: on va prendre ces outliers car les rs reste les mêmes d'après Thomas K.
 
-*Candidtes for G_clumped*:
+*Candidates for G_clumped and test*:
 #+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  dat <- Article3_Celiac_sampler(clumped = FALSE) %>%
+    sampl()
 
+  snps.name <- colnames(dat$G)[dat$outlier]
+  snps.name
+  length(snps.name)
+
+
+  ## for clumped dataset
+  rm(dat)
+  gc()
+  G <- readRDS('~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_clumped.rds')
+  candidates.clumped <- which(colnames(G) %in% snps.name)
+  length(candidates.clumped)
+  colnames(G)[candidates.clumped]
+  saveRDS(candidates.clumped, "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/gwas_catalog_candidates_clumped.rds")
 #+end_src
 
-*TEST*:
-#+begin_src R :results output :exports both :session *ssh krakenator*
-  candidates <- 
-
-  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
-#+end_src
+#+RESULTS:
+#+begin_example
+  > snps.name
+   [1] "rs3748816"  "rs12727642" "rs10903122" "rs6691768"  "rs864537"  
+   [6] "rs859637"   "rs2157453"  "rs2816316"  "rs296547"   "rs13003464"
+  [11] "rs10188217" "rs13015714" "rs917997"   "rs13010713" "rs7574865" 
+  [16] "rs4675374"  "rs13098911" "rs6441961"  "rs17810546" "rs10936599"
+  [21] "rs1464510"  "rs13151961" "rs1020388"  "rs1033180"  "rs2187668" 
+  [26] "rs2474619"  "rs10806425" "rs531930"   "rs802734"   "rs2327832" 
+  [31] "rs1738074"  "rs212402"   "rs212388"   "rs6974491"  "rs9792269" 
+  [36] "rs975730"   "rs1953126"  "rs1250552"  "rs10876993" "rs653178"  
+  [41] "rs2762051"  "rs1958589"  "rs4899260"  "rs12928822" "rs2074404" 
+  [46] "rs1893217"  "rs157640"   "rs4819388"  "rs2298428" 
+  > length(snps.name)
+  [1] 49
+  > length(candidates.clumped)
+  [1] 10
+  > colnames(G)[candidates.clumped]
+   [1] "rs10903122" "rs859637"   "rs13010713" "rs1464510"  "rs1020388" 
+   [6] "rs1738074"  "rs653178"   "rs1958589"  "rs1893217"  "rs157640" 
+#+end_example
 
 *** choix des paramètres
 **** DONE PCA
@@ -5840,7 +6013,6 @@ CLOSED: [2017-05-22 lun. 08:55]
                                 cluster.nb = NULL)
 
   expr <- runExperiment(expr, TRUE)
-  dumpExperiment(expr)
 #+end_src
 
 ***** plot
@@ -5851,20 +6023,54 @@ CLOSED: [2017-05-22 lun. 08:55]
   library(ThesisRpackage)
   expr <- retrieveExperiment(127)
   expr$description
+  expr$outlier <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/gwas_catalog_candidates_clumped.rds")
   expr$outlier
   expr <- MethodBatchExperiment_calibrate(expr)
 #+end_src
 
 #+RESULTS:
 : [1] "Run on GSE42861 with RidgeLfmm|func=run"
-: NULL
+:  [1]  1053  4838 12948 20749 28748 38105 66375 71660 83729 90549
 : [1] "RidgeLfmm"
 : [1] "== calibrate: median"
 : [1] 0.001673503
 : [1] "== calibrate: mad"
 : [1] 1.050637
 
+****** Candidates
+#+begin_src R :results output :exports both
+  cat("============= candidates with fdr < 0.01  \n")
+  res <- MethodBatchExperiment_candidates(expr, fdr.threshold = 0.01, print = TRUE)
+  cat('============= all candidates \n')
+  pl <- MethodBatchExperiment_qqplot(expr)
+#+end_src
 
+#+RESULTS:
+#+begin_example
+============= candidates with fdr < 0.01
+     method  nb observed.fdr observed.puissance
+1 RidgeLfmm 140    0.9642857                0.5
+============= all candidates
+        pvalue1    method    id  rank
+1  9.305136e-23 RidgeLfmm 20749    50
+2  2.129392e-11 RidgeLfmm 66375    89
+3  2.008585e-08 RidgeLfmm 38105   111
+4  5.872772e-06 RidgeLfmm 12948   134
+5  1.363655e-05 RidgeLfmm 83729   139
+6  7.534954e-05 RidgeLfmm  1053   163
+7  5.001705e-04 RidgeLfmm 28748   240
+8  1.347504e-03 RidgeLfmm  4838   336
+9  5.794449e-01 RidgeLfmm 71660 54728
+10 5.982918e-01 RidgeLfmm 90549 56482
+#+end_example
+
+Il faut lancer l'association sur tout le génome !
+
+*RMK*: Le clumping ca sert a n'avoir qu'un représentant par zone de LD !! Du
+coup la on a peut être des outlier qui sorte mais son contabilisé dans les
+candidat par un autre snps en LD !!
+
+****** count plots
 #+begin_src R :results output :exports both
   print.data.frame(MethodBatchExperiment_count_intersect(expr, top = 10, plot = NULL))
 #+end_src
@@ -5892,8 +6098,11 @@ CLOSED: [2017-05-22 lun. 08:55]
 [[./Rplots/celiac_lfmmridge_count_intersect_fdr01.png]]
 
 
-**** DEBUG all
+**** STARTED lfmmLasso + pca
 :LOGBOOK:
+- State "STARTED"    from "DEBUG"      [2017-05-23 mar. 15:45]
+- Note taken on [2017-05-23 mar. 15:45] \\
+  on va voir si ca, ca plante
 - Note taken on [2017-05-22 lun. 09:05] \\
   Ca a planté, je pense que ca prennait trop de mémoire...
 - State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
@@ -5902,34 +6111,84 @@ CLOSED: [2017-05-22 lun. 08:55]
 - State "RUNNING"    from "TODO"       [2017-05-19 ven. 17:32]
 - State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
 :END:
+
+We only run the computation of lattent factor score
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   method.batch <- list()
   K <- 9
-  ## famt
-  method.batch$m.famt <- finalFamtMethod(K)
-  ## cate
-  method.batch$m.sva <- finalcateMethod(K)
-  ## lm
-  method.batch$m.lm <- finalLm()
   ## pca
   method.batch$m.pca <- finalPcaLm(K)
   ## lfmm lasso
   method.batch$m.lfmmLasso <- finalLfmmLassoMethod(K, 0.05)
-  ## lfmm ridge
-  method.batch$m.lfmmRidge <- finalLfmmRdigeMethod(K, 1e-10)
-  ## sva
-  method.batch$m.cate <- finalSVAMethod(K)
-
   expr <- MethodBatchExperiment("celiac",
                                 s = Article3_Celiac_sampler(clumped = TRUE),
                                 method.batch = method.batch,
-                                cluster.nb = NULL)
+                                cluster.nb = NULL,
+                                func = fit)
 
-  expr <- runExperiment(expr, TRUE)
-  dumpExperiment(expr)
+  expr <- runExperiment(expr, save = TRUE)
 #+end_src
 
+*** TODO Run on the whole dataset
+:LOGBOOK:
+- State "TODO"       from              [2017-05-23 mar. 15:12]
+:END:
+**** TODO lfmmRidge
+:LOGBOOK:
+- State "TODO"       from              [2017-05-23 mar. 15:35]
+:END:
+We use computed score in G ~ X + U
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(127)
+
+  func <- lm_zscore(calibrate = FALSE,
+                    sigma.computation = "lm",
+                    correctionByC = FALSE)$fun
+  expr <- MethodBatchExperiment("Celiac whole dataset",
+                                s = Article3_Celiac_sampler(FALSE),
+                                method.batch = expr$method.batch,
+                                func = func)
+  expr <- runExperiment(expr, save = TRUE)
+#+end_src
+**** TODO lfmmLasso + pca
+:LOGBOOK:
+- State "TODO"       from              [2017-05-23 mar. 15:35]
+:END:
+We use computed score in G ~ X + U
+**** TODO lm
+:LOGBOOK:
+- State "TODO"       from              [2017-05-23 mar. 15:35]
+:END:
+#+begin_src R :results output :exports both
+## lm
+method.batch$m.lm <- finalLm()
+#+end_src
+**** TODO sva 
+:LOGBOOK:
+- State "TODO"       from              [2017-05-23 mar. 15:33]
+:END:
+#+begin_src R :results output :exports both
+## sva
+method.batch$m.sva <- finalSVAMethod(K = 9)
+#+end_src
+**** TODO famt
+:LOGBOOK:
+- State "TODO"       from              [2017-05-23 mar. 15:33]
+:END:
+#+begin_src R :results output :exports both
+## famt
+method.batch$m.famt <- finalFamtMethod(K = 9)
+#+end_src
+**** TODO cate
+:LOGBOOK:
+- State "TODO"       from              [2017-05-23 mar. 15:34]
+:END:
+#+begin_src R :results output :exports both
+## cate
+method.batch$m.cate <- finalcateMethod(K = 9)
+#+end_src
 ** DONE LEA lfmm tuto                                             :3Article:
 CLOSED: [2017-05-23 mar. 11:11]
 :LOGBOOK:
@@ -6178,7 +6437,7 @@ Ca sert a rien il y a pas les genes.
   att <- listAttributes(snp.db)
   att
 
-  the.snps <- c("rs2187668", "rs1464510")
+  the.snps <- c("rs13010713")
 
   nt.biomart <- getBM(c("refsnp_id",
                         "refsnp_source",
@@ -6189,7 +6448,7 @@ Ca sert a rien il y a pas les genes.
                       filters="snp_filter",
                       values=the.snps,
                       mart=snp.db)
-  nt.biomart[1:10,]
+  nt.biomart
 #+end_src
 
 Ce que je comprends c'est que le top pour faire des annotation de SNP c'est
