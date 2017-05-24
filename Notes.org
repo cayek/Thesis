@@ -2293,6 +2293,8 @@ quand K n'est pas specifié.
 :END:
 ***** RUNNING Run all even with lfmm lasso :D
 :LOGBOOK:
+- Note taken on [2017-05-24 mer. 16:21] \\
+  Ca tourne sur krakenator 26414.pts-8.krakenator
 - State "RUNNING"    from "TODO"       [2017-05-24 mer. 16:17]
 - Note taken on [2017-05-23 mar. 17:15] \\
   hahaha je vais etre obligé de tout relancer....pour etre sur les même dataset...
@@ -2315,7 +2317,7 @@ quand K n'est pas specifié.
                                     sd.V.rho = 1,
                                     nb.rep = 4,
                                     fast.only = FALSE,
-                                    cluster.nb = 8,
+                                    cluster.nb = 4,
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
@@ -6220,6 +6222,8 @@ We only run the computation of lattent factor score.
                                 cluster.nb = NULL,
                                 func = fit)
   expr <- runExperiment(expr, save = TRUE)
+  rm(expr)
+  gc()
 
   ## lfmm lasso
   method.batch <- list()
@@ -6230,6 +6234,8 @@ We only run the computation of lattent factor score.
                                 cluster.nb = NULL,
                                 func = fit)
   expr <- runExperiment(expr, save = TRUE)
+  rm(expr)
+  gc()
 
 #+end_src
 
@@ -6238,8 +6244,11 @@ We only run the computation of lattent factor score.
 - State "STARTED"    from "TODO"       [2017-05-24 mer. 15:52]
 - State "TODO"       from              [2017-05-23 mar. 15:12]
 :END:
-**** RUNNING lfmmRidge
+**** DONE lfmmRidge
+CLOSED: [2017-05-24 mer. 16:38]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-24 mer. 16:38]
+- State "STARTED"    from "RUNNING"    [2017-05-24 mer. 16:22]
 - Note taken on [2017-05-24 mer. 15:18] \\
   sur patator
 - State "RUNNING"    from "DEBUG"      [2017-05-24 mer. 15:15]
@@ -6253,6 +6262,7 @@ We only run the computation of lattent factor score.
 - State "TODO"       from              [2017-05-23 mar. 15:35]
 :END:
 We use computed score in G ~ X + U
+***** run
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
 
@@ -6274,6 +6284,95 @@ We use computed score in G ~ X + U
   expr <- runExperiment(expr, save = TRUE)
 
 #+end_src
+
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh patator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(131)
+  expr$description
+  expr <- MethodBatchExperiment_calibrate(expr)
+#+end_src
+
+#+RESULTS:
+: [1] "Run on Celiac lm whole dataset with U with RidgeLfmm|func=Article3_Celiac_lm"
+: [1] "RidgeLfmm"
+: [1] "== calibrate: median"
+: [1] 0.007643403
+: [1] "== calibrate: mad"
+: [1] 1.061488
+
+****** Candidates
+#+begin_src R :results output :exports both
+  cat("============= candidates with fdr < 0.05  \n")
+  res <- MethodBatchExperiment_candidates(expr, fdr.threshold = 0.05, print = TRUE)
+  cat('============= all candidates \n')
+  pl <- MethodBatchExperiment_qqplot(expr)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+============= candidates with fdr < 0.05
+     method   nb observed.fdr observed.puissance
+1 RidgeLfmm 1166    0.9691252          0.7346939
+============= all candidates
+        pvalue1    method     id   rank
+1  0.000000e+00 RidgeLfmm 103828     31
+2  2.371219e-22 RidgeLfmm  63274    476
+3  3.498751e-15 RidgeLfmm  60508    600
+4  9.674894e-14 RidgeLfmm  75334    624
+5  9.699760e-12 RidgeLfmm  31804    664
+6  3.266453e-11 RidgeLfmm 203233    674
+7  5.616458e-11 RidgeLfmm 114103    680
+8  8.436232e-11 RidgeLfmm  31789    686
+9  8.211414e-10 RidgeLfmm  50070    718
+10 5.778457e-09 RidgeLfmm  15649    751
+11 1.198882e-08 RidgeLfmm  50080    766
+12 2.705133e-08 RidgeLfmm 116598    787
+13 1.235358e-07 RidgeLfmm  40409    828
+14 3.590099e-07 RidgeLfmm 116599    843
+15 1.332407e-06 RidgeLfmm  28630    864
+16 2.114836e-06 RidgeLfmm 116602    877
+17 2.579529e-06 RidgeLfmm 276792    883
+18 2.603027e-06 RidgeLfmm  28631    884
+19 2.679245e-06 RidgeLfmm 113029    885
+20 4.100769e-06 RidgeLfmm 172879    902
+21 6.062160e-06 RidgeLfmm  13423    919
+22 7.114791e-06 RidgeLfmm  38837    924
+23 1.141864e-05 RidgeLfmm 109444    941
+24 1.626703e-05 RidgeLfmm 250870    949
+25 1.829045e-05 RidgeLfmm 209311    955
+26 3.149488e-05 RidgeLfmm     88    989
+27 3.510917e-05 RidgeLfmm  99224    999
+28 3.745052e-05 RidgeLfmm    813   1004
+29 4.618707e-05 RidgeLfmm  61280   1017
+30 4.715884e-05 RidgeLfmm 234846   1018
+31 7.222080e-05 RidgeLfmm   5864   1057
+32 9.129374e-05 RidgeLfmm   2620   1075
+33 1.443142e-04 RidgeLfmm  16326   1123
+34 1.501310e-04 RidgeLfmm 109441   1127
+35 1.539928e-04 RidgeLfmm 221199   1129
+36 1.959969e-04 RidgeLfmm 275804   1156
+37 2.184960e-04 RidgeLfmm 147445   1174
+38 2.306231e-04 RidgeLfmm 122882   1176
+39 3.415331e-04 RidgeLfmm 147434   1246
+40 5.828767e-04 RidgeLfmm  86896   1353
+41 7.425196e-04 RidgeLfmm 245524   1416
+42 1.480292e-03 RidgeLfmm  14037   1678
+43 2.826462e-03 RidgeLfmm 197911   2101
+44 5.933679e-03 RidgeLfmm  39545   3115
+45 8.688135e-02 RidgeLfmm 162427  25997
+46 8.732873e-02 RidgeLfmm  14048  26127
+47 4.114918e-01 RidgeLfmm 112718 115852
+48 5.794731e-01 RidgeLfmm 218005 162793
+49 6.059601e-01 RidgeLfmm 269927 170254
+#+end_example
+
+On recupère presque tous les outlier de GWAS catalogue. C'est pas mal vu qu'on
+c'est lancé sur un gros dataset ! On peut d'attendre à ne pas avoir une bonne puissance ! 
+
 **** TODO lfmmLasso + pca
 :LOGBOOK:
 - State "TODO"       from              [2017-05-23 mar. 15:35]
