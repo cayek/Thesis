@@ -18,6 +18,7 @@ Article3_Celiac_sampler <- function(clumped = TRUE) {
   s
 }
 
+#' @export
 Article3_Celiac_list_G_split_files<- function() {
   file.pattern <- "G_[0-9]*.rds$"
   files <- list.files("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_splits/")
