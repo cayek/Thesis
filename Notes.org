@@ -6009,7 +6009,7 @@ un test
   ## colnames
   G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
   col.names <- colnames(G)
-  col.names <- colnames(G)
+  row.names <- rownames(G)
   rm(G)
   gc()
 
@@ -6017,8 +6017,8 @@ un test
   for (f in files) {
     aux <- readRDS(f)
     print(f)
-    assert_that(colnames(aux$G) == cols[aux$ch])
-    assert_that(rownames(aux$G) == cols[aux$ch])
+    assert_that(colnames(aux$G) == col.names[aux$ch])
+    assert_that(rownames(aux$G) == row.names[aux$ch])
   }
 
 
