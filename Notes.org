@@ -6028,6 +6028,12 @@ Je vais faire un truc à l'arrache qui marche de paire avec [[file:ThesisRpackag
 
 C'est bon :D
 
+Je creer un G_fake.rds pour que ca rentre dans mon workflow
+#+begin_src R :results output :exports both
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+  saveRDS(G[1,], "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_fake.rds")
+#+end_src
+
 *** choix des paramètres
 **** DONE PCA
 CLOSED: [2017-05-19 ven. 15:36]
@@ -6254,7 +6260,7 @@ We use computed score in G ~ X + U
 
   ## run lm
   expr <- MethodBatchExperiment("Celiac lm whole dataset with U",
-                                s = Article3_Celiac_sampler(FALSE),
+                                s = Sampler(), 
                                 method.batch = list(m = m),
                                 func = Article3_Celiac_lm)
   expr <- runExperiment(expr, save = TRUE)

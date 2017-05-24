@@ -18,6 +18,18 @@ Article3_Celiac_sampler <- function(clumped = TRUE) {
   s
 }
 
+#' Just to work with MethodBatchExperiment
+#'
+#' @export
+Article3_Celiac_fake_sampler <- function() {
+
+  s <- TrueSampler(G.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_fake.rds",
+                   X.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/X.rds",
+                   outlier.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/gwas_catalog_candidates.rds",
+                   n = NULL,
+                   L = NULL)
+}
+
 #' @export
 Article3_Celiac_list_G_split_files<- function() {
   file.pattern <- "G_[0-9]*.rds$"

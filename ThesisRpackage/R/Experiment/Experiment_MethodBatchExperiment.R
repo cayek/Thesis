@@ -39,11 +39,12 @@ runExperiment.MethodBatchExperiment <- function(expr, save = FALSE) {
   ## dataset
   dat <- sampl(expr$s)
   expr$outlier <- dat$outlier
-  expr$G.colnames <- colnames(dat$G)
-  if (is.null(expr$G.colnames)) {
-    expr$G.colnames <- sapply(1:ncol(dat$G), function(i) paste0('V',i))
+  if (!is.null(dat$G)) {
+    expr$G.colnames <- colnames(dat$G)
+    if (is.null(expr$G.colnames)) {
+      expr$G.colnames <- sapply(1:ncol(dat$G), function(i) paste0('V',i))
+    }
   }
-
 
   start.time <- Sys.time()
   res <- foreach(m = expr$method.batch) %dopar%
