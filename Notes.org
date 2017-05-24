@@ -2224,8 +2224,10 @@ CLOSED: [2017-05-19 ven. 16:42]
 - State "RUNNING"    from "TODO"       [2017-05-19 ven. 13:47]
 - State "TODO"       from              [2017-05-19 ven. 11:41]
 :END:
-***** RUNNING Run without lfmm Lasso
+***** DONE Run without lfmm Lasso
+CLOSED: [2017-05-24 mer. 08:41]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-24 mer. 08:41]
 - State "RUNNING"    from              [2017-05-23 mar. 15:47]
 :END:
 #+begin_src R :results output :exports both
@@ -2250,6 +2252,33 @@ CLOSED: [2017-05-19 ven. 16:42]
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
   Article3_MethodComparison_plot_GIF(expr)
 #+end_src
+***** RUNNING plot
+:LOGBOOK:
+- State "RUNNING"    from "STARTED"    [2017-05-24 mer. 08:44]
+- State "STARTED"    from "WAITING"    [2017-05-24 mer. 08:42]
+- State "WAITING"    from              [2017-05-23 mar. 15:47]
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(130)
+  expr$description
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=10 K.method=10 correctionByC=FALSE fast.only=TRUE n= L=1e+05 cs=0.1|0.2|0.4|0.6|0.8 cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=5e-04|0.005|0.01|0.05 ridge.lambda=1e-05 lasso.sparse.prop=0.05 nb.rep=4 "
+#+end_example
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_without_lasso.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_without_lasso.png")
+#+end_src
+
+#+RESULTS:
+[[./Rplots/NumericVal_auc_without_lasso.png]]
+[[./Rplots/NumericVal_gif_without_lasso.png]]
 ***** TODO Run with lfmm lasso
 :LOGBOOK:
 - Note taken on [2017-05-23 mar. 17:15] \\
@@ -2278,22 +2307,6 @@ CLOSED: [2017-05-19 ven. 16:42]
 
   Article3_MethodComparison_plot_relative_diff_AUC(expr)
   Article3_MethodComparison_plot_GIF(expr)
-#+end_src
-***** WAITING plot
-:LOGBOOK:
-- State "WAITING"    from              [2017-05-23 mar. 15:47]
-:END:
-#+begin_src R :results output :exports both
-  library(ThesisRpackage)
-  expr <- retrieveExperiment(?)
-  expr$description
-#+end_src
-
-#+begin_src R :results output :exports both
-  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
-  save_plot_timc_bcm_15(pl, "NumericVal_auc_without_lasso.png")
-  pl <- Article3_MethodComparison_plot_GIF(expr)
-  save_plot_timc_bcm_15(pl, "NumericVal_gif_without_lasso.png")
 #+end_src
 
 ** Dataset
@@ -6134,8 +6147,9 @@ We only run the computation of lattent factor score
 :LOGBOOK:
 - State "TODO"       from              [2017-05-23 mar. 15:12]
 :END:
-**** RUNNING lfmmRidge
+**** DEBUG lfmmRidge
 :LOGBOOK:
+- State "DEBUG"      from "DONE"       [2017-05-24 mer. 08:47]
 - State "RUNNING"    from "TODO"       [2017-05-23 Tue 23:37]
 - State "TODO"       from              [2017-05-23 mar. 15:35]
 :END:

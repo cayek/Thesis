@@ -10,6 +10,7 @@
 #'
 #' @export
 lm_zscore <- function(calibrate = FALSE, correctionByC = TRUE,
+                      center = TRUE,
                       sigma.computation = c("lm", "bootstrap", "lm+df"),
                       bootstrap.func = PairedBoostrap,
                       bootstrap.rep = 30) {
@@ -18,15 +19,19 @@ lm_zscore <- function(calibrate = FALSE, correctionByC = TRUE,
     lm.method <- ClassicLinearMethod(center = FALSE)
     d <- ncol(dat$X)
 
-    # G -C or U used as co variable ?
-    if (correctionByC) {
-      dat$G <- sweep(dat$G, 2, m$mu) - m$C
-      # lm
-    } else {
+    ## center
+    if (center) {
       dat$G <- sweep(dat$G, 2, m$mu)
-      # lm
+    }
+
+    ## G -C or U used as co variable ?
+    if (correctionByC) {
+      dat$G <- dat$G - m$C
+    } else {
       dat$X <- cbind(dat$X, m$U)
     }
+
+    ## run lm
     lm.res <- fit(lm.method, dat)## if there is missing data, there are take into acount by lm
 
     # calibrate ?

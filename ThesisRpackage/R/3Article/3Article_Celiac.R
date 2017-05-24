@@ -18,3 +18,31 @@ Article3_Celiac_sampler <- function(clumped = TRUE) {
   s
 }
 
+#' @export
+Article3_Celiac_lm <- function(m, dat) {
+
+  ## lm function
+  lm.functor <- lm_zscore(calibrate = FALSE,
+                      sigma.computation = "lm",
+                      correctionByC = FALSE,
+                      center = FALSE)
+
+  ## we split the dataset
+  L <- ncol(dat$G)
+  d <- ncol(dat$X)
+  nb.chunks <- 20
+  chunks <- split(1:L, ceiling(1:L / nb.chunk))
+  it <- 1
+  dat.aux <- list(X = dat$X)
+  m$pvalue <- matrix(NA, d, L)
+  m$score <- matrix(NA, d, L)
+  for (ch in chunks) {
+    flog.trace("Chunk", it, "/", nb.chunks)
+    dat.aux$G <- dat$G[,ch]
+    m.aux <- lm.functor$fun(m, dat.aux)
+    m$pvalue[,ch] <- m.aux$pvalue
+    m$score[,ch] <- m.aux$score
+    it <- it + 1
+  }
+  m
+}

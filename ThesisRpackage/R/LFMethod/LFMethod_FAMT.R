@@ -41,7 +41,8 @@ fit.FAMTMethod <- function(m, dat, reuse = FALSE) {
 
 
   # run model
-  out <- capture.output(model <- FAMT::modelFAMT(dat.FAMT, x = 2, nbf = m$K))
+  out <- capture.output(model <- FAMT::modelFAMT(dat.FAMT, x = 2, nbf = m$K,
+                                                 maxnbfactors = m$K))
   DebugMessage("FAMT::modelFAMT", out)
   # output
   m$score <- matrix(model$adjtest, nrow = 1, ncol = L)

@@ -249,6 +249,6 @@ Article3_MethodComparison_plot_GIF <- function(exp) {
 
   ggplot(toplot, aes(x = method, y = gif, color = method)) +
     geom_boxplot() +
-    facet_grid(`cor(U,X)` ~ outlier.prop)
+    facet_grid(`cor(U,X)` ~ outlier.prop, scales = "free")
 
 }

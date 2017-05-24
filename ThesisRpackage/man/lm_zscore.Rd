@@ -4,7 +4,7 @@
 \alias{lm_zscore}
 \title{lm + zscore on G - C}
 \usage{
-lm_zscore(calibrate = FALSE, correctionByC = TRUE,
+lm_zscore(calibrate = FALSE, correctionByC = TRUE, center = TRUE,
   sigma.computation = c("lm", "bootstrap", "lm+df"),
   bootstrap.func = PairedBoostrap, bootstrap.rep = 30)
 }
