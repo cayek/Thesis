@@ -2286,8 +2286,14 @@ C'est les résultats attendus, a par pour famt qui fait n'imp... c'est peut atre
 a cause du param max.nbcluster qui était à 8 mais je pense qu'il ne sert que
 quand K n'est pas specifié.
 
-***** TODO Run with lfmm lasso
+**** STARTED with 0.05 0.5 1 % outlier and L = 50 000
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-24 mer. 16:17]
+- State "TODO"       from              [2017-05-24 mer.16:13]
+:END:
+***** RUNNING Run all even with lfmm lasso :D
+:LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-05-24 mer. 16:17]
 - Note taken on [2017-05-23 mar. 17:15] \\
   hahaha je vais etre obligé de tout relancer....pour etre sur les même dataset...
 - State "TODO"       from              [2017-05-23 mar. 17:14]
@@ -2298,13 +2304,13 @@ quand K n'est pas specifié.
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
   expr <- Article3_MethodComparison(G.file,
-                                    outlier.props = c(0.0005, 0.005, 0.01, 0.05),
-                                    n = NULL, L = 100000,
+                                    outlier.props = c(0.0005, 0.005, 0.01),
+                                    n = NULL, L = 50000,
                                     K = 10,
                                     K.method = 10,
                                     lasso.sparse.prop = 0.05,
                                     ridge.lambda = 1e-5,
-                                    cs = c(0.1, 0.2, 0.4, 0.6, 0.8),
+                                    cs = c(0.1, 0.2, 0.4, 0.6),
                                     cs.sum = FALSE,
                                     sd.V.rho = 1,
                                     nb.rep = 4,
@@ -2312,8 +2318,6 @@ quand K n'est pas specifié.
                                     cluster.nb = 8,
                                     save = TRUE, bypass = FALSE)
 
-  Article3_MethodComparison_plot_relative_diff_AUC(expr)
-  Article3_MethodComparison_plot_GIF(expr)
 #+end_src
 
 ** Dataset
@@ -6196,7 +6200,7 @@ candidat par un autre snps en LD !!
 **** RUNNING lfmmLasso + pca
 :LOGBOOK:
 - Note taken on [2017-05-24 mer. 15:52] \\
-  ca tourne sur krakenator pour le long we.
+  ca tourne sur krakenator pour le long we : 26210.pts-4.krakenator
 - State "RUNNING"    from "TODO"       [2017-05-24 mer. 15:52]
 - Note taken on [2017-05-24 mer. 15:23] \\
   Je coupe en deux experiment pour ne pas avoir d'experiment trop lourde !!
