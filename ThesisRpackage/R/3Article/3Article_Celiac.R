@@ -48,10 +48,8 @@ Article3_Celiac_lm <- function(m, dat) {
                       correctionByC = FALSE,
                       center = FALSE)
 
-  dat <- list()
-  ## read X and outlier
-  dat$X <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/X.rds")
-  dat$outlier <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/gwas_catalog_candidates.rds")
+  d <- ncol(dat$X)
+  L <- ncol(dat$G)
 
   ## files
   files <- Article3_Celiac_list_G_split_files()
@@ -69,7 +67,7 @@ Article3_Celiac_lm <- function(m, dat) {
     gc()
 
     ## run method
-    m.aux <- lm.functor$fun(m, dat.aux)
+    m.aux <- lm.functor$fun(m, dat)
     m$pvalue[,ch] <- m.aux$pvalue
     m$score[,ch] <- m.aux$score
   }

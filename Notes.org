@@ -6031,7 +6031,7 @@ C'est bon :D
 Je creer un G_fake.rds pour que ca rentre dans mon workflow
 #+begin_src R :results output :exports both
   G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
-  saveRDS(G[1,], "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_fake.rds")
+  saveRDS(G[1,,drop = FALSE], "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_fake.rds")
 #+end_src
 
 *** choix des paramètres
@@ -6193,8 +6193,11 @@ candidat par un autre snps en LD !!
 [[./Rplots/celiac_lfmmridge_count_intersect_fdr01.png]]
 
 
-**** TODO lfmmLasso + pca
+**** RUNNING lfmmLasso + pca
 :LOGBOOK:
+- Note taken on [2017-05-24 mer. 15:52] \\
+  ca tourne sur krakenator pour le long we.
+- State "RUNNING"    from "TODO"       [2017-05-24 mer. 15:52]
 - Note taken on [2017-05-24 mer. 15:23] \\
   Je coupe en deux experiment pour ne pas avoir d'experiment trop lourde !!
 - State "TODO"       from "STARTED"    [2017-05-24 mer. 15:22]
@@ -6226,8 +6229,9 @@ We only run the computation of lattent factor score.
 
 #+end_src
 
-*** TODO Run on the whole dataset
+*** STARTED Run on the whole dataset
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-24 mer. 15:52]
 - State "TODO"       from              [2017-05-23 mar. 15:12]
 :END:
 **** RUNNING lfmmRidge
@@ -6264,6 +6268,7 @@ We use computed score in G ~ X + U
                                 method.batch = list(m = m),
                                 func = Article3_Celiac_lm)
   expr <- runExperiment(expr, save = TRUE)
+
 #+end_src
 **** TODO lfmmLasso + pca
 :LOGBOOK:
