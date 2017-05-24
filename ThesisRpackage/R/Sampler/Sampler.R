@@ -24,6 +24,13 @@ sampl <- function(x){
 #' Title
 #'
 #' @export
+sampl.Sampler <- function(x){
+  dat <- list()
+}
+
+#' Title
+#'
+#' @export
 Sampler_load <- function(s){
   UseMethod("Sampler_load")
 }

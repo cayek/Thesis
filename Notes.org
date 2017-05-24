@@ -6003,7 +6003,7 @@ Je vais faire un truc à l'arrache qui marche de paire avec [[file:ThesisRpackag
 
 #+end_src
 
-un test
+*un test*:
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   library(assertthat)
@@ -6187,44 +6187,48 @@ candidat par un autre snps en LD !!
 [[./Rplots/celiac_lfmmridge_count_intersect_fdr01.png]]
 
 
-**** STARTED lfmmLasso + pca
+**** TODO lfmmLasso + pca
 :LOGBOOK:
-- State "STARTED"    from "DEBUG"      [2017-05-23 mar. 15:45]
-- Note taken on [2017-05-23 mar. 15:45] \\
-  on va voir si ca, ca plante
-- Note taken on [2017-05-22 lun. 09:05] \\
-  Ca a planté, je pense que ca prennait trop de mémoire...
-- State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
-- Note taken on [2017-05-19 ven. 17:33] \\
-  32600.pts-3.krakenator
-- State "RUNNING"    from "TODO"       [2017-05-19 ven. 17:32]
-- State "TODO"       from "RUNNING"    [2017-05-19 ven. 16:00]
+- Note taken on [2017-05-24 mer. 15:23] \\
+  Je coupe en deux experiment pour ne pas avoir d'experiment trop lourde !!
+- State "TODO"       from "STARTED"    [2017-05-24 mer. 15:22]
 :END:
 
-We only run the computation of lattent factor score
+We only run the computation of lattent factor score. 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  method.batch <- list()
   K <- 9
   ## pca
+  method.batch <- list()
   method.batch$m.pca <- finalPcaLm(K)
+  expr <- MethodBatchExperiment("celiac",
+                                s = Article3_Celiac_sampler(clumped = TRUE),
+                                method.batch = method.batch,
+                                cluster.nb = NULL,
+                                func = fit)
+  expr <- runExperiment(expr, save = TRUE)
+
   ## lfmm lasso
+  method.batch <- list()
   method.batch$m.lfmmLasso <- finalLfmmLassoMethod(K, 0.05)
   expr <- MethodBatchExperiment("celiac",
                                 s = Article3_Celiac_sampler(clumped = TRUE),
                                 method.batch = method.batch,
                                 cluster.nb = NULL,
                                 func = fit)
-
   expr <- runExperiment(expr, save = TRUE)
+
 #+end_src
 
 *** TODO Run on the whole dataset
 :LOGBOOK:
 - State "TODO"       from              [2017-05-23 mar. 15:12]
 :END:
-**** DEBUG lfmmRidge
+**** RUNNING lfmmRidge
 :LOGBOOK:
+- Note taken on [2017-05-24 mer. 15:18] \\
+  sur patator
+- State "RUNNING"    from "DEBUG"      [2017-05-24 mer. 15:15]
 - State "DEBUG"      from "DONE"       [2017-05-24 mer. 11:39]
 - State "DONE"       from "RUNNING"    [2017-05-24 mer. 11:39]
 - Note taken on [2017-05-24 mer. 10:54] \\
