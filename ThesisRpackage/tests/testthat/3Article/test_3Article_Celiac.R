@@ -6,6 +6,8 @@ flog.threshold(futile.logger::ERROR, name = "console")
 
 test_that("Article3_Celiac_lm", {
 
+  skip("DEPRECATED")
+
   m <- finalLfmmRdigeMethod(K = 6,
                             1e-1)
 

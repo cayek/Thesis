@@ -41,6 +41,11 @@ sampl.TrueSampler <- function(s) {
     G <- matrix(NA,1,1)
   }
 
+  ## test if G is a bigmatrix descriptor
+  if (class(G) == "big.matrix.descriptor") {
+    G <- bigmemory::attach.big.matrix(G)
+  }
+
   # read X
   if (is.character(s$X.file)) {
     X <- read_X(s$X.file)

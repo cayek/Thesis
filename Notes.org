@@ -5958,6 +5958,71 @@ GRCh38.
    [1] "rs10903122" "rs859637"   "rs13010713" "rs1464510"  "rs1020388" 
    [6] "rs1738074"  "rs653178"   "rs1958589"  "rs1893217"  "rs157640" 
 #+end_example
+**** CANCELLED Convert G into bigmatrix
+CLOSED: [2017-05-24 mer. 14:00]
+:LOGBOOK:
+- Note taken on [2017-05-24 mer. 14:14] \\
+  bigmatrix n'arrive pas a me gerrer une matrix de cette taille.... On va faire ca
+  a l'arrache !!
+- State "CANCELLED"  from "RUNNING"    [2017-05-24 mer. 14:00]
+- State "RUNNING"    from "TODO"       [2017-05-24 mer. 11:38]
+- State "TODO"       from              [2017-05-24 mer. 11:38]
+:END:
+#+begin_src R :results output :exports both
+  library(bigmemory)
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+  G.big <- as.big.matrix(G,
+                         backingpath = "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/",
+                         backingfile = "G.bigmemory")
+
+  saveRDS(describe(G.big), "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_bigmemory_desc.rds")
+
+#+end_src
+**** RUNNING Slip G
+:LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-05-24 mer. 14:13]
+- State "TODO"       from              [2017-05-24 mer. 14:00]
+:END:
+
+Je vais faire un truc à l'arrache qui marche de paire avec [[file:ThesisRpackage/R/3Article_Celiac.R::Article3_Celiac_lm%20<-%20function(m,%20dat)%20{][Article3_Celiac_lm]].
+#+begin_src R :results output :exports both
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+
+  L <- ncol(G)
+  chunk.size <- L / 20
+  chunks <- split(1:L, ceiling(1:L / chunk.size))
+  it <- 1
+  for (ch in chunks) {
+
+    saveRDS(list(G = G[,ch], ch = ch),
+            paste0("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_splits/G_", it,".rds"))
+    it <- it + 1
+  }
+
+#+end_src
+
+un test
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  library(assertthat)
+
+  ## colnames
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+  col.names <- colnames(G)
+  col.names <- colnames(G)
+  rm(G)
+  gc()
+
+  files <- Article3_Celiac_list_G_split_files()
+  for (f in files) {
+    aux <- readRDS(f)
+    print(f)
+    assert_that(colnames(aux$G) == cols[aux$ch])
+    assert_that(rownames(aux$G) == cols[aux$ch])
+  }
+
+
+#+end_src
 
 *** choix des paramètres
 **** DONE PCA
@@ -6154,8 +6219,12 @@ We only run the computation of lattent factor score
 :LOGBOOK:
 - State "TODO"       from              [2017-05-23 mar. 15:12]
 :END:
-**** RUNNING lfmmRidge
+**** DEBUG lfmmRidge
 :LOGBOOK:
+- State "DEBUG"      from "DONE"       [2017-05-24 mer. 11:39]
+- State "DONE"       from "RUNNING"    [2017-05-24 mer. 11:39]
+- Note taken on [2017-05-24 mer. 10:54] \\
+  il tourne sur patator !!
 - State "RUNNING"    from "DEBUG"      [2017-05-24 mer. 10:52]
 - State "DEBUG"      from "DONE"       [2017-05-24 mer. 08:47]
 - State "RUNNING"    from "TODO"       [2017-05-23 Tue 23:37]
@@ -6178,7 +6247,7 @@ We use computed score in G ~ X + U
   ## run lm
   expr <- MethodBatchExperiment("Celiac lm whole dataset with U",
                                 s = Article3_Celiac_sampler(FALSE),
-                                method.batch = m,
+                                method.batch = list(m = m),
                                 func = Article3_Celiac_lm)
   expr <- runExperiment(expr, save = TRUE)
 #+end_src

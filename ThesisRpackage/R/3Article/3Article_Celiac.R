@@ -18,6 +18,13 @@ Article3_Celiac_sampler <- function(clumped = TRUE) {
   s
 }
 
+Article3_Celiac_list_G_split_files<- function() {
+  file.pattern <- "G_[0-9]*.rds$"
+  files <- list.files("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_splits/")
+  files <- grep(file.pattern, files, value = TRUE)
+  files
+}
+
 #' @export
 Article3_Celiac_lm <- function(m, dat) {
 
@@ -27,22 +34,30 @@ Article3_Celiac_lm <- function(m, dat) {
                       correctionByC = FALSE,
                       center = FALSE)
 
-  ## we split the dataset
-  L <- ncol(dat$G)
-  d <- ncol(dat$X)
-  nb.chunks <- 20
-  chunks <- split(1:L, ceiling(1:L / nb.chunk))
-  it <- 1
-  dat.aux <- list(X = dat$X)
+  dat <- list()
+  ## read X and outlier
+  dat$X <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/X.rds")
+  dat$outlier <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/gwas_catalog_candidates.rds")
+
+  ## files
+  files <- Article3_Celiac_list_G_split_files()
+
+  ## loop
   m$pvalue <- matrix(NA, d, L)
   m$score <- matrix(NA, d, L)
   for (ch in chunks) {
     flog.trace("Chunk", it, "/", nb.chunks)
-    dat.aux$G <- dat$G[,ch]
+    ## read data
+    aux <- readRDS(f)
+    dat$G <- aux$G
+    ch <- aux$ch
+    rm(aux)
+    gc()
+
+    ## run method
     m.aux <- lm.functor$fun(m, dat.aux)
     m$pvalue[,ch] <- m.aux$pvalue
     m$score[,ch] <- m.aux$score
-    it <- it + 1
   }
   m
 }
