@@ -28,6 +28,7 @@ Article3_Celiac_fake_sampler <- function() {
                    outlier.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/gwas_catalog_candidates.rds",
                    n = NULL,
                    L = NULL)
+  s
 }
 
 #' @export

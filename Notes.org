@@ -6260,7 +6260,7 @@ We use computed score in G ~ X + U
 
   ## run lm
   expr <- MethodBatchExperiment("Celiac lm whole dataset with U",
-                                s = Sampler(), 
+                                s = Article3_Celiac_fake_sampler(), 
                                 method.batch = list(m = m),
                                 func = Article3_Celiac_lm)
   expr <- runExperiment(expr, save = TRUE)
