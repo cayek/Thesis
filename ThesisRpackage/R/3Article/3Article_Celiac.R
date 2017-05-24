@@ -23,7 +23,7 @@ Article3_Celiac_list_G_split_files<- function() {
   file.pattern <- "G_[0-9]*.rds$"
   files <- list.files("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_splits/")
   files <- grep(file.pattern, files, value = TRUE)
-  files
+  paste0( "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_splits/", files)
 }
 
 #' @export
@@ -46,8 +46,8 @@ Article3_Celiac_lm <- function(m, dat) {
   ## loop
   m$pvalue <- matrix(NA, d, L)
   m$score <- matrix(NA, d, L)
-  for (ch in chunks) {
-    flog.trace("Chunk", it, "/", nb.chunks)
+  for (f in files) {
+    flog.trace(f)
     ## read data
     aux <- readRDS(f)
     dat$G <- aux$G

@@ -5978,8 +5978,10 @@ CLOSED: [2017-05-24 mer. 14:00]
   saveRDS(describe(G.big), "~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_bigmemory_desc.rds")
 
 #+end_src
-**** RUNNING Slip G
+**** DONE Split G
+CLOSED: [2017-05-24 mer. 15:13]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-24 mer. 15:13]
 - State "RUNNING"    from "TODO"       [2017-05-24 mer. 14:13]
 - State "TODO"       from              [2017-05-24 mer. 14:00]
 :END:
@@ -6017,12 +6019,14 @@ un test
   for (f in files) {
     aux <- readRDS(f)
     print(f)
-    assert_that(colnames(aux$G) == col.names[aux$ch])
-    assert_that(rownames(aux$G) == row.names[aux$ch])
+    assert_that(mean(colnames(aux$G) == col.names[aux$ch]) == 1)
+    assert_that(mean(rownames(aux$G) == row.names) == 1)
   }
 
 
 #+end_src
+
+C'est bon :D
 
 *** choix des paramètres
 **** DONE PCA
