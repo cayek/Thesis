@@ -6202,7 +6202,7 @@ candidat par un autre snps en LD !!
 **** RUNNING lfmmLasso + pca
 :LOGBOOK:
 - Note taken on [2017-05-24 mer. 15:52] \\
-  ca tourne sur krakenator pour le long we : 26210.pts-4.krakenator
+  ca tourne sur krakenator pour le long we : 26581.pts-1.krakenator
 - State "RUNNING"    from "TODO"       [2017-05-24 mer. 15:52]
 - Note taken on [2017-05-24 mer. 15:23] \\
   Je coupe en deux experiment pour ne pas avoir d'experiment trop lourde !!
@@ -6378,14 +6378,119 @@ c'est lancé sur un gros dataset ! On peut d'attendre à ne pas avoir une bonne 
 - State "TODO"       from              [2017-05-23 mar. 15:35]
 :END:
 We use computed score in G ~ X + U
-**** TODO lm
+**** DONE lm
+CLOSED: [2017-05-24 mer. 16:56]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"       [2017-05-24 mer. 16:56]
+- State "RUNNING"    from "TODO"       [2017-05-24 mer. 16:46]
 - State "TODO"       from              [2017-05-23 mar. 15:35]
 :END:
+
+***** run
 #+begin_src R :results output :exports both
-## lm
-method.batch$m.lm <- finalLm()
+  library(ThesisRpackage)
+
+  ## run lm
+  expr <- MethodBatchExperiment("Celiac lm whole dataset with U",
+                                s = Article3_Celiac_fake_sampler(), 
+                                method.batch = list(m = finalLm()),
+                                func = Article3_Celiac_lm)
+  expr <- runExperiment(expr, save = TRUE)
+
 #+end_src
+
+***** DONE plot
+CLOSED: [2017-05-24 mer. 16:54]
+:PROPERTIES:
+:header-args: :cache no :session *ssh patator* :eval no-export
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-24 mer. 16:54]
+- State "TODO"       from              [2017-05-24 mer. 16:51]
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(132)
+  expr$description
+  expr <- MethodBatchExperiment_calibrate(expr)
+#+end_src
+
+#+RESULTS:
+: [1] "Run on Celiac lm whole dataset with U with lm|func=Article3_Celiac_lm"
+: [1] "lm"
+: [1] "== calibrate: median"
+: [1] -0.02361021
+: [1] "== calibrate: mad"
+: [1] 1.201294
+
+Il y a une plus forte inflation car le mad est à 1.2
+
+****** Candidates
+#+begin_src R :results output :exports both
+  cat("============= candidates with fdr < 0.05  \n")
+  res <- MethodBatchExperiment_candidates(expr, fdr.threshold = 0.05, print = TRUE)
+  cat('============= all candidates \n')
+  pl <- MethodBatchExperiment_qqplot(expr)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+============= candidates with fdr < 0.05
+  method   nb observed.fdr observed.puissance
+1     lm 1490    0.9812081          0.5714286
+============= all candidates
+        pvalue1 method     id   rank
+1  0.000000e+00     lm 103828     57
+2  3.547765e-18     lm  63274    840
+3  4.960419e-13     lm  75334    958
+4  5.458312e-12     lm  60508    982
+5  7.189596e-12     lm  31804    984
+6  6.598389e-11     lm 203233    999
+7  8.404523e-11     lm  31789   1002
+8  2.771070e-09     lm  15649   1043
+9  6.601078e-09     lm  50080   1061
+10 8.223723e-09     lm 114103   1067
+11 8.868546e-09     lm  40409   1069
+12 9.204793e-09     lm 172879   1070
+13 2.580068e-08     lm  50070   1092
+14 4.719332e-08     lm  28630   1101
+15 7.795850e-07     lm  28631   1157
+16 9.448597e-07     lm     88   1164
+17 5.663411e-06     lm 234846   1230
+18 1.027275e-05     lm  38837   1251
+19 1.087123e-05     lm  13423   1254
+20 3.572210e-05     lm 276792   1304
+21 3.764200e-05     lm  61280   1309
+22 3.824733e-05     lm 116598   1311
+23 8.590132e-05     lm 116599   1352
+24 1.169511e-04     lm 113029   1377
+25 1.310568e-04     lm 109444   1391
+26 1.603605e-04     lm 116602   1420
+27 2.343013e-04     lm   2620   1472
+28 2.478641e-04     lm 250870   1480
+29 3.166738e-04     lm   5864   1526
+30 3.948011e-04     lm 221199   1571
+31 4.083755e-04     lm  99224   1577
+32 5.365683e-04     lm 197911   1634
+33 6.644093e-04     lm  16326   1695
+34 6.681579e-04     lm 209311   1700
+35 9.062050e-04     lm 109441   1778
+36 2.307384e-03     lm 122882   2332
+37 3.385705e-03     lm  86896   2730
+38 3.954167e-03     lm 147434   2915
+39 6.610409e-03     lm    813   3725
+40 8.923028e-03     lm 245524   4425
+41 1.486567e-02     lm  39545   6149
+42 1.732572e-02     lm 275804   6854
+43 2.007250e-02     lm 147445   7668
+44 3.810430e-02     lm  14037  12800
+45 9.152812e-02     lm 162427  27547
+46 2.558236e-01     lm  14048  72673
+47 4.059647e-01     lm 269927 114363
+48 6.504444e-01     lm 112718 182731
+49 7.456977e-01     lm 218005 209276
+#+end_example
+On observe bien que lm à moins de puissance. 
 **** TODO sva 
 :LOGBOOK:
 - State "TODO"       from              [2017-05-23 mar. 15:33]
