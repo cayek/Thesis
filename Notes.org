@@ -6199,8 +6199,12 @@ candidat par un autre snps en LD !!
 [[./Rplots/celiac_lfmmridge_count_intersect_fdr01.png]]
 
 
-**** RUNNING lfmmLasso + pca
+**** DEBUG lfmmLasso + pca
 :LOGBOOK:
+- Note taken on [2017-05-25 Thu 09:35] \\
+  Le processus c'est fait tué ! Je vais ajouter un flag light a [[file:ThesisRpackage/R/LFMethod.R::fit%20<-%20function(m,%20dat,%20reuse%20=%20FALSE,%20...){][fit]] !! On vera ca
+  lundi, je peux pas coder sur le mac !!
+- State "DEBUG"      from "RUNNING"    [2017-05-25 Thu 09:35]
 - Note taken on [2017-05-24 mer. 15:52] \\
   ca tourne sur krakenator pour le long we : 26581.pts-1.krakenator
 - State "RUNNING"    from "TODO"       [2017-05-24 mer. 15:52]

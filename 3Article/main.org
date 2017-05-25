@@ -40,9 +40,77 @@ where $U$ is a $n \times K$ matrix of latent factor scores and $E$ is the error
 matrix distributed with a multivariate normal distribution with the diagonal
 covariance matrix $D$.
 ** Model 
-We consider a G matrix which record n observations of a vector $G_i = (G_{i
-1},..., G_{i L})$ of size L. For each observation 
-** Estimation
+Following the common notation in linear factor regression we write the following
+model 
+
+$$ G = U V^T + X B^T + E $$.
+
+Here the G $n \times L$ matrix records n observations of a vector $G_i = (G_{i
+1},..., G_{i L})$ of size L (genotype, methylation level). Variation of the
+observations variable are explained by K latent factor ($U V^T$) and the
+interest co-variate ($X$). For each observation the $X$ $n \times d$ matrix
+records for each $i$ the observation of $d$ co-variate (phenotype, environmental
+gradient). The matrices $U$ of size $n /times K$ records the scores for $K$
+latent factors. The $K$ latent factor loading are stored in the $L \times K$
+matrix $V$. The $n \times L$ matrix $E$ is the residual error matrix.
+
+A classic method to estimate $U$ $V$ and $B$ is to write the following
+optimization problem 
+
+#+NAME: eq:optim_no_reg
+$$min \frac{1}{2} ||G - U V^T - X B^T||_{F}^2$$
+
+where $||.||_{F}$ is the Frobenius norm. This optimization problem arises when
+considering the log-likelihood for a Gaussian residual error matrix $E$. 
+
+We can easily show that the equation [[ref:eq:optim_no_reg]] do not allow to
+estimate unique latent factor product $U V^T$ and a unique effect matrix
+$B$. Then we can not uniquely identify the part explain by the $K$ latent factor
+and the part explain by the co-variate of interest. We have to add a
+regularization term to fix that.
+
+*** demo
+We write $B^*$ the unique matrices of optimization problem
+[[ref:eq:optim_no_reg]], and $U^*$, $V^*$ possible matrix for this solution. 
+We remark that $U^*$ and $V^*$ are not unique because $U^* R$ and $V^*R^{-1}$ is
+still a valid solution of [[ref:eq:optim_no_reg]]. 
+
+Then $U^{**} = U^* + X $ and $B^{**} = B^* - V^*$ is still a valid solution for
+[[ref:eq:optim_no_reg]].
+
+** Ridge regularized estimation
+In order to force uniqueness of the latent factor product matrix $C = U V^T$ and
+effect size $B$. We can write the following problem
+
+#+NAME: eq:optim_ridge_reg
+$$min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||^2_2.$$ 
+
+The optimization problem [[ref:eq:optim_ridge_reg]] has unique solution $C$ and $B$
+which can be write
+
+$$ 
+C = svd_K()
+$$
+
+** Lasso regularized estimation
+
+An other possible regularization to force the uniqueness of $C$ and $B$ is the
+lasso regularization. The optimization problem is written as follow 
+
+#+NAME: eq:optim_lasso_reg
+$$min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||_1.$$ 
+
+Contrary to [[ref:eq:optim_ridge_reg]], we can not write analytic solution of
+[[ref:eq:optim_lasso_reg]]. Moreover the problem is not convex which not enable to
+easily guarantee uniqueness of the solution and find an efficient algorithm. To
+avoid this problem we can make a convex relaxation of the optimization problem
+
+#+NAME: eq:optim_convex_lasso_reg
+$$min \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||_1 +
+\gamma ||C||_*.$$ 
+
+
+** COMMENT Estimation
 :LOGBOOK:
 - Note taken on [2017-05-12 Ven 16:35] \\
   On va plutot faire uen partie pour l'estimateur lasso et un autre pour la ridge
@@ -66,7 +134,7 @@ $$min \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B|| + \gamma ||C||*)$$
 
 where ... It is easy to prove that the problem is convex.
 
-** Algorithm
+** COMMENT Algorithm
    
 In this section we propose algorithms to estimate latent matrices $U$ and $V$
 and association parameter $B$. We present a very efficient algorithm for the
@@ -82,8 +150,33 @@ this can lead to bias estimation and spurious association pattern introduced
 by the imputation algorithm. We propose an algorithm we avoid using a
 preliminary imputation method.
 
+** Parameter estimation
+:LOGBOOK:
+- Note taken on [2017-05-25 Thu 11:52] \\
+  Pour ridge faire ma petite heuristic pour trouver lambda.
+  Pour lasso aussi (chemin de reg).
+- Note taken on [2017-05-25 Thu 11:49] \\
+  Pour une estimation precise des parametre il y a la cross validation. Sinon
+  comme la méthode resemble a l'acp auquel on a enlevé la variance expliqué par X
+  on peut utiliser les même éthodes que pour l'acp. Quite à surestimer le nombre
+  de facteur lattent.
+- Note taken on [2017-05-25 Thu 11:46] \\
+  Bien preciser que on veut a tou pris eviter les truc du style j'impute a
+  l'arrache avant etc...
+:END:
 ** Hypothesis testing
+:LOGBOOK:
+- Note taken on [2017-05-25 Thu 11:55] \\
+  parler de lm : G ~U + X 
+  ET
+  la recalibration par mad + median
+:END:
 
+** Similar methods
+*** lm and lm + pca
+*** cate
+*** sva
+*** famt
 ** Simulations and data
 
 *** Generative model simulation
@@ -100,8 +193,8 @@ matrix equal to $c$.
 
 *** Real data example
 In to evaluate our methods on real data we chose realized a genome-wide
-association study (GWAS), an genome-wide association study (EWAS) and an ecological
-association study (EAS). 
+association study (GWAS), an genome-wide association study (EWAS) and an
+ecological association study (EAS).
 **** Association study of DNA methylation with rheumatoid arthritis (EWAS)
 In order to evaluate the ability to our method to correct for unobserved
 confounding variable we used data from a recent association study of DNA
