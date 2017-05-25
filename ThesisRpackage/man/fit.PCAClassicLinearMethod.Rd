@@ -2,10 +2,14 @@
 % Please edit documentation in LFMethod/LFMethod_LinearMethod.R
 \name{fit.PCAClassicLinearMethod}
 \alias{fit.PCAClassicLinearMethod}
+\title{fir for PCA + lm}
 \usage{
 \method{fit}{PCAClassicLinearMethod}(m, dat, reuse = FALSE, light = TRUE)
 }
 \arguments{
 \item{light}{if TRUE, we only compute U V and B}
+}
+\description{
+fir for PCA + lm
 }
 

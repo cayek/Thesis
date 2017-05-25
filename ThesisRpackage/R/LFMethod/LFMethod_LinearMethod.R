@@ -209,9 +209,10 @@ PCAClassicLinearMethod <- function(K,
 }
 
 
-#' @export
+#' fir for PCA + lm
 #' 
 #' @param light if TRUE, we only compute U V and B
+#' @export
 fit.PCAClassicLinearMethod <- function(m, dat, reuse = FALSE, light = TRUE) {
 
   # constants
