@@ -210,7 +210,9 @@ PCAClassicLinearMethod <- function(K,
 
 
 #' @export
-fit.PCAClassicLinearMethod <- function(m, dat, reuse = FALSE) {
+#' 
+#' @param light if TRUE, we only compute U V and B
+fit.PCAClassicLinearMethod <- function(m, dat, reuse = FALSE, light = TRUE) {
 
   # constants
   n <- nrow(dat$G)
@@ -245,9 +247,10 @@ fit.PCAClassicLinearMethod <- function(m, dat, reuse = FALSE) {
   } else {
     svd.res <- svd(G_, nu = m$K, nv = m$K)
     m$U <- svd.res$u
-    # Run K pca
-    #pca.res <- prcomp(G_, center = FALSE, scale = FALSE)
-    #m$U <- pca.res$x[,1:m$K]; cat("pca.res")
+    ## Run K pca
+    ## pca.res <- prcomp(G_, center = FALSE, scale = FALSE)
+    ## m$U <- pca.res$x[,1:m$K]; cat("pca.res")
+    rm(svd.res)
   }
 
   # run lm
@@ -255,13 +258,15 @@ fit.PCAClassicLinearMethod <- function(m, dat, reuse = FALSE) {
   B_ <- B_ridge(G_, X_, 0.0)
   m$B <- B_[1:d,, drop = FALSE]
   m$V <- t(B_[(d + 1):(d + m$K),, drop = FALSE])
-  m$C <- tcrossprod(m$U, m$V)
-  m$epsilon <- G_ - X_ %*% B_
-  m$epsilon.sigma2 <- epsilon.sigma2(m$epsilon,
-                                     reduced.df = ifelse(m$center,1,0))
-  m$B.sigma2 <- B.sigma2(epsilon.sigma2 = m$epsilon.sigma2,
-                         X = X_,
-                         lambda = 0.0)[1:d,, drop = FALSE]
+  if (!light) {
+    m$C <- tcrossprod(m$U, m$V)
+    m$epsilon <- G_ - X_ %*% B_
+    m$epsilon.sigma2 <- epsilon.sigma2(m$epsilon,
+                                       reduced.df = ifelse(m$center,1,0))
+    m$B.sigma2 <- B.sigma2(epsilon.sigma2 = m$epsilon.sigma2,
+                           X = X_,
+                           lambda = 0.0)[1:d,, drop = FALSE]
+  }
   return(m)
 }
 

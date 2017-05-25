@@ -6199,7 +6199,7 @@ candidat par un autre snps en LD !!
 [[./Rplots/celiac_lfmmridge_count_intersect_fdr01.png]]
 
 
-**** DEBUG lfmmLasso + pca
+**** DEBUG pca
 :LOGBOOK:
 - Note taken on [2017-05-25 Thu 09:35] \\
   Le processus c'est fait tué ! Je vais ajouter un flag light a [[file:ThesisRpackage/R/LFMethod.R::fit%20<-%20function(m,%20dat,%20reuse%20=%20FALSE,%20...){][fit]] !! On vera ca
@@ -6220,6 +6220,8 @@ We only run the computation of lattent factor score.
   ## pca
   method.batch <- list()
   method.batch$m.pca <- finalPcaLm(K)
+  method.batch$m.pca$center <- FALSE ## useless because G was scaled
+
   expr <- MethodBatchExperiment("celiac",
                                 s = Article3_Celiac_sampler(clumped = TRUE),
                                 method.batch = method.batch,
@@ -6228,10 +6230,21 @@ We only run the computation of lattent factor score.
   expr <- runExperiment(expr, save = TRUE)
   rm(expr)
   gc()
+#+end_src
 
+**** TODO lfmmLasso
+:LOGBOOK:
+- State "TODO"       from              [2017-05-25 Thu 14:15]
+:END:
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  K <- 9
+  
   ## lfmm lasso
   method.batch <- list()
   method.batch$m.lfmmLasso <- finalLfmmLassoMethod(K, 0.05)
+  
   expr <- MethodBatchExperiment("celiac",
                                 s = Article3_Celiac_sampler(clumped = TRUE),
                                 method.batch = method.batch,
@@ -6242,7 +6255,6 @@ We only run the computation of lattent factor score.
   gc()
 
 #+end_src
-
 *** STARTED Run on the whole dataset
 :LOGBOOK:
 - State "STARTED"    from "TODO"       [2017-05-24 mer. 15:52]

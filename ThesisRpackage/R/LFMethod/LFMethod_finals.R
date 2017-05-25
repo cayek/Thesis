@@ -10,7 +10,7 @@ data_clumping <- function(dat) {
   dat
 }
 
-fit.final <- function(m, dat, reuse = FALSE) {
+fit.final <- function(m, dat, reuse = FALSE, ...) {
   ## impute
   if (anyNA(dat$G)) {
     flog.debug("fit.final: Missing values detected")
