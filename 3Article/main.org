@@ -43,6 +43,7 @@ covariance matrix $D$.
 Following the common notation in linear factor regression we write the following
 model 
 
+#+NAME: eq:model
 $$ G = U V^T + X B^T + E $$.
 
 Here the G $n \times L$ matrix records n observations of a vector $G_i = (G_{i
@@ -94,8 +95,8 @@ $$
 
 ** Lasso regularized estimation
 
-An other possible regularization to force the uniqueness of $C$ and $B$ is the
-lasso regularization. The optimization problem is written as follow 
+to enforce the uniqueness of $C$ and $B$, we propose a lasso regularized
+optimization problem
 
 #+NAME: eq:optim_lasso_reg
 $$min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||_1.$$ 
@@ -109,6 +110,18 @@ avoid this problem we can make a convex relaxation of the optimization problem
 $$min \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||_1 +
 \gamma ||C||_*.$$ 
 
+*** An alternated algorithm
+In this paragraph we introduce an alternated algorithm which return solution of
+[[ref:eq:optim_convex_lasso_reg]]. This algorithm start with null matrix and
+alternate the two step:
+- compute $B_{i} as the solution of the lasso linear regression problem
+$$
+min \frac{1}{2} ||(G - C_{i-1}) - X B^T||_{F}^2 + \lambda ||B||_1 
+$$
+- compute C as the solution of 
+min \frac{1}{2} ||(G - X B_i^T)- C_{i-1} ||_{F}^2 + \gamma ||C||_*
+$$
+which is give by the singular value shrinkage operator.
 
 ** COMMENT Estimation
 :LOGBOOK:
@@ -150,7 +163,7 @@ this can lead to bias estimation and spurious association pattern introduced
 by the imputation algorithm. We propose an algorithm we avoid using a
 preliminary imputation method.
 
-** Parameter estimation
+** Hyper-parameters choice
 :LOGBOOK:
 - Note taken on [2017-05-25 Thu 11:52] \\
   Pour ridge faire ma petite heuristic pour trouver lambda.
@@ -164,6 +177,37 @@ preliminary imputation method.
   Bien preciser que on veut a tou pris eviter les truc du style j'impute a
   l'arrache avant etc...
 :END:
+*** Cross validation
+bi cross validation
+*** Choice of K using singular value
+Methods presented in this paper are very close to the Principal Component
+Analysis (PCA), we can see them as a PCA $G - X^B$. Thus we can use method use
+for the PCA to estimate the number of latent factor. These method lead to an
+overestimated number of factor in the model [[ref:eq:model]] because the co-variate
+would be considered as latent variable. However, because the goal of our methods
+is to estimate latent variation while protection variation explain by co-variate
+$X$, algorithms are robust to overestimated $K$.
+
+For real data set, the number of latent variable $K$ by visualizing the singular
+of the $G$ matrix. We chose intentionally softly overestimated to be sure to
+consider all the latent variation in the data.
+*** Heuristic to choice of $\lambda$ ridge
+cf mon cahier 
+*** Heuristic to choice of $\gamma$ lasso
+*** Heuristic to choice of $\lambda$ lasso
+This hyper-parameter impact the number of line set to zero in $B$. We know that
+only a part of observe variable $G_j$ are correlated with the variable $X$. So
+we can interpret the proportion on non zero line in $B$ as the proportion $p$ of
+variable which correlate with $X$. To find the lambda which correspond to the
+proportion $p$ we propose an heuristic based on a regularization path of lambda
+value. We start with smallest value of $\lambda$ such that 
+- $C = D_{\gamma}(G)
+- B = argmin ....  = 0
+
+Then we construct a sequence of m values of $\lambda$ decreasing from
+$\lambda_max to $\lambda_min$ on the log scale. Typical values are \epsilon =
+0.001 and K = 100.
+
 ** Hypothesis testing
 :LOGBOOK:
 - Note taken on [2017-05-25 Thu 11:55] \\

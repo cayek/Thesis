@@ -2199,8 +2199,10 @@ CLOSED: [2017-05-19 ven. 16:42]
 20 Oracle         0.01        0.8     5 0.9834062
 #+end_example
 
-**** STARTED with 0.05 0.5 1 5 % outlier and L = 100 000
+**** DONE with 0.05 0.5 1 5 % outlier and L = 100 000
+CLOSED: [2017-05-25 Thu 14:45]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-25 Thu 14:45]
 - State "STARTED"    from "RUNNING"    [2017-05-23 mar. 15:47]
 - State "RUNNING"    from "DEBUG"      [2017-05-22 lun. 09:32]
 - State "DEBUG"      from "RUNNING"    [2017-05-22 lun. 08:49]
@@ -6199,8 +6201,11 @@ candidat par un autre snps en LD !!
 [[./Rplots/celiac_lfmmridge_count_intersect_fdr01.png]]
 
 
-**** DEBUG pca
+**** RUNNING pca
 :LOGBOOK:
+- Note taken on [2017-05-25 Thu 14:40] \\
+  j'ai relancé sur krakenator :D
+- State "RUNNING"    from "DEBUG"      [2017-05-25 Thu 14:40]
 - Note taken on [2017-05-25 Thu 09:35] \\
   Le processus c'est fait tué ! Je vais ajouter un flag light a [[file:ThesisRpackage/R/LFMethod.R::fit%20<-%20function(m,%20dat,%20reuse%20=%20FALSE,%20...){][fit]] !! On vera ca
   lundi, je peux pas coder sur le mac !!
@@ -7208,7 +7213,7 @@ Le fait de prendre en compte la structure lattente donne un ranking des
 gênes plus stable. Ca pourait être un critere pour le choix de model :D
 *** The R package                                                  :Rpackage:
 http://www.genomine.org/sva/
-[[./org-ref-pdfs/Rpackage_sva.pdf][The SVA manual]]
+[[./Biblio/org-ref-pdfs/Rpackage_sva.pdf][The SVA manual]]
 **** Overview
 - "Surrogate variables are covariates constructed directly
   from high-dimensional data (like gene expression/RNA sequencing/
