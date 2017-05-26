@@ -2293,8 +2293,12 @@ quand K n'est pas specifié.
 - State "STARTED"    from "TODO"       [2017-05-24 mer. 16:17]
 - State "TODO"       from              [2017-05-24 mer.16:13]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DONE Run all even with lfmm lasso :D
+CLOSED: [2017-05-26 Ven 17:41]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-26 Ven 17:41]
+- Note taken on [2017-05-26 Ven 17:40] \\
+  C'est fini: 134
 - Note taken on [2017-05-24 mer. 16:21] \\
   Ca tourne sur krakenator 26414.pts-8.krakenator
 - State "RUNNING"    from "TODO"       [2017-05-24 mer. 16:17]
@@ -2323,7 +2327,10 @@ quand K n'est pas specifié.
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-
+***** TODO plot
+:LOGBOOK:
+- State "TODO"       from              [2017-05-26 Ven 17:42]
+:END:
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
 *** ./Data/SSMPG2015/ 
@@ -6201,8 +6208,12 @@ candidat par un autre snps en LD !!
 [[./Rplots/celiac_lfmmridge_count_intersect_fdr01.png]]
 
 
-**** RUNNING pca
+**** DONE pca
+CLOSED: [2017-05-26 Ven 17:37]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-26 Ven 17:37]
+- Note taken on [2017-05-26 Ven 17:36] \\
+  C'est bon c'est passé !!! 133
 - Note taken on [2017-05-25 Thu 14:40] \\
   j'ai relancé sur krakenator :D
 - State "RUNNING"    from "DEBUG"      [2017-05-25 Thu 14:40]
@@ -6394,11 +6405,37 @@ We use computed score in G ~ X + U
 On recupère presque tous les outlier de GWAS catalogue. C'est pas mal vu qu'on
 c'est lancé sur un gros dataset ! On peut d'attendre à ne pas avoir une bonne puissance ! 
 
-**** TODO lfmmLasso + pca
+**** RUNNING pca
 :LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-05-26 Ven 17:39]
 - State "TODO"       from              [2017-05-23 mar. 15:35]
 :END:
 We use computed score in G ~ X + U
+
+***** run
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  ## we retrieve fitted method
+  expr <- retrieveExperiment(133)
+  m <- expr$method.batch[[1]]
+  rm(expr)
+  m$epsilon <- NULL
+  m$C <- NULL
+  m$P <- NULL
+  gc()
+  object.size(m)
+
+  m$nickname
+  ## run lm
+  expr <- MethodBatchExperiment("Celiac lm whole dataset with U",
+                                s = Article3_Celiac_fake_sampler(), 
+                                method.batch = list(m = m),
+                                func = Article3_Celiac_lm)
+  expr <- runExperiment(expr, save = TRUE)
+
+#+end_src
+
 **** DONE lm
 CLOSED: [2017-05-24 mer. 16:56]
 :LOGBOOK:
