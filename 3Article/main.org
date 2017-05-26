@@ -17,9 +17,8 @@
 
 #+BABEL: :session *R* :cache yes :results output graphics :exports both :tangle yes 
 
-* Introduction
 
-test cite:dubois2010multiple 
+* Introduction
 
 * Materials and methods
 ** COMMENT Model
@@ -334,8 +333,5 @@ and normalized with standard deviation.
 * Figures and tables
 ** Numerical validation
 
-test [[ref:eq:model][equation model]]
-
 bibliographystyle:unsrt
 bibliography:../biblio.bib
-
