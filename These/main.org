@@ -19,9 +19,24 @@
 
 * État de l'art 
 ** Contexte
-** Structure des données biologiques
+** Analyse factorielle des données biologiques
 ** Test d'association
 ** Problématique et plan
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
-* lfmm
-* Conclusion
+* Estimation des facteurs latents pour corriger les test d'association 
+* Conclusion 
+* COMMENT perspectives
+:LOGBOOK:
+- Note taken on [2017-05-26 Fri 15:49] \\
+  Je pense que je ne vais pas pouvoir développer la crossvalidation et les données
+  manquante. 
+  
+  Par contre je peux montrer que si la cross validation est mal faite
+  ca abouti a des mauvais choix de parametre (exemple)
+  
+  Pareil pour les données manquantes. 
+  
+  Après dans mes application il n'y a jamais trop de données manquantes, donc peut
+  être que c'est pas la peine de se prendre la tête... Surtout que la cross
+  validation j'en aurai deja parlé !
+:END:

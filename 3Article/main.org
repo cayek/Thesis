@@ -13,9 +13,14 @@
 #+LaTeX_CLASS: article
 # #+LaTeX_CLASS: acm-proc-article-sp
 
+#+HTML_MATHJAX: align: left indent: 5em tagside: left font: Neo-Euler
+
 #+BABEL: :session *R* :cache yes :results output graphics :exports both :tangle yes 
 
 * Introduction
+
+test cite:dubois2010multiple 
+
 * Materials and methods
 ** COMMENT Model
 Following the common notations in linear latent factor regression models cite
@@ -43,8 +48,10 @@ covariance matrix $D$.
 Following the common notation in linear factor regression we write the following
 model 
 
-#+NAME: eq:model
-$$ G = U V^T + X B^T + E $$.
+\begin{equation}
+\label{eq:model}
+ G = U V^T + X B^T + E 
+\end{equation}
 
 Here the G $n \times L$ matrix records n observations of a vector $G_i = (G_{i
 1},..., G_{i L})$ of size L (genotype, methylation level). Variation of the
@@ -58,61 +65,72 @@ matrix $V$. The $n \times L$ matrix $E$ is the residual error matrix.
 A classic method to estimate $U$ $V$ and $B$ is to write the following
 optimization problem 
 
-#+NAME: eq:optim_no_reg
-$$min \frac{1}{2} ||G - U V^T - X B^T||_{F}^2$$
+#+NAME: eqn:optim_no_reg
+\begin{equation}
+min \frac{1}{2} ||G - U V^T - X B^T||_{F}^2 
+\end{equation}
 
 where $||.||_{F}$ is the Frobenius norm. This optimization problem arises when
 considering the log-likelihood for a Gaussian residual error matrix $E$. 
 
-We can easily show that the equation [[ref:eq:optim_no_reg]] do not allow to
+We can easily show that the equation [[eqn:optim_no_reg]] do not allow to
 estimate unique latent factor product $U V^T$ and a unique effect matrix
 $B$. Then we can not uniquely identify the part explain by the $K$ latent factor
 and the part explain by the co-variate of interest. We have to add a
 regularization term to fix that.
 
 *** demo
-We write $B^*$ the unique matrices of optimization problem
-[[ref:eq:optim_no_reg]], and $U^*$, $V^*$ possible matrix for this solution. 
-We remark that $U^*$ and $V^*$ are not unique because $U^* R$ and $V^*R^{-1}$ is
-still a valid solution of [[ref:eq:optim_no_reg]]. 
+We write $B^*$ the unique matrices of optimization problem [[eqn:optim_no_reg]],
+and $U^*$, $V^*$ possible matrix for this solution. We remark that $U^*$ and
+$V^*$ are not unique because $U^* R$ and $V^*R^{-1}$ is still a valid solution
+of [[eqn:optim_no_reg]].
 
 Then $U^{**} = U^* + X $ and $B^{**} = B^* - V^*$ is still a valid solution for
-[[ref:eq:optim_no_reg]].
+[[eqn:optim_no_reg]].
 
 ** Ridge regularized estimation
 In order to force uniqueness of the latent factor product matrix $C = U V^T$ and
 effect size $B$. We can write the following problem
 
-#+NAME: eq:optim_ridge_reg
-$$min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||^2_2.$$ 
+#+NAME: eqn:optim_ridge_reg
+\begin{equation}
+min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||^2_2.
+\end{equation}
 
-The optimization problem [[ref:eq:optim_ridge_reg]] has unique solution $C$ and $B$
+The optimization problem [[eqn:optim_ridge_reg]] has unique solution $C$ and $B$
 which can be write
 
 $$ 
-C = svd_K()
+C = P_{\lambda}^{-1} * svd_K(P_{\lambda} G )
 $$
+
+and 
+
+$$
+... 
+$$
+
 
 ** Lasso regularized estimation
 
 to enforce the uniqueness of $C$ and $B$, we propose a lasso regularized
 optimization problem
 
-#+NAME: eq:optim_lasso_reg
+#+NAME: eqn:optim_lasso_reg
 $$min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||_1.$$ 
 
-Contrary to [[ref:eq:optim_ridge_reg]], we can not write analytic solution of
-[[ref:eq:optim_lasso_reg]]. Moreover the problem is not convex which not enable to
+Contrary to [[eqn:optim_ridge_reg]], we can not write analytic solution of
+[[eqn:optim_lasso_reg]]. Moreover the problem is not convex which not enable to
 easily guarantee uniqueness of the solution and find an efficient algorithm. To
 avoid this problem we can make a convex relaxation of the optimization problem
 
-#+NAME: eq:optim_convex_lasso_reg
+#+NAME: eqn:optim_convex_lasso_reg
 $$min \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||_1 +
 \gamma ||C||_*.$$ 
 
 *** An alternated algorithm
 In this paragraph we introduce an alternated algorithm which return solution of
-[[ref:eq:optim_convex_lasso_reg]]. This algorithm start with null matrix and
+[[eqn:optim_convex_lasso_reg]]. This algorithm start with null matrix and
 alternate the two step:
 - compute $B_{i} as the solution of the lasso linear regression problem
 $$
@@ -178,12 +196,23 @@ preliminary imputation method.
   l'arrache avant etc...
 :END:
 *** Cross validation
-bi cross validation
+:LOGBOOK:
+- Note taken on [2017-05-26 Fri 14:46] \\
+  cf mon cahier
+:END:
+Cross validation is a classic method to select hyper-parameter. We propose here
+method adapted to our algorithms. 
+... 
+
+However, cross validation procedure can be long to run in particular on very big
+data set. We propose other procedure to assess hyper-parameters that gave good
+results our experiments.
+
 *** Choice of K using singular value
 Methods presented in this paper are very close to the Principal Component
 Analysis (PCA), we can see them as a PCA $G - X^B$. Thus we can use method use
 for the PCA to estimate the number of latent factor. These method lead to an
-overestimated number of factor in the model [[ref:eq:model]] because the co-variate
+overestimated number of factor in the model [[ref:eq:model][(1)]] because the co-variate
 would be considered as latent variable. However, because the goal of our methods
 is to estimate latent variation while protection variation explain by co-variate
 $X$, algorithms are robust to overestimated $K$.
@@ -192,8 +221,28 @@ For real data set, the number of latent variable $K$ by visualizing the singular
 of the $G$ matrix. We chose intentionally softly overestimated to be sure to
 consider all the latent variation in the data.
 *** Heuristic to choice of $\lambda$ ridge
-cf mon cahier 
+:LOGBOOK:
+- Note taken on [2017-05-26 Fri 14:45] \\
+  voir mon cahier et il va falloir normaliser lambda ?? a voir !!C'est chiant car
+  j'ai deja lancé les experiences !!
+:END:
+...
+We observed that for a centered and normalized $G$ and $X$ $\lambda = ?$
+provided good results in our experiments.
+
 *** Heuristic to choice of $\gamma$ lasso
+This hyper-parameter impact the rank of the $C$ matrix. To assess the gamma
+value we compute singular values of G $(\mu_1, ..., \mu_n)$. Then we set 
+
+$$
+\gamma = \frac{(\mu_K + \mu_{K + 1})}{2} 
+$$
+
+for $K$ the chosen number of latent factors. In our experiments, we observed
+that for such computed $\gamma$ the rank of $C$ returned by lasso algorithm was
+$K$.
+
+
 *** Heuristic to choice of $\lambda$ lasso
 This hyper-parameter impact the number of line set to zero in $B$. We know that
 only a part of observe variable $G_j$ are correlated with the variable $X$. So
@@ -216,9 +265,34 @@ $\lambda_max to $\lambda_min$ on the log scale. Typical values are \epsilon =
   la recalibration par mad + median
 :END:
 
+*** Linear model with latent factor score
+:LOGBOOK:
+- Note taken on [2017-05-26 Fri 15:35] \\
+  faut que je choississe les notations mieux que ca, je m'enmmèle la ...
+:END:
+After computing latent factors score matrix $U$ with the lasso or ridge
+algorithm, we use them as co-variables with $X$ in a linear model. This enable
+to compute the pvalue to test the null hypothesis 
+$$
+B_j = 0
+$$
+
+where in $B$ is the ....
+
+*** Hypothesis calibration
+Even with latent factors correction we can observed not calibrated p-value. This
+can be due to model misspecification, presence of not interested and small
+effects or dependency between variables. As we are typically interested by a small
+proportion of variables we used empirical correction to have score with a mean
+to zero and standard deviation to 1. We used the median and the mad as robust
+estimators of the mean and standard deviation.
+
 ** Similar methods
 *** lm and lm + pca
+We comparared results of our method to two well known method the linear model
+and the linear model with PCA scores. 
 *** cate
+
 *** sva
 *** famt
 ** Simulations and data
@@ -259,4 +333,9 @@ and normalized with standard deviation.
 * Discussion
 * Figures and tables
 ** Numerical validation
+
+test [[ref:eq:model][equation model]]
+
+bibliographystyle:unsrt
+bibliography:../biblio.bib
 
