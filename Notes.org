@@ -923,8 +923,9 @@ On prend les données climatique de worldclim et on fait l'acp ;-)
 - State "STARTED"    from "TODO"       [2017-05-29 lun. 16:38]
 - State "TODO"       from              [2017-05-29 lun. 16:03]
 :END:
-**** RUNNING Run on krakenator
+**** DEBUG Run on krakenator
 :LOGBOOK:
+- State "DEBUG"      from "RUNNING"    [2017-05-29 lun. 18:45]
 - State "RUNNING"    from              [2017-05-29 lun. 16:36]
 :END:
 On va prendre K = 10, voir ici [[1000Genome_pca][file:~/Projects/Thesis/Notes.org::1000Genome_pca]]
@@ -970,6 +971,31 @@ pour les valeur singuliere
   expr <- runExperiment(expr, TRUE)
 
 #+end_src
+
+#+RESULTS:
+#+begin_example
+NULL
+NULL
+starting worker pid=7521 on localhost:11115 at 16:31:15.698
+Loading required package: ThesisRpackage
+loaded ThesisRpackage and set parent environment
+Loading required package: ThesisRpackage
+loaded ThesisRpackage and set parent environment
+Loading required package: ThesisRpackage
+loaded ThesisRpackage and set parent environment
+Loading required package: ThesisRpackage
+loaded ThesisRpackage and set parent environment
+Loading required package: ThesisRpackage
+loaded ThesisRpackage and set parent environment
+Loading required package: ThesisRpackage
+loaded ThesisRpackage and set parent environment
+Loading required package: ThesisRpackage
+loaded ThesisRpackage and set parent environment
+TRACE [2017-05-29 16:32:47] attaching impute
+Error in { : task 1 failed - "only d = 1 allowed ;-)"
+
+#+end_example
+
 **** TODO Plot
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
