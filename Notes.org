@@ -774,8 +774,10 @@ voir la vrai valeur de K après convergeance.
   1000  genome + climat
 - State "TODO"       from              [2017-04-04 mar. 12:09]
 :END:
-*** STARTED Preprocessing genotype data
+*** DONE Preprocessing genotype data
+CLOSED: [2017-05-29 lun. 13:29]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-29 lun. 13:29]
 - Note taken on [2017-05-23 mar. 16:52] \\
   ask to OF
 - State "STARTED"    from "TODO"       [2017-05-23 mar. 16:52]
@@ -791,21 +793,28 @@ We remove admxed individual (see [[http://www.internationalgenome.org/category/p
 dans leur milieu depuis longtemps. Je vais garder les européens, africain et
 asiatique.
 
-#+begin_src R :results output :exports both :session *ssh patator*
+#+begin_src R :results output :exports both
   G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds")
+  indiv.df <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/indiv_df.rds")
+
+  ## keep only indiv in G
+  indiv.df <- indiv.df %>%
+    dplyr::filter(sample %in% rownames(G))
+
 
   ## indiv metadata
-  indiv.df <- readRDS("~/Projects/Thesis/Data/1000Genomes/Phase3/indiv_df.rds")
   indiv.df <- indiv.df %>%
     dplyr::filter(super_pop %in% c("EUR", "SAS", "AFR", "EAS"))
   indiv.df <- indiv.df %>%
     dplyr::filter(!(pop %in% c("ASW")))
   indiv.df
 
-  G <- G[rownames(G) %in% indiv.df$sample,]
+
+  G <- G[indiv.df$sample,]
   dim(G)
 
   saveRDS(G, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS.rds")
+  saveRDS(indiv.df, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS_indiv.rds")
 #+end_src
 
 #+RESULTS:
@@ -813,25 +822,153 @@ asiatique.
   > dim(G)
   [1]    670 342478
 #+end_example
-*** STARTED Compute of X
+*** DONE Compute of X
+CLOSED: [2017-05-29 lun. 16:03]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-29 lun. 16:03]
 - State "STARTED"    from "TODO"       [2017-05-23 mar. 16:52]
 - State "TODO"       from              [2017-05-23 mar. 16:52]
 :END:
 
 On prend les données climatique de worldclim et on fait l'acp ;-)
 #+begin_src R :results output :exports both
-  library(raster)
+  ## get pop information
+  library(rvest)
 
-  ## compute coodinates for each indiv
-  TODO
+  pop.tbl <- read_html("http://www.internationalgenome.org/faq/which-populations-are-part-your-study/")%>%
+    html_nodes("table") %>%
+    html_table() %>%
+    .[[1]]
+
+  head(pop.tbl)
+  names(pop.tbl)[1] <- "pop"
+
+
+  ## pop location
+  library(ggmap)
+
+  indiv.df <- readRDS( "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS_indiv.rds")
+  indiv.df <-indiv.df %>% inner_join(pop.tbl)
+
+  indiv.df
+
+  ## match pop localisation
+  indiv.df <- indiv.df %>%
+    mutate(citie = NA)
+  indiv.df[indiv.df$pop == "IBS",]$citie = "Spain"
+  indiv.df[indiv.df$pop == "PJL",]$citie = "Pakistan"
+  indiv.df[indiv.df$pop == "CDX",]$citie = "China"
+  indiv.df[indiv.df$pop == "ACB",]$citie = "Barbados"
+  indiv.df[indiv.df$pop == "GWD",]$citie = "Gambia"
+  indiv.df[indiv.df$pop == "BEB",]$citie = "Bangladesh"
+  indiv.df[indiv.df$pop == "MSL",]$citie = "Sierra Leone"
+  indiv.df[indiv.df$pop == "STU",]$citie = "Sri Lanka"
+  indiv.df[indiv.df$pop == "ITU",]$citie = "Telangana"
+  indiv.df[indiv.df$pop == "CEU",]$citie = "United Kingdom"
+  indiv.df[indiv.df$pop == "LWK",]$citie = "Kenya"
+  indiv.df[indiv.df$pop == "JPT",]$citie = "Japan"
+  indiv.df[indiv.df$pop == "YRI",]$citie = "Nigeria"
+  indiv.df[indiv.df$pop == "TSI",]$citie = "Italia"
+  indiv.df[indiv.df$pop == "GIH",]$citie = "Gujarat"
+
+
+  ## get location
+  cities <- indiv.df %>% group_by(pop) %>%
+    dplyr::filter(row_number(citie) == 1) %>%
+    ungroup() %>%
+    dplyr::select(citie, pop, `Population Description`)
+  cities <- cbind(cities, geocode(cities$citie))
+
+  ## plot with leaflet
+  library(leaflet)
+  m <- leaflet() %>%
+    addTiles() %>%  # Add default OpenStreetMap map tiles
+    addMarkers(lng = cities$lon, lat = cities$lat, popup = cities$`Population Description`)
+  m  # Print the map
+
 
   ## compute X
+  library(raster)
   climate <- getData('worldclim', var='bio', res = 2.5)
-  bio <- extract(climate, y = as.matrix(coordinates))
+  bio <- extract(climate, y = as.matrix(cities[c("lon","lat")]))
   pc.bio <- prcomp(bio,scale = T)
   X <- pc.bio$x[,1]
+
+  cities <- cbind(cities, X)
+
+
+  ## add to indiv
+  indiv.df <- indiv.df %>%
+    inner_join(cities)
+
+
+  ## save 
+  saveRDS(indiv.df, "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS_indiv.rds")
+  saveRDS(as.matrix(indiv.df$X), "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/X_EAS.rds")
+
+  ## plot X
+  indiv.df <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS_indiv.rds")
+  pl <- ggplot(indiv.df, aes(x = lon, y = lat, color = X, size = X, text = `Population Description`)) +
+    geom_point()
+  pl
+
+
+  ## try plotly :D
+  library(plotly)
+  ggplotly(pl)
+
 #+end_src
+*** TODO Run methods
+:LOGBOOK:
+- State "TODO"       from              [2017-05-29 lun. 16:03]
+:END:
+**** RUNNING Run on krakenator
+:LOGBOOK:
+- State "RUNNING"    from              [2017-05-29 lun. 16:36]
+:END:
+On va prendre K = 10, voir ici [[1000Genome_pca][file:~/Projects/Thesis/Notes.org::1000Genome_pca]]
+pour les valeur singuliere
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  method.batch <- list()
+  K <- 10
+  ## famt
+  method.batch$m.famt <- finalFamtMethod(K)
+  method.batch$m.famt$center <- FALSE
+  ## sva
+  method.batch$m.sva <- finalSVAMethod(K)
+  method.batch$m.sva$center <- FALSE
+  ## lm
+  method.batch$m.lm <- finalLm()
+  method.batch$m.lm$center <- FALSE
+  ## pca
+  method.batch$m.pca <- finalPcaLm(K)
+  method.batch$m.pca$center <- FALSE
+  ## lfmm lasso
+  method.batch$m.lfmmLasso <- finalLfmmLassoMethod(K, 0.05)
+  method.batch$m.lfmmLasso$center <- FALSE
+  ## lfmm ridge
+  method.batch$m.lfmmRidge <- finalLfmmRdigeMethod(K, 1e-10)
+  method.batch$m.lfmmRidge$center <- FALSE
+  ## cate
+  method.batch$m.cate <- finalcateMethod(K)
+  method.batch$m.cate$center <- FALSE
+
+
+  ## sampler
+  s <- TrueSampler(G.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS.rds",
+                   X.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS.rds",
+                   outlier.file = NULL)
+
+  expr <- MethodBatchExperiment("1000 Genome EAS",
+                                s = s,
+                                method.batch = method.batch,
+                                cluster.nb = 7)
+
+  expr <- runExperiment(expr, TRUE)
+#+end_src
+
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
 - Note taken on [2017-05-03 mer. 09:03] \\
@@ -1880,6 +2017,7 @@ Si les na :D
 #+end_example
 
 **** DONE PCA 
+<<1000Genome_pca>>
 CLOSED: [2017-05-18 jeu. 14:10]
 :LOGBOOK:
 - State "DONE"       from "RUNNING"    [2017-05-18 jeu. 14:10]
@@ -6300,6 +6438,8 @@ We only run the computation of lattent factor score.
 
 **** TODO lfmmLasso
 :LOGBOOK:
+- Note taken on [2017-05-29 lun. 13:22] \\
+  C'est trop long, je pense que je vais pas pouvoir le lancer...
 - State "TODO"       from              [2017-05-25 Thu 14:15]
 :END:
 
@@ -6321,6 +6461,34 @@ We only run the computation of lattent factor score.
   gc()
 
 #+end_src
+
+**** RUNNING cate
+:LOGBOOK:
+- Note taken on [2017-05-29 lun. 13:25] \\
+  C'est parti sur krakenator, on va voir si ca passe !!
+- State "RUNNING"    from "TODO"       [2017-05-29 lun. 13:25]
+- State "TODO"       from "DONE"       [2017-05-29 lun. 13:23]
+:END:
+
+We only run the computation of lattent factor score. 
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  K <- 9
+  ## pca
+  method.batch <- list()
+  method.batch$m.cate <- finalcateMethod(K)
+
+  expr <- MethodBatchExperiment("celiac",
+                                s = Article3_Celiac_sampler(clumped = TRUE),
+                                method.batch = method.batch,
+                                cluster.nb = NULL,
+                                func = fit)
+  expr <- runExperiment(expr, save = TRUE)
+  rm(expr)
+  gc()
+
+#+end_src
+
 *** STARTED Run on the whole dataset
 :LOGBOOK:
 - State "STARTED"    from "TODO"       [2017-05-24 mer. 15:52]

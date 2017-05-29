@@ -61,6 +61,7 @@ test_that("lasso Regularization path lfmm on binomial dataset with outlier", {
   exp <- runExperiment(exp)
   p <- plot(exp, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
   print(p)
+
 })
 
 ################################################################################

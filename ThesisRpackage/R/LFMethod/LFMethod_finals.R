@@ -53,7 +53,7 @@ finalLfmmRdigeMethod <- function(K, lambda, calibrate  = FALSE, prior.impute = F
 }
 
 #' @export
-fit.finalLfmmRdigeMethod <- function(m, dat, reuse = FALSE) {
+fit.finalLfmmRdigeMethod <- function(m, dat, reuse = FALSE, ...) {
   if (anyNA(dat$G)) {
     ## param
     n <- nrow(dat$G)

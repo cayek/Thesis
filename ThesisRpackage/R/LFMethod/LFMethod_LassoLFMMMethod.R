@@ -148,7 +148,7 @@ LassoLFMMMethod <- function(K,
 
 
 #' @export
-fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
+fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE, light = TRUE) {
 
   n <- nrow(dat$G)
   L <- ncol(dat$G)
@@ -244,12 +244,17 @@ fit.LassoLFMMMethod <- function(m, dat, reuse = FALSE) {
 
   }
 
-  # compute analytic variance
-  m$epsilon.sigma2 <- epsilon.sigma2(m$epsilon,
-                                     reduced.df = ifelse(m$center,1,0))
+  if (!light) {
+    ## compute analytic variance
+    m$epsilon.sigma2 <- epsilon.sigma2(m$epsilon,
+                                       reduced.df = ifelse(m$center,1,0))
+  } else {
+    ## we do not want this result to be store in m !! To big ! 
+    m$C <- NULL
+    m$epsilon <- NULL
+  }
 
-
-  # B.sigma2 to one can not be computed
+  ## B.sigma2 to one can not be computed
 
   # score
   m$score <- B.all %>%

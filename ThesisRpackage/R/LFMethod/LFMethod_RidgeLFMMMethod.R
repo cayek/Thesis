@@ -80,7 +80,7 @@ RidgeLFMMMethod <- function(K,
 
 
 #' @export
-fit.RidgeLFMMMethod <- function(m, dat, reuse = FALSE) {
+fit.RidgeLFMMMethod <- function(m, dat, reuse = FALSE, light = TRUE) {
 
   # param
   n <- nrow(dat$G)
@@ -111,17 +111,21 @@ fit.RidgeLFMMMethod <- function(m, dat, reuse = FALSE) {
                             reuse = reuse)
 
 
-  # epsilon
-  m$epsilon <- G_ - dat$X %*% m$B - m$C
-  m$epsilon.sigma2 <- epsilon.sigma2(m$epsilon,
-                                     reduced.df = ifelse(m$center,1,0))
+  if (!light) {
+    ## epsilon
+    m$epsilon <- G_ - dat$X %*% m$B - m$C
+    m$epsilon.sigma2 <- epsilon.sigma2(m$epsilon,
+                                       reduced.df = ifelse(m$center,1,0))
 
 
-  # B.sigma2 B|V,X so we do not variability of the estimattion of V ... see perso lab notebook (2/12/2016)
-  m$B.sigma2 <- B.sigma2(epsilon.sigma2 = m$epsilon.sigma2,
-                         X = dat$X,
-                         lambda = m$lambda)
-
+    ## B.sigma2 B|V,X so we do not variability of the estimattion of V ... see perso lab notebook (2/12/2016)
+    m$B.sigma2 <- B.sigma2(epsilon.sigma2 = m$epsilon.sigma2,
+                           X = dat$X,
+                           lambda = m$lambda)
+  } else {
+    m$C <- NULL
+    m$P <- NULL
+  }
   m
 }
 
