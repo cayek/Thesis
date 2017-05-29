@@ -1669,8 +1669,10 @@ variable lattentes.
 
 C'est comparable a les loadings RDA1
 
-** STARTED Validation numérique pour l'article "LFMM"             :3Article:
+** DONE Validation numérique pour l'article "LFMM"                :3Article:
+CLOSED: [2017-05-29 lun. 09:01]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-29 lun. 09:01]
 - Note taken on [2017-05-18 jeu. 10:49] \\
   Ok on part du 1000 genome bien netoyé avec plink :D
 - Note taken on [2017-05-11 jeu. 17:46] \\
@@ -2091,11 +2093,13 @@ CLOSED: [2017-05-22 lun. 15:06]
 
 lfmm lasso donne bien comme l'oracle. Il y a toujours ce truc bizare avec l'ACP
 mais je pense que c'est une particularité des data.
-*** STARTED Run on krakenator
+*** DONE Run on krakenator
+CLOSED: [2017-05-29 lun. 09:01]
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-29 lun. 09:01]
 - Note taken on [2017-05-19 ven. 13:24] \\
   Je pense que je met trop de variable lattentes pour l'acp et pour je ne sais
   quelle raison il capte X.... De toute facon j'utilise un critère objectif pour
@@ -2288,8 +2292,10 @@ C'est les résultats attendus, a par pour famt qui fait n'imp... c'est peut atre
 a cause du param max.nbcluster qui était à 8 mais je pense qu'il ne sert que
 quand K n'est pas specifié.
 
-**** STARTED with 0.05 0.5 1 % outlier and L = 50 000
+**** DONE with 0.05 0.5 1 % outlier and L = 50 000
+CLOSED: [2017-05-29 lun. 09:01]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-29 lun. 09:01]
 - State "STARTED"    from "TODO"       [2017-05-24 mer. 16:17]
 - State "TODO"       from              [2017-05-24 mer.16:13]
 :END:
@@ -2328,9 +2334,53 @@ CLOSED: [2017-05-26 Ven 17:41]
 
 #+end_src
 ***** TODO plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
 :LOGBOOK:
 - State "TODO"       from              [2017-05-26 Ven 17:42]
 :END:
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(134)
+  expr$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=10 K.method=10 correctionByC=FALSE fast.only=FALSE n= L=50000 cs=0.1|0.2|0.4|0.6 cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=5e-04|0.005|0.01 ridge.lambda=1e-05 lasso.sparse.prop=0.05 nb.rep=4 "
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4.png")
+#+end_src
+
+#+RESULTS:
+[[./Rplots/NumericVal_auc_with_lasso_L5e4.png]]
+[[./Rplots/NumericVal_gif_with_lasso_L5e4.png]]
+#+begin_example
+# A tibble: 48 × 5
+   method outlier.prop `cor(U,X)`   rep       auc
+    <chr>        <dbl>      <chr> <dbl>     <dbl>
+1  Oracle        5e-04        0.1     1 0.9405889
+2  Oracle        5e-04        0.1     2 0.9402349
+3  Oracle        5e-04        0.1     3 0.9401196
+4  Oracle        5e-04        0.1     4 0.9400257
+5  Oracle        5e-04        0.2     1 0.9400108
+6  Oracle        5e-04        0.2     2 0.9400122
+7  Oracle        5e-04        0.2     3 0.9400716
+8  Oracle        5e-04        0.2     4 0.9400251
+9  Oracle        5e-04        0.4     1 0.9400155
+10 Oracle        5e-04        0.4     2 0.9401116
+# ... with 38 more rows
+#+end_example
+
+On a le bon message, plus il y a d'outlier moins acp+lm est puissant. Plus la
+corrélation est forte moin lm est puissant. Sinon ils sont tout calibré a part
+lm. FAMT on sait pas pour ca merde....
+
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
 *** ./Data/SSMPG2015/ 
@@ -6405,8 +6455,10 @@ We use computed score in G ~ X + U
 On recupère presque tous les outlier de GWAS catalogue. C'est pas mal vu qu'on
 c'est lancé sur un gros dataset ! On peut d'attendre à ne pas avoir une bonne puissance ! 
 
-**** RUNNING pca
+**** DONE pca
+CLOSED: [2017-05-29 lun. 08:42]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-29 lun. 08:42]
 - State "RUNNING"    from "TODO"       [2017-05-26 Ven 17:39]
 - State "TODO"       from              [2017-05-23 mar. 15:35]
 :END:
@@ -6435,6 +6487,92 @@ We use computed score in G ~ X + U
   expr <- runExperiment(expr, save = TRUE)
 
 #+end_src
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(135)
+  expr$description
+  expr <- MethodBatchExperiment_calibrate(expr)
+#+end_src
+
+#+RESULTS:
+: [1] "Run on Celiac lm whole dataset with U with PcaLm|func=Article3_Celiac_lm"
+: [1] "PcaLm"
+: [1] "== calibrate: median"
+: [1] 0.009601749
+: [1] "== calibrate: mad"
+: [1] 1.037876
+
+
+****** Candidates
+#+begin_src R :results output :exports both
+  cat("============= candidates with fdr < 0.05  \n")
+  res <- MethodBatchExperiment_candidates(expr, fdr.threshold = 0.05, print = TRUE)
+  cat('============= all candidates \n')
+  pl <- MethodBatchExperiment_qqplot(expr)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+============= candidates with fdr < 0.05
+  method  nb observed.fdr observed.puissance
+1  PcaLm 931    0.9731472          0.5102041
+============= all candidates
+        pvalue1 method     id   rank
+1  0.000000e+00  PcaLm 103828      1
+2  4.617156e-19  PcaLm  63274    261
+3  5.772660e-13  PcaLm  60508    365
+4  2.659369e-11  PcaLm  75334    411
+5  9.002770e-10  PcaLm 114103    457
+6  4.087058e-09  PcaLm 203233    487
+7  5.243616e-09  PcaLm  31804    492
+8  2.057905e-08  PcaLm  31789    529
+9  2.532802e-08  PcaLm 116598    539
+10 4.207813e-08  PcaLm  50070    555
+11 3.615079e-07  PcaLm  50080    610
+12 4.552497e-07  PcaLm 116599    614
+13 6.183613e-07  PcaLm  15649    622
+14 9.268653e-07  PcaLm  40409    639
+15 5.057776e-06  PcaLm 116602    701
+16 9.947658e-06  PcaLm 113029    728
+17 1.483828e-05  PcaLm 109444    739
+18 1.601684e-05  PcaLm 276792    745
+19 4.301990e-05  PcaLm  28631    805
+20 4.680456e-05  PcaLm 209311    814
+21 9.851797e-05  PcaLm  13423    866
+22 1.004862e-04  PcaLm  28630    867
+23 1.054958e-04  PcaLm    813    875
+24 1.285412e-04  PcaLm  99224    900
+25 1.672076e-04  PcaLm 109441    931
+26 2.410613e-04  PcaLm 172879    971
+27 2.430565e-04  PcaLm  16326    973
+28 2.603479e-04  PcaLm  38837    984
+29 3.201834e-04  PcaLm 221199   1019
+30 3.628296e-04  PcaLm 147445   1041
+31 3.630059e-04  PcaLm 250870   1042
+32 4.610480e-04  PcaLm 275804   1083
+33 5.183564e-04  PcaLm     88   1108
+34 5.431577e-04  PcaLm 234846   1116
+35 5.802832e-04  PcaLm   2620   1134
+36 8.665041e-04  PcaLm   5864   1244
+37 1.106089e-03  PcaLm 122882   1344
+38 1.200209e-03  PcaLm  61280   1367
+39 1.312198e-03  PcaLm  86896   1402
+40 3.420760e-03  PcaLm 147434   2028
+41 4.443618e-03  PcaLm  14037   2370
+42 8.226520e-03  PcaLm  39545   3521
+43 1.064279e-02  PcaLm 197911   4180
+44 1.596013e-02  PcaLm 245524   5805
+45 6.882650e-02  PcaLm  14048  20811
+46 4.178394e-01  PcaLm 162427 117634
+47 5.132954e-01  PcaLm 112718 144306
+48 6.143502e-01  PcaLm 218005 172649
+49 9.302648e-01  PcaLm 269927 261863
+#+end_example
+
 
 **** DONE lm
 CLOSED: [2017-05-24 mer. 16:56]

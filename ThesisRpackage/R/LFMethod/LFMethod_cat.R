@@ -30,6 +30,7 @@ fit.cateMethod <- function(m, dat, reuse = FALSE) {
 
   ## output
   m$B <- matrix(cate.results$beta, 1, L)
+  m$U <- matrix(cate.results$Z, n, m$K)
   m$score <- matrix(cate.results$beta.t, 1, L)
   m$pvalue <- matrix(cate.results$beta.p.value, 1, L)
   m
