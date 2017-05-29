@@ -918,8 +918,9 @@ On prend les données climatique de worldclim et on fait l'acp ;-)
   ggplotly(pl)
 
 #+end_src
-*** TODO Run methods
+*** STARTED Run methods
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-05-29 lun. 16:38]
 - State "TODO"       from              [2017-05-29 lun. 16:03]
 :END:
 **** RUNNING Run on krakenator
@@ -967,7 +968,44 @@ pour les valeur singuliere
                                 cluster.nb = 7)
 
   expr <- runExperiment(expr, TRUE)
+
 #+end_src
+**** TODO Plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+:LOGBOOK:
+- State "TODO"       from              [2017-05-29 lun. 16:43]
+:END:
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(?)
+  expr$description
+  expr$outlier
+  expr <- MethodBatchExperiment_calibrate(expr)
+#+end_src
+
+
+#+begin_src R :results output :exports both
+  print.data.frame(MethodBatchExperiment_count_intersect(expr, top = 10, plot = NULL))
+#+end_src
+
+
+#+begin_src R :results output :exports both
+  pl <- MethodBatchExperiment_count_intersect(expr, top = 100, plot = "tile")
+  save_plot_timc_bcm_15(pl, "1000Genome_EAS_count_intersect_top100.png")
+#+end_src
+
+
+#+begin_src R :results output :exports both
+  pl <- MethodBatchExperiment_count_intersect(expr, fdr.threshold = 0.01, plot = "point")
+  save_plot_timc_bcm_15(pl, "1000Genome_EAS_count_intersect_fdr01.png")
+#+end_src
+**** TODO SNPs annotation
+:LOGBOOK:
+- State "TODO"       from              [2017-05-29 lun. 16:44]
+:END:
 
 ** STARTED Run of methods on OF GWAS simulation                   :3Article:
 :LOGBOOK:
@@ -9234,3 +9272,19 @@ de risque). Dans ce modèle il y a de l'orde du millier de SNIPs causaux !
  :END:
 
 cite:dubois2010multiple C'est l'article du dataset Celiac
+
+** TODO 2017 - Unifying and Generalizing Methods for Removing Unwanted Variation Based on Negative Controls :LFMMLike:LFMM:3Article:
+ :PROPERTIES:
+  :Custom_ID: gerard2017unifying
+  :AUTHOR: Gerard \& Stephens
+  :JOURNAL: arXiv preprint arXiv:1705.08393
+  :YEAR: 2017
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+ 
+ cite:gerard2017unifying Un papier qui veut faire comme lfmm, cad identifier la
+ vairance indesirable pour faire une association.
+
