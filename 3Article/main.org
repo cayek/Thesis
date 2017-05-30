@@ -12,6 +12,7 @@
 # #+LATEX_CLASS: IEEEtran
 #+LaTeX_CLASS: article
 # #+LaTeX_CLASS: acm-proc-article-sp
+#+LATEX_HEADER: \input{notations.tex}
 
 #+HTML_MATHJAX: align: left indent: 5em tagside: left font: Neo-Euler
 
@@ -49,94 +50,96 @@ model
 
 \begin{equation}
 \label{eq:model}
- G = U V^T + X B^T + E 
+\G = \U \V^T + \X \B^T + \E 
 \end{equation}
 
-Here the G $n \times L$ matrix records n observations of a vector $G_i = (G_{i
-1},..., G_{i L})$ of size L (genotype, methylation level). Variation of the
-observations variable are explained by K latent factor ($U V^T$) and the
-interest co-variate ($X$). For each observation the $X$ $n \times d$ matrix
-records for each $i$ the observation of $d$ co-variate (phenotype, environmental
-gradient). The matrices $U$ of size $n /times K$ records the scores for $K$
-latent factors. The $K$ latent factor loading are stored in the $L \times K$
-matrix $V$. The $n \times L$ matrix $E$ is the residual error matrix.
 
-A classic method to estimate $U$ $V$ and $B$ is to write the following
-optimization problem 
+Here the $\G$ matrix records $n$ observations of a vector $\G_i = (\G_{i 1},...,
+\G_{i L})$ of $L$ variables (single nucleotide polymorphism, methylation level).
+Variation of $\G_{i}$ are explained by K latent factor ($\U \V^T$) and the
+interest covariates ($\X$). The $\X$ matrix records each $i$ observation $d$
+covariates (phenotype, environmental gradient). The matrices $\U$ of size $n
+/times K$ records scores for the $K$ latent factors. The $K$ latent factor
+loading are stored in the $L \times K$ matrix $\V$. The $n \times L$ matrix $\E$
+is the residual error matrix.
 
-#+NAME: eqn:optim_no_reg
+
+A classic method to estimate $\U$ $\V$ and $\B$ is to write the following
+loss function
+
 \begin{equation}
-min \frac{1}{2} ||G - U V^T - X B^T||_{F}^2 
+\label{eq:optim_no_reg}
+L(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\G - \U \V^T - \X \B^T}_{F}^2
 \end{equation}
 
-where $||.||_{F}$ is the Frobenius norm. This optimization problem arises when
-considering the log-likelihood for a Gaussian residual error matrix $E$. 
+where $\norm{.}_{F}$ is the Frobenius norm. This loss function arises when
+considering the log-likelihood if $\E$ contains independent Gaussian errors
+with means $0$ and $var(\E_{i,j}) = \sigma$.
 
-We can easily show that the equation [[eqn:optim_no_reg]] do not allow to
-estimate unique latent factor product $U V^T$ and a unique effect matrix
-$B$. Then we can not uniquely identify the part explain by the $K$ latent factor
-and the part explain by the co-variate of interest. We have to add a
-regularization term to fix that.
+We can show that the loss function eqref:eq:optim_no_reg do not allow to define
+an optimization problem with a unique latent factor product $\U \V^T$ and a
+unique effect matrix $\B$. It means that we can not uniquely identify the part
+of the variance explained by the $K$ latent factor and the part explained by
+$\X$. We have to add a regularization term to fix that.
 
 *** demo
-We write $B^*$ the unique matrices of optimization problem [[eqn:optim_no_reg]],
-and $U^*$, $V^*$ possible matrix for this solution. We remark that $U^*$ and
-$V^*$ are not unique because $U^* R$ and $V^*R^{-1}$ is still a valid solution
-of [[eqn:optim_no_reg]].
+We write $\hat{\B}$ the unique matrices of optimization problem defined by the
+loss function [[eqref:eq:optim_no_reg]], and $\hat{\U}$, $\hat{\V}$ possible matrices for
+this solution. First, we remark that $\hat{\U}$ and $\hat{\V}$ are not unique because,
+for a invertible matrix $L(\hat{\U}, \hat{\V}^{T}, \hat{\B}) = L(\hat{\U} \matr{R},
+\matr{R}^{-1} \V^{T}, \hat{\B})$.
 
-Then $U^{**} = U^* + X $ and $B^{**} = B^* - V^*$ is still a valid solution for
-[[eqn:optim_no_reg]].
+
+Then, we remark that for a any matrix $\matr{C}$ 
+
+\begin{equation*}
+L(\hat{\U} - \X \matr{C}, \hat{\V}^{T}, \hat{\B} + \hat{\V} \matr{C}^T}) = L(\hat{\U},
+\hat{\V}^{T}, \hat{\B})
+\end{equation*}
+
 
 ** Ridge regularized estimation
-In order to force uniqueness of the latent factor product matrix $C = U V^T$ and
-effect size $B$. We can write the following problem
-
-#+NAME: eqn:optim_ridge_reg
+In order to have uniqueness of the latent factor product matrix $\C = \U \V^T$ and
+effect size $\B$ we propose the following objective function
 \begin{equation}
-min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||^2_2.
+\label{eq:optim_ridge_reg}
+L_{ridge}(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\G - \U \V^T - \X \B^T}_{F}^2 + \lambda \norm{B}^{2}_{2}.
 \end{equation}
-
-The optimization problem [[eqn:optim_ridge_reg]] has unique solution $C$ and $B$
-which can be write
-
-$$ 
-C = P_{\lambda}^{-1} * svd_K(P_{\lambda} G )
+We can show that minimizing the function eqref:eq:optim_ridge_reg lead to unique
+solutions that we write
+\begin{align*}
+\hat{\C} & =  \PP_{\lambda}^{-1} * svd_{K}(\PP_{\lambda} \G ) \\
+\hat{\B} & = (\X^{T} \X + \lambda \Id_{d})^{-1} \X^{T} (G - \hat{C}).
+\end{align*}
+With $\PP_{\lambda}$ a oblique projection matrix such that
+$$
+\PP_{\lambda} = \Id_{n} - (\X^T \X + \lambda \Id_{n})^{-1} \X^T \X.
 $$
 
-and 
-
-$$
-... 
-$$
 
 
 ** Lasso regularized estimation
-
-to enforce the uniqueness of $C$ and $B$, we propose a lasso regularized
-optimization problem
-
-#+NAME: eqn:optim_lasso_reg
-$$min_{rk(C) \leq K} \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||_1.$$ 
-
-Contrary to [[eqn:optim_ridge_reg]], we can not write analytic solution of
-[[eqn:optim_lasso_reg]]. Moreover the problem is not convex which not enable to
-easily guarantee uniqueness of the solution and find an efficient algorithm. To
-avoid this problem we can make a convex relaxation of the optimization problem
-
-#+NAME: eqn:optim_convex_lasso_reg
-$$min \frac{1}{2} ||G - C - X B^T||_{F}^2 + \lambda ||B||_1 +
-\gamma ||C||_*.$$ 
+We propose an other objective function with $L_{1}$ regularization
+\begin{equation}
+\label{eq:optim_lasso_reg}
+L_{lasso}(\C, \B) =  \frac{1}{2} \norm{\G - \C - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\C}_{*}.
+\end{equation}
+Where $\norm{.}_{*}$ is the nuclear norm. Contrary to function
+eqref:eq:optim_ridge_reg, loss function eqref:eq:optim_lasso_reg is a function
+of $\C$ rather than $\U$ and $\V$. This variable change allow $L_{lasso}$ to be
+a convex function.
 
 *** An alternated algorithm
-In this paragraph we introduce an alternated algorithm which return solution of
-[[eqn:optim_convex_lasso_reg]]. This algorithm start with null matrix and
-alternate the two step:
-- compute $B_{i} as the solution of the lasso linear regression problem
+In this paragraph we introduce an alternated algorithm which minimize the convex
+function eqref:eq:optim_lasso_reg. We start with null matrix and alternate the
+two step:
+- compute $B_{i}$ as minimizing the loss function
 $$
-min \frac{1}{2} ||(G - C_{i-1}) - X B^T||_{F}^2 + \lambda ||B||_1 
+L_{lasso 1} =  \frac{1}{2} ||(\G - \C_{i-1}) - \X \B^T||_{F}^2 + \lambda ||\B||_1.
 $$
-- compute C as the solution of 
-min \frac{1}{2} ||(G - X B_i^T)- C_{i-1} ||_{F}^2 + \gamma ||C||_*
+- compute C as minimizing the loss function
+$$
+L_{lasso 2} = \frac{1}{2} ||(\G - \X \B_i^T)- \C_{i-1} ||_{F}^2 + \gamma ||\C||_{*}
 $$
 which is give by the singular value shrinkage operator.
 
@@ -335,3 +338,5 @@ and normalized with standard deviation.
 
 bibliographystyle:unsrt
 bibliography:../biblio.bib
+
+#  LocalWords:  methylation polymorphism nucleotide Frobenius invertible

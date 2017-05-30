@@ -923,8 +923,12 @@ On prend les données climatique de worldclim et on fait l'acp ;-)
 - State "STARTED"    from "TODO"       [2017-05-29 lun. 16:38]
 - State "TODO"       from              [2017-05-29 lun. 16:03]
 :END:
-**** DEBUG Run on krakenator
+**** WAITING Run on krakenator
 :LOGBOOK:
+- Note taken on [2017-05-30 mar. 11:17] \\
+  waiting from cate...
+- State "WAITING"    from "RUNNING"    [2017-05-30 mar. 11:17]
+- State "RUNNING"    from "DEBUG"      [2017-05-30 mar. 10:31]
 - State "DEBUG"      from "RUNNING"    [2017-05-29 lun. 18:45]
 - State "RUNNING"    from              [2017-05-29 lun. 16:36]
 :END:
@@ -972,29 +976,6 @@ pour les valeur singuliere
 
 #+end_src
 
-#+RESULTS:
-#+begin_example
-NULL
-NULL
-starting worker pid=7521 on localhost:11115 at 16:31:15.698
-Loading required package: ThesisRpackage
-loaded ThesisRpackage and set parent environment
-Loading required package: ThesisRpackage
-loaded ThesisRpackage and set parent environment
-Loading required package: ThesisRpackage
-loaded ThesisRpackage and set parent environment
-Loading required package: ThesisRpackage
-loaded ThesisRpackage and set parent environment
-Loading required package: ThesisRpackage
-loaded ThesisRpackage and set parent environment
-Loading required package: ThesisRpackage
-loaded ThesisRpackage and set parent environment
-Loading required package: ThesisRpackage
-loaded ThesisRpackage and set parent environment
-TRACE [2017-05-29 16:32:47] attaching impute
-Error in { : task 1 failed - "only d = 1 allowed ;-)"
-
-#+end_example
 
 **** TODO Plot
 :PROPERTIES:
