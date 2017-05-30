@@ -960,7 +960,7 @@ pour les valeur singuliere
 
   ## sampler
   s <- TrueSampler(G.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS.rds",
-                   X.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/G_EAS.rds",
+                   X.file = "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/X_EAS.rds",
                    outlier.file = NULL)
 
   expr <- MethodBatchExperiment("1000 Genome EAS",
