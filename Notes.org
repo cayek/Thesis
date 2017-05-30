@@ -2823,8 +2823,10 @@ A dataset with only European and chromosome 22, maf filter to 5%.
   # save
   saveRDS(G.EUR.filtered, file = "European_Chrm22.maf.05.rds")
 #+end_src
-***** STARTED Data preprocessing with plink
+***** DONE Data preprocessing with plink
+CLOSED: [2017-05-30 mar. 17:53]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-30 mar. 17:53]
 - State "STARTED"    from "TODO"       [2017-05-17 mer. 15:38]
 - Note taken on [2017-05-17 mer. 15:37] \\
   On va faire les chose proprement avec plink ! ca a l'air de bien tourner, du
@@ -9295,3 +9297,18 @@ cite:dubois2010multiple C'est l'article du dataset Celiac
  cite:gerard2017unifying Un papier qui veut faire comme lfmm, cad identifier la
  vairance indesirable pour faire une association.
 
+
+** TODO 2007 - PLINK: A Tool Set for Whole-Genome Association and  Population-Based Linkage Analyses
+ :PROPERTIES:
+  :Custom_ID: Purcell_2007
+  :AUTHOR: Purcell {\it et al.}
+  :JOURNAL: The American Journal of Human Genetics
+  :YEAR: 2007
+  :VOLUME: 81
+  :PAGES: 559–575
+  :DOI: 10.1086/519795
+  :URL: http://dx.doi.org/10.1086/519795
+ :END:
+
+  cite:Purcell_2007 C'est la papier a cité pour citer plink (voir [[http://zzz.bwh.harvard.edu/plink/contact.shtml][le site
+  deplink]]). Ils faut aussi citer le logiciel...

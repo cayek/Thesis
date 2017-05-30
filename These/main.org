@@ -11,11 +11,10 @@
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
 
-# #+LATEX_CLASS: IEEEtran
-#+LaTeX_CLASS: article
-# #+LaTeX_CLASS: acm-proc-article-sp
+#+LaTeX_CLASS: thesis
+#+LATEX_HEADER: \input{notations.tex}
 
-#+BABEL: :session *R* :cache yes :results output graphics :exports both :tangle yes 
+#+HTML_MATHJAX: align: left indent: 5em tagside: left font: Neo-Euler
 
 * État de l'art 
 ** Contexte
@@ -24,6 +23,280 @@
 ** Problématique et plan
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
 * Estimation des facteurs latents pour corriger les test d'association 
+** Introduction
+** Materials and methods
+:PROPERTIES:
+:header-args: :cache no :eval no-export :results output :exports none
+:END:
+
+*** Model 
+Following the common notation in linear factor regression we write the following
+model 
+\begin{equation}
+\label{eq:model}
+\G = \U \V^T + \X \B^T + \E 
+\end{equation}
+Here the $\G$ matrix records $n$ observations of a vector $\G_i = (\G_{i 1},...,
+\G_{i L})$ of $L$ variables (single nucleotide polymorphism, methylation level).
+Variation of $\G_{i}$ are explained by K latent factor ($\U \V^T$) and the
+interest covariates ($\X$). The $\X$ matrix records each $i$ observation $d$
+covariates (phenotype, environmental gradient). The matrices $\U$ of size $n
+/times K$ records scores for the $K$ latent factors. The $K$ latent factor
+loading are stored in the $L \times K$ matrix $\V$. The $n \times L$ matrix $\E$
+is the residual error matrix.
+
+
+A classic method to estimate $\U$ $\V$ and $\B$ is to write the following
+loss function
+\begin{equation}
+\label{eq:optim_no_reg}
+L(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\G - \U \V^T - \X \B^T}_{F}^2
+\end{equation}
+where $\norm{.}_{F}$ is the Frobenius norm. This loss function arises when
+considering the log-likelihood if $\E$ contains independent Gaussian errors
+with means $0$ and $var(\E_{i,j}) = \sigma$.
+
+
+We can show that the loss function eqref:eq:optim_no_reg do not allow to define
+an optimization problem with a unique latent factor product $\U \V^T$ and a
+unique effect matrix $\B$. It means that we can not uniquely identify the part
+of the variance explained by the $K$ latent factor and the part explained by
+$\X$. We have to add a regularization term to fix that.
+
+**** demo
+We write $\hat{\B}$ the unique matrices of optimization problem defined by the
+loss function [[eqref:eq:optim_no_reg]], and $\hat{\U}$, $\hat{\V}$ possible matrices for
+this solution. First, we remark that $\hat{\U}$ and $\hat{\V}$ are not unique because,
+for a invertible matrix $L(\hat{\U}, \hat{\V}^{T}, \hat{\B}) = L(\hat{\U} \matr{R},
+\matr{R}^{-1} \V^{T}, \hat{\B})$.
+
+
+Then, we remark that for a any matrix $\matr{C}$ 
+
+\begin{equation*}
+L(\hat{\U} - \X \matr{C}, \hat{\V}^{T}, \hat{\B} + \hat{\V} \matr{C}^T}) = L(\hat{\U},
+\hat{\V}^{T}, \hat{\B})
+\end{equation*}
+*** Ridge regularized estimation
+In order to have uniqueness of the latent factor product matrix $\C = \U \V^T$ and
+effect size $\B$ we propose the following objective function
+\begin{equation}
+\label{eq:optim_ridge_reg}
+L_{ridge}(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\G - \U \V^T - \X \B^T}_{F}^2 + \lambda \norm{B}^{2}_{2}.
+\end{equation}
+We can show that minimizing the function eqref:eq:optim_ridge_reg lead to unique
+solutions that we write
+\begin{align*}
+\hat{\C} & =  \PP_{\lambda}^{-1} * svd_{K}(\PP_{\lambda} \G ) \\
+\hat{\B} & = (\X^{T} \X + \lambda \Id_{d})^{-1} \X^{T} (G - \hat{C}).
+\end{align*}
+With $\PP_{\lambda}$ a oblique projection matrix such that
+$$
+\PP_{\lambda} = \Id_{n} - (\X^T \X + \lambda \Id_{n})^{-1} \X^T \X.
+$$
+*** Lasso regularized estimation
+We propose an other objective function with $L_{1}$ regularization
+\begin{equation}
+\label{eq:optim_lasso_reg}
+L_{lasso}(\C, \B) =  \frac{1}{2} \norm{\G - \C - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\C}_{*}.
+\end{equation}
+Where $\norm{.}_{*}$ is the nuclear norm. Contrary to function
+eqref:eq:optim_ridge_reg, loss function eqref:eq:optim_lasso_reg is a function
+of $\C$ rather than $\U$ and $\V$. This variable change allow $L_{lasso}$ to be
+a convex function.
+
+**** An alternated algorithm
+In this paragraph we introduce an alternated algorithm which minimize the convex
+function eqref:eq:optim_lasso_reg. We start with null matrix and alternate the
+two step:
+- compute $B_{i}$ as minimizing the loss function
+$$
+L_{lasso 1} =  \frac{1}{2} ||(\G - \C_{i-1}) - \X \B^T||_{F}^2 + \lambda ||\B||_1.
+$$
+- compute C as minimizing the loss function
+$$
+L_{lasso 2} = \frac{1}{2} ||(\G - \X \B_i^T)- \C_{i-1} ||_{F}^2 + \gamma ||\C||_{*}
+$$
+which is give by the singular value shrinkage operator.
+
+*** Hyper-parameters choice
+:LOGBOOK:
+- Note taken on [2017-05-25 Thu 11:52] \\
+  Pour ridge faire ma petite heuristic pour trouver lambda.
+  Pour lasso aussi (chemin de reg).
+- Note taken on [2017-05-25 Thu 11:49] \\
+  Pour une estimation precise des parametre il y a la cross validation. Sinon
+  comme la méthode resemble a l'acp auquel on a enlevé la variance expliqué par X
+  on peut utiliser les même éthodes que pour l'acp. Quite à surestimer le nombre
+  de facteur lattent.
+- Note taken on [2017-05-25 Thu 11:46] \\
+  Bien preciser que on veut a tou pris eviter les truc du style j'impute a
+  l'arrache avant etc...
+:END:
+**** Cross validation
+:LOGBOOK:
+- Note taken on [2017-05-26 Fri 14:46] \\
+  cf mon cahier
+:END:
+Cross validation is a classic method to select hyper-parameter. We propose here
+method adapted to our algorithms. 
+... 
+
+However, cross validation procedure can be long to run in particular on very big
+data set. We propose other procedure to assess hyper-parameters that gave good
+results our experiments.
+
+**** Choice of K using singular value
+Methods presented in this paper are very close to the Principal Component
+Analysis (PCA), we can see them as a PCA $G - X^B$. Thus we can use method use
+for the PCA to estimate the number of latent factor. These method lead to an
+overestimated number of factor in the model [[ref:eq:model][(1)]] because the co-variate
+would be considered as latent variable. However, because the goal of our methods
+is to estimate latent variation while protection variation explain by co-variate
+$X$, algorithms are robust to overestimated $K$.
+
+For real data set, the number of latent variable $K$ by visualizing the singular
+of the $G$ matrix. We chose intentionally softly overestimated to be sure to
+consider all the latent variation in the data.
+**** Heuristic to choice of $\lambda$ ridge
+:LOGBOOK:
+- Note taken on [2017-05-26 Fri 14:45] \\
+  voir mon cahier et il va falloir normaliser lambda ?? a voir !!C'est chiant car
+  j'ai deja lancé les experiences !!
+:END:
+...
+We observed that for a centered and normalized $G$ and $X$ $\lambda = ?$
+provided good results in our experiments.
+
+**** Heuristic to choice of $\gamma$ lasso
+This hyper-parameter impact the rank of the $C$ matrix. To assess the gamma
+value we compute singular values of G $(\mu_1, ..., \mu_n)$. Then we set 
+
+$$
+\gamma = \frac{(\mu_K + \mu_{K + 1})}{2} 
+$$
+
+for $K$ the chosen number of latent factors. In our experiments, we observed
+that for such computed $\gamma$ the rank of $C$ returned by lasso algorithm was
+$K$.
+
+
+**** Heuristic to choice of $\lambda$ lasso
+This hyper-parameter impact the number of line set to zero in $B$. We know that
+only a part of observe variable $G_j$ are correlated with the variable $X$. So
+we can interpret the proportion on non zero line in $B$ as the proportion $p$ of
+variable which correlate with $X$. To find the lambda which correspond to the
+proportion $p$ we propose an heuristic based on a regularization path of lambda
+value. We start with smallest value of $\lambda$ such that 
+- $C = D_{\gamma}(G)
+- B = argmin ....  = 0
+
+Then we construct a sequence of m values of $\lambda$ decreasing from
+$\lambda_max to $\lambda_min$ on the log scale. Typical values are \epsilon =
+0.001 and K = 100.
+
+*** Hypothesis testing
+:LOGBOOK:
+- Note taken on [2017-05-25 Thu 11:55] \\
+  parler de lm : G ~U + X 
+  ET
+  la recalibration par mad + median
+:END:
+
+**** Linear model with latent factor score
+:LOGBOOK:
+- Note taken on [2017-05-26 Fri 15:35] \\
+  faut que je choississe les notations mieux que ca, je m'enmmèle la ...
+:END:
+After computing latent factors score matrix $U$ with the lasso or ridge
+algorithm, we use them as co-variables with $X$ in a linear model. This enable
+to compute the pvalue to test the null hypothesis 
+$$
+B_j = 0
+$$
+
+where in $B$ is the ....
+
+**** Hypothesis calibration
+Even with latent factors correction we can observed not calibrated p-value. This
+can be due to model misspecification, presence of not interested and small
+effects or dependency between variables. As we are typically interested by a small
+proportion of variables we used empirical correction to have score with a mean
+to zero and standard deviation to 1. We used the median and the mad as robust
+estimators of the mean and standard deviation.
+
+*** Similar methods
+<<sec:similar_method>>
+**** lm and lm + pca
+We comparared results of our method to two well known method the linear model
+and the linear model with PCA scores. 
+**** cate
+
+**** sva
+**** famt
+*** Simulations and data
+
+**** Generative model simulation
+
+We used equation to generate generative model dataset. The latent factor
+scores and loadings $U$ and $V$ were generated using a multivariate gaussian
+distribution with a zero mean and a $K$ identity matrix for the covariance
+matrix where is the number of latent factor. The error matrix $E$ was
+generated using a multivariate gaussian distribution with a zero mean and a
+$L$ identity matrix for the covariance matrix where $L$ is the number of
+variables. The co-variable $X$ was generated with a normal distribution with
+the mean equal to zero and the standard deviation equal to one such that the
+Pearson linear correlation between $X$ and $U_1$ the first latent score
+matrix equal to $c$.
+
+**** Real data example
+In this section we present the real data we used to compare lasso LFMM, ridge
+LFMM with similar methods presented in section [[sec:similar_method]]. To evaluate
+the utility of our methods on several situation we select study where correction
+for confounding variables is an important step. We realized genome wide
+association study (GWAS), an genome-wide association study (EWAS) and an
+ecological association study (EAS). Before running algorithm $\G$ and $\X$
+matrix was centered and normalized with standard deviation for all the study. We
+now describe preprocessing step for each study.
+
+***** Association study of DNA methylation with rheumatoid arthritis (EWAS)
+For the EWAS we chose data from a recent association study of DNA with
+rheumatoid arthritis (RA) cite:Liu_2013. We retrieve the RA data from Gene
+Expression Omnibus (GEO) database (accession number GSE42861). Following
+cite:Zou_2014 we filtered out site if its average probe $\beta$ value was above
+0.8 are below 0.2. We finally obtain $n = 689$ and $L = 162038$.
+
+#+BEGIN_SRC R :session *ssh krakenator*
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
+  dim(G)
+#+END_SRC
+
+#+RESULTS:
+: [1]    689 162038
+
+For this data set confounding variables (batch effect, age, gender, smoking
+status, cell-type composition) are known but we did not use them in methods.
+Thus, we can compare methods output with output of method considering explicitly
+these variables cite:Rahmani_2016,Zou_2014.
+
+***** Association study of genetic variants with Celiac disease (GWAS)
+For the GWAS we chose data from an association study of SNPs with Celiac disease
+citep:dubois2010multiple. We keep only individual and SNPs with a proportion of
+missing value inferior to $5\%$. Then, we filter out variants with minor allele
+frequency below $0.05$ and Hardy-Weinberg equilibrium exact test \pvalue below
+$1e-10$. After that we filter out individuals which have identity-by-descent
+proportion (first by pairs) superior to $0.08$. Finally, we perform an linkage
+disequilibrium pruning. These preprocessing step was made with the software
+Plink cite:Purcell_2007.
+
+***** Association study of genetic variants with climatic data (EAS)
+For EAS
+** Results
+** Discussion
+** Figures and tables
+*** Numerical validation
+
+
 * Conclusion 
 * COMMENT perspectives
 :LOGBOOK:
@@ -40,3 +313,10 @@
   être que c'est pas la peine de se prendre la tête... Surtout que la cross
   validation j'en aurai deja parlé !
 :END:
+
+
+bibliographystyle:unsrt
+bibliography:../biblio.bib
+
+#  LocalWords:  methylation polymorphism nucleotide Frobenius invertible
+#  LocalWords:  preprocessing
