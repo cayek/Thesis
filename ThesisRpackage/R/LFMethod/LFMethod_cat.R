@@ -20,7 +20,7 @@ cateMethod <- function(K,
 fit.cateMethod <- function(m, dat, reuse = FALSE) {
 
   L <- ncol(dat$G)
-  n <- ncol(dat$G)
+  n <- nrow(dat$G)
 
   cate.results <- cate::cate.fit(X.primary = dat$X,
                                  X.nuis = dat$X[,-1],

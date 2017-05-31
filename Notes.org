@@ -6509,9 +6509,11 @@ We only run the computation of lattent factor score.
 
 #+end_src
 
-**** DONE cate
-CLOSED: [2017-05-31 mer. 08:35]
+**** RUNNING cate
 :LOGBOOK:
+- Note taken on [2017-05-31 mer. 08:54] \\
+  ok il y avait un bug...
+- State "RUNNING"    from "DONE"       [2017-05-31 mer. 08:52]
 - State "DONE"       from "RUNNING"    [2017-05-31 mer. 08:35]
 - Note taken on [2017-05-29 lun. 13:25] \\
   C'est parti sur krakenator, on va voir si ca passe !!
@@ -6538,19 +6540,6 @@ We only run the computation of lattent factor score.
 
 #+end_src
 
-#+RESULTS:
-#+begin_example
-  DEBUG [2017-05-29 13:18:30] We set the seed said:
-  --------------------------------
-
-  --------------------------------
-  Warning messages:
-  1: executing %dopar% sequentially: no parallel backend registered
-  2: In matrix(cate.results$Z, n, m$K) :
-    la longueur des données [136395] n'est pas un diviseur ni un multiple du nombre de lignes [94497]
-#+end_example
-
-Il y a eu un warning bizare... On passe a la suite on vera bien ! 
 
 *** STARTED Run on the whole dataset
 :LOGBOOK:
@@ -6934,14 +6923,39 @@ method.batch$m.sva <- finalSVAMethod(K = 9)
 ## famt
 method.batch$m.famt <- finalFamtMethod(K = 9)
 #+end_src
-**** TODO cate
+**** WAITING cate
 :LOGBOOK:
+- State "WAITING"    from "RUNNING"    [2017-05-31 mer. 08:53]
+- State "RUNNING"    from "TODO"       [2017-05-31 mer. 08:36]
 - State "TODO"       from              [2017-05-23 mar. 15:34]
 :END:
+
+***** run
 #+begin_src R :results output :exports both
-## cate
-method.batch$m.cate <- finalcateMethod(K = 9)
+  library(ThesisRpackage)
+
+  ## we retrieve fitted method
+  expr <- retrieveExperiment(136)
+  m <- expr$method.batch[[1]]
+  rm(expr)
+  m$epsilon <- NULL
+  m$C <- NULL
+  m$P <- NULL
+  gc()
+  object.size(m)
+
+  m$nickname
+  dim(m$U)
+  ## run lm
+  expr <- MethodBatchExperiment("Celiac lm whole dataset with U",
+                                s = Article3_Celiac_fake_sampler(), 
+                                method.batch = list(m = m),
+                                func = Article3_Celiac_lm)
+  expr <- runExperiment(expr, save = TRUE)
+
 #+end_src
+
+
 ** DONE LEA lfmm tuto                                             :3Article:
 CLOSED: [2017-05-23 mar. 11:11]
 :LOGBOOK:
