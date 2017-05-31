@@ -76,3 +76,8 @@ Notes.tex
 GPATH
 GRTAG
 GTAGS
+
+# latex
+*.bbl
+These/main.pdf
+These/main.tex
