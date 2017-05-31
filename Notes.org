@@ -7557,10 +7557,10 @@ Leur B est le V de lfmm
 :END:
 
 cite:article_Toh_Yun_2010
-C'est article est interessant pour file:./org-ref-pdfs/article_Toh_Yun_2010.pdf::9 
+C'est article est interessant pour file:./Biblio/org-ref-pdfs/article_Toh_Yun_2010.pdf::9 
 Il donne le lien entre SVD et nuclear norm : 
 #+DOWNLOADED: /tmp/screenshot.png @ 2017-01-06 13:28:59
-[[file:org-download/Articles/screenshot_2017-01-06_13-28-59.png]]  
+[[file:./Biblio/org-download/Articles/screenshot_2017-01-06_13-28-59.png]]  
    
 
 ** 2004 - Generalized Multilevel Structural Equation Modeling :LFMM:LFMMLike:GLLAMM:
@@ -7592,7 +7592,7 @@ cite:rabe-hesketh04_gener_multil_struc_equat_model
 cite:cai10_singul_value_thres_algor_matrix_compl
 Démo de
 #+DOWNLOADED: /tmp/screenshot.png @ 2017-01-06 14:49:43
-[[file:org-download/Articles/screenshot_2017-01-06_14-49-43.png]]
+[[file:./Biblio/org-download/Articles/screenshot_2017-01-06_14-49-43.png]]
 Du coup c'est un example de preuve avec la norme nucléaire (donc calcul de subgradient).
 Rmk: dans la preuve il font pas l'analyse, il font que la synthèse. De toute facon ils ont 
 l'unicité car c'est strictement convexe !!!

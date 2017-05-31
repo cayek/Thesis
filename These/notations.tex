@@ -1,25 +1,33 @@
+%% common 
 \newcommand{\matr}[1]{\mathbf{#1}} %% \matr{}
 \newcommand{\Y}{\matr{Y}} %% Output matrix
-
-%% common 
+\newcommand{\Yrow}{n} %% Y row dim
+\newcommand{\Ycol}{p} %% Y col dim
 \newcommand{\Id}{\matr{Id}} %% \Id
 \newcommand\norm[1]{\left\lVert#1\right\rVert} %% \norm
 \newcommand{\pvalue}{$p$-value} %% \pvalue
-\newcommand{\Yrow}{n} %% Y row dim
-\newcommand{\Ycol}{p} %% Y col dim
-\newcommand{\Xcol}{d} %% X col dim
-\newcommand{\Ucol}{K} %% number of factor
+\newcommand{\Var}{\mathrm{Var}} %% variance
+\newcommand{\RR}{\mathbb{R}} %% real ensemble
 
 %% lattent factor model
+\newcommand{\K}{K} %% number of latent factor
 \newcommand{\U}{\matr{U}} %% factor score matrix
+\newcommand{\Ucol}{\K} %% U col dim
+\newcommand{\Urow}{\Yrow} %% U row dim
 \newcommand{\V}{\matr{V}} %% factor loading matrix
+\newcommand{\Vcol}{\K} %% V col dim
+\newcommand{\Vrow}{\Ycol} %% V row dim
 \newcommand{\X}{\matr{X}} %% primary variables matrix
+\newcommand{\Xcol}{d} %% X col dim
+\newcommand{\Xrow}{\Yrow} %% X row dim
 \newcommand{\B}{\matr{B}} %% primary effects matrix
+\newcommand{\Bcol}{\Xcol} %% B col dim
+\newcommand{\Brow}{\Ycol} %% B row dim
+
 \newcommand{\E}{\matr{E}} %% residual error matrix
 \newcommand{\C}{\matr{C}} %% approximation matrix with latent factor/
                           %% approximation matrix
-
-\newcommand{\PP}{\matr{P}} %% \PP
+\newcommand{\obP}{\matr{P}_{\lambda}} %% U row dim
 
 
 %% name of method

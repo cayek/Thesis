@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: org -*-
 
-# #+TITLE: Méthodes de factorisation matricielle pour la génomique des populations et tests d'association
+#+TITLE: Méthodes de factorisation matricielle pour la génomique des populations et tests d'association
 #+AUTHOR:      Kevin Caye
 
 #+LANGUAGE:  en
@@ -18,7 +18,7 @@
 #+HTML_MATHJAX: align: left indent: 5em tagside: left font: Neo-Euler
 
 #  LocalWords:  methylation polymorphism nucleotide Frobenius invertible SNP
-#  LocalWords:  preprocessing dataset
+#  LocalWords:  preprocessing dataset RidgeLFMM LassoLFMM
 
 bibliographystyle:unsrt
 bibliography:../biblio.bib
@@ -34,7 +34,7 @@ bibliography:../biblio.bib
 ** Models
 *** Model 
 We present here the model and the notations which will be used in the article.
-Following the common notation in linear factor regression we write the following
+Following the common notation in latent factor mixed model (LFMM) we write the following
 model
 \begin{equation}
 \label{eq:model}
@@ -57,7 +57,7 @@ L(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2
 \end{equation}
 where $\norm{.}_{F}$ is the Frobenius norm. This loss function arises when
 considering the log-likelihood if $\E$ rows are independent and Gaussian 
-with means $0$ and $var(\E_{i,j}) = \sigma$.
+with means $0$ and $\Var(\E_{i,j}) = \sigma$.
 
 However, the function $L$ do not allow to define unique factor matrices product
 $$\C = \U \V^T$$ and a unique primary effect matrix $\B$. It means that we can
@@ -82,50 +82,114 @@ L(\hat{\U} - \X \matr{C}, \hat{\V}^{T}, \hat{\B} + \hat{\V} \matr{C}^T}) = L(\ha
 Thus, $\hat{\B}$ is not unique.
 
 
-*** Ridge regularized estimation
-In this section we present ....
-
-In order to have uniqueness of the latent factor product matrix $\C = \U \V^T$ and
-effect size $\B$ we propose the following objective function
+*** Ridge regularized latent factor mixed model (RidgeLFMM)
+In this section we present a ridge regularized latent factor mixed model
+(RidgeLFMM). The regularized loss function is written as follow 
 \begin{equation}
 \label{eq:optim_ridge_reg}
-L_{ridge}(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\G - \U \V^T - \X \B^T}_{F}^2 + \lambda \norm{B}^{2}_{2}.
+L_{ridge}(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2 + \lambda \norm{B}^{2}_{2}.
 \end{equation}
-We can show that minimizing the function eqref:eq:optim_ridge_reg lead to unique
-solutions that we write
+We can show that minimizing the function eqref:eq:optim_ridge_reg leads to the
+following unique solution
 \begin{align*}
-\hat{\C} & =  \PP_{\lambda}^{-1} * svd_{K}(\PP_{\lambda} \G ) \\
-\hat{\B} & = (\X^{T} \X + \lambda \Id_{d})^{-1} \X^{T} (G - \hat{C}).
+\hat{\U} \hat{\V} & =  \sqrt{\obP}^{-1} * svd_{\K}(\sqrt{\obP} \Y ) \\
+\hat{\B} & = (\X^{T} \X + \lambda \Id_{d})^{-1} \X^{T} (G - \hat{\U} \hat{\V}).
 \end{align*}
-With $\PP_{\lambda}$ a oblique projection matrix such that
-$$
-\PP_{\lambda} = \Id_{n} - (\X^T \X + \lambda \Id_{n})^{-1} \X^T \X.
-$$
-*** Lasso regularized estimation
-We propose an other objective function with $L_{1}$ regularization
+Where $svd_{\K}(\matr{A})$ is the best approximation of rank $\K$ for the matrix
+$\matr{A}$ given by the singular value decomposition. $\Id_{q}$ is the $q \times
+q$ identity matrix. The $\Yrow \times \Yrow$ matrix $\obP$ is an oblique
+projection matrix defined as $$\obP = \Id_{n} - \X (\X^T \X + \lambda \Id_{n})^{-1}
+\X^T.$$ The matrix $\sqrt{\obP}$ is define such that 
+\begin{equation*}
+\obP = \sqrt{\obP}^{2}
+\end{equation*}
+
+
+**** Proof
+We want to find 
+\begin{align*}
+\hat{\U} & \in \RR^{\Urow \times \Ucol} \\
+\hat{\V} & \in \RR^{\Vrow \times \Vcol} \\
+\hat{\B} & \in \RR^{\Brow \times \Bcol} \\
+\end{align*}
+which minimize the function $L_{ridge}$ define in eqref:eq:optim_ridge_reg. We
+start to compute the Jacobian of $L_{ridge}$ along $\B$, $\U$ and $\V$
+\begin{equation}
+\begin{cases}
+\label{eq:partial_Lridge}
+& \frac{\partial L_{ridge}}{\partial \B}(\U, \V, \B) = \X^{T} (\U \V^{T} + \X \B^{T} - \Y) + \lambda \Id_{d} \B^{T} \\
+& \frac{\partial L_{ridge}}{\partial \V}(\U, \V, \B) = \U^{T} (\U \V^{T} + \X \B^{T} - \Y) \\
+& \frac{\partial L_{ridge}}{\partial \U}(\U, \V, \B) = (\U \V^{T} + \X \B^{T} - \Y) \V
+
+\end{cases}
+\end{equation}
+The minimum is reach if and even if  eqref:eq:partial_Lridge equal to
+zero. We can write
+\begin{equation}
+\begin{cases}
+\label{eq:euler_Lridge}
+& \hat{\B}^{T} = (\X^{T} \X + \lambda \Id_{\Bcol})^{-1} \X^{T} (\Y - \U \V) \\
+& 0 = \U^{T} (\U \V^{T} + \X \B^{T} - \Y) \\
+& 0 = (\U \V^{T} + \X \B^{T} - \Y) \V
+\end{cases}
+\end{equation}
+Then by using the first line of eqref:eq:euler_Lridge the two last ones we have
+\begin{equation}
+\label{eq:euler_UV_Lridge}
+\begin{cases}
+&  0 = \hat(\U)^{T} \obP (\hat{\U} \hat{\V}^{T} - \Y) \\
+& 0 = \obP (\hat{\U} \hat{\V}^{T} - \Y) \hat{\V}
+\end{cases}
+\end{equation}
+Finally, finding the solutions $\hat{\U}$ and $\hat{\V}$ of
+eqref:eq:euler_UV_Lridge is equivalent to find the minimum of 
+\begin{equation}
+L^{'}_{ridge}(\U, \V) = \frac{1}{2} \norm{ \sqrt{\obP} (\Y - \U \V^{T})}_{F}^{2}
+\end{equation}
+which is the classic problem of finding $\K$ rank best approximation of the matrix
+$$ \sqrt{\obP} \Y.$$
+As result we have 
+\begin{align*}
+\hat{\U} \hat{\V} & =  \sqrt{\obP}^{-1} * svd_{\K}(\sqrt{\obP} \Y ) \\
+\hat{\B} & = (\X^{T} \X + \lambda \Id_{d})^{-1} \X^{T} (G - \hat{\U} \hat{\V}).
+\end{align*}
+
+*** Lasso regularized latent factor mixed model (LassoLFMM)
+In this section we present a lasso regularized latent factor mixed model (LassoLFMM)
+The regularized loss function is written as follow
 \begin{equation}
 \label{eq:optim_lasso_reg}
-L_{lasso}(\C, \B) =  \frac{1}{2} \norm{\G - \C - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\C}_{*}.
+L_{lasso}(\U, \V, \B) =  \frac{1}{2} \norm{\G - \U \V^{T} - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\U \V^{T}}_{*}.
 \end{equation}
-Where $\norm{.}_{*}$ is the nuclear norm. Contrary to function
-eqref:eq:optim_ridge_reg, loss function eqref:eq:optim_lasso_reg is a function
-of $\C$ rather than $\U$ and $\V$. This variable change allow $L_{lasso}$ to be
-a convex function.
+Where $\norm{.}_{*}$ is the nuclear norm. Contrary to $L_{ridge}$ finding minimum
+solution of $L_{lasso}$ is not easy. However, if we made the variable change $$ \C = \U \V^{T}
+$$ in ref:eq:optim_lasso_reg, the function $L_{lasso}$ become an convex
+function of $\C$ and $\B$. Thereby, we can apply alternated algorithm to compute
+minimum value of $L_{lasso}$.
 
 **** An alternated algorithm
-In this paragraph we introduce an alternated algorithm which minimize the convex
-function eqref:eq:optim_lasso_reg. We start with null matrix and alternate the
-two step:
-- compute $B_{i}$ as minimizing the loss function
-$$
-L_{lasso 1} =  \frac{1}{2} ||(\G - \C_{i-1}) - \X \B^T||_{F}^2 + \lambda ||\B||_1.
-$$
-- compute C as minimizing the loss function
-$$
-L_{lasso 2} = \frac{1}{2} ||(\G - \X \B_i^T)- \C_{i-1} ||_{F}^2 + \gamma ||\C||_{*}
-$$
-which is give by the singular value shrinkage operator.
+We start with null matrices
+\begin{align*}
+C_{t = 0} & = 0 \\
+B_{t = 0} & = 0.
+\end{align*}
+Then we alternate the two steps 
+- compute $\B_{t}$ as minimizing the loss function
+\begin{equation}
+\label{eq:lasso_algo_1}
+L_{lasso}^{1}(\B) =  \frac{1}{2} ||(\Y - \C_{t-1}) - \X \B^T||_{F}^2 + \lambda ||\B||_1.
+\end{equation}
+- compute $\C_{t}$ as minimizing the loss function
+\begin{equation}
+\label{eq:lasso_algo_2}
+L_{lasso}^{2}(\C) = \frac{1}{2} ||(\Y - \X \B_t^T)- \C ||_{F}^2 + \gamma ||\C||_{*}.
+\end{equation}
 
+The first step is a regression of $$\Y - \C_{t-1}$$ by the primary variable $\X$ with
+a lasso regularization on the primary effect matrix $\B$. The second step is a
+low rank approximation of the regression residual $$\Y - \X \B_{t}^{T}.$$ The low
+rank approximation is given by the singular value shrinkage operator, see
+cite:cai10_singul_value_thres_algor_matrix_compl.
 *** Hyper-parameters choice
 :LOGBOOK:
 - Note taken on [2017-05-25 Thu 11:52] \\
