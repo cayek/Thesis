@@ -6509,8 +6509,10 @@ We only run the computation of lattent factor score.
 
 #+end_src
 
-**** RUNNING cate
+**** DONE cate
+CLOSED: [2017-05-31 mer. 08:35]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-05-31 mer. 08:35]
 - Note taken on [2017-05-29 lun. 13:25] \\
   C'est parti sur krakenator, on va voir si ca passe !!
 - State "RUNNING"    from "TODO"       [2017-05-29 lun. 13:25]
@@ -6535,6 +6537,20 @@ We only run the computation of lattent factor score.
   gc()
 
 #+end_src
+
+#+RESULTS:
+#+begin_example
+  DEBUG [2017-05-29 13:18:30] We set the seed said:
+  --------------------------------
+
+  --------------------------------
+  Warning messages:
+  1: executing %dopar% sequentially: no parallel backend registered
+  2: In matrix(cate.results$Z, n, m$K) :
+    la longueur des données [136395] n'est pas un diviseur ni un multiple du nombre de lignes [94497]
+#+end_example
+
+Il y a eu un warning bizare... On passe a la suite on vera bien ! 
 
 *** STARTED Run on the whole dataset
 :LOGBOOK:
