@@ -29,10 +29,11 @@ bibliography:../biblio.bib
 ** Test d'association
 ** Problématique et plan
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
-* Estimation des facteurs latents pour corriger les test d'association 
+* Estimation des facteurs latents pour corriger les test d'association :3Article:
 ** Introduction
 ** Models
 *** Model 
+
 We present here the model and the notations which will be used in the article.
 Following the common notation in latent factor mixed model (LFMM) we write the following
 model
