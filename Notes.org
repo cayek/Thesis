@@ -9342,3 +9342,19 @@ cite:dubois2010multiple C'est l'article du dataset Celiac
 
   cite:Purcell_2007 C'est la papier a cité pour citer plink (voir [[http://zzz.bwh.harvard.edu/plink/contact.shtml][le site
   deplink]]). Ils faut aussi citer le logiciel...
+
+** TODO 2016 - Genotype Imputation with Millions of Reference Samples
+ :PROPERTIES:
+  :Custom_ID: Browning_2016
+  :AUTHOR: Browning \& Browning
+  :JOURNAL: The American Journal of Human Genetics
+  :YEAR: 2016
+  :VOLUME: 98
+  :PAGES: 116–126
+  :DOI: 10.1016/j.ajhg.2015.11.020
+  :URL: http://dx.doi.org/10.1016/j.ajhg.2015.11.020
+ :END:
+
+cite:Browning_2016 C'est l'article a citer  Beagle's genotype imputation algorithm.
+Voir le [[https://faculty.washington.edu/browning/beagle/beagle.html][site]].
+

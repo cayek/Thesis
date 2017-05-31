@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: org -*-
 
-#+TITLE: Méthodes de factorisation matricielle pour la génomique des populations et tests d'association
+# #+TITLE: Méthodes de factorisation matricielle pour la génomique des populations et tests d'association
 #+AUTHOR:      Kevin Caye
 
 #+LANGUAGE:  en
@@ -11,10 +11,17 @@
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
 
-#+LaTeX_CLASS: thesis
+# #+LaTeX_CLASS: book
+#+LaTeX_CLASS: article
 #+LATEX_HEADER: \input{notations.tex}
 
 #+HTML_MATHJAX: align: left indent: 5em tagside: left font: Neo-Euler
+
+#  LocalWords:  methylation polymorphism nucleotide Frobenius invertible SNP
+#  LocalWords:  preprocessing dataset
+
+bibliographystyle:unsrt
+bibliography:../biblio.bib
 
 * État de l'art 
 ** Contexte
@@ -24,60 +31,60 @@
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
 * Estimation des facteurs latents pour corriger les test d'association 
 ** Introduction
-** Materials and methods
-:PROPERTIES:
-:header-args: :cache no :eval no-export :results output :exports none
-:END:
-
+** Models
 *** Model 
+We present here the model and the notations which will be used in the article.
 Following the common notation in linear factor regression we write the following
-model 
+model
 \begin{equation}
 \label{eq:model}
-\G = \U \V^T + \X \B^T + \E 
+\Y = \X \B^T + \U \V^T + \E 
 \end{equation}
-Here the $\G$ matrix records $n$ observations of a vector $\G_i = (\G_{i 1},...,
-\G_{i L})$ of $L$ variables (single nucleotide polymorphism, methylation level).
-Variation of $\G_{i}$ are explained by K latent factor ($\U \V^T$) and the
-interest covariates ($\X$). The $\X$ matrix records each $i$ observation $d$
-covariates (phenotype, environmental gradient). The matrices $\U$ of size $n
-/times K$ records scores for the $K$ latent factors. The $K$ latent factor
-loading are stored in the $L \times K$ matrix $\V$. The $n \times L$ matrix $\E$
-is the residual error matrix.
+Here $\Y$ is a $\Yrow\times\Ycol$ observed output matrix. For instance, output can
+be single nucleotide polymorphism (SNP) or methylation level. The $\Yrow\times\Xcol$
+matrix $\X$ records observed primary variables. Primary variables can be for
+example disease state or environmental gradient. The $\Ycol\times\Xcol$ matrix $\B$
+records primary effects. Matrices $\U$ and $\V$ are respectively $\n \times \K$
+score matrix and $\Ycol\times\Ucol$ loading matrix of a regression with $\Ucol$ latent
+factors. The matrix $\E$ is the residual error matrix of size $\Yrow\times\Ycol$.
 
 
 A classic method to estimate $\U$ $\V$ and $\B$ is to write the following
 loss function
 \begin{equation}
 \label{eq:optim_no_reg}
-L(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\G - \U \V^T - \X \B^T}_{F}^2
+L(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2
 \end{equation}
 where $\norm{.}_{F}$ is the Frobenius norm. This loss function arises when
-considering the log-likelihood if $\E$ contains independent Gaussian errors
+considering the log-likelihood if $\E$ rows are independent and Gaussian 
 with means $0$ and $var(\E_{i,j}) = \sigma$.
 
+However, the function $L$ do not allow to define unique factor matrices product
+$$\C = \U \V^T$$ and a unique primary effect matrix $\B$. It means that we can
+not identify the output variance explained by the $K$ latent factors and the
+output variance explained by $\X$.
 
-We can show that the loss function eqref:eq:optim_no_reg do not allow to define
-an optimization problem with a unique latent factor product $\U \V^T$ and a
-unique effect matrix $\B$. It means that we can not uniquely identify the part
-of the variance explained by the $K$ latent factor and the part explained by
-$\X$. We have to add a regularization term to fix that.
+We will now expose two regularized variants of function $L$ which lead to
+unique primary effect matrix $\B$. 
 
 **** demo
 We write $\hat{\B}$ the unique matrices of optimization problem defined by the
-loss function [[eqref:eq:optim_no_reg]], and $\hat{\U}$, $\hat{\V}$ possible matrices for
-this solution. First, we remark that $\hat{\U}$ and $\hat{\V}$ are not unique because,
-for a invertible matrix $L(\hat{\U}, \hat{\V}^{T}, \hat{\B}) = L(\hat{\U} \matr{R},
-\matr{R}^{-1} \V^{T}, \hat{\B})$.
-
-
-Then, we remark that for a any matrix $\matr{C}$ 
-
+loss function $\L$ in [[eqref:eq:optim_no_reg]], and $\hat{\U}$, $\hat{\V}$
+possible matrices for this solution. First, we remark that $\hat{\U}$ and
+$\hat{\V}$ are not unique because, for any invertible matrix $\matr{R}$ we have
+$$L(\hat{\U}, \hat{\V}^{T}, \hat{\B}) = L(\hat{\U} \matr{R}, \matr{R}^{-1}
+\V^{T}, \hat{\B}).$$ Then, we remark that for a any $\Xcol \times \Ycol$ matrix
+$\matr{C}$
 \begin{equation*}
 L(\hat{\U} - \X \matr{C}, \hat{\V}^{T}, \hat{\B} + \hat{\V} \matr{C}^T}) = L(\hat{\U},
 \hat{\V}^{T}, \hat{\B})
 \end{equation*}
+Thus, $\hat{\B}$ is not unique.
+
+
 *** Ridge regularized estimation
+In this section we present ....
+
 In order to have uniqueness of the latent factor product matrix $\C = \U \V^T$ and
 effect size $\B$ we propose the following objective function
 \begin{equation}
@@ -225,7 +232,12 @@ proportion of variables we used empirical correction to have score with a mean
 to zero and standard deviation to 1. We used the median and the mad as robust
 estimators of the mean and standard deviation.
 
-*** Similar methods
+
+** Simulation study and dataset
+:PROPERTIES:
+:header-args: :cache no :eval no-export :results output :exports none
+:END:
+*** Others methods
 <<sec:similar_method>>
 **** lm and lm + pca
 We comparared results of our method to two well known method the linear model
@@ -281,13 +293,26 @@ these variables cite:Rahmani_2016,Zou_2014.
 
 ***** Association study of genetic variants with Celiac disease (GWAS)
 For the GWAS we chose data from an association study of SNPs with Celiac disease
-citep:dubois2010multiple. We keep only individual and SNPs with a proportion of
-missing value inferior to $5\%$. Then, we filter out variants with minor allele
-frequency below $0.05$ and Hardy-Weinberg equilibrium exact test \pvalue below
-$1e-10$. After that we filter out individuals which have identity-by-descent
-proportion (first by pairs) superior to $0.08$. Finally, we perform an linkage
-disequilibrium pruning. These preprocessing step was made with the software
-Plink cite:Purcell_2007.
+citep:dubois2010multiple. Before running method we apply classic preprossessing
+step with the software Plink cite:Purcell_2007. Firstly, we keep only individual
+and SNPs with a proportion of missing value inferior to $5\%$. Then, we filter
+out variants with minor allele frequency below $0.05$ and Hardy-Weinberg
+equilibrium exact test \pvalue below $1e-10$. After that we filter out
+individuals which have identity-by-descent proportion (first by pairs) superior
+to $0.08$. Finally, we perform an linkage disequilibrium pruning to obtain SNPs
+which are not correlated. The final dataset was of size $n = $ and $L = $.
+
+#+BEGIN_SRC R :session *ssh krakenator*
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G_clumped.rds")
+  dim(G)
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+[1] 15155 94497
+#+end_example
+
+We also impute missing value with the sowtware 
 
 ***** Association study of genetic variants with climatic data (EAS)
 For EAS
@@ -298,6 +323,8 @@ For EAS
 
 
 * Conclusion 
+
+
 * COMMENT perspectives
 :LOGBOOK:
 - Note taken on [2017-05-26 Fri 15:49] \\
@@ -315,8 +342,3 @@ For EAS
 :END:
 
 
-bibliographystyle:unsrt
-bibliography:../biblio.bib
-
-#  LocalWords:  methylation polymorphism nucleotide Frobenius invertible
-#  LocalWords:  preprocessing
