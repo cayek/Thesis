@@ -1851,9 +1851,9 @@ variable lattentes.
 
 C'est comparable a les loadings RDA1
 
-** DONE Validation numérique pour l'article "LFMM"                :3Article:
-CLOSED: [2017-05-29 lun. 09:01]
+** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
+- State "STARTED"    from "DONE"       [2017-06-01 jeu. 18:21]
 - State "DONE"       from "STARTED"    [2017-05-29 lun. 09:01]
 - Note taken on [2017-05-18 jeu. 10:49] \\
   Ok on part du 1000 genome bien netoyé avec plink :D
@@ -2570,8 +2570,11 @@ lm. FAMT on sait pas pour ca merde....
 :LOGBOOK:
 - State "TODO"       from "DONE"       [2017-06-01 jeu. 18:12]
 :END:
-***** TODO Run all even with lfmm lasso :D
+***** RUNNING Run all even with lfmm lasso :D
 :LOGBOOK:
+- Note taken on [2017-06-01 jeu. 18:20] \\
+  6604.pts-0.patator
+- State "RUNNING"    from "TODO"       [2017-06-01 jeu. 18:20]
 - State "TODO"       from "DONE"       [2017-06-01 jeu. 18:13]
 :END:
 
@@ -6963,16 +6966,20 @@ Il y a une plus forte inflation car le mad est à 1.2
 49 7.456977e-01     lm 218005 209276
 #+end_example
 On observe bien que lm à moins de puissance. 
-**** TODO sva 
+**** CANCELLED sva 
+CLOSED: [2017-06-01 jeu. 18:21]
 :LOGBOOK:
+- State "CANCELLED"  from "TODO"       [2017-06-01 jeu. 18:21]
 - State "TODO"       from              [2017-05-23 mar. 15:33]
 :END:
 #+begin_src R :results output :exports both
 ## sva
 method.batch$m.sva <- finalSVAMethod(K = 9)
 #+end_src
-**** TODO famt
+**** CANCELLED famt
+CLOSED: [2017-06-01 jeu. 18:21]
 :LOGBOOK:
+- State "CANCELLED"  from "TODO"       [2017-06-01 jeu. 18:21]
 - State "TODO"       from              [2017-05-23 mar. 15:33]
 :END:
 #+begin_src R :results output :exports both
