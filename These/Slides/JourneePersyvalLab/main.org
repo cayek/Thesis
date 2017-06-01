@@ -1,0 +1,59 @@
+# -*- mode: org -*-
+# -*- coding: utf-8 -*-
+#+STARTUP: overview indent inlineimages logdrawer
+#+startup: beamer
+#+LINK_HOME:
+#+TITLE: Matrix factorization methods for population genomics and association testing
+#+AUTHOR:    Kevin Caye$^{1}$, Olivier Michel$^{2}$, Jean-Luc Bosson$^{1}$, Olivier Francois$^{1}$
+#+BEAMER_HEADER: \institute{$^{1}$ TIMC-IMAG, $^{2}$ GIPSA-lab}
+#+EMAIL:     kevin.caye@imag.fr
+#+DATE:      2017-01-06  
+#+OPTIONS: H:2 toc:t num:t
+#+LATEX_CLASS: beamer
+#+BEAMER_THEME: default
+#+BEAMER_FRAME_LEVEL: 2
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+BEAMER_HEADER: \usebackgroundtemplate{\includegraphics[width=\paperwidth]{background.pdf}}%
+#+BEAMER_HEADER: \addtobeamertemplate{frametitle}{\vskip2ex}{} 
+#+BEAMER_HEADER: \input{../notations.tex}
+
+* Introduction
+
+** Genotypic data
+   Example: Celiac dataset cite:dubois2010multiple
+
+** Association Study
+   
+*We want* to detect output observed variable which are correlated with an
+primary interest variable.
+
+\begin{equation*}
+\Y \sim \X
+\end{equation* }
+
+*Exemple* 
+- \Y celiac
+
+- $\X$ celiac desease state
+** Linear model
+exemple sur celiac
+qqplot
+** Confounding
+PCA + X pour montrer que la structure et X sont corrélé
+
+* Latent factor in Multiple Hypothesis Testing
+** Latent Factor Mixed Model
+citer cate, ruv etc
+** Estimation
+lasso 
+ridge
+* Results on Celiac dataset
+** 
+
+
+* References
+ bibliography:../../biblio.bib
+ bibliographystyle:apalike
+

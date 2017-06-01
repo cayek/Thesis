@@ -923,8 +923,11 @@ On prend les données climatique de worldclim et on fait l'acp ;-)
 - State "STARTED"    from "TODO"       [2017-05-29 lun. 16:38]
 - State "TODO"       from              [2017-05-29 lun. 16:03]
 :END:
-**** WAITING Run on krakenator
+**** RUNNING Run on krakenator
 :LOGBOOK:
+- Note taken on [2017-06-01 jeu. 18:24] \\
+  16554.pts-3.krakenator
+- State "RUNNING"    from "WAITING"    [2017-06-01 jeu. 18:24]
 - Note taken on [2017-05-30 mar. 11:17] \\
   waiting from cate...
 - State "WAITING"    from "RUNNING"    [2017-05-30 mar. 11:17]
@@ -2276,12 +2279,12 @@ CLOSED: [2017-05-22 lun. 15:06]
 
 lfmm lasso donne bien comme l'oracle. Il y a toujours ce truc bizare avec l'ACP
 mais je pense que c'est une particularité des data.
-*** DONE Run on krakenator
-CLOSED: [2017-05-29 lun. 09:01]
+*** STARTED Run on krakenator
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "STARTED"    from "DONE"       [2017-06-01 jeu. 18:26]
 - State "DONE"       from "STARTED"    [2017-05-29 lun. 09:01]
 - Note taken on [2017-05-19 ven. 13:24] \\
   Je pense que je met trop de variable lattentes pour l'acp et pour je ne sais
@@ -2566,12 +2569,15 @@ On a le bon message, plus il y a d'outlier moins acp+lm est puissant. Plus la
 corrélation est forte moin lm est puissant. Sinon ils sont tout calibré a part
 lm. FAMT on sait pas pour ca merde....
 
-**** TODO with 2 5 10 % outlier and L = 50 000
+**** STARTED with 2 5 10 % outlier and L = 50 000
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-06-01 jeu. 18:26]
 - State "TODO"       from "DONE"       [2017-06-01 jeu. 18:12]
 :END:
 ***** RUNNING Run all even with lfmm lasso :D
 :LOGBOOK:
+- Note taken on [2017-06-01 jeu. 18:27] \\
+  16668.pts-8.krakenator
 - Note taken on [2017-06-01 jeu. 18:20] \\
   6604.pts-0.patator
 - State "RUNNING"    from "TODO"       [2017-06-01 jeu. 18:20]
