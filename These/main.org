@@ -31,7 +31,7 @@ bibliography:../biblio.bib
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
 * Estimation des facteurs latents pour corriger les test d'association :3Article:
 ** Introduction
-** Models
+** Methods
 *** Model 
 
 We present here the model and the notations which will be used in the article.
@@ -191,7 +191,7 @@ a lasso regularization on the primary effect matrix $\B$. The second step is a
 low rank approximation of the regression residual $$\Y - \X \B_{t}^{T}.$$ The low
 rank approximation is given by the singular value shrinkage operator, see
 cite:cai10_singul_value_thres_algor_matrix_compl.
-*** Hyper-parameters choice
+*** Choice of hyper-parameters
 :LOGBOOK:
 - Note taken on [2017-05-25 Thu 11:52] \\
   Pour ridge faire ma petite heuristic pour trouver lambda.
@@ -205,37 +205,57 @@ cite:cai10_singul_value_thres_algor_matrix_compl.
   Bien preciser que on veut a tou pris eviter les truc du style j'impute a
   l'arrache avant etc...
 :END:
+
+LassoLFMM and RidgeLFMM .....
+
 **** Cross validation
 :LOGBOOK:
 - Note taken on [2017-05-26 Fri 14:46] \\
   cf mon cahier
 :END:
-Cross validation is a classic method to select hyper-parameter. We propose here
-method adapted to our algorithms. 
-... 
+Cross validation is a classic method to select hyper-parameter in factor
+analysis cite:Owen_2009,Owen_2009,Bro_2008. We explain here a cross-validation
+method adapted to our methods.
+
+[...]
 
 However, cross validation procedure can be long to run in particular on very big
-data set. We propose other procedure to assess hyper-parameters that gave good
-results our experiments.
+data set. Especially since, LassoLFMM and RidgeLFMM have each 2 hyper-parameters
+which can be cross-validated.We propose other procedure to assess
+hyper-parameters that gave good results our experiments.
 
 **** Choice of K using singular value
 Methods presented in this paper are very close to the Principal Component
-Analysis (PCA), we can see them as a PCA $G - X^B$. Thus we can use method use
-for the PCA to estimate the number of latent factor. These method lead to an
-overestimated number of factor in the model [[ref:eq:model][(1)]] because the co-variate
-would be considered as latent variable. However, because the goal of our methods
-is to estimate latent variation while protection variation explain by co-variate
-$X$, algorithms are robust to overestimated $K$.
+Analysis (PCA), we can seen them as a PCA of $G - X^B$. Thus we propose to use
+select the number of latent variable $\K$ by visualizing the scree plot. 
 
-For real data set, the number of latent variable $K$ by visualizing the singular
-of the $G$ matrix. We chose intentionally softly overestimated to be sure to
-consider all the latent variation in the data.
+We empirically observed that, this method leads to an overestimated number of
+factor in the model describe in eqref:eq:model since the co-variate would be
+considered as a latent variable. However, because the goal of our methods is to
+estimate latent variation while protection variation explain by co-variate $X$,
+we observed that our algorithms was robust to overestimated $K$.
+
+
+...
+
 **** Heuristic to choice of $\lambda$ ridge
 :LOGBOOK:
+- Note taken on [2017-06-01 jeu. 12:03] \\
+  et la on fait le lien avec le model de cate :D
 - Note taken on [2017-05-26 Fri 14:45] \\
   voir mon cahier et il va falloir normaliser lambda ?? a voir !!C'est chiant car
   j'ai deja lancé les experiences !!
 :END:
+In the article of \MethodCate method cite:wang2015confounder, authors propose to
+explicitly model the relationship between the factor score matrix $\U$ and the
+primary variables matrix $\X$. There assume that there is a linear relationship
+between $\U$ and $\X$ such as $$ \U = \X \matr{\alpha}^{T} + matr{W},$$ where
+$\W$ is a $\Urow \times \K$ residual error matrix independent of $\X$ and $\E$
+and $matr{\alpha}$ $\Xcol \times \Ucol$ characterizes the linear relationship
+between $\U$ and $\X$. If $\matr{\alpha}$ is null, there is no problem of
+confounding and $\U$, $\V$ and $\X$ can be estimated separately.  
+
+
 ...
 We observed that for a centered and normalized $G$ and $X$ $\lambda = ?$
 provided good results in our experiments.
@@ -290,6 +310,10 @@ $$
 where in $B$ is the ....
 
 **** Hypothesis calibration
+:LOGBOOK:
+- Note taken on [2017-06-01 jeu. 14:45] \\
+  Voir dans cite:gerard2017unifying la parti sur la calibration !
+:END:
 Even with latent factors correction we can observed not calibrated p-value. This
 can be due to model misspecification, presence of not interested and small
 effects or dependency between variables. As we are typically interested by a small

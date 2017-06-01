@@ -2516,11 +2516,13 @@ CLOSED: [2017-05-26 Ven 17:41]
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-***** TODO plot
+***** DONE plot
+CLOSED: [2017-06-01 jeu. 18:12]
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-01 jeu. 18:12]
 - State "TODO"       from              [2017-05-26 Ven 17:42]
 :END:
 
@@ -2563,6 +2565,58 @@ CLOSED: [2017-05-26 Ven 17:41]
 On a le bon message, plus il y a d'outlier moins acp+lm est puissant. Plus la
 corrélation est forte moin lm est puissant. Sinon ils sont tout calibré a part
 lm. FAMT on sait pas pour ca merde....
+
+**** TODO with 2 5 10 % outlier and L = 50 000
+:LOGBOOK:
+- State "TODO"       from "DONE"       [2017-06-01 jeu. 18:12]
+:END:
+***** TODO Run all even with lfmm lasso :D
+:LOGBOOK:
+- State "TODO"       from "DONE"       [2017-06-01 jeu. 18:13]
+:END:
+
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.01, 0.05, 0.1),
+                                    n = NULL, L = 50000,
+                                    K = 10,
+                                    K.method = 10,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c(0.1, 0.2, 0.4, 0.6),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 4,
+                                    fast.only = FALSE,
+                                    cluster.nb = 4,
+                                    save = TRUE, bypass = FALSE)
+
+#+end_src
+***** TODO plot
+:LOGBOOK:
+- State "TODO"       from "DONE"       [2017-06-01 jeu. 18:14]
+:END:
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(?)
+  expr$description
+#+end_src
+
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_moreOutlier.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_moreOutlier.png")
+#+end_src
+
 
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
@@ -6509,8 +6563,10 @@ We only run the computation of lattent factor score.
 
 #+end_src
 
-**** RUNNING cate
+**** DONE cate
+CLOSED: [2017-06-01 jeu. 16:45]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-06-01 jeu. 16:45]
 - Note taken on [2017-05-31 mer. 08:54] \\
   ok il y avait un bug...
 - State "RUNNING"    from "DONE"       [2017-05-31 mer. 08:52]
@@ -6923,14 +6979,22 @@ method.batch$m.sva <- finalSVAMethod(K = 9)
 ## famt
 method.batch$m.famt <- finalFamtMethod(K = 9)
 #+end_src
-**** WAITING cate
+**** DONE cate
+CLOSED: [2017-06-01 jeu. 17:20]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-06-01 jeu. 17:20]
+- State "STARTED"    from "WAITING"    [2017-06-01 jeu. 17:04]
 - State "WAITING"    from "RUNNING"    [2017-05-31 mer. 08:53]
 - State "RUNNING"    from "TODO"       [2017-05-31 mer. 08:36]
 - State "TODO"       from              [2017-05-23 mar. 15:34]
 :END:
 
-***** run
+***** DONE run
+CLOSED: [2017-06-01 jeu. 17:18]
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-06-01 jeu. 17:18]
+- State "RUNNING"    from              [2017-06-01 jeu. 17:04]
+:END:
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
 
@@ -6955,6 +7019,116 @@ method.batch$m.famt <- finalFamtMethod(K = 9)
 
 #+end_src
 
+#+RESULTS:
+#+begin_example
+>   m$nickname
+[1] "cate"
+>   dim(m$U)
+[1] 15155     9
+
+#+end_example
+
+***** plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(137)
+  expr$description
+  expr <- MethodBatchExperiment_calibrate(expr)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+>   expr$description
+[1] "Run on Celiac lm whole dataset with U with cate|func=Article3_Celiac_lm"
+>   expr <- MethodBatchExperiment_calibrate(expr)
+[1] "cate"
+[1] "== calibrate: median"
+[1] 0.0118414
+[1] "== calibrate: mad"
+[1] 1.052495
+#+end_example
+
+****** Candidates
+#+begin_src R :results output :exports both
+  cat("============= candidates with fdr < 0.05  \n")
+  res <- MethodBatchExperiment_candidates(expr, fdr.threshold = 0.05, print = TRUE)
+  cat('============= all candidates \n')
+  pl <- MethodBatchExperiment_qqplot(expr)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  ============= candidates with fdr < 0.05  
+    method   nb observed.fdr observed.puissance
+  1   cate 1492    0.9745308          0.7755102
+  ============= all candidates 
+          pvalue1 method     id   rank
+  1  0.000000e+00   cate 103828    104
+  2  1.933307e-23   cate  63274    782
+  3  1.384456e-16   cate  60508    902
+  4  7.824784e-15   cate  75334    929
+  5  6.306602e-13   cate  31804    972
+  6  7.332164e-13   cate 203233    974
+  7  6.916363e-12   cate 114103    995
+  8  1.190883e-11   cate  31789   1003
+  9  1.117737e-10   cate  15649   1031
+  10 1.179775e-10   cate  50070   1032
+  11 6.883056e-09   cate  50080   1080
+  12 2.822458e-08   cate 116598   1099
+  13 1.188332e-07   cate  40409   1117
+  14 2.089014e-07   cate 172879   1129
+  15 2.265089e-07   cate  28630   1133
+  16 2.904890e-07   cate 116599   1137
+  17 5.828200e-07   cate  38837   1148
+  18 7.273079e-07   cate  13423   1151
+  19 9.524053e-07   cate 276792   1162
+  20 1.049396e-06   cate  28631   1166
+  21 1.231041e-06   cate 113029   1172
+  22 1.500158e-06   cate 116602   1177
+  23 1.830223e-06   cate 250870   1179
+  24 3.895536e-06   cate     88   1204
+  25 8.426060e-06   cate  61280   1230
+  26 1.176549e-05   cate   5864   1243
+  27 1.494987e-05   cate 209311   1253
+  28 1.852909e-05   cate  99224   1258
+  29 2.440185e-05   cate 109444   1275
+  30 3.222632e-05   cate   2620   1289
+  31 4.231491e-05   cate 234846   1303
+  32 4.588758e-05   cate    813   1312
+  33 4.645923e-05   cate 245524   1313
+  34 5.305677e-05   cate 147434   1323
+  35 5.619108e-05   cate 122882   1327
+  36 8.642969e-05   cate  16326   1362
+  37 1.232841e-04   cate 275804   1398
+  38 1.857824e-04   cate 147445   1445
+  39 3.633833e-04   cate 221199   1545
+  40 3.941267e-04   cate  86896   1560
+  41 4.228748e-04   cate 109441   1578
+  42 4.460965e-04   cate  14037   1590
+  43 1.912542e-03   cate 197911   2142
+  44 6.282883e-03   cate  39545   3563
+  45 1.846550e-02   cate 162427   7205
+  46 9.926091e-02   cate  14048  30002
+  47 2.596580e-01   cate 112718  74206
+  48 4.672110e-01   cate 269927 131496
+  49 5.511297e-01   cate 218005 154761
+#+end_example
+
+Quand on regarde le ranking, cate, lfmm et pca+lm recupere tous dans leur top
+1500 les outlier qui ont été trouvé.
+**** TODO Comparaison des méthodes
+:LOGBOOK:
+- State "TODO"       from              [2017-06-01 jeu. 17:49]
+:END:
+
+On va comparer les méthodes entre elles !! Ce qui est interessant c'est que tous
+le monde ne trouve pas les même listes. C'est normal que l'acp soit bonne pour
+trouver la liste du GWAScatalogue, la plupart on surment été trouvé comme ca !!
+De toute facon je pense que ma methode est bonne quand il y a beaucoups
+d'outlier !!
 
 ** DONE LEA lfmm tuto                                             :3Article:
 CLOSED: [2017-05-23 mar. 11:11]
@@ -9325,7 +9499,11 @@ cite:dubois2010multiple C'est l'article du dataset Celiac
  :END:
  
  cite:gerard2017unifying Un papier qui veut faire comme lfmm, cad identifier la
- vairance indesirable pour faire une association.
+ vairance indesirable pour faire une association. 
+
+Papier bien ecrit et très proche de lfmm, j'ai l'impression qu'il font des
+simulation avec 50 % d'outlier dans ce cas LassoLFMM est bien :D. Mais dans quel
+cas c'est interessant autant d'outlier ?
 
 
 ** TODO 2007 - PLINK: A Tool Set for Whole-Genome Association and  Population-Based Linkage Analyses
@@ -9358,3 +9536,32 @@ cite:dubois2010multiple C'est l'article du dataset Celiac
 cite:Browning_2016 C'est l'article a citer  Beagle's genotype imputation algorithm.
 Voir le [[https://faculty.washington.edu/browning/beagle/beagle.html][site]].
 
+
+** TODO 2009 - Cross-Validation for Unsupervised Learning
+ :PROPERTIES:
+  :Custom_ID: perry09_cross_valid_unsup_learn
+  :AUTHOR: Perry
+  :JOURNAL: 
+  :YEAR: 2009
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: http://arxiv.org/abs/0909.3052v1
+ :END:
+
+cite:perry09_cross_valid_unsup_learn Tout est dit dans le titre !! Ca peut être
+interessant de cross valider proprement mes deux algos :D A voir
+
+** TODO 2009 - Bi-cross-validation of the SVD and the nonnegative matrix  factorization
+ :PROPERTIES:
+  :Custom_ID: Owen_2009
+  :AUTHOR: Owen \& Perry
+  :JOURNAL: The Annals of Applied Statistics
+  :YEAR: 2009
+  :VOLUME: 3
+  :PAGES: 564–594
+  :DOI: 10.1214/08-aoas227
+  :URL: http://dx.doi.org/10.1214/08-aoas227
+ :END:
+
+cite:Owen_2009. Parfait si je veux faire le cross validation de lfmm et TESS3
