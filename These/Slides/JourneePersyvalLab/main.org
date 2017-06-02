@@ -43,54 +43,62 @@
   GSM1051528   1.338992  1.7947700  0.8489499  0.59589792
 #+end_example
 
-*Data*
-- single nucleotide polymorphism (SNP): single nucleotide variation occurring
-  commonly within a population.
-- Data are matrix of size $L$ loci for $n$ individuals ($L \sim 10^6$ and $n
-  \sim 10^4$)
-#+BEGIN_EXPORT latex
-\begin{table}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\begin{tabular}[t]{l|r|r|r}
-\hline
-  & chr: 1 pos: 657 & chr: 1 pos: 3102 & chr: 1 pos: 4268\\
-\hline
-02B6 & 0 & 1 & 1\\
-\hline
-DraIV 1-16 & 1 & 1 & 1\\
-\hline
-UllA 2 & 1 & 0 & 1\\
-\hline
-Zdr-1 & 1 & 1 & 1\\
-\hline
-\end{tabular}
-\caption{Sample of a Rheumatoid Arthritis SNP matrix of size $\Yrow = 15~155$ individuals and $\Ycol = 281~112$ loci~\cite{dubois2010multiple}.}
-\end{table}
-#+END_EXPORT
+*Dataset*
+- $\Y$ output observed matrix
+- $\X$ primary variables matrix.
+  
+*We want* to detect output variables which are in relationship with the primary
+interest variable.
 
-** Association Study  
+*Example*
+- Association of DNA methylation with Rheumatoid Arthritis (RA) cite:Liu_2013
+  - $\Y$ records DNA methylation level for $\Yrow = 689$ at $\Ycol = 162~038$
+    sites
+  - $\X$ records RA disease state for each individual.
+
+*** COMMENT celiac
+- Association of genotype with Celiac disease cite:dubois2010multiple
+  - $\Y$ records genotype for $\Yrow = 15~155$ individuals at
+    $\Ycol = 281 112$ loci.
+  - $\X$ records Celiac disease state for each individual
+
+
+
+** Multiple Hypothesis Testing: Simple Linear Regression
    
-*We want* to detect output observed variable which are correlated with an
-primary interest variable. 
+ Linear model for each locus $j$ 
+     $$\Y =  \X \B^{T} + \E$$
+   where
+      - $\B$ is the primary effect matrix
+      - $\E$ is the residual error matrix.
+   
+   We want to detect $j$ variable where we can reject the hypothesis 
+   
+   $$ H_0: \B_j = 0.$$
 
+*** COMMENT zscore
+   We compute z-score for each locus $j$: 
+   
+   $$ z_j = \frac{\hat{B_j}}{\hat{\sigma_j}} $$
 
-- $\Y$ (Ex: Celiac SNP matrix)
-- $\X$ (Ex: Celiac disease state)
+   where $\hat{\B_j}$ is an estimation of $\B_j$ and $\hat{\sigma_j}$ the
+   estimation its standard deviation.
 
+** Example: Linear Regression on RA Dataset 
 
-*Linear regression*
-\begin{equation*}
-\Y =  \X \B^{T}
-\end{equation* }
-We want to detect $$ \B_{j} \neq 0. $$
+#+begin_src R :results output :exports none
+  expr <- retrieveExperiment(110)
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_lm.png", "~/Projects/Thesis/These/Slides/JourneePersyvalLab/Rplots/")
+#+end_src
 
-** Confounding
+[[./Rplots/GSE42861_qqplot_lm.png]]
+#+CAPTION: Q-Q plot of significance $t$ test for the linear regression.
 
-There is *unwanded variation* which want to detect and remove.
+*** COMMENT comments
+There is *unwanded variation* which we want to detect and remove. 
 
-PCA + X pour montrer que la structure et X sont corrélé
-PCA on RA data set avec confunding 
-
+** Example: Principal Component Analysis of RA dataset 
 #+begin_src R :results output :exports none
   library(ThesisRpackage)
 
@@ -121,8 +129,9 @@ PCA on RA data set avec confunding
   toplot.X.cor
 
   ## plot
-  toplot <- as_tibble(expr$svd2$u)
-  pl <- ggplot(toplot, aes(V1, V2)) +
+  toplot <- as_tibble(expr$svd2$u) %>%
+    mutate(`score PC1` = V1, `score PC2` = V2)
+  pl <- ggplot(toplot, aes(`score PC1`, `score PC2`)) +
     geom_point() +
     geom_segment(data = toplot.X.cor, aes(xend = x,
                                           yend = y,
@@ -135,9 +144,17 @@ PCA on RA data set avec confunding
     ##                                    label = toplot.X.cor$covariable), hjust = -0.4)
 
   pl
+
+  save_plot_timc_bcm_15(pl, filename = "PC_RA.png", path.dir = "~/Projects/Thesis/These/Slides/JourneePersyvalLab/Rplots/")
 #+end_src
 
+[[./Rplots/PC_RA.png]]
+#+CAPTION: PCA of the RA dataset DNA methylation level matrix. 
 
+*** COMMENT comments
+In DNA methylation dataset there are unobserved variables which can be
+confounding for association the primary variable (Age, gender, smoking status,
+cellular composition).
 
 * Latent factor in Multiple Hypothesis Testing
 ** Latent Factor Mixed Model
@@ -214,15 +231,13 @@ L_{lasso}^{2}(\C) = \frac{1}{2} ||(\Y - \X \B_t^T)- \C ||_{F}^2 + \gamma ||\C||_
 
 * Some results
 ** Numerical validation
-We performed simulations of LFMM generative model $$ \Y = \X \B^T + \U \V^T + \E
-$$ 
+We performed simulations of LFMM generative model $$\Y = \X \B^T + \U \V^T + \E$$ 
 
 with $$ B_{j} \neq 0$$ for some variables associated with the variable of
 interest $\X$.
 ** Numerical validation
 
-
-#+begin_src R :results output :exports both
+#+begin_src R :results output :exports none
   library(ThesisRpackage)
 
   s <- NormalSampler2(n = 100,
@@ -249,9 +264,10 @@ qqplot avec les annotations classic.
  bibliographystyle:apalike
 
 
-#  LocalWords:  dataset Celiac Genotypic SNP RidgeLFMM LassoLFMM LFMM
+#  LocalWords:  dataset Celiac Genotypic SNP RidgeLFMM LassoLFMM LFMM genotype
 ** AR dataset
 presenter data
 confusion (batch effect etc)
 We run without known confonding effect
 with 
+#  LocalWords:  methylation

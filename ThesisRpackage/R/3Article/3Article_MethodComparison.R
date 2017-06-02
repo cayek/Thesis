@@ -61,7 +61,7 @@ Article3_MethodComparison <- function(G.file,
                                       fast.only = TRUE,
                                       cluster.nb = NULL,
 
-                                      ## sampler
+                                      ## sampler when G.file not NULL
                                       B.outlier.sampler = function(n, mean, sd) {
                                         res = 1:n
                                         for (i in 1:n) {
@@ -72,6 +72,10 @@ Article3_MethodComparison <- function(G.file,
                                         }
                                         res
                                       },
+
+                                      ## sampler 
+                                      s = NULL,
+
 
                                       save = TRUE, bypass = FALSE,
                                       methods = NULL) {
@@ -111,23 +115,25 @@ Article3_MethodComparison <- function(G.file,
 
 
   ## test compute.pca
+  if (!is.null(G.file)) {
+    exp$s <- FromTrueSampler(G.file = G.file,
+                             n = n,
+                             L = L,
+                             K = K,
 
-  exp$s <- FromTrueSampler(G.file = G.file,
-                           n = n,
-                           L = L,
-                           K = K,
+                             pca.file = sub("\\.rds", "_PCA.rds", G.file),
 
-                           pca.file = sub("\\.rds", "_PCA.rds", G.file),
-
-                           prop.outlier = NULL,
-                           rho = NULL,
-                           cs = NULL,
-                           sd.V.rho = sd.V.rho,
-                           rho.E = rho.E,
-                           round = FALSE,
-                           B.outlier.sampler = B.outlier.sampler,
-                           reference = TRUE)
-  
+                             prop.outlier = NULL,
+                             rho = NULL,
+                             cs = NULL,
+                             sd.V.rho = sd.V.rho,
+                             rho.E = rho.E,
+                             round = FALSE,
+                             B.outlier.sampler = B.outlier.sampler,
+                             reference = TRUE)
+  } else {
+    exp$s <- s
+  }
   exp$methods <- methods
   exp <- Article3_MethodComparison_main(exp)
 

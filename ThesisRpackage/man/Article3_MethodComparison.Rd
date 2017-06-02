@@ -11,8 +11,8 @@ Article3_MethodComparison(G.file, outlier.props = c(0.01, 0.05, 0.1),
   fast.only = TRUE, cluster.nb = NULL, B.outlier.sampler = function(n,
   mean, sd) {     res = 1:n     for (i in 1:n) {         res[i] <- rnorm(1,
   mean, sd)         while (abs(res[i]) < 1 * sd) {             res[i] <-
-  rnorm(1, mean, sd)         }     }     res }, save = TRUE, bypass = FALSE,
-  methods = NULL)
+  rnorm(1, mean, sd)         }     }     res }, s = NULL, save = TRUE,
+  bypass = FALSE, methods = NULL)
 }
 \arguments{
 \item{outlier.props}{proportion of outlier simulated}

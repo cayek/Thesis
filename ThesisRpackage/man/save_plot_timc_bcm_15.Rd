@@ -4,7 +4,8 @@
 \alias{save_plot_timc_bcm_15}
 \title{save plot to png format on timc-bcm-15}
 \usage{
-save_plot_timc_bcm_15(pl, filename, width = 600, height = 400)
+save_plot_timc_bcm_15(pl, filename, width = 600, height = 400,
+  path.dir = "~/Projects/Thesis/Rplots/")
 }
 \description{
 save plot to png format on timc-bcm-15
