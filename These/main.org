@@ -54,7 +54,7 @@ A classic method to estimate $\U$ $\V$ and $\B$ is to write the following
 loss function
 \begin{equation}
 \label{eq:optim_no_reg}
-L(\U, \V^{T}, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2
+\LfmmL
 \end{equation}
 where $\norm{.}_{F}$ is the Frobenius norm. This loss function arises when
 considering the log-likelihood if $\E$ rows are independent and Gaussian 
@@ -88,7 +88,7 @@ In this section we present a ridge regularized latent factor mixed model
 (RidgeLFMM). The regularized loss function is written as follow 
 \begin{equation}
 \label{eq:optim_ridge_reg}
-L_{ridge}(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2 + \lambda \norm{B}^{2}_{2}.
+\LfmmLridge
 \end{equation}
 We can show that minimizing the function eqref:eq:optim_ridge_reg leads to the
 following unique solution
@@ -99,8 +99,7 @@ following unique solution
 Where $svd_{\K}(\matr{A})$ is the best approximation of rank $\K$ for the matrix
 $\matr{A}$ given by the singular value decomposition. $\Id_{q}$ is the $q \times
 q$ identity matrix. The $\Yrow \times \Yrow$ matrix $\obP$ is an oblique
-projection matrix defined as $$\obP = \Id_{n} - \X (\X^T \X + \lambda \Id_{n})^{-1}
-\X^T.$$ The matrix $\sqrt{\obP}$ is define such that 
+projection matrix defined as $$\LfmmP.$$ The matrix $\sqrt{\obP}$ is define such that 
 \begin{equation*}
 \obP = \sqrt{\obP}^{2}
 \end{equation*}
@@ -160,7 +159,7 @@ In this section we present a lasso regularized latent factor mixed model (LassoL
 The regularized loss function is written as follow
 \begin{equation}
 \label{eq:optim_lasso_reg}
-L_{lasso}(\U, \V, \B) =  \frac{1}{2} \norm{\G - \U \V^{T} - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\U \V^{T}}_{*}.
+\LfmmLlasso
 \end{equation}
 Where $\norm{.}_{*}$ is the nuclear norm. Contrary to $L_{ridge}$ finding minimum
 solution of $L_{lasso}$ is not easy. However, if we made the variable change $$ \C = \U \V^{T}
@@ -178,7 +177,7 @@ Then we alternate the two steps
 - compute $\B_{t}$ as minimizing the loss function
 \begin{equation}
 \label{eq:lasso_algo_1}
-L_{lasso}^{1}(\B) =  \frac{1}{2} ||(\Y - \C_{t-1}) - \X \B^T||_{F}^2 + \lambda ||\B||_1.
+L_{lasso}^{1}(\B) =  \frac{1}{2} ||(\Y - \C_{t-1}) - \X \B^T||_{F}^2 + \lambda ||\B||_1
 \end{equation}
 - compute $\C_{t}$ as minimizing the loss function
 \begin{equation}

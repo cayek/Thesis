@@ -3,7 +3,7 @@
 #+STARTUP: overview indent inlineimages logdrawer
 #+startup: beamer
 #+LINK_HOME:
-#+TITLE: Matrix factorization methods for population genomics and association testing
+#+TITLE: Matrix factorization methods for population genomics and association mapping
 #+AUTHOR:    Kevin Caye$^{1}$, Olivier Michel$^{2}$, Jean-Luc Bosson$^{1}$, Olivier Francois$^{1}$
 #+BEAMER_HEADER: \institute{$^{1}$ TIMC-IMAG, $^{2}$ GIPSA-lab}
 #+EMAIL:     kevin.caye@imag.fr
@@ -17,43 +17,241 @@
 #+LANGUAGE:  en
 #+BEAMER_HEADER: \usebackgroundtemplate{\includegraphics[width=\paperwidth]{background.pdf}}%
 #+BEAMER_HEADER: \addtobeamertemplate{frametitle}{\vskip2ex}{} 
-#+BEAMER_HEADER: \input{../notations.tex}
+#+BEAMER_HEADER: \input{../../notations.tex}
 
 * Introduction
 
-** Genotypic data
-   Example: Celiac dataset cite:dubois2010multiple
+** Dataset
+:LOGBOOK:
+- Note taken on [2017-06-02 ven. 12:29] \\
+  data et exemple de EWAS !
+:END:
 
-** Association Study
+#+begin_src R :results output :exports none
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
+  dim(G)
+  G[1:4, 1:4]
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  [1]    689 162038
+             cg00000029 cg00000165 cg00000236  cg00000289
+  GSM1051525   2.570601  0.9992794  0.5671318 -0.82059475
+  GSM1051526   1.402888  0.6278198  0.6574943  0.01820761
+  GSM1051527   1.417139  0.7503816  1.0295372  0.76304748
+  GSM1051528   1.338992  1.7947700  0.8489499  0.59589792
+#+end_example
+
+*Data*
+- single nucleotide polymorphism (SNP): single nucleotide variation occurring
+  commonly within a population.
+- Data are matrix of size $L$ loci for $n$ individuals ($L \sim 10^6$ and $n
+  \sim 10^4$)
+#+BEGIN_EXPORT latex
+\begin{table}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\begin{tabular}[t]{l|r|r|r}
+\hline
+  & chr: 1 pos: 657 & chr: 1 pos: 3102 & chr: 1 pos: 4268\\
+\hline
+02B6 & 0 & 1 & 1\\
+\hline
+DraIV 1-16 & 1 & 1 & 1\\
+\hline
+UllA 2 & 1 & 0 & 1\\
+\hline
+Zdr-1 & 1 & 1 & 1\\
+\hline
+\end{tabular}
+\caption{Sample of a Rheumatoid Arthritis SNP matrix of size $\Yrow = 15~155$ individuals and $\Ycol = 281~112$ loci~\cite{dubois2010multiple}.}
+\end{table}
+#+END_EXPORT
+
+** Association Study  
    
 *We want* to detect output observed variable which are correlated with an
-primary interest variable.
+primary interest variable. 
 
+
+- $\Y$ (Ex: Celiac SNP matrix)
+- $\X$ (Ex: Celiac disease state)
+
+
+*Linear regression*
 \begin{equation*}
-\Y \sim \X
+\Y =  \X \B^{T}
 \end{equation* }
+We want to detect $$ \B_{j} \neq 0. $$
 
-*Exemple* 
-- \Y celiac
-
-- $\X$ celiac desease state
-** Linear model
-exemple sur celiac
-qqplot
 ** Confounding
+
+There is *unwanded variation* which want to detect and remove.
+
 PCA + X pour montrer que la structure et X sont corrélé
+PCA on RA data set avec confunding 
+
+#+begin_src R :results output :exports none
+  library(ThesisRpackage)
+
+  dat <- Article3_GSE42861_sampler() %>% sampl()
+
+  ## K = 2 svd
+  svd2 <- svd(dat$G, 10, 10)
+
+  ## dump
+  expr <- Experiment(name = "10 svd on RA")
+  expr$description <- "10 svd on ~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds"
+  expr$svd2 <- svd2
+  dumpExperiment(expr)
+
+#+end_src
+
+#+begin_src R :results output :exports none
+  library(ThesisRpackage)
+
+  expr <- retrieveExperiment(138)
+
+
+  ## indiv info
+  X <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/X.rds")
+  X.cor <- cor(cbind(expr$svd2$u[,1:2], X))[1:2, -c(1,2)]
+  X.cor
+  toplot.X.cor <- tibble(x = X.cor[1,], y = X.cor[2,], covariates = as.character(colnames(X.cor)))
+  toplot.X.cor
+
+  ## plot
+  toplot <- as_tibble(expr$svd2$u)
+  pl <- ggplot(toplot, aes(V1, V2)) +
+    geom_point() +
+    geom_segment(data = toplot.X.cor, aes(xend = x,
+                                          yend = y,
+                                          color = covariates),
+                 x = 0, y = 0
+               , arrow=arrow(length=unit(0.3,"cm"))) 
+    ## geom_text(data = toplot.X.cor, aes(color = covariable,
+    ##                                    x = toplot.X.cor$x,
+    ##                                    y = toplot.X.cor$y,
+    ##                                    label = toplot.X.cor$covariable), hjust = -0.4)
+
+  pl
+#+end_src
+
+
 
 * Latent factor in Multiple Hypothesis Testing
 ** Latent Factor Mixed Model
-citer cate, ruv etc
+Following the common notation in *latent factor mixed model* (LFMM) we write the following
+model cite:wang2015confounder,frichot13_testin_assoc_between_loci_envir
+
+\begin{equation}
+\label{eq:model}
+\Y = \X \B^T + \U \V^T + \E 
+\end{equation}
+
+- $\U \V^{T}$ is the unwanted variation
+- $\X \B^{T}$ is the variation of interest
+- $\E$ the residual noise.
+
 ** Estimation
-lasso 
-ridge
-* Results on Celiac dataset
-** 
+*L2-norm loss function*
+\begin{equation*}
+\label{eq:optim_no_reg}
+\LfmmL
+\end{equation*}
+*The problem* is $L$ do not allow to separate source of unwanted variation from
+interest variation.
+\begin{equation*}
+L(\U, \V, \B) = L(\U - \X \matr{C}, \V, \B + \V \matr{C}^{T})
+\end{equation*}
+** Regularized estimation
+
+*Ridge* regularized LFMM
+
+\begin{equation*}
+\LfmmLridge
+\end{equation*}
+
+*Lasso* regularized LFMM
+
+\begin{equation*}
+L_{lasso}(\C, \B) =  \frac{1}{2} \norm{\Y - \C - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\C}_{*}
+\end{equation*}
+
+where $$\C = \U \V^{T}.$$
+
+** COMMENT Ridge regularized LFMM (RidgeLFMM)
+
+*Solutions* of optimization of the ridge regularized loss function
+
+\begin{align*}
+\hat{\U} \hat{\V} & =  \sqrt{\obP}^{-1} * svd_{\K}(\sqrt{\obP} \Y ) \\
+\hat{\B} & = (\X^{T} \X + \lambda \Id_{d})^{-1} \X^{T} (G - \hat{\U} \hat{\V}),
+\end{align*}
+
+where 
+
+\begin{equation*}
+\obP = \sqrt{\obP}^{2}.
+\end{equation*}
+
+** COMMENT Lasso regularized LFMM (LassoLFMM)
+
+The lasso regularized loss function is *convex* of $\C$ and $\B$, we can alternated minimization
+along each variable
+
+- compute $\B_{t}$ as minimizing the loss function
+\begin{equation}
+\label{eq:lasso_algo_1}
+L_{lasso}^{1}(\B) =  \frac{1}{2} ||(\Y - \C_{t-1}) - \X \B^T||_{F}^2 + \lambda ||\B||_1
+\end{equation}
+
+- compute $\C_{t}$ as minimizing the loss function
+\begin{equation}
+\label{eq:lasso_algo_2}
+L_{lasso}^{2}(\C) = \frac{1}{2} ||(\Y - \X \B_t^T)- \C ||_{F}^2 + \gamma ||\C||_{*}.
+\end{equation}
+
+* Some results
+** Numerical validation
+We performed simulations of LFMM generative model $$ \Y = \X \B^T + \U \V^T + \E
+$$ 
+
+with $$ B_{j} \neq 0$$ for some variables associated with the variable of
+interest $\X$.
+** Numerical validation
 
 
-* References
- bibliography:../../biblio.bib
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  s <- NormalSampler2(n = 100,
+                      L = 1000,
+                      K = 3,
+                      prop.outlier = 0.8)
+
+  ## TODO pass s in parameter
+  FDRControlExperiment(nb.rep = 5, )
+#+end_src
+
+plot precision * power
+
+Ideéalement on montre que lasso est plus robust que lfmm ridge
+
+** Celiac dataset
+We applied LfmmRidge on Celiac dataset.
+
+We retrieve in top 1000 .... of SNP referenced in GWASCatalogue.
+
+qqplot avec les annotations classic.
+
+ bibliography:../../../biblio.bib
  bibliographystyle:apalike
 
+
+#  LocalWords:  dataset Celiac Genotypic SNP RidgeLFMM LassoLFMM LFMM
+** AR dataset
+presenter data
+confusion (batch effect etc)
+We run without known confonding effect
+with 

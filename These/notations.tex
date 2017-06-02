@@ -9,6 +9,13 @@
 \newcommand{\Var}{\mathrm{Var}} %% variance
 \newcommand{\RR}{\mathbb{R}} %% real ensemble
 
+%% name of method
+\newcommand{\MethodCate}{CATE}
+
+%% name of software
+\newcommand{\RpackageCate}{{\tt cate}}
+
+
 %% lattent factor model
 \newcommand{\K}{K} %% number of latent factor
 \newcommand{\U}{\matr{U}} %% factor score matrix
@@ -23,15 +30,26 @@
 \newcommand{\B}{\matr{B}} %% primary effects matrix
 \newcommand{\Bcol}{\Xcol} %% B col dim
 \newcommand{\Brow}{\Ycol} %% B row dim
-
 \newcommand{\E}{\matr{E}} %% residual error matrix
 \newcommand{\C}{\matr{C}} %% approximation matrix with latent factor/
                           %% approximation matrix
 \newcommand{\obP}{\matr{P}_{\lambda}} %% U row dim
 
+%% lfmm equation
+\newcommand{\LfmmLridge}{%
+L_{ridge}(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2 +
+\lambda \norm{\B}^{2}_{2}%
+}
+\newcommand{\LfmmL}{%
+L(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2 %
+}
+\newcommand{\LfmmLlasso}{%
+L_{lasso}(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^{T} - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\U \V^{T}}_{*}%
+}
+\newcommand{\LfmmP}{%
+\obP = \Id_{\Yrow} - \X (\X^T \X + \lambda \Id_{\Yrow})^{-1}
+\X^T%
+}
 
-%% name of method
-\newcommand{\MethodCate}{CATE}
+%% tess3 equation
 
-%% name of software
-\newcommand{\RpackageCate}{{\tt cate}}

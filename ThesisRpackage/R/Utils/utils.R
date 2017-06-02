@@ -60,13 +60,15 @@ plotable<- function(toplot) {
 
 #' save plot to png format on timc-bcm-15
 #' @export
-save_plot_timc_bcm_15 <- function(pl, filename, width = 600, height = 400) {
+save_plot_timc_bcm_15 <- function(pl, filename, width = 600, height = 400,
+                                  path.dir = "~/Projects/Thesis/Rplots/") {
   tmp.file <- tempfile()
   png(tmp.file, width, height)
   print(pl)
   dev.off()
   system(paste0("scp ", tmp.file,
-                " cayek@timc-bcm-15:~/Projects/Thesis/Rplots/", filename),
+                paste0(" cayek@timc-bcm-15:",path.dir),
+                filename),
          ignore.stdout = TRUE)
   cat(paste0("[[./Rplots/",filename,"]]\n"))
 }

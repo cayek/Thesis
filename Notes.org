@@ -923,8 +923,10 @@ On prend les données climatique de worldclim et on fait l'acp ;-)
 - State "STARTED"    from "TODO"       [2017-05-29 lun. 16:38]
 - State "TODO"       from              [2017-05-29 lun. 16:03]
 :END:
-**** RUNNING Run on krakenator
+**** DEBUG Run on krakenator
 :LOGBOOK:
+- State "DEBUG"      from "DONE"       [2017-06-02 ven. 08:45]
+- State "DONE"       from "RUNNING"    [2017-06-02 ven. 08:45]
 - Note taken on [2017-06-01 jeu. 18:24] \\
   16554.pts-3.krakenator
 - State "RUNNING"    from "WAITING"    [2017-06-01 jeu. 18:24]
@@ -979,6 +981,62 @@ pour les valeur singuliere
 
 #+end_src
 
+#+RESULTS:
+#+begin_example
+  DEBUG [2017-06-01 18:50:03] missingValueImputationLoop: it =  1 | err =  0.913409825550464
+  DEBUG [2017-06-01 18:54:38] D_thau: K =  10
+
+  DEBUG [2017-06-01 19:06:18] missingValueImputationLoop: it =  2 | err =  0.91338938207813
+  DEBUG [2017-06-01 19:11:06] D_thau: K =  10
+
+  DEBUG [2017-06-01 19:23:02] missingValueImputationLoop: it =  3 | err =  0.913381012080782
+  DEBUG [2017-06-01 19:26:21] FAMT::modelFAMT said:
+  --------------------------------
+  [1] "Fitting Factor Analysis Model with 10 factors"
+  [1] "Fitting Factor Analysis Model with 10 factors"
+  --------------------------------
+  DEBUG [2017-06-01 19:27:42] D_thau: K =  10
+
+  DEBUG [2017-06-01 19:40:35] missingValueImputationLoop: it =  4 | err =  0.91337742530545
+  DEBUG [2017-06-01 19:46:06] D_thau: K =  10
+
+  DEBUG [2017-06-01 19:59:39] missingValueImputationLoop: it =  5 | err =  0.91337584643065
+  DEBUG [2017-06-01 20:03:53] D_thau: K =  10
+
+  DEBUG [2017-06-01 20:13:46] sva::sva said:
+  --------------------------------
+  Number of significant surrogate variables is:  10
+  Iteration (out of 5 ):1  2  3  4  5
+  --------------------------------
+  DEBUG [2017-06-01 20:14:23] fit.LassoLFMMMethod: B not null prop=0.0404726726972243
+  DEBUG [2017-06-01 20:14:23] fit.LassoLFMMMethod: i=2 / 100|lambda = 0.0446606864782912
+  DEBUG [2017-06-01 20:14:27] missingValueImputationLoop: it =  0 | err =  0.913375142885555
+  DEBUG [2017-06-01 20:18:38] D_thau: K =  10
+
+  DEBUG [2017-06-01 20:20:39] sva::fstats said:
+  --------------------------------
+  --------------------------------
+  DEBUG [2017-06-01 20:28:11] sva::f.pvalue said:
+  --------------------------------
+  --------------------------------
+  DEBUG [2017-06-01 20:29:38] missingValueImputationLoop: it =  1 | err =  0.913365242323615
+  DEBUG [2017-06-01 20:33:49] D_thau: K =  10
+
+  DEBUG [2017-06-01 20:44:25] missingValueImputationLoop: it =  2 | err =  0.913360725989644
+  DEBUG [2017-06-01 20:48:39] D_thau: K =  10
+
+  DEBUG [2017-06-01 20:59:41] missingValueImputationLoop: it =  3 | err =  0.913358649587905
+  DEBUG [2017-06-01 21:04:02] D_thau: K =  10
+
+  DEBUG [2017-06-01 21:14:12] missingValueImputationLoop: it =  4 | err =  0.913357687143264
+  DEBUG [2017-06-01 21:18:18] D_thau: K =  10
+
+  DEBUG [2017-06-01 21:28:38] fit.LassoLFMMMethod: B not null prop=0.059781942197747
+  DEBUG [2017-06-01 21:28:41] run.Method: running  lm+zscore|calibrate=FALSE
+  Error in { :
+    task 4 failed - "'data' doit être de type vecteur, il était 'NULL'"
+
+#+end_example
 
 **** TODO Plot
 :PROPERTIES:
