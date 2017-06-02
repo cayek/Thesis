@@ -132,7 +132,6 @@ Article3_MethodComparison <- function(G.file,
                              B.outlier.sampler = B.outlier.sampler,
                              reference = TRUE)
   } else {
-    print("G.file is null")
     exp$s <- s
   }
   exp$methods <- methods

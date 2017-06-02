@@ -18,6 +18,10 @@
 #+BEAMER_HEADER: \usebackgroundtemplate{\includegraphics[width=\paperwidth]{background.pdf}}%
 #+BEAMER_HEADER: \addtobeamertemplate{frametitle}{\vskip2ex}{} 
 #+BEAMER_HEADER: \input{../../notations.tex}
+#+BEAMER_HEADER: \thankstitle{Thank you!}
+
+#  LocalWords:  dataset Celiac Genotypic SNP RidgeLFMM LassoLFMM LFMM genotype
+#  LocalWords:  methylation
 
 * Introduction
 
@@ -235,7 +239,11 @@ We performed simulations of LFMM generative model $$\Y = \X \B^T + \U \V^T + \E$
 
 with $$ B_{j} \neq 0$$ for some variables associated with the variable of
 interest $\X$.
-** Numerical validation
+** TODO Numerical validation
+:LOGBOOK:
+- Note taken on [2017-06-02 ven. 17:05] \\
+  je suis pas content du plot, il y a moyen de plus planter l'acp !!!
+:END:
 
 #+begin_src R :results output :exports none
   library(ThesisRpackage)
@@ -254,33 +262,47 @@ interest $\X$.
   ## TODO pass s in parameter
   expr <- Article3_MethodComparison(G.file = NULL,
                                     outlier.props = c(0.1),
-                                    cs = c(0.8),
+                                    cs = c(0.9, 0.6, 0.3),
                                     s = s,
                                     methods = methods,
-                                    nb.rep = 1)
+                                    nb.rep = 4,
+                                    cluster.nb = 4)
 
   pl <- Article3_MethodComparison_plot_precisionRecall(expr)
   pl
+  save_plot_timc_bcm_15(pl, "method_comp.png", path.dir = "~/Projects/Thesis/These/Slides/JourneePersyvalLab/Rplots/")
 #+end_src
 
-plot precision * power
 
-Ideéalement on montre que lasso est plus robust que lfmm ridge
+[[./Rplots/method_comp.png]]
+#+CAPTION: TODO
 
-** Celiac dataset
+** TODO AR dataset
+
+We retrieve main site found in other study using explicitly confounding
+variables (age, gender, smoking status, cellular composition)
+
+#+begin_src R :results output :exports none
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(121)
+  expr$description
+  expr$outlier
+  expr <- MethodBatchExperiment_calibrate(expr)
+#+end_src
+
+
+** Thank you ! 
+
+Thank you for your attention ! 
+
+** References
+bibliography:../../../biblio.bib
+bibliographystyle:apalike
+
+
+** COMMENT Celiac dataset
 We applied LfmmRidge on Celiac dataset.
 
 We retrieve in top 1000 .... of SNP referenced in GWASCatalogue.
 
 qqplot avec les annotations classic.
-
-** AR dataset
-
-We retrieve 
-
-bibliography:../../../biblio.bib
-bibliographystyle:apalike
-
-
-#  LocalWords:  dataset Celiac Genotypic SNP RidgeLFMM LassoLFMM LFMM genotype
-#  LocalWords:  methylation

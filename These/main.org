@@ -360,7 +360,7 @@ matrix was centered and normalized with standard deviation for all the study. We
 now describe preprocessing step for each study.
 
 ***** Association study of DNA methylation with rheumatoid arthritis (EWAS)
-For the EWAS we chose data from a recent association study of DNA with
+For the EWAS we chose data from a recent association study of DNA methylation with
 rheumatoid arthritis (RA) cite:Liu_2013. We retrieve the RA data from Gene
 Expression Omnibus (GEO) database (accession number GSE42861). Following
 cite:Zou_2014 we filtered out site if its average probe $\beta$ value was above
