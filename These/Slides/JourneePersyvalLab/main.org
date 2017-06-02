@@ -89,7 +89,7 @@ interest variable.
 #+begin_src R :results output :exports none
   expr <- retrieveExperiment(110)
   pl <- MethodBatchExperiment_qqplot(expr)
-  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_lm.png", "~/Projects/Thesis/These/Slides/JourneePersyvalLab/Rplots/")
+  save_plot_timc_bcm_15(pl, "GSE42861_qqplot_lm.png", path.dir = "~/Projects/Thesis/These/Slides/JourneePersyvalLab/Rplots/")
 #+end_src
 
 [[./Rplots/GSE42861_qqplot_lm.png]]
@@ -243,10 +243,24 @@ interest $\X$.
   s <- NormalSampler2(n = 100,
                       L = 1000,
                       K = 3,
-                      prop.outlier = 0.8)
+                      prop.outlier = NULL)
+
+  methods <- list()
+  methods$lfmm.ridge <- finalLfmmRdigeMethod(K = 3, lambda = 1e-5)
+  methods$lfmm.lasso <- finalLfmmLassoMethod(K = 3, 0.1)
+  methods$lmPca <- finalPcaLm(K = 3)
+  methods$lm <- finalLm()
 
   ## TODO pass s in parameter
-  FDRControlExperiment(nb.rep = 5, )
+  expr <- Article3_MethodComparison(G.file = NULL,
+                                    outlier.props = c(0.1),
+                                    cs = c(0.8),
+                                    s = s,
+                                    methods = methods,
+                                    nb.rep = 1)
+
+  pl <- Article3_MethodComparison_plot_precisionRecall(expr)
+  pl
 #+end_src
 
 plot precision * power
@@ -260,14 +274,13 @@ We retrieve in top 1000 .... of SNP referenced in GWASCatalogue.
 
 qqplot avec les annotations classic.
 
- bibliography:../../../biblio.bib
- bibliographystyle:apalike
+** AR dataset
+
+We retrieve 
+
+bibliography:../../../biblio.bib
+bibliographystyle:apalike
 
 
 #  LocalWords:  dataset Celiac Genotypic SNP RidgeLFMM LassoLFMM LFMM genotype
-** AR dataset
-presenter data
-confusion (batch effect etc)
-We run without known confonding effect
-with 
 #  LocalWords:  methylation
