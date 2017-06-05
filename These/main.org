@@ -25,10 +25,26 @@ bibliography:../biblio.bib
 
 * État de l'art 
 ** Contexte
+:LOGBOOK:
+- Note taken on [2017-06-05 Mon 10:38] \\
+  Ca peut etre cool de replacer le context historique en partant de la niasance
+  des stats (fisher etc) et de faire le parallele avec maintenant pour on a
+  suffisament de données pour se rendre compte que nos test d'hypothèse sont faux
+  :D et la on fait le lien avec les tests d'hypothèe multiple....
+:END:
 ** Analyse factorielle des données biologiques
 ** Test d'association
 ** Problématique et plan
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
+:LOGBOOK:
+- Note taken on [2017-06-05 Mon 13:44] \\
+  Ce qui serais stylé c'est d'ajouté une cross validation propre pour tess3 :D, et
+  de relancer les analyse sur AT, voir pk pas sur les très gros dataset AT :D !!!
+  
+  On ne toucherais pas à l'autre papier mais on lance sur ce dataset la même
+  analyse mais très proprement :D, y compris pour l'étude stat à la fin
+  (recalibration propre !)
+:END:
 * Estimation des facteurs latents pour corriger les test d'association :3Article:
 ** Introduction
 ** Methods

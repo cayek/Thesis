@@ -3,7 +3,7 @@
 #+STARTUP: overview indent inlineimages logdrawer
 #+startup: beamer
 #+LINK_HOME:
-#+TITLE: Matrix factorization methods for population genomics and association mapping
+#+TITLE: Matrix factorization methods for association mapping
 #+AUTHOR:    Kevin Caye$^{1}$, Olivier Michel$^{2}$, Jean-Luc Bosson$^{1}$, Olivier Francois$^{1}$
 #+BEAMER_HEADER: \institute{$^{1}$ TIMC-IMAG, $^{2}$ GIPSA-lab}
 #+EMAIL:     kevin.caye@imag.fr
@@ -70,13 +70,13 @@ interest variable.
 
 ** Multiple Hypothesis Testing: Simple Linear Regression
    
- Linear model for each locus $j$ 
+ Linear model supposes that
      $$\Y =  \X \B^{T} + \E$$
    where
       - $\B$ is the primary effect matrix
       - $\E$ is the residual error matrix.
    
-   We want to detect $j$ variable where we can reject the hypothesis 
+   We want to detect $j$ output variable where we can reject the hypothesis 
    
    $$ H_0: \B_j = 0.$$
 
@@ -88,7 +88,13 @@ interest variable.
    where $\hat{\B_j}$ is an estimation of $\B_j$ and $\hat{\sigma_j}$ the
    estimation its standard deviation.
 
-** Example: Linear Regression on RA Dataset 
+** TODO Example: Linear Regression on RA Dataset 
+:LOGBOOK:
+- Note taken on [2017-06-05 Mon 12:51] \\
+  on voit pas la legende .
+- Note taken on [2017-06-05 Mon 12:50] \\
+  faut que j'enleve pvalue et lm
+:END:
 
 #+begin_src R :results output :exports none
   expr <- retrieveExperiment(110)
@@ -181,7 +187,7 @@ model cite:wang2015confounder,frichot13_testin_assoc_between_loci_envir
 \LfmmL
 \end{equation*}
 *The problem* is $L$ do not allow to separate source of unwanted variation from
-interest variation.
+interested variation.
 \begin{equation*}
 L(\U, \V, \B) = L(\U - \X \matr{C}, \V, \B + \V \matr{C}^{T})
 \end{equation*}
@@ -239,8 +245,15 @@ We performed simulations of LFMM generative model $$\Y = \X \B^T + \U \V^T + \E$
 
 with $$ B_{j} \neq 0$$ for some variables associated with the variable of
 interest $\X$.
+
+With correlation between latent factor matrix score $\U$ and $\X$.
+
 ** TODO Numerical validation
 :LOGBOOK:
+- Note taken on [2017-06-05 Mon 13:14] \\
+  changer le nom des axes
+- Note taken on [2017-06-05 Mon 13:11] \\
+  il faut des legende plus clair en haut et sur le coté .
 - Note taken on [2017-06-02 ven. 17:05] \\
   je suis pas content du plot, il y a moyen de plus planter l'acp !!!
 :END:
@@ -280,7 +293,7 @@ interest $\X$.
 ** TODO AR dataset
 
 We retrieve main site found in other study using explicitly confounding
-variables (age, gender, smoking status, cellular composition)
+variables (age, gender, smoking status, cellular composition).
 
 #+begin_src R :results output :exports none
   library(ThesisRpackage)
