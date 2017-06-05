@@ -81,3 +81,14 @@ GTAGS
 *.bbl
 These/main.pdf
 These/main.tex
+*.toc
+*.nav
+*.vrb
+*.out
+*.bbl
+*.fdb_latexmk
+*.aux
+*.snm
+*.fls
+*.blg
+2Article/Slides/JourneePersyvalLab_2017/main.pdf
