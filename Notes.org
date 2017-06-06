@@ -2337,7 +2337,7 @@ CLOSED: [2017-05-22 lun. 15:06]
 
 lfmm lasso donne bien comme l'oracle. Il y a toujours ce truc bizare avec l'ACP
 mais je pense que c'est une particularité des data.
-*** STARTED Run on krakenator
+*** STARTED K = 10 
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
@@ -2726,8 +2726,11 @@ CLOSED: [2017-06-06 mar. 09:21]
 :LOGBOOK:
 - State "STARTED"    from              [2017-06-06 mar. 09:26]
 :END:
-***** TODO Run all even with lfmm lasso :D
+***** RUNNING Run all even with lfmm lasso :D
 :LOGBOOK:
+- Note taken on [2017-06-06 mar. 09:32] \\
+  28717.pts-4.krakenator
+- State "RUNNING"    from "TODO"       [2017-06-06 mar. 09:32]
 - State "TODO"       from              [2017-06-06 mar. 09:28]
 :END:
 
@@ -2736,13 +2739,13 @@ CLOSED: [2017-06-06 mar. 09:21]
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
   expr <- Article3_MethodComparison(G.file,
-                                    outlier.props = c(0.05, 0.05, 0.1),
+                                    outlier.props = c(0.005, 0.01, 0.1),
                                     n = NULL, L = 50000,
                                     K = 10,
                                     K.method = 10,
                                     lasso.sparse.prop = 0.05,
                                     ridge.lambda = 1e-5,
-                                    cs = c(0.1, 0.2, 0.4, 0.6),
+                                    cs = list(c1 = c(0.6, 0.4, 0.2, 0.1)),
                                     cs.sum = FALSE,
                                     sd.V.rho = 1,
                                     nb.rep = 4,
@@ -2771,7 +2774,10 @@ CLOSED: [2017-06-06 mar. 09:21]
   pl <- Article3_MethodComparison_plot_GIF(expr)
   save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_moreCorrelation.png")
 #+end_src
-
+*** TODO Robustness to K choice
+:LOGBOOK:
+- State "TODO"       from              [2017-06-06 mar. 09:35]
+:END:
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
 *** ./Data/SSMPG2015/ 
