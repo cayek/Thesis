@@ -2627,13 +2627,19 @@ On a le bon message, plus il y a d'outlier moins acp+lm est puissant. Plus la
 corrélation est forte moin lm est puissant. Sinon ils sont tout calibré a part
 lm. FAMT on sait pas pour ca merde....
 
-**** STARTED with 2 5 10 % outlier and L = 50 000
+**** DONE with 2 5 10 % outlier and L = 50 000
+CLOSED: [2017-06-06 mar. 09:26]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-06-06 mar. 09:26]
 - State "STARTED"    from "TODO"       [2017-06-01 jeu. 18:26]
 - State "TODO"       from "DONE"       [2017-06-01 jeu. 18:12]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DONE Run all even with lfmm lasso :D
+CLOSED: [2017-06-06 mar. 09:07]
 :LOGBOOK:
+- Note taken on [2017-06-06 mar. 09:08] \\
+  148
+- State "DONE"       from "RUNNING"    [2017-06-06 mar. 09:07]
 - Note taken on [2017-06-01 jeu. 18:27] \\
   16668.pts-8.krakenator
 - Note taken on [2017-06-01 jeu. 18:20] \\
@@ -2662,8 +2668,10 @@ lm. FAMT on sait pas pour ca merde....
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-***** TODO plot
+***** DONE plot
+CLOSED: [2017-06-06 mar. 09:21]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-06 mar. 09:21]
 - State "TODO"       from "DONE"       [2017-06-01 jeu. 18:14]
 :END:
 :PROPERTIES:
@@ -2672,9 +2680,12 @@ lm. FAMT on sait pas pour ca merde....
 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  expr <- retrieveExperiment(?)
+  expr <- retrieveExperiment(148)
   expr$description
 #+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=10 K.method=10 correctionByC=FALSE fast.only=FALSE n= L=50000 cs=0.1|0.2|0.4|0.6 cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=0.01|0.05|0.1 ridge.lambda=1e-05 lasso.sparse.prop=0.05 nb.rep=4 "
 
 
 #+begin_src R :results output :exports both
@@ -2684,6 +2695,82 @@ lm. FAMT on sait pas pour ca merde....
   save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_moreOutlier.png")
 #+end_src
 
+#+RESULTS:
+[[./Rplots/NumericVal_auc_with_lasso_L5e4_moreOutlier.png]]
+[[./Rplots/NumericVal_gif_with_lasso_L5e4_moreOutlier.png]]
+#+begin_example
+# A tibble: 48 × 5
+   method outlier.prop `cor(U,X)`   rep       auc
+    <chr>        <dbl>      <chr> <dbl>     <dbl>
+1  Oracle         0.01        0.1     1 0.9970106
+2  Oracle         0.01        0.1     2 0.9970722
+3  Oracle         0.01        0.1     3 0.9970173
+4  Oracle         0.01        0.1     4 0.9970141
+5  Oracle         0.01        0.2     1 0.9970641
+6  Oracle         0.01        0.2     2 0.9970148
+7  Oracle         0.01        0.2     3 0.9970192
+8  Oracle         0.01        0.2     4 0.9970236
+9  Oracle         0.01        0.4     1 0.9970304
+10 Oracle         0.01        0.4     2 0.9970177
+# ... with 38 more rows
+#+end_example
+
+*Remarks:*
+- lasso lfmm est pas très bon avec p=0.1 et même p=0.5, c'est normal on a mis
+  lasso proportion à 0.05 !!
+- Tous le monde fait trop bien avec ces simu !!! on va changer la correlation
+  entre X et U :D
+
+
+**** STARTED with p = 0.005 0.01 0.1 outlier and L = 50 000 and cor(X,U) = 0.6,0.4,0.2,0.1
+:LOGBOOK:
+- State "STARTED"    from              [2017-06-06 mar. 09:26]
+:END:
+***** TODO Run all even with lfmm lasso :D
+:LOGBOOK:
+- State "TODO"       from              [2017-06-06 mar. 09:28]
+:END:
+
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.05, 0.05, 0.1),
+                                    n = NULL, L = 50000,
+                                    K = 10,
+                                    K.method = 10,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c(0.1, 0.2, 0.4, 0.6),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 4,
+                                    fast.only = FALSE,
+                                    cluster.nb = 4,
+                                    save = TRUE, bypass = FALSE)
+
+#+end_src
+***** WAITING plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+:LOGBOOK:
+- State "WAITING"    from              [2017-06-06 mar. 09:28]
+:END:
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(?)
+  expr$description
+#+end_src
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_moreCorrelation.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_moreCorrelation.png")
+#+end_src
 
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
