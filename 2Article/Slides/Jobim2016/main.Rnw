@@ -1,53 +1,4 @@
-\documentclass{beamer}\usepackage[]{graphicx}\usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-
-\usepackage{framed}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
-
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
-
-\usepackage{alltt}
+\documentclass{beamer}
 
 \mode<presentation>
 {
@@ -71,20 +22,31 @@
 \usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
 
 \title{tess3r: a R package for estimating spatial population structure}
-\subtitle[\ldots]{Scientific Days, June 13 th \& 14 th , 2017}
-\author{Kevin Caye$^{1}$ (third year phd student), \\
-  Olivier Michel$^{2}$, Olivier Francois$^{1}$}
+\subtitle[\ldots]{Jobim 2016}
+\author{Kevin Caye$^{1}$, Olivier Michel$^{2}$, Olivier Francois$^{1}$}
 \institute{$^{1}$ TIMC-IMAG, $^{2}$ GIPSA-lab}
-\date{}
+\date{\today} 
+
 \titlegraphic{\includegraphics[width=0.2\linewidth]{uga_logo_visuel.jpg}\hspace*{0.2\linewidth}~%
   \includegraphics[width=0.2\linewidth]{persyval.png}\hspace*{0.2\linewidth}~%
   \includegraphics[width=0.2\linewidth]{logoTIMC.jpg}
 }
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
 \begin{document}
 
 
+<<setup, include=FALSE>>=
+library(knitr)
+opts_chunk$set(echo = FALSE, cache = TRUE, eval = TRUE,
+               fig.path = 'figure/graphics-', cache.path = 'cache/graphics-', 
+               fig.align = 'center', dev = 'tikz', fig.width = 2.5, fig.height = 2.5, fig.show = 'hold', par = TRUE, 
+               warning = FALSE, error = FALSE, results = FALSE, message = FALSE)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+}, crop=hook_pdfcrop)
 
+source("PlotParams.R")
+@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -95,35 +57,26 @@
 % Genotypic Data
 
 
-
+<<at.data>>=
+load(paste0(data.dir,"call_method_75_TAIR8.RData"))
+@
 
 \begin{frame}{Genotypic Data}
+DNA Sequencing Technologies: 
 \begin{itemize}
-  \item single nucleotide polymorphism (SNP): single nucleotide variation
-    occurring commonly within a population.
-  \item Data are matrix of size $L$ loci for $n$ individuals ($L \sim 10^6$ and
-    $n \sim 10^3$)
+  \item SNPs array (\emph{Arabidopsis thaliana} RegMap lines \citep{horton2012genome} : $200k$ loci of 1 307 individuals)
+  \item next generation sequencing (1000 Genome project \citep{10002015global} : whole genome of $2504$ individuals)
 \end{itemize}
 
 \begin{center}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\begin{tabular}{l|r|r|r}
-\hline
-  & chr: 1 pos: 657 & chr: 1 pos: 3102 & chr: 1 pos: 4648\\
-\hline
-02B6 & 1 & 1 & 1\\
-\hline
-09A3 & 1 & 0 & 1\\
-\hline
-12A1 & 1 & 1 & 1\\
-\hline
-13B5 & 0 & 0 & 0\\
-\hline
-\end{tabular}
-
-
-\end{knitrout}
+<<table, depson=c("at.data")>>=
+n = 4
+L = 3
+table <- as.data.frame(call_method_75_TAIR8.europe$X[1:n,1:L])
+#rownames(table)[n] <- "$\\hdots$" 
+#colnames(table) <- c( "1_657", "1_3102", "$\\vdots$")
+kable(table)
+@
 \end{center}
 
 \end{frame}
@@ -143,12 +96,12 @@ We want to estimate:
 \includegraphics{barplot.pdf}
 
 
-Several methods exist:
+Several method exist:
 \begin{itemize}
   \item \alert{Bayesian}: structure~\citep{pritchard2000inference}
-  \item \alert{optimization based}: sNMF~\citep{frichot2014fast}
+  \item \alert{optimisation based}: sNMF~\citep{frichot2014fast}
 \end{itemize}
-Estimating ancestral population structure is crucial for demographic analysis, medical genetics, 
+These methods are crucial for demographic analysis, medical genetics, 
   conservation genetics or landscape genetics.
 \end{frame}
 
@@ -173,10 +126,7 @@ Several methods incorporate geographic data in prior distributions:
      \end{center}
 \end{column}
 \end{columns}
-
-\alert{Our contribution:}
-
-We propose a new method TESS3 to estimate spatial population based on an optimization 
+We propose a new method to estimate spatial population based on an optimizarion 
 problem.
 \end{frame}
 
@@ -184,7 +134,7 @@ problem.
 % MODEL SNMF
 \begin{frame}{Model for the Genotypic Matrix}
 
-We write $G$ the genotypic matrix
+We write $G$ the genomic matrix
 
 \begin{equation*}
 \begin{array}{rcl}
@@ -209,7 +159,7 @@ F \succeq 0,~\sum_{j=0}^{d} f_{k,\ell}(j) = 1,~\forall \ell \in \{1,...,L\}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OPTIM PB
 
-\begin{frame}{Optimization Problem}
+\begin{frame}{Optimisation Problem}
 
 We construct a weighted graph using spatial data:
 
@@ -223,12 +173,13 @@ The loss function is:
 
 \begin{equation*}
 \begin{aligned}
-Loss(Q,F)& = &||G - QF^T||^2 + \lambda \sum_{i,j}^{n} W_{i,j} ||Q_{i,} - Q_{j,}||^2 \\
+Loss(Q,F)& = &||X-QF^T||^2 + \lambda \sum_{i,j}^{n} W_{i,j} ||Q_{i,} - Q_{j,}||^2 \\
  &= &||X-QF^T||^2 + \lambda \text{trace}(Q^T \Lambda Q),
 \end{aligned}
 \end{equation*}
 
-where $\Lambda$ is the graph Laplacian matrix.
+where $\Lambda$ is the graph Laplacian matrix and $X$ is the data matrix.
+% is a binary matrix which encode absence or the presence of each genotype at each locus.
 
 \end{frame}
 
@@ -239,7 +190,7 @@ where $\Lambda$ is the graph Laplacian matrix.
 
 \begin{itemize}
 
-\item The loss function is not convex.
+\item The optimisation problem is not convex.
 
 \item It is convex with respect to one of the variables $Q$ or $F$ when the other one is fixed.
 
@@ -263,12 +214,12 @@ $ Q \gets \underset{Q}{\text{arg min}} f_Q(Q,F)$
 
 \begin{frame}{Alternating Projected Least Squares}
 
-F optimization step : 
+F optimisation step : 
 \begin{enumerate}
   \item Solving least squares problems for $F$ rows
   \item Projecting onto the polygon of $F$ constraints
 \end{enumerate}
-Q optimization step : 
+Q optimisation step : 
 \begin{enumerate}
   \item Solving $L_2$-regularized least squares problems for $Q$ rows
   \item Projecting onto the polygon of $Q$ constraints
@@ -284,9 +235,9 @@ Q optimization step :
 
 \item Advantage:
 
-The $F$ optimization step requires to solve $L$ least squares problems of size $K$.
+The $F$ optimisation step requires to solve $L$ least squares problems of size $K$.
 
-The $Q$ optimization step requires to solve $n$ $L_2$-regularized least squares problems of size $K$.
+The $Q$ optimisation step requires to solve $n$ $L_2$-regularized least squares problems of size $K$.
 
 \item Drawback:
 
@@ -298,11 +249,11 @@ The algorithm is not guaranteed to provide a stationary point.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Numerical experiement 2 slides présentation de l'experimentation + resultats
-\begin{frame}{Benchmark}
+\begin{frame}{Simulations}
 
-Simulation of hybrid population dataset~\citep{franccois2010spatially}
+Simulation of admixed population dataset~\citep{franccois2010spatially}
 \begin{center}
-\includegraphics[width=.70\linewidth]{addmixed_QF.png}
+\includegraphics[width=.70\linewidth]{addmixed.png}
 \end{center}
 
 \end{frame}
@@ -335,12 +286,9 @@ On these simulation TESS3 algorithm performs 30 time better than TESS 2.3
 \end{figure}
 
 \begin{itemize}
-\item 1,307 accessions of \emph{A. thaliana} have been genotyped using the
-  Affymetrix Arabidopsis 250k - SNP chip~\citep{horton2012genome}
+  \item 1,307 accessions of \emph{A. thaliana} have been genotyped using the Affymetrix Arabidopsis 250k - SNP chip~\citep{horton2012genome}
   \item Geographic coordinates for 1,193 of these samples~\citep{anastasio2011source}
 \end{itemize}
-
-We now present a study of this dataset with our new R package \alert{tess3r}.
 
 \end{frame}
 
@@ -396,11 +344,11 @@ We choose \alert{$\sigma = 1.5$} for the spatial autocorrelation scale.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Detecting Adaptive Loci}
+\begin{frame}{Detecting Adaptive Loci (Preliminary Results)}
 \begin{itemize}
   \item Flowering-related genes detected in the top list: FRIGIDA, FLOWERING LOCUS C (FLC), 
   DELAY OF GERMINATION 1 (DOG1)~\citep{horton2012genome}.
-  \item Statistical over representation of genes involved in metabolic processes: 
+  \item Statistical overrepresentation of genes involved in metabolic processes: 
   1.08 fold enrichment, $p$-value $< 1e^{-6}$ (PANTHER database).
 \end{itemize}
   
@@ -410,37 +358,19 @@ We choose \alert{$\sigma = 1.5$} for the spatial autocorrelation scale.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusion: (résumé) 
 
-\begin{frame}[fragile]{Conclusion and Perspective}
+\begin{frame}[fragile]{Conclusion}
 
 \begin{itemize}
-  \item Estimation and visualization of spatial population structure.
+  \item Estimation and visualisation of spatial population structure.
   \item Local adaptation detection.
   \item Beta Version available on github.
+
 \end{itemize}
+
   
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{devtools}\hlopt{::}\hlkwd{install_github}\hlstd{(}\hlstr{"cayek/TESS3_encho_sen@master"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-\alert{Publication:}
-
-\begin{itemize}
-% \item Kevin Caye, Timo Deist, Helena Martins, Olivier Michel, Olivier Francois. TESS3: fast inference of spatial population structure and genome scans for selection. Molecular Ecology Resources, Blackwell, 2015.
-  
-\item Kevin Caye, Flora Jay, Olivier Michel, Olivier Francois. Fast Inference of
-  Individual Admixture Coefficients Using Geographic Data. bioRxiv, 2016.
-\end{itemize}
-
-\alert{Perspective:}
-\begin{itemize}
-\item Use the graph regularization on have temporally consistent ancestral
-  populations.
-\end{itemize}
-
+<<ccl, echo = TRUE, eval = FALSE>>=
+devtools::install_github("cayek/TESS3_encho_sen@master")
+@
 
 \end{frame}
 
@@ -456,8 +386,6 @@ We choose \alert{$\sigma = 1.5$} for the spatial autocorrelation scale.
 \begin{center}
 \Huge \alert{Thank you for your attention.}
 \end{center}
-
-
 
 \end{frame}
 

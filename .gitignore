@@ -77,6 +77,21 @@ GPATH
 GRTAG
 GTAGS
 
+# these
+These/ltximg/
+
+# These/Slides/ThemasSeminar2017/
+These/Slides/ThemasSeminar2017/main.pdf
+These/Slides/ThemasSeminar2017/main.tex
+
+# 2Article/Slides/Jobim2016/
+2Article/Slides/Jobim2016/*.pdf
+2Article/Slides/Jobim2016/*.tex
+2Article/Slides/Jobim2016/cache/
+
+# odt
+*.odt
+
 # latex
 *.bbl
 These/main.pdf
