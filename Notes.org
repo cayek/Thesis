@@ -7816,7 +7816,7 @@ data:
 *** Algorithme
 Je comprend que c'est un Monte Carlo EM (a voir ce que c'est).
 *** Slides
-[[file:org-ref-pdfs/slides_agarwal09_regres.pdf]]
+[[file:./Biblio/org-ref-pdfs/slides_agarwal09_regres.pdf]]
 ** 2008 - High-Dimensional Sparse Factor Modeling: Applications in Gene  Epression Genomics :LFMMLike:
 :PROPERTIES:
 :Custom_ID: carvalho08_high_dimen_spars_factor_model

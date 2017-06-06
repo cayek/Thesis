@@ -72,7 +72,8 @@
 
 \title{tess3r: a R package for estimating spatial population structure}
 \subtitle[\ldots]{Scientific Days, June 13 th \& 14 th , 2017}
-\author{Kevin Caye$^{1}$, Olivier Michel$^{2}$, Olivier Francois$^{1}$}
+\author{Kevin Caye$^{1}$ (third year phd student), \\
+  Olivier Michel$^{2}$, Olivier Francois$^{1}$}
 \institute{$^{1}$ TIMC-IMAG, $^{2}$ GIPSA-lab}
 \date{}
 \titlegraphic{\includegraphics[width=0.2\linewidth]{uga_logo_visuel.jpg}\hspace*{0.2\linewidth}~%
@@ -142,12 +143,12 @@ We want to estimate:
 \includegraphics{barplot.pdf}
 
 
-Several method exist:
+Several methods exist:
 \begin{itemize}
   \item \alert{Bayesian}: structure~\citep{pritchard2000inference}
-  \item \alert{optimisation based}: sNMF~\citep{frichot2014fast}
+  \item \alert{optimization based}: sNMF~\citep{frichot2014fast}
 \end{itemize}
-These methods are crucial for demographic analysis, medical genetics, 
+Estimating ancestral population structure is crucial for demographic analysis, medical genetics, 
   conservation genetics or landscape genetics.
 \end{frame}
 
@@ -172,7 +173,10 @@ Several methods incorporate geographic data in prior distributions:
      \end{center}
 \end{column}
 \end{columns}
-We propose a new method to estimate spatial population based on an optimizarion 
+
+\alert{Our contribution:}
+
+We propose a new method TESS3 to estimate spatial population based on an optimization 
 problem.
 \end{frame}
 
@@ -180,7 +184,7 @@ problem.
 % MODEL SNMF
 \begin{frame}{Model for the Genotypic Matrix}
 
-We write $G$ the genomic matrix
+We write $G$ the genotypic matrix
 
 \begin{equation*}
 \begin{array}{rcl}
@@ -205,7 +209,7 @@ F \succeq 0,~\sum_{j=0}^{d} f_{k,\ell}(j) = 1,~\forall \ell \in \{1,...,L\}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OPTIM PB
 
-\begin{frame}{Optimisation Problem}
+\begin{frame}{Optimization Problem}
 
 We construct a weighted graph using spatial data:
 
@@ -219,13 +223,12 @@ The loss function is:
 
 \begin{equation*}
 \begin{aligned}
-Loss(Q,F)& = &||X-QF^T||^2 + \lambda \sum_{i,j}^{n} W_{i,j} ||Q_{i,} - Q_{j,}||^2 \\
+Loss(Q,F)& = &||G - QF^T||^2 + \lambda \sum_{i,j}^{n} W_{i,j} ||Q_{i,} - Q_{j,}||^2 \\
  &= &||X-QF^T||^2 + \lambda \text{trace}(Q^T \Lambda Q),
 \end{aligned}
 \end{equation*}
 
-where $\Lambda$ is the graph Laplacian matrix and $X$ is the data matrix.
-% is a binary matrix which encode absence or the presence of each genotype at each locus.
+where $\Lambda$ is the graph Laplacian matrix.
 
 \end{frame}
 
@@ -236,7 +239,7 @@ where $\Lambda$ is the graph Laplacian matrix and $X$ is the data matrix.
 
 \begin{itemize}
 
-\item The optimisation problem is not convex.
+\item The loss function is not convex.
 
 \item It is convex with respect to one of the variables $Q$ or $F$ when the other one is fixed.
 
@@ -260,12 +263,12 @@ $ Q \gets \underset{Q}{\text{arg min}} f_Q(Q,F)$
 
 \begin{frame}{Alternating Projected Least Squares}
 
-F optimisation step : 
+F optimization step : 
 \begin{enumerate}
   \item Solving least squares problems for $F$ rows
   \item Projecting onto the polygon of $F$ constraints
 \end{enumerate}
-Q optimisation step : 
+Q optimization step : 
 \begin{enumerate}
   \item Solving $L_2$-regularized least squares problems for $Q$ rows
   \item Projecting onto the polygon of $Q$ constraints
@@ -281,9 +284,9 @@ Q optimisation step :
 
 \item Advantage:
 
-The $F$ optimisation step requires to solve $L$ least squares problems of size $K$.
+The $F$ optimization step requires to solve $L$ least squares problems of size $K$.
 
-The $Q$ optimisation step requires to solve $n$ $L_2$-regularized least squares problems of size $K$.
+The $Q$ optimization step requires to solve $n$ $L_2$-regularized least squares problems of size $K$.
 
 \item Drawback:
 
@@ -295,9 +298,9 @@ The algorithm is not guaranteed to provide a stationary point.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Numerical experiement 2 slides présentation de l'experimentation + resultats
-\begin{frame}{Simulations}
+\begin{frame}{Benchmark}
 
-Simulation of admixed population dataset~\citep{franccois2010spatially}
+Simulation of hybrid population dataset~\citep{franccois2010spatially}
 \begin{center}
 \includegraphics[width=.70\linewidth]{addmixed.png}
 \end{center}
@@ -332,9 +335,12 @@ On these simulation TESS3 algorithm performs 30 time better than TESS 2.3
 \end{figure}
 
 \begin{itemize}
-  \item 1,307 accessions of \emph{A. thaliana} have been genotyped using the Affymetrix Arabidopsis 250k - SNP chip~\citep{horton2012genome}
+\item 1,307 accessions of \emph{A. thaliana} have been genotyped using the
+  Affymetrix Arabidopsis 250k - SNP chip~\citep{horton2012genome}
   \item Geographic coordinates for 1,193 of these samples~\citep{anastasio2011source}
 \end{itemize}
+
+We now present a study of this dataset with our new R package \alert{tess3r}.
 
 \end{frame}
 
@@ -390,11 +396,11 @@ We choose \alert{$\sigma = 1.5$} for the spatial autocorrelation scale.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Detecting Adaptive Loci (Preliminary Results)}
+\begin{frame}{Detecting Adaptive Loci}
 \begin{itemize}
   \item Flowering-related genes detected in the top list: FRIGIDA, FLOWERING LOCUS C (FLC), 
   DELAY OF GERMINATION 1 (DOG1)~\citep{horton2012genome}.
-  \item Statistical overrepresentation of genes involved in metabolic processes: 
+  \item Statistical over representation of genes involved in metabolic processes: 
   1.08 fold enrichment, $p$-value $< 1e^{-6}$ (PANTHER database).
 \end{itemize}
   
@@ -404,15 +410,13 @@ We choose \alert{$\sigma = 1.5$} for the spatial autocorrelation scale.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusion: (résumé) 
 
-\begin{frame}[fragile]{Conclusion}
+\begin{frame}[fragile]{Conclusion and Perspective}
 
 \begin{itemize}
-  \item Estimation and visualisation of spatial population structure.
+  \item Estimation and visualization of spatial population structure.
   \item Local adaptation detection.
   \item Beta Version available on github.
-
 \end{itemize}
-
   
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -421,6 +425,22 @@ We choose \alert{$\sigma = 1.5$} for the spatial autocorrelation scale.
 \end{alltt}
 \end{kframe}
 \end{knitrout}
+
+\alert{Publication:}
+
+\begin{itemize}
+% \item Kevin Caye, Timo Deist, Helena Martins, Olivier Michel, Olivier Francois. TESS3: fast inference of spatial population structure and genome scans for selection. Molecular Ecology Resources, Blackwell, 2015.
+  
+\item Kevin Caye, Flora Jay, Olivier Michel, Olivier Francois. Fast Inference of
+  Individual Admixture Coefficients Using Geographic Data. bioRxiv, 2016.
+\end{itemize}
+
+\alert{Perspective:}
+\begin{itemize}
+\item Use the graph regularization on have temporally consistent ancestral
+  populations.
+\end{itemize}
+
 
 \end{frame}
 
@@ -436,6 +456,8 @@ We choose \alert{$\sigma = 1.5$} for the spatial autocorrelation scale.
 \begin{center}
 \Huge \alert{Thank you for your attention.}
 \end{center}
+
+
 
 \end{frame}
 
