@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: org -*-
 
-#+TITLE: Méthodes de factorisation matricielle pour la génomique des populations et tests d'association
+#+TITLE: Méthodes de factorisation matricielle pour la génomique des populations et les tests d'association
 #+AUTHOR:      Kevin Caye
 
 #+LANGUAGE:  en
@@ -23,6 +23,11 @@
 bibliographystyle:unsrt
 bibliography:../biblio.bib
 
+#+BEGIN_QUOTE
+In Code we trust, all others bring data.
+–William Edwards Deming (1900-1993).
+#+END_QUOTE
+
 * État de l'art 
 ** Contexte
 :LOGBOOK:
@@ -33,7 +38,14 @@ bibliography:../biblio.bib
   :D et la on fait le lien avec les tests d'hypothèe multiple....
 :END:
 ** Analyse factorielle des données biologiques
+:LOGBOOK:
+- Note taken on [2017-06-07 Mer 14:42] \\
+  - analyse de la structure de variance covariance: PCA
+  - analyse de la structure de population: structure, snmf, etc
+  - ewas: refactor
+:END:
 ** Test d'association
+
 ** Problématique et plan
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
 :LOGBOOK:
@@ -64,7 +76,6 @@ example disease state or environmental gradient. The $\Ycol\times\Xcol$ matrix $
 records primary effects. Matrices $\U$ and $\V$ are respectively $\n \times \K$
 score matrix and $\Ycol\times\Ucol$ loading matrix of a regression with $\Ucol$ latent
 factors. The matrix $\E$ is the residual error matrix of size $\Yrow\times\Ycol$.
-
 
 A classic method to estimate $\U$ $\V$ and $\B$ is to write the following
 loss function
@@ -229,10 +240,10 @@ LassoLFMM and RidgeLFMM .....
   cf mon cahier
 :END:
 Cross validation is a classic method to select hyper-parameter in factor
-analysis cite:Owen_2009,Owen_2009,Bro_2008. We explain here a cross-validation
-method adapted to our methods.
+analysis cite:Owen_2009,Bro_2008. We explain here the cross-validation
+method we used.
 
-[...]
+....
 
 However, cross validation procedure can be long to run in particular on very big
 data set. Especially since, LassoLFMM and RidgeLFMM have each 2 hyper-parameters
@@ -247,7 +258,7 @@ select the number of latent variable $\K$ by visualizing the scree plot.
 We empirically observed that, this method leads to an overestimated number of
 factor in the model describe in eqref:eq:model since the co-variate would be
 considered as a latent variable. However, because the goal of our methods is to
-estimate latent variation while protection variation explain by co-variate $X$,
+estimate latent variation while protecting variation explain by co-variate $X$,
 we observed that our algorithms was robust to overestimated $K$.
 
 

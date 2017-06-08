@@ -2778,6 +2778,165 @@ CLOSED: [2017-06-06 mar. 09:21]
 :LOGBOOK:
 - State "TODO"       from              [2017-06-06 mar. 09:35]
 :END:
+**** TODO with 2 5 10 % outlier and L = 50 000 K well estimated
+:LOGBOOK:
+- State "TODO"       from              [2017-06-07 Mer 14:16]
+:END:
+***** RUNNING Run all even with lfmm lasso :D
+:LOGBOOK:
+- Note taken on [2017-06-07 Mer 14:24] \\
+  KWE
+- State "RUNNING"    from              [2017-06-07 Mer 14:24]
+:END:
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.01, 0.05, 0.1),
+                                    n = NULL, L = 50000,
+                                    K = 5,
+                                    K.method = 5,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c(0.6, 0.4, 0.2, 0.1, 0.05),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 4,
+                                    fast.only = FALSE,
+                                    cluster.nb = 4,
+                                    save = TRUE, bypass = FALSE)
+
+#+end_src
+***** WAITING plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+:LOGBOOK:
+- State "WAITING"    from              [2017-06-07 Mer 14:25]
+:END:
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(?)
+  expr$description
+#+end_src
+
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_KWE.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_KWE.png")
+#+end_src
+
+
+
+**** TODO with 2 5 10 % outlier and L = 50 000 K over estimated
+:LOGBOOK:
+- State "TODO"       from              [2017-06-07 Mer 14:16]
+:END:
+***** RUNNING Run all even with lfmm lasso :D
+:LOGBOOK:
+- Note taken on [2017-06-07 Mer 14:28] \\
+  KOW
+- State "RUNNING"    from              [2017-06-07 Mer 14:28]
+:END:
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.01, 0.05, 0.1),
+                                    n = NULL, L = 50000,
+                                    K = 5,
+                                    K.method = 10,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c(0.6, 0.4, 0.2, 0.1, 0.05),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 4,
+                                    fast.only = FALSE,
+                                    cluster.nb = 4,
+                                    save = TRUE, bypass = FALSE)
+
+#+end_src
+***** WAITING plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+:LOGBOOK:
+- State "WAITING"    from              [2017-06-07 Mer 14:28]
+:END:
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(?)
+  expr$description
+#+end_src
+
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_KOE.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_KOE.png")
+#+end_src
+
+
+**** TODO with 2 5 10 % outlier and L = 50 000 K under estimated
+:LOGBOOK:
+- State "TODO"       from              [2017-06-07 Mer 14:16]
+:END:
+***** RUNNING Run all even with lfmm lasso :D
+:LOGBOOK:
+- Note taken on [2017-06-07 Mer 14:30] \\
+  KUE
+- State "RUNNING"    from              [2017-06-07 Mer 14:30]
+:END:
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.01, 0.05, 0.1),
+                                    n = NULL, L = 50000,
+                                    K = 5,
+                                    K.method = 3,
+                                    lasso.sparse.prop = 0.05,
+                                    ridge.lambda = 1e-5,
+                                    cs = c(0.6, 0.4, 0.2, 0.1, 0.05),
+                                    cs.sum = FALSE,
+                                    sd.V.rho = 1,
+                                    nb.rep = 4,
+                                    fast.only = FALSE,
+                                    cluster.nb = 4,
+                                    save = TRUE, bypass = FALSE)
+
+#+end_src
+***** WAITING plot
+:PROPERTIES:
+:header-args: :cache no :session *ssh krakenator* :eval no-export
+:END:
+:LOGBOOK:
+- State "WAITING"    from              [2017-06-07 Mer 14:30]
+:END:
+
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(?)
+  expr$description
+#+end_src
+
+
+#+begin_src R :results output :exports both
+  pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_KUE.png")
+  pl <- Article3_MethodComparison_plot_GIF(expr)
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_KUE.png")
+#+end_src
+
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
 *** ./Data/SSMPG2015/ 
@@ -7421,6 +7580,380 @@ outliers. C'est pour ca que la calibration par maf et mad echoue.
 C'est juste que l'on ne peut pas recalibré car il y a 12.5 % d'outlier mais
 sinon tout le monde a les mêmes resultats y compris lm.
 
+** Epigenome challenge
+*** Mike data
+ddl data
+#+begin_src R :results output :exports both
+  mike_data <- function() {
+    data1 <- data.table::fread("~/Projects/BcmPowerRangers/challenge1.txt")
+    dat <- list()
+    dat$G <- as.matrix(data1[,-c("exposure", "phenotype")])
+    dat$X.droite <- as.matrix(data1[,c("phenotype")])
+    dat$X.gauche <- as.matrix(data1[,c("exposure")])
+    dat$G <- scale(dat$G)
+    dat$X.gauche <- scale(dat$X.gauche)
+    dat$X.droite <- scale(dat$X.droite)
+    dat
+  }
+
+#+end_src
+
+#+RESULTS:
+*** With lfmm
+***** sandbox
+with lfmm
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  m <- finalLfmmRdigeMethod(3, 1e-5)
+
+  ## gauche
+  dat$X <- dat$X_gauche 
+  m.gauche <- run(m, dat)
+  hist(m.gauche$pvalue)
+
+  ## droite
+  dat$X <- dat$X_droite
+  m.droite <- run(m, dat)
+  hist(m.droite$pvalue)
+
+  ## plot
+  library(tidyverse)
+  library(ggplot2)
+  toplot <- tibble::tibble(pvalue.gauche = m.gauche$pvalue[1,],
+                           pvalue.droite = m.droite$pvalue[1,]) %>%
+    dplyr::mutate(index = row_number()) %>%
+    dplyr::mutate(name = colnames(dat$G))
+
+  head(toplot)
+  ggplot2::ggplot(toplot, ggplot2::aes(x = index, y = -log10(pvalue.droite))) +
+    ggplot2::geom_point()
+
+
+
+#+end_src
+
+#+RESULTS:
+: # A tibble: 6 x 4
+:   pvalue.gauche pvalue.droite index  name
+:           <dbl>         <dbl> <int> <chr>
+: 1     0.3746316     0.3779603     1    M1
+: 2     0.1911586     0.5554809     2    M2
+: 3     0.2622793     0.5594943     3    M3
+: 4     0.9848397     0.7843780     4    M4
+: 5     0.2721801     0.2103095     5    M5
+: 6     0.3915787     0.3336072     6    M6
+
+
+top list de la reg de droite
+#+begin_src R :results output :exports both
+  toplot %>% arrange(pvalue.droite) %>%
+    filter(row_number() < 20) %>%
+    print.data.frame()
+
+  sub3 <- read_delim(file = "~/Projects/BcmPowerRangers/submit3.txt", delim = " ", col_names = FALSE)
+
+  toplot %>%
+    filter(name %in% sub3$X1) %>%
+    print.data.frame()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+   pvalue.gauche pvalue.droite index  name
+1   1.708482e-16  5.303736e-13   308  M308
+2   6.219487e-51  5.869345e-12  2850 M2850
+3  6.138023e-120  7.625876e-11   492  M492
+4   6.701728e-06  1.069232e-10  5000 M5000
+5   8.433646e-18  5.347791e-10  3891 M3891
+6   1.244780e-25  9.870141e-08  4879 M4879
+7   4.409917e-02  4.566478e-07  1873 M1873
+8   1.340024e-10  4.936565e-07   196  M196
+9   8.275175e-01  1.384457e-06  3130 M3130
+10  3.599609e-08  4.162804e-06  2086 M2086
+11  1.851784e-68  4.348085e-06  3126 M3126
+12 1.309825e-151  1.553832e-05  1824 M1824
+13  1.291742e-32  2.812437e-05   280  M280
+14  1.148795e-53  1.924092e-04  3648 M3648
+15  5.639290e-01  2.365867e-04  2218 M2218
+16  8.030217e-82  3.027279e-04  1094 M1094
+17  5.179647e-01  3.351219e-04   947  M947
+18  9.444986e-02  3.617969e-04  4801 M4801
+19  2.829809e-02  8.049950e-04   718  M718
+Parsed with column specification:
+cols(
+  X1 = col_character()
+)
+   pvalue.gauche pvalue.droite index  name
+1   1.340024e-10  4.936565e-07   196  M196
+2   1.291742e-32  2.812437e-05   280  M280
+3   1.708482e-16  5.303736e-13   308  M308
+4  6.138023e-120  7.625876e-11   492  M492
+5   3.673059e-22  1.221691e-03   575  M575
+6   6.043301e-01  6.050826e-03   577  M577
+7   1.109586e-15  4.338240e-03   596  M596
+8   4.041645e-02  1.283414e-02   693  M693
+9   3.111263e-01  4.730869e-03   791  M791
+10  2.272248e-57  1.051997e-02   816  M816
+11  1.612240e-55  6.468961e-01   900  M900
+12  1.350387e-07  4.003050e-03   996  M996
+13  8.030217e-82  3.027279e-04  1094 M1094
+14  6.657324e-51  4.179041e-02  1308 M1308
+15  2.007427e-04  1.192193e-03  1353 M1353
+16  2.771511e-59  6.249105e-01  1391 M1391
+17  2.630007e-55  3.022709e-03  1397 M1397
+18 1.309825e-151  1.553832e-05  1824 M1824
+19  4.409917e-02  4.566478e-07  1873 M1873
+20  8.649048e-82  6.425090e-01  1960 M1960
+21  1.423150e-08  5.937961e-01  1963 M1963
+22  3.599609e-08  4.162804e-06  2086 M2086
+23  3.513083e-04  1.936482e-02  2136 M2136
+24  5.295119e-06  3.617421e-03  2422 M2422
+25  6.219487e-51  5.869345e-12  2850 M2850
+26  1.851784e-68  4.348085e-06  3126 M3126
+27  8.275175e-01  1.384457e-06  3130 M3130
+28  7.013637e-54  3.514398e-02  3256 M3256
+29  9.202064e-10  7.924074e-01  3424 M3424
+30  1.148795e-53  1.924092e-04  3648 M3648
+31 1.448659e-128  3.963830e-01  3798 M3798
+32  8.433646e-18  5.347791e-10  3891 M3891
+33  2.493073e-23  8.541290e-01  3934 M3934
+34  6.411171e-50  1.536778e-03  3951 M3951
+35  1.442523e-39  1.092356e-01  4089 M4089
+36  1.244780e-25  9.870141e-08  4879 M4879
+37  6.701728e-06  1.069232e-10  5000 M5000
+#+end_example
+
+
+controle du fdr et intersection
+#+begin_src R :results output :exports both
+  library(qvalue)
+  result <- toplot %>%
+    mutate(candidate.gauche = qvalue(toplot$pvalue.gauche, fdr.level = 0.05)$significant) %>%
+    mutate(candidate.droite = qvalue(toplot$pvalue.droite, fdr.level = 0.05)$significant) %>%
+    mutate(candidate = candidate.gauche * candidate.droite)
+
+  result <- result %>%
+    filter(candidate == 1)
+
+  result %>%
+    print.data.frame()
+
+  mean(sub3$X1 %in% result$name) %>% print()
+  mean(result$name %in% sub3$X1) %>% print()
+
+
+  ## not in sub3
+  result %>%
+    filter(!(result$name %in% sub3$X1))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+   pvalue.gauche pvalue.droite index  name candidate.gauche candidate.droite
+1   1.340024e-10  4.936565e-07   196  M196             TRUE             TRUE
+2   1.291742e-32  2.812437e-05   280  M280             TRUE             TRUE
+3   1.708482e-16  5.303736e-13   308  M308             TRUE             TRUE
+4  6.138023e-120  7.625876e-11   492  M492             TRUE             TRUE
+5  1.309825e-151  1.553832e-05  1824 M1824             TRUE             TRUE
+6   3.599609e-08  4.162804e-06  2086 M2086             TRUE             TRUE
+7   6.219487e-51  5.869345e-12  2850 M2850             TRUE             TRUE
+8   1.851784e-68  4.348085e-06  3126 M3126             TRUE             TRUE
+9   8.433646e-18  5.347791e-10  3891 M3891             TRUE             TRUE
+10  1.244780e-25  9.870141e-08  4879 M4879             TRUE             TRUE
+11  6.701728e-06  1.069232e-10  5000 M5000             TRUE             TRUE
+   candidate
+1          1
+2          1
+3          1
+4          1
+5          1
+6          1
+7          1
+8          1
+9          1
+10         1
+11         1
+[1] 0.2972973
+[1] 1
+# A tibble: 0 x 7
+# ... with 7 variables: pvalue.gauche <dbl>, pvalue.droite <dbl>, index <int>,
+#   name <chr>, candidate.gauche <lgl>, candidate.droite <lgl>, candidate <int>
+#+end_example
+
+***** a function
+#+begin_src R :results output :exports both
+  fit_lfmm <- function(K, X, G, X.gauche, X.droite, fdr.threshold) {
+
+    library(ThesisRpackage)
+
+    m <- finalLfmmRdigeMethod(3, 1e-5)
+
+    ## gauche
+    dat <- list()
+    dat$X <- cbind(X.gauche, X)
+    dat$G <- G
+    m.gauche <- run(m, dat)
+
+    ## gauche
+    dat <- list()
+    dat$X <- cbind(X.droite, X)
+    dat$G <- G
+    m.droite <- run(m, dat)
+
+
+    res.df<- tibble::tibble(pvalue.gauche = m.gauche$pvalue[1,],
+                             pvalue.droite = m.droite$pvalue[1,]) %>%
+      dplyr::mutate(index = row_number()) %>%
+      dplyr::mutate(name = colnames(G))
+
+    ## fdr control
+    res.df <- res.df %>%
+      mutate(candidate.gauche = qvalue(res.df$pvalue.gauche, fdr.level = fdr.threshold)$significant) %>%
+      mutate(candidate.droite = qvalue(res.df$pvalue.droite, fdr.level = fdr.threshold)$significant) %>%
+      mutate(candidate = candidate.gauche * candidate.droite)
+
+  }
+
+#+end_src
+
+#+RESULTS:
+
+lets try the function
+#+begin_src R :results output :exports both
+  library(tidyverse)
+  library(qvalue)
+  sub3 <- read_delim(file = "~/Projects/BcmPowerRangers/submit3.txt", delim = " ", col_names = FALSE)
+  library(data.table)
+  data1 <- fread("~/Projects/BcmPowerRangers/challenge1.txt")
+  G <- as.matrix(data1[,-c("exposure", "phenotype")]) %>% scale()
+  X.droite <- as.matrix(data1[,c("phenotype")]) %>% scale()
+  X.gauche <- as.matrix(data1[,c("exposure")]) %>% scale()
+  X <- G[, colnames(G) %in% sub3$X1] 
+  dim(X)
+
+  res.df <- fit_lfmm(K = 5,
+                     X = X, G = G, X.gauche = X.gauche, X.droite = X.droite,
+                     fdr.threshold = 0.05)
+
+  candidates <- res.df %>%
+    filter(candidate == 1)
+  candidates
+
+  mean(candidates$name %in% sub3$X1)
+#+end_src
+
+Correct for outlier
+#+begin_src R :results output :exports both
+  sub3 <- read_delim(file = "~/Projects/BcmPowerRangers/submit3.txt", delim = " ", col_names = FALSE)
+  library(data.table)
+  data1 <- fread("~/Projects/BcmPowerRangers/challenge1.txt")
+  G <- as.matrix(data1[,-c("exposure", "phenotype")]) %>% scale()
+  X.droite <- as.matrix(data1[,c("phenotype")]) %>% scale()
+  X.gauche <- as.matrix(data1[,c("exposure")]) %>% scale()
+  X <- G[, colnames(G) %in% sub3$X1] 
+  dim(X)
+
+  ## correction for X
+  dat <- list()
+  dat$G <- G
+  dat$X <- X
+  m.lm <- finalLm() %>%
+    run(dat)
+  hist(m.lm$pvalue)
+
+
+  res.df <- fit_lfmm(K = 1,
+                     X = NULL,
+                     G = m.lm$epsilon,
+                     X.gauche = X.gauche, X.droite = X.droite,
+                     fdr.threshold = 0.1)
+
+  candidates <- res.df %>%
+    filter(candidate == 1)
+
+  candidates
+
+  mean(candidates$name %in% sub3$X1)
+#+end_src
+*** With xgboost
+***** sandbox
+#+begin_src R :results output :exports both
+  library(xgboost)
+  library(tidyverse)
+  dat <- mike_data()
+
+  feature.name <- colnames(dat$G)
+  xg.gauche <- xgboost(data = dat$G, label = dat$X.gauche, objective = 'reg:linear',
+                       max.depth = 1, eta = 0.05, nthread = 4, nround = 100)
+
+
+  ## importance
+  importance_matrix <- xgb.importance(model = xg.gauche, feature_names = feature.name)
+  print(importance_matrix)
+  xgb.plot.importance(importance_matrix = importance_matrix)
+
+  importance.gauche.df <- importance_matrix %>%
+    as_tibble()
+  importance.gauche.df
+  hist(importance.gauche.df$Importance)
+
+  ## th.gauche <- 0.0000001
+  ## importance.gauche.df <- importance_matrix %>%
+  ##   as_tibble() %>%
+  ##   filter(Importance > th.gauche)
+  ## importance.gauche.df
+
+
+  ## droite
+  xg.droite <- xgboost(data = dat$G,
+                       label = dat$X.droite, objective = 'reg:linear',
+                       max.depth = 1, eta = 0.001, nthread = 4, nround = 5000)
+
+
+
+  ## importance
+  importance_matrix <- xgb.importance(model = xg.droite,
+                                      feature_names=feature.name)
+  print(importance_matrix)
+  xgb.plot.importance(importance_matrix = importance_matrix)
+
+  importance.droite.df <- importance_matrix %>%
+    as_tibble()
+  importance.droite.df
+  hist(importance.droite.df$Importance)
+
+  ## th.droite <- 0.01
+  ## importance.droite.df <- importance_matrix %>%
+  ##   as_tibble() %>%
+  ##   filter(Importance > th.droite)
+  ## importance.droite.df
+
+  ## mult
+  importance.mult <- importance.gauche.df %>%
+    inner_join(importance.droite.df, by = "Feature", suffix = c(".gauche", ".droite")) %>%
+    mutate(importance.mult = Importance.gauche *
+             Importance.droite) %>%
+    arrange(-importance.mult)
+
+
+  ## plot
+  importance.mult$Feature
+
+  ## sub3
+  sub3 <- read_delim(file = "~/Projects/BcmPowerRangers/submit3.txt", delim = " ", col_names = FALSE)
+
+
+  sum(sub3$X1 %in% importance.mult$Feature)
+  sum(sub3$X1 %in% importance.droite.df$Feature)
+  sum(sub3$X1 %in% importance.gauche.df$Feature)
+
+
+  importance.mult %>%
+    select(Feature,
+           importance.mult)
+  hist(importance.mult$importance.mult)
+#+end_src
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both
@@ -9729,3 +10262,18 @@ interessant de cross valider proprement mes deux algos :D A voir
  :END:
 
 cite:Owen_2009. Parfait si je veux faire le cross validation de lfmm et TESS3
+
+** TODO 2017 - Controlling bias and inflation in epigenome- and transcriptome-wide association studies using the empirical null distribution :LFMM:
+ :PROPERTIES:
+  :Custom_ID: vanIterson2017
+  :AUTHOR: van Iterson, , van Zwet, \& Heijmans
+  :JOURNAL: Genome Biology
+  :YEAR: 2017
+  :VOLUME: 18
+  :PAGES: 19
+  :DOI: 10.1186/s13059-016-1131-9
+  :URL: http://dx.doi.org/10.1186/s13059-016-1131-9
+ :END:
+
+cite:vanIterson2017 Encore un papier qui se compare a cate et ruv ! a voir pour
+la biblio.
