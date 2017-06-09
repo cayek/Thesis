@@ -2771,6 +2771,9 @@ CLOSED: [2017-06-09 Ven 10:14]
   expr$description
 #+end_src
 
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=10 K.method=10 correctionByC=FALSE fast.only=FALSE n= L=50000 cs=c(0.6, 0.4, 0.2, 0.1) cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=0.005|0.01|0.1 ridge.lambda=1e-05 lasso.sparse.prop=0.05 nb.rep=4 "
+
 #+begin_src R :results output :exports both
   pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
   save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_moreCorrelation.png")
