@@ -2722,8 +2722,10 @@ CLOSED: [2017-06-06 mar. 09:21]
   entre X et U :D
 
 
-**** STARTED with p = 0.005 0.01 0.1 outlier and L = 50 000 and cor(X,U) = 0.6,0.4,0.2,0.1
+**** DONE with p = 0.005 0.01 0.1 outlier and L = 50 000 and cor(X,U) = 0.6,0.4,0.2,0.1
+CLOSED: [2017-06-09 ven. 16:15]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-06-09 ven. 16:15]
 - State "STARTED"    from              [2017-06-06 mar. 09:26]
 :END:
 ***** DONE Run all even with lfmm lasso :D
@@ -2756,11 +2758,13 @@ CLOSED: [2017-06-09 Ven 10:14]
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-***** TODO plot
+***** DONE plot
+CLOSED: [2017-06-09 ven. 16:15]
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-09 ven. 16:15]
 - State "TODO"       from "WAITING"    [2017-06-09 Ven 10:14]
 - State "WAITING"    from              [2017-06-06 mar. 09:28]
 :END:
@@ -2776,10 +2780,34 @@ CLOSED: [2017-06-09 Ven 10:14]
 
 #+begin_src R :results output :exports both
   pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
-  save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_moreCorrelation.png")
+  save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_CorOn4U.png")
   pl <- Article3_MethodComparison_plot_GIF(expr)
-  save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_moreCorrelation.png")
+  save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_CorOn4U.png")
 #+end_src
+
+#+RESULTS:
+[[./Rplots/NumericVal_auc_with_lasso_L5e4_CorOn4U.png]]
+[[./Rplots/NumericVal_gif_with_lasso_L5e4_CorOn4U.png]]
+#+begin_example
+# A tibble: 12 × 5
+   method outlier.prop      `cor(U,X)`   rep       auc
+    <chr>        <dbl>           <chr> <dbl>     <dbl>
+1  Oracle        0.005 0.6|0.4|0.2|0.1     1 0.9940107
+2  Oracle        0.005 0.6|0.4|0.2|0.1     2 0.9940149
+3  Oracle        0.005 0.6|0.4|0.2|0.1     3 0.9943613
+4  Oracle        0.005 0.6|0.4|0.2|0.1     4 0.9940127
+5  Oracle        0.010 0.6|0.4|0.2|0.1     1 0.9970173
+6  Oracle        0.010 0.6|0.4|0.2|0.1     2 0.9970179
+7  Oracle        0.010 0.6|0.4|0.2|0.1     3 0.9971932
+8  Oracle        0.010 0.6|0.4|0.2|0.1     4 0.9970162
+9  Oracle        0.100 0.6|0.4|0.2|0.1     1 0.9997203
+10 Oracle        0.100 0.6|0.4|0.2|0.1     2 0.9997458
+11 Oracle        0.100 0.6|0.4|0.2|0.1     3 0.9997103
+12 Oracle        0.100 0.6|0.4|0.2|0.1     4 0.9997137
+#+end_example
+
+Rien de discriminant, toujours PCA et lm qui derive.
+
 *** TODO Robustness to K choice
 :LOGBOOK:
 - State "TODO"       from              [2017-06-06 mar. 09:35]
@@ -2806,14 +2834,14 @@ CLOSED: [2017-06-09 Ven 10:14]
                                     n = NULL, L = 50000,
                                     K = 5,
                                     K.method = 5,
-                                    lasso.sparse.prop = 0.05,
+                                    lasso.sparse.prop = 0.2,
                                     ridge.lambda = 1e-5,
-                                    cs = c(0.6, 0.4, 0.2, 0.1, 0.05),
+                                    cs = list(c1 = c(0.6, 0.4, 0.2, 0.1, 0.05)),
                                     cs.sum = FALSE,
                                     sd.V.rho = 1,
                                     nb.rep = 4,
                                     fast.only = FALSE,
-                                    cluster.nb = 4,
+                                    cluster.nb = 2,
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
@@ -2891,6 +2919,9 @@ CLOSED: [2017-06-09 Ven 10:09]
   expr$description
 #+end_src
 
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=5 K.method=10 correctionByC=FALSE fast.only=FALSE n= L=50000 cs=0.6|0.4|0.2|0.1|0.05 cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=0.01|0.05|0.1 ridge.lambda=1e-05 lasso.sparse.prop=0.05 nb.rep=4 "
+
 
 #+begin_src R :results output :exports both
   pl <- Article3_MethodComparison_plot_relative_diff_AUC(expr)
@@ -2898,6 +2929,26 @@ CLOSED: [2017-06-09 Ven 10:09]
   pl <- Article3_MethodComparison_plot_GIF(expr)
   save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_KOE.png")
 #+end_src
+
+#+RESULTS:
+[[./Rplots/NumericVal_auc_with_lasso_L5e4_KOE.png]]
+[[./Rplots/NumericVal_gif_with_lasso_L5e4_KOE.png]]
+#+begin_example
+# A tibble: 60 × 5
+   method outlier.prop `cor(U,X)`   rep       auc
+    <chr>        <dbl>      <chr> <dbl>     <dbl>
+1  Oracle         0.01       0.05     1 0.9970570
+2  Oracle         0.01       0.05     2 0.9970184
+3  Oracle         0.01       0.05     3 0.9970106
+4  Oracle         0.01       0.05     4 0.9970203
+5  Oracle         0.01        0.1     1 0.9970235
+6  Oracle         0.01        0.1     2 0.9970180
+7  Oracle         0.01        0.1     3 0.9970161
+8  Oracle         0.01        0.1     4 0.9970195
+9  Oracle         0.01        0.2     1 0.9970187
+10 Oracle         0.01        0.2     2 0.9970232
+# ... with 50 more rows
+#+end_example
 
 
 **** TODO with 2 5 10 % outlier and L = 50 000 K under estimated
