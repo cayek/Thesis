@@ -2726,8 +2726,10 @@ CLOSED: [2017-06-06 mar. 09:21]
 :LOGBOOK:
 - State "STARTED"    from              [2017-06-06 mar. 09:26]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DONE Run all even with lfmm lasso :D
+CLOSED: [2017-06-09 Ven 10:14]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-06-09 Ven 10:14]
 - Note taken on [2017-06-06 mar. 09:32] \\
   28717.pts-4.krakenator
 - State "RUNNING"    from "TODO"       [2017-06-06 mar. 09:32]
@@ -2754,17 +2756,18 @@ CLOSED: [2017-06-06 mar. 09:21]
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-***** WAITING plot
+***** TODO plot
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "TODO"       from "WAITING"    [2017-06-09 Ven 10:14]
 - State "WAITING"    from              [2017-06-06 mar. 09:28]
 :END:
 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  expr <- retrieveExperiment(?)
+  expr <- retrieveExperiment(151)
   expr$description
 #+end_src
 
@@ -2782,8 +2785,11 @@ CLOSED: [2017-06-06 mar. 09:21]
 :LOGBOOK:
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DEBUG Run all even with lfmm lasso :D
 :LOGBOOK:
+- Note taken on [2017-06-09 Ven 10:12] \\
+  ca a crash sur krak a cause de la mémoire ....
+- State "DEBUG"      from "RUNNING"    [2017-06-09 Ven 10:12]
 - Note taken on [2017-06-07 Mer 14:24] \\
   KWE
 - State "RUNNING"    from              [2017-06-07 Mer 14:24]
@@ -2836,8 +2842,10 @@ CLOSED: [2017-06-06 mar. 09:21]
 :LOGBOOK:
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DONE Run all even with lfmm lasso :D
+CLOSED: [2017-06-09 Ven 10:09]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-06-09 Ven 10:09]
 - Note taken on [2017-06-07 Mer 14:28] \\
   KOW
 - State "RUNNING"    from              [2017-06-07 Mer 14:28]
@@ -2862,17 +2870,21 @@ CLOSED: [2017-06-06 mar. 09:21]
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-***** WAITING plot
+***** TODO plot
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "TODO"       from "DONE"       [2017-06-09 Ven 10:09]
+- State "DONE"       from "WAITING"    [2017-06-09 Ven 10:09]
+- Note taken on [2017-06-09 Ven 10:09] \\
+  id = 152
 - State "WAITING"    from              [2017-06-07 Mer 14:28]
 :END:
 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  expr <- retrieveExperiment(?)
+  expr <- retrieveExperiment(152)
   expr$description
 #+end_src
 
@@ -2889,8 +2901,13 @@ CLOSED: [2017-06-06 mar. 09:21]
 :LOGBOOK:
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DEBUG Run all even with lfmm lasso :D
 :LOGBOOK:
+- Note taken on [2017-06-09 Ven 10:11] \\
+  ca a craché sur krakenator, mais c'est juste un problème avec la mémoire !
+  faudra le relancer.
+- State "DEBUG"      from "DONE"       [2017-06-09 Ven 10:11]
+- State "DONE"       from "RUNNING"    [2017-06-09 Ven 10:10]
 - Note taken on [2017-06-07 Mer 14:30] \\
   KUE
 - State "RUNNING"    from              [2017-06-07 Mer 14:30]
@@ -7877,7 +7894,7 @@ Correct for outlier
   mean(candidates$name %in% sub3$X1)
 #+end_src
 *** With xgboost
-***** sandbox
+**** sandbox
 #+begin_src R :results output :exports both
   library(xgboost)
   library(tidyverse)
@@ -7953,6 +7970,186 @@ Correct for outlier
     select(Feature,
            importance.mult)
   hist(importance.mult$importance.mult)
+#+end_src
+*** Second dataset
+ddl data
+#+begin_src R :results output :exports both
+  of_data <- function() {
+    data1 <- read.table("~/Projects/BcmPowerRangers/challenge2.txt")
+    dat <- list()
+    dat$G <- as.matrix(data1[,-(1497:1501)])
+    dat$X.droite <- as.matrix(data1[,c("phenotype")])
+    dat$X.gauche <- as.matrix(as.numeric(data1[,c("exposure")]))
+    dat$age <- as.numeric(data1[,c("age")]) %>% scale
+    dat$gender <- as.numeric(data1[,c("gender")]) %>% scale
+    dat$tissue <- as.numeric(data1[,c("tissue")]) %>% scale
+    dat$G <- scale(dat$G)
+    dat$X.gauche <- scale(dat$X.gauche)
+    dat$X.droite <- scale(dat$X.droite)
+    ## dat$X.co <- scale(dat$X.co)
+    dat
+  }
+#+end_src
+
+#+RESULTS:
+
+**** sandbox
+#+begin_src R :results output :exports both
+  library(tidyverse)
+  library(ThesisRpackage)
+  library(qvalue)
+
+  ## run of lfmm
+  dat <- of_data()
+  m.lfmm <- finalLfmmRdigeMethod(K = 5, 1e-5)
+  dat$X <- dat$X.gauche
+  m.lfmm <- run( m.lfmm, dat)
+
+
+  res <- tibble(pvalue.exposure = m.lfmm$pvalue[1,],
+                feature = colnames(dat$G)) %>%
+    mutate(qvalue.exposure = qvalue(pvalue.exposure)$qvalues)
+
+  hist(res$pvalue.exposure)
+  step1.filter <- res$qvalue.exposure < 0.000001
+  sum(step1.filter)
+
+  seq(11, 1496, 80) %in% which(step1.filter)
+
+  ## write(colnames(dat$G)[which(step1.filter)],file = "~/Projects/BcmPowerRangers/data2_gauche.txt")
+
+  ####################
+  ## hima
+  data.of <- read.table("~/Projects/BcmPowerRangers/challenge2.txt")
+  ## devtools::install_github("privefl/HIMA")
+  require(HIMA)
+  exp <- 1 - (data.of[, "exposure"] %>% as.integer() - 1)
+  exp
+  cov <- data.frame(gender = as.integer(data.of$gender),
+                    age = as.integer(data.of$age),
+                    tissue = as.integer(data.of$tissue))
+  hima.res <- hima(X = exp,
+                   Y = data.of$phenotype,
+                   M = dat$G[,step1.filter],
+                   COV = cov,
+                   family = "binomial",
+                   lambda.min = 0.000000000001)
+  hima.res
+  ####################
+  ## 
+  install.packages("RcppNumerical")
+
+
+  ## run of glmnet with selected outlier
+  library(glmnet)
+
+  x = dat$G[, step1.filter] %>%
+    cbind(dat$age, dat$gender, dat$tissue)
+  glmnet.res <- glmnet(x = x,
+                       y = as.factor(dat$X.droite), family = "binomial")
+  glmnet.res
+  rownames(glmnet.res$beta)[glmnet.res$beta[,100] != 0]
+
+#+end_src
+
+**** a lfmm function
+#+begin_src R :results output :exports both
+
+  lfmm.func <- function(K = 5, lambda = 1e-5, X, G) {
+    require(ThesisRpackage)
+    require(qvalue)
+
+    m.lfmm <- finalLfmmRdigeMethod(K = K, lambda = lambda)
+    dat <- list()
+    dat$X <- X
+    dat$G <- G
+    m.lfmm <- run(m.lfmm, dat)
+
+    res <- tibble(pvalue = m.lfmm$pvalue[1,],
+                  feature = colnames(dat$G),
+                  beta = m.lfmm$B[1,]) %>%
+      mutate(qvalue = qvalue(pvalue)$qvalues)
+  res
+
+  }
+
+  dat <- of_data()
+  res <- lfmm.func(K = 5,
+                   lambda = 1e-5,
+                   X = dat$X.gauche,
+                   G = dat$G)
+  hist(res$pvalue)
+  hist(res$beta)
+#+end_src
+
+**** lfmm a gauche et a droite
+#+begin_src R :results output :exports both
+  dat <- of_data()
+  true.cand <- seq(11, 1496, 80)
+  true.cand
+
+
+  ## gauche
+  res.gauche <- lfmm.func(K = 5, lambda = 1e-5,
+                          X = dat$X.gauche,
+                          G = dat$G)
+
+  res.gauche %>%
+    filter(qvalue < 0.000001)
+  candidate.gauche <- which(res.gauche$qvalue < 0.000001)
+  candidate.gauche
+
+  toplot <- res.gauche %>%
+    mutate(id = row_number()) %>%
+    mutate(col = id %in% true.cand)
+  ggplot(toplot, aes(x = id, y = -log10(pvalue), col = col)) +
+    geom_point()
+
+  ## lfmm droite
+  res.droite <- lfmm.func(K = 1, lambda = 1e-5,
+                          X = dat$X.droite,
+                          G = dat$G)
+
+  toplot <- res.droite %>%
+    mutate(id = row_number()) %>%
+    mutate(col = id %in% true.cand)
+  ggplot(toplot, aes(x = id, y = -log10(pvalue), col = col)) +
+    geom_point()
+
+
+  ## mult
+  res.mult <- res.gauche %>%
+    inner_join(res.droite, by = "feature", suffix = c(".gauche",
+                                                    ".droite")) %>%
+    mutate(beta.sobel = beta.gauche * beta.droite) %>%
+    mutate(sd.gauche = mad(beta.gauche),
+           sd.droite = mad(beta.droite),
+           t.test.sobel = beta.gauche * beta.droite /
+             (sqrt(beta.gauche ^ 2 * sd.droite ^ 2 +
+                   beta.droite ^ 2 * sd.gauche ^ 2))) %>%
+    mutate(pvalue = 2 * pnorm(abs(t.test.sobel), lower.tail = FALSE))
+
+  toplot <- res.mult %>%
+    mutate(id = row_number()) %>%
+    mutate(col = id %in% true.cand)
+  ggplot(toplot, aes(x = id, y = -log10(pvalue), col = col)) +
+    geom_point()
+
+  res.mult <- res.mult %>%
+    mutate(qvalue = qvalue(res.mult$pvalue)$qvalues)
+
+  candidate <- which(res.mult$pvalue < 0.02)
+  length(candidate)
+  f.score <- function(candidate, sol) {
+    pwr <- mean(sol %in% candidate)
+    cat("P", pwr)
+    fdr <- 1 -  mean(candidate %in% sol)
+    cat("FDR", fdr)
+    2 * pwr * (1 - fdr) / (pwr + (1 - fdr))
+  }
+  f.score(candidate, true.cand)
+
+  write(colnames(dat$G)[candidate], file = "~/Projects/BcmPowerRangers/data2_submit.txt")
 #+end_src
 * Sandbox
 ** Test of bigsnpr
@@ -10277,3 +10474,17 @@ cite:Owen_2009. Parfait si je veux faire le cross validation de lfmm et TESS3
 
 cite:vanIterson2017 Encore un papier qui se compare a cate et ruv ! a voir pour
 la biblio.
+
+** TODO 2007 - Méthodes Statistiques pour l'Analyse des Données Génétiques  d'Association à Grande Échelle
+ :PROPERTIES:
+  :Custom_ID: phdGuedj
+  :AUTHOR: Mickaël Guedj
+  :JOURNAL: 
+  :YEAR: 2007
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:phdGuedj Une thèse sur les thèse d'association mais en 2007, ca date. A voir.

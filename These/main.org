@@ -28,9 +28,17 @@ In Code we trust, all others bring data.
 –William Edwards Deming (1900-1993).
 #+END_QUOTE
 
-* État de l'art 
+* Introduction
+:LOGBOOK:
+- Note taken on [2017-06-09 Ven 11:44] \\
+  dans l'intro il faut que je motive la problématique !! et le plan répond a cette
+  problématique.
+:END:
 ** Contexte
 :LOGBOOK:
+- Note taken on [2017-06-09 Ven 11:47] \\
+  c'est un context de fouille de données trop grosse !! Il faut amener de
+  l'information à un niveau inteligible.
 - Note taken on [2017-06-05 Mon 10:38] \\
   Ca peut etre cool de replacer le context historique en partant de la niasance
   des stats (fisher etc) et de faire le parallele avec maintenant pour on a
@@ -57,7 +65,14 @@ In Code we trust, all others bring data.
   analyse mais très proprement :D, y compris pour l'étude stat à la fin
   (recalibration propre !)
 :END:
+** Detection de la structure de population
+** Test adaptation local 
+** presentation de l'article 1
 * Estimation des facteurs latents pour corriger les test d'association :3Article:
+** before article 2
+*** Les tests d'hypothèse multiple
+*** Les modèle a facteur lattents pour ca
+*** presentation de l'article 2
 ** Introduction
 ** Methods
 *** Model 
