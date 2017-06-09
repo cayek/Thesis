@@ -2816,8 +2816,11 @@ Rien de discriminant, toujours PCA et lm qui derive.
 :LOGBOOK:
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** DEBUG Run all even with lfmm lasso :D
+***** RUNNING Run all even with lfmm lasso :D
 :LOGBOOK:
+- Note taken on [2017-06-09 ven. 16:18] \\
+  32517.pts-8.krakenator
+- State "RUNNING"    from "DEBUG"      [2017-06-09 ven. 16:18]
 - Note taken on [2017-06-09 Ven 10:12] \\
   ca a crash sur krak a cause de la mémoire ....
 - State "DEBUG"      from "RUNNING"    [2017-06-09 Ven 10:12]
@@ -2830,11 +2833,11 @@ Rien de discriminant, toujours PCA et lm qui derive.
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
   expr <- Article3_MethodComparison(G.file,
-                                    outlier.props = c(0.01, 0.05, 0.1),
+                                    outlier.props = c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4),
                                     n = NULL, L = 50000,
                                     K = 5,
                                     K.method = 5,
-                                    lasso.sparse.prop = 0.2,
+                                    lasso.sparse.prop = 0.4,
                                     ridge.lambda = 1e-5,
                                     cs = list(c1 = c(0.6, 0.4, 0.2, 0.1, 0.05)),
                                     cs.sum = FALSE,
@@ -2873,9 +2876,12 @@ Rien de discriminant, toujours PCA et lm qui derive.
 :LOGBOOK:
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** DONE Run all even with lfmm lasso :D
-CLOSED: [2017-06-09 Ven 10:09]
+***** RUNNING Run all even with lfmm lasso :D
 :LOGBOOK:
+- State "RUNNING"    from "TODO"       [2017-06-09 ven. 16:20]
+- Note taken on [2017-06-09 ven. 16:19] \\
+  32585.pts-11.krakenator
+- State "TODO"       from "DONE"       [2017-06-09 ven. 16:18]
 - State "DONE"       from "RUNNING"    [2017-06-09 Ven 10:09]
 - Note taken on [2017-06-07 Mer 14:28] \\
   KOW
@@ -2886,18 +2892,18 @@ CLOSED: [2017-06-09 Ven 10:09]
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
   expr <- Article3_MethodComparison(G.file,
-                                    outlier.props = c(0.01, 0.05, 0.1),
+                                    outlier.props = c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4),
                                     n = NULL, L = 50000,
                                     K = 5,
                                     K.method = 10,
-                                    lasso.sparse.prop = 0.05,
+                                    lasso.sparse.prop = 0.4,
                                     ridge.lambda = 1e-5,
-                                    cs = c(0.6, 0.4, 0.2, 0.1, 0.05),
+                                    cs = list(c1 = c(0.6, 0.4, 0.2, 0.1, 0.05)),
                                     cs.sum = FALSE,
                                     sd.V.rho = 1,
                                     nb.rep = 4,
                                     fast.only = FALSE,
-                                    cluster.nb = 4,
+                                    cluster.nb = 2,
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
@@ -2955,8 +2961,11 @@ CLOSED: [2017-06-09 Ven 10:09]
 :LOGBOOK:
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** DEBUG Run all even with lfmm lasso :D
+***** RUNNING Run all even with lfmm lasso :D
 :LOGBOOK:
+- Note taken on [2017-06-09 ven. 16:21] \\
+  32674.pts-14.krakenator
+- State "RUNNING"    from "DEBUG"      [2017-06-09 ven. 16:20]
 - Note taken on [2017-06-09 Ven 10:11] \\
   ca a craché sur krakenator, mais c'est juste un problème avec la mémoire !
   faudra le relancer.
@@ -2971,18 +2980,18 @@ CLOSED: [2017-06-09 Ven 10:09]
   G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds"
 
   expr <- Article3_MethodComparison(G.file,
-                                    outlier.props = c(0.01, 0.05, 0.1),
+                                    outlier.props = c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4),
                                     n = NULL, L = 50000,
                                     K = 5,
                                     K.method = 3,
-                                    lasso.sparse.prop = 0.05,
+                                    lasso.sparse.prop = 0.4,
                                     ridge.lambda = 1e-5,
-                                    cs = c(0.6, 0.4, 0.2, 0.1, 0.05),
+                                    cs = list(c1 = c(0.6, 0.4, 0.2, 0.1, 0.05)),
                                     cs.sum = FALSE,
                                     sd.V.rho = 1,
                                     nb.rep = 4,
                                     fast.only = FALSE,
-                                    cluster.nb = 4,
+                                    cluster.nb = 2,
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
