@@ -30,6 +30,10 @@ In Code we trust, all others bring data.
 
 * Introduction
 :LOGBOOK:
+- Note taken on [2017-06-09 ven. 16:37] \\
+  Il faut que j'ai travailler sur deux méthodes ! Les deux répondes à deux
+  problématique différentes et le tout s'inscrit dans un besoin t'outils adapté à
+  la génétique du 21ieme siecle !!
 - Note taken on [2017-06-09 Ven 11:44] \\
   dans l'intro il faut que je motive la problématique !! et le plan répond a cette
   problématique.
@@ -45,7 +49,7 @@ In Code we trust, all others bring data.
   suffisament de données pour se rendre compte que nos test d'hypothèse sont faux
   :D et la on fait le lien avec les tests d'hypothèe multiple....
 :END:
-** Analyse factorielle des données biologiques
+** La génomique des populations
 :LOGBOOK:
 - Note taken on [2017-06-07 Mer 14:42] \\
   - analyse de la structure de variance covariance: PCA

@@ -66,6 +66,16 @@ save_plot_timc_bcm_15 <- function(pl, filename, width = 600, height = 400,
   png(tmp.file, width, height)
   print(pl)
   dev.off()
+
+  ## test if the file exists on timc_bcm_15
+  cmd <- paste0("ssh cayek@timc-bcm-15 stat ", path.dir, "/",
+                filename)
+  a <- system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+  if (a == 0) {
+    stop("file exists")
+  } 
+
+  ## copy file !
   system(paste0("scp ", tmp.file,
                 paste0(" cayek@timc-bcm-15:",path.dir),
                 filename),

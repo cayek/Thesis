@@ -126,7 +126,8 @@ retrieveExperiment <- function(id, bench.dir = getOption("thesis.dump.file")) {
 }
 
 #' @export
-removeExperiment <- function(id, bench.dir = getOption("thesis.dump.file")) {
+removeExperiment <- function(id, bench.dir = getOption("thesis.dump.file"),
+                             only.rds = TRUE) {
 
   bench.tbl <- getBenchmarkDb(bench.dir = bench.dir)
   bench.file <- paste0(bench.dir,"/benchmark.sqlite3")
@@ -134,8 +135,10 @@ removeExperiment <- function(id, bench.dir = getOption("thesis.dump.file")) {
   dumpfile <- bench.tbl$dumpfile[id]
   file.remove(paste0(bench.dir,"/",basename(dumpfile)))
   ## remove from db
-  remove_from_table(db.file = bench.file,
-                    condition = paste0("dumpfile = ","\'",dumpfile,"'"))
+  if (!only.rds) {
+    remove_from_table(db.file = bench.file,
+                      condition = paste0("dumpfile = ","\'",dumpfile,"'"))
+  }
 }
 
 ################################################################################
