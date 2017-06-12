@@ -77,9 +77,10 @@ In Code we trust, all others bring data.
 *** Les tests d'hypothèse multiple
 *** Les modèle a facteur lattents pour ca
 *** presentation de l'article 2
-** Introduction
-** Methods
-*** Model 
+** Article
+*** Introduction
+*** Methods
+**** Model 
 
 We present here the model and the notations which will be used in the article.
 Following the common notation in latent factor mixed model (LFMM) we write the following
@@ -114,7 +115,7 @@ output variance explained by $\X$.
 We will now expose two regularized variants of function $L$ which lead to
 unique primary effect matrix $\B$. 
 
-**** demo
+***** demo
 We write $\hat{\B}$ the unique matrices of optimization problem defined by the
 loss function $\L$ in [[eqref:eq:optim_no_reg]], and $\hat{\U}$, $\hat{\V}$
 possible matrices for this solution. First, we remark that $\hat{\U}$ and
@@ -129,7 +130,7 @@ L(\hat{\U} - \X \matr{C}, \hat{\V}^{T}, \hat{\B} + \hat{\V} \matr{C}^T}) = L(\ha
 Thus, $\hat{\B}$ is not unique.
 
 
-*** Ridge regularized latent factor mixed model (RidgeLFMM)
+**** Ridge regularized latent factor mixed model (RidgeLFMM)
 In this section we present a ridge regularized latent factor mixed model
 (RidgeLFMM). The regularized loss function is written as follow 
 \begin{equation}
@@ -151,7 +152,7 @@ projection matrix defined as $$\LfmmP.$$ The matrix $\sqrt{\obP}$ is define such
 \end{equation*}
 
 
-**** Proof
+***** Proof
 We want to find 
 \begin{align*}
 \hat{\U} & \in \RR^{\Urow \times \Ucol} \\
@@ -200,7 +201,7 @@ As result we have
 \hat{\B} & = (\X^{T} \X + \lambda \Id_{d})^{-1} \X^{T} (G - \hat{\U} \hat{\V}).
 \end{align*}
 
-*** Lasso regularized latent factor mixed model (LassoLFMM)
+**** Lasso regularized latent factor mixed model (LassoLFMM)
 In this section we present a lasso regularized latent factor mixed model (LassoLFMM)
 The regularized loss function is written as follow
 \begin{equation}
@@ -213,7 +214,7 @@ $$ in ref:eq:optim_lasso_reg, the function $L_{lasso}$ become an convex
 function of $\C$ and $\B$. Thereby, we can apply alternated algorithm to compute
 minimum value of $L_{lasso}$.
 
-**** An alternated algorithm
+***** An alternated algorithm
 We start with null matrices
 \begin{align*}
 C_{t = 0} & = 0 \\
@@ -236,7 +237,7 @@ a lasso regularization on the primary effect matrix $\B$. The second step is a
 low rank approximation of the regression residual $$\Y - \X \B_{t}^{T}.$$ The low
 rank approximation is given by the singular value shrinkage operator, see
 cite:cai10_singul_value_thres_algor_matrix_compl.
-*** Choice of hyper-parameters
+**** Choice of hyper-parameters
 :LOGBOOK:
 - Note taken on [2017-05-25 Thu 11:52] \\
   Pour ridge faire ma petite heuristic pour trouver lambda.
@@ -251,39 +252,80 @@ cite:cai10_singul_value_thres_algor_matrix_compl.
   l'arrache avant etc...
 :END:
 
-LassoLFMM and RidgeLFMM .....
+LassoLFMM and RidgeLFMM method results depend on two kinds of hyper-parameter,
+the number of latent factors and the regularization parameters. We present here
+practice solutions to assess these hyper-parameters. 
 
-**** Cross validation
+***** Cross validation
 :LOGBOOK:
 - Note taken on [2017-05-26 Fri 14:46] \\
   cf mon cahier
 :END:
 Cross validation is a classic method to select hyper-parameter in factor
-analysis cite:Owen_2009,Bro_2008. We explain here the cross-validation
-method we used.
+analysis cite:Owen_2009,Bro_2008. The cross validation algorithm we used is
+explained in detail in annex. Cross validation procedure can be long to run in
+particular on very big data set. Especially since LassoLFMM and RidgeLFMM have
+each 2 hyper-parameters which can be cross-validated. We propose other procedure
+to assess hyper-parameters that gave good results in our experiments.
 
-....
+****** ANNEX Cross validation algorithm
+We present here the cross validation algorithm which can be used to assess
+hyper-parameter of LassoLFMM and RidgeLFMM.
 
-However, cross validation procedure can be long to run in particular on very big
-data set. Especially since, LassoLFMM and RidgeLFMM have each 2 hyper-parameters
-which can be cross-validated.We propose other procedure to assess
-hyper-parameters that gave good results our experiments.
+We first split the observation output matrix into 
+$$
+\Y^{(-I)}
+$$
+and 
+$$
+\Y^{(I)}
+$$ where matrices are respectively compose of 
 
-**** Choice of K using singular value
+
+. We write the training
+data matrices $$ \Y^{(-i)}$$ and $$\X^{(-i)}.$$ These matrices are compose of
+random lines of the observed output matrix and the primary matrix. Then we
+compute (with RidgeLFMM or LassoLFMM) latent factor matrices $$\U^{(-i)}$$ and
+$$\V^{(-i)}$$ and the primary effect matrix $$\B^{(-i)}.$$
+
+In a second step we want to compute an estimation of test output matrix
+$$\Y^{(i)}$$. However, to predict the output matrix with LFMM model
+eqref:eq:model we must estimate the latent score matrix 
+$$\U^{(i)}$$ 
+for this the test data.
+To avoid using test observation for the prediction, we split the test data
+by selecting a random set of variables of the observed output matrix which we
+note $$\Y^{(i)_{(-j}}$$. 
+
+Then, if we assume that we know the primary effect size
+matrix and the latent factor loading matrix for staying variables we write 
+
+\begin{equation}
+\label{eq:cvU}
+U^{(i)}_{(-j)} = (\Y^{i}_{(-j)} - \X^{(i)}} \B^{(-j)}) \V_{(-j)}^{T}.
+\end{equation}
+
+The equation eqref:eq:cvU is given by optimal solution of $L$
+ref:eq:optim_no_reg when $V$ and $B$ are fixed.
+
+Finally, we compute the residual error on the test set such as 
+\begin{equation}
+Err = \norm{ \Y^{i}_{(j)} + \X^{(i)}} \B^{(-i)_{(j)} + \U^{(i)}_{(-j)} \V^{(-i)}
+\end{equation}
+
+***** Choice of K using singular value
 Methods presented in this paper are very close to the Principal Component
-Analysis (PCA), we can seen them as a PCA of $G - X^B$. Thus we propose to use
-select the number of latent variable $\K$ by visualizing the scree plot. 
+Analysis (PCA), we can seen them as a PCA of $$G - X^B$$ if we know the primary
+effect matrix. Thus we propose to select the number of latent variable $\K$
+by visualizing the scree plot.
 
-We empirically observed that, this method leads to an overestimated number of
+We empirically observed that this method leads to an overestimated number of
 factor in the model describe in eqref:eq:model since the co-variate would be
 considered as a latent variable. However, because the goal of our methods is to
 estimate latent variation while protecting variation explain by co-variate $X$,
 we observed that our algorithms was robust to overestimated $K$.
 
-
-...
-
-**** Heuristic to choice of $\lambda$ ridge
+***** Heuristic to choice of $\lambda$ ridge
 :LOGBOOK:
 - Note taken on [2017-06-01 jeu. 12:03] \\
   et la on fait le lien avec le model de cate :D
@@ -305,7 +347,7 @@ confounding and $\U$, $\V$ and $\X$ can be estimated separately.
 We observed that for a centered and normalized $G$ and $X$ $\lambda = ?$
 provided good results in our experiments.
 
-**** Heuristic to choice of $\gamma$ lasso
+***** Heuristic to choice of $\gamma$ lasso
 This hyper-parameter impact the rank of the $C$ matrix. To assess the gamma
 value we compute singular values of G $(\mu_1, ..., \mu_n)$. Then we set 
 
@@ -318,7 +360,7 @@ that for such computed $\gamma$ the rank of $C$ returned by lasso algorithm was
 $K$.
 
 
-**** Heuristic to choice of $\lambda$ lasso
+***** Heuristic to choice of $\lambda$ lasso
 This hyper-parameter impact the number of line set to zero in $B$. We know that
 only a part of observe variable $G_j$ are correlated with the variable $X$. So
 we can interpret the proportion on non zero line in $B$ as the proportion $p$ of
@@ -332,7 +374,7 @@ Then we construct a sequence of m values of $\lambda$ decreasing from
 $\lambda_max to $\lambda_min$ on the log scale. Typical values are \epsilon =
 0.001 and K = 100.
 
-*** Hypothesis testing
+**** Hypothesis testing
 :LOGBOOK:
 - Note taken on [2017-05-25 Thu 11:55] \\
   parler de lm : G ~U + X 
@@ -340,11 +382,25 @@ $\lambda_max to $\lambda_min$ on the log scale. Typical values are \epsilon =
   la recalibration par mad + median
 :END:
 
-**** Linear model with latent factor score
+Until now, we only presented how to estimate latent factor scores and loadings
+and primary effects. However, the purpose which motivate the estimation of
+latent factor by considering the primary variable is the detection of observed
+output variables associated with the variable of interest. We propose here to
+use latent factor score matrix $U$ as co-variables of a linear model.
+
+***** Linear model with latent factor score
 :LOGBOOK:
 - Note taken on [2017-05-26 Fri 15:35] \\
   faut que je choississe les notations mieux que ca, je m'enmmèle la ...
 :END:
+
+We write the linear model for each observed output variable $\Y_{j}$ as follow 
+\begin{equation}
+\Y_{j} =  \U \matr{\gamma_{j}}^{T} + \X \beta_{j} + \matr{\epsilon_{j}}
+\end{equation}
+
+where \matr{\epsilon_{j}} 
+
 After computing latent factors score matrix $U$ with the lasso or ridge
 algorithm, we use them as co-variables with $X$ in a linear model. This enable
 to compute the pvalue to test the null hypothesis 
@@ -354,7 +410,7 @@ $$
 
 where in $B$ is the ....
 
-**** Hypothesis calibration
+***** Hypothesis calibration
 :LOGBOOK:
 - Note taken on [2017-06-01 jeu. 14:45] \\
   Voir dans cite:gerard2017unifying la parti sur la calibration !
@@ -367,22 +423,22 @@ to zero and standard deviation to 1. We used the median and the mad as robust
 estimators of the mean and standard deviation.
 
 
-** Simulation study and dataset
+*** Simulation study and dataset
 :PROPERTIES:
 :header-args: :cache no :eval no-export :results output :exports none
 :END:
-*** Others methods
+**** Others methods
 <<sec:similar_method>>
-**** lm and lm + pca
+***** lm and lm + pca
 We comparared results of our method to two well known method the linear model
 and the linear model with PCA scores. 
-**** cate
+***** cate
 
-**** sva
-**** famt
-*** Simulations and data
+***** sva
+***** famt
+**** Simulations and data
 
-**** Generative model simulation
+***** Generative model simulation
 
 We used equation to generate generative model dataset. The latent factor
 scores and loadings $U$ and $V$ were generated using a multivariate gaussian
@@ -395,7 +451,7 @@ the mean equal to zero and the standard deviation equal to one such that the
 Pearson linear correlation between $X$ and $U_1$ the first latent score
 matrix equal to $c$.
 
-**** Real data example
+***** Real data example
 In this section we present the real data we used to compare lasso LFMM, ridge
 LFMM with similar methods presented in section [[sec:similar_method]]. To evaluate
 the utility of our methods on several situation we select study where correction
@@ -405,7 +461,7 @@ ecological association study (EAS). Before running algorithm $\G$ and $\X$
 matrix was centered and normalized with standard deviation for all the study. We
 now describe preprocessing step for each study.
 
-***** Association study of DNA methylation with rheumatoid arthritis (EWAS)
+****** Association study of DNA methylation with rheumatoid arthritis (EWAS)
 For the EWAS we chose data from a recent association study of DNA methylation with
 rheumatoid arthritis (RA) cite:Liu_2013. We retrieve the RA data from Gene
 Expression Omnibus (GEO) database (accession number GSE42861). Following
@@ -425,7 +481,7 @@ status, cell-type composition) are known but we did not use them in methods.
 Thus, we can compare methods output with output of method considering explicitly
 these variables cite:Rahmani_2016,Zou_2014.
 
-***** Association study of genetic variants with Celiac disease (GWAS)
+****** Association study of genetic variants with Celiac disease (GWAS)
 For the GWAS we chose data from an association study of SNPs with Celiac disease
 citep:dubois2010multiple. Before running method we apply classic preprossessing
 step with the software Plink cite:Purcell_2007. Firstly, we keep only individual
@@ -448,12 +504,12 @@ which are not correlated. The final dataset was of size $n = $ and $L = $.
 
 We also impute missing value with the sowtware 
 
-***** Association study of genetic variants with climatic data (EAS)
+****** Association study of genetic variants with climatic data (EAS)
 For EAS
-** Results
-** Discussion
-** Figures and tables
-*** Numerical validation
+*** Results
+*** Discussion
+*** Figures and tables
+**** Numerical validation
 
 
 * Conclusion 

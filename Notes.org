@@ -2337,11 +2337,13 @@ CLOSED: [2017-05-22 lun. 15:06]
 
 lfmm lasso donne bien comme l'oracle. Il y a toujours ce truc bizare avec l'ACP
 mais je pense que c'est une particularité des data.
-*** STARTED K = 10 
+*** DONE K = 10 
+CLOSED: [2017-06-12 lun. 11:42]
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-06-12 lun. 11:42]
 - State "STARTED"    from "DONE"       [2017-06-01 jeu. 18:26]
 - State "DONE"       from "STARTED"    [2017-05-29 lun. 09:01]
 - Note taken on [2017-05-19 ven. 13:24] \\
@@ -2808,16 +2810,22 @@ CLOSED: [2017-06-09 ven. 16:15]
 
 Rien de discriminant, toujours PCA et lm qui derive.
 
-*** TODO Robustness to K choice
+*** DONE Robustness to K choice
+CLOSED: [2017-06-12 lun. 11:42]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-12 lun. 11:42]
 - State "TODO"       from              [2017-06-06 mar. 09:35]
 :END:
-**** TODO with 2 5 10 % outlier and L = 50 000 K well estimated
+**** DONE with 2 5 10 % outlier and L = 50 000 K well estimated
+CLOSED: [2017-06-12 lun. 11:41]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-12 lun. 11:41]
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DONE Run all even with lfmm lasso :D
+CLOSED: [2017-06-12 lun. 11:27]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-06-12 lun. 11:27]
 - Note taken on [2017-06-09 ven. 16:18] \\
   32517.pts-8.krakenator
 - State "RUNNING"    from "DEBUG"      [2017-06-09 ven. 16:18]
@@ -2848,19 +2856,24 @@ Rien de discriminant, toujours PCA et lm qui derive.
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-***** WAITING plot
+***** DONE plot
+CLOSED: [2017-06-12 lun. 11:41]
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "DONE"       from "WAITING"    [2017-06-12 lun. 11:41]
 - State "WAITING"    from              [2017-06-07 Mer 14:25]
 :END:
 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  expr <- retrieveExperiment(?)
+  expr <- retrieveExperiment(154)
   expr$description
 #+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=5 K.method=5 correctionByC=FALSE fast.only=FALSE n= L=50000 cs=c(0.6, 0.4, 0.2, 0.1, 0.05) cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=0.01|0.05|0.1|0.2|0.3|0.4 ridge.lambda=1e-05 lasso.sparse.prop=0.4 nb.rep=4 "
 
 
 #+begin_src R :results output :exports both
@@ -2870,14 +2883,38 @@ Rien de discriminant, toujours PCA et lm qui derive.
   save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_KWE.png")
 #+end_src
 
+#+RESULTS:
+[[./Rplots/NumericVal_auc_with_lasso_L5e4_KWE.png]]
+[[./Rplots/NumericVal_gif_with_lasso_L5e4_KWE.png]]
+#+begin_example
+# A tibble: 24 × 5
+   method outlier.prop           `cor(U,X)`   rep       auc
+    <chr>        <dbl>                <chr> <dbl>     <dbl>
+1  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     1 0.9970198
+2  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     2 0.9970179
+3  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     3 0.9970174
+4  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     4 0.9970153
+5  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     1 0.9994422
+6  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     2 0.9994182
+7  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     3 0.9994654
+8  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     4 0.9994129
+9  Oracle         0.10 0.6|0.4|0.2|0.1|0.05     1 0.9997119
+10 Oracle         0.10 0.6|0.4|0.2|0.1|0.05     2 0.9997287
+# ... with 14 more rows
+#+end_example
 
 
-**** TODO with 2 5 10 % outlier and L = 50 000 K over estimated
+
+**** DONE with 2 5 10 % outlier and L = 50 000 K over estimated
+CLOSED: [2017-06-12 lun. 11:41]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-12 lun. 11:41]
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DONE Run all even with lfmm lasso :D
+CLOSED: [2017-06-12 lun. 11:02]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-06-12 lun. 11:02]
 - State "RUNNING"    from "TODO"       [2017-06-09 ven. 16:20]
 - Note taken on [2017-06-09 ven. 16:19] \\
   32585.pts-11.krakenator
@@ -2907,11 +2944,13 @@ Rien de discriminant, toujours PCA et lm qui derive.
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-***** TODO plot
+***** DONE plot
+CLOSED: [2017-06-12 lun. 11:41]
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-12 lun. 11:41]
 - State "TODO"       from "DONE"       [2017-06-09 Ven 10:09]
 - State "DONE"       from "WAITING"    [2017-06-09 Ven 10:09]
 - Note taken on [2017-06-09 Ven 10:09] \\
@@ -2921,12 +2960,12 @@ Rien de discriminant, toujours PCA et lm qui derive.
 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  expr <- retrieveExperiment(152)
+  expr <- retrieveExperiment(153)
   expr$description
 #+end_src
 
 #+RESULTS:
-: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=5 K.method=10 correctionByC=FALSE fast.only=FALSE n= L=50000 cs=0.6|0.4|0.2|0.1|0.05 cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=0.01|0.05|0.1 ridge.lambda=1e-05 lasso.sparse.prop=0.05 nb.rep=4 "
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=5 K.method=10 correctionByC=FALSE fast.only=FALSE n= L=50000 cs=c(0.6, 0.4, 0.2, 0.1, 0.05) cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=0.01|0.05|0.1|0.2|0.3|0.4 ridge.lambda=1e-05 lasso.sparse.prop=0.4 nb.rep=4 "
 
 
 #+begin_src R :results output :exports both
@@ -2940,29 +2979,35 @@ Rien de discriminant, toujours PCA et lm qui derive.
 [[./Rplots/NumericVal_auc_with_lasso_L5e4_KOE.png]]
 [[./Rplots/NumericVal_gif_with_lasso_L5e4_KOE.png]]
 #+begin_example
-# A tibble: 60 × 5
-   method outlier.prop `cor(U,X)`   rep       auc
-    <chr>        <dbl>      <chr> <dbl>     <dbl>
-1  Oracle         0.01       0.05     1 0.9970570
-2  Oracle         0.01       0.05     2 0.9970184
-3  Oracle         0.01       0.05     3 0.9970106
-4  Oracle         0.01       0.05     4 0.9970203
-5  Oracle         0.01        0.1     1 0.9970235
-6  Oracle         0.01        0.1     2 0.9970180
-7  Oracle         0.01        0.1     3 0.9970161
-8  Oracle         0.01        0.1     4 0.9970195
-9  Oracle         0.01        0.2     1 0.9970187
-10 Oracle         0.01        0.2     2 0.9970232
-# ... with 50 more rows
+# A tibble: 24 × 5
+   method outlier.prop           `cor(U,X)`   rep       auc
+    <chr>        <dbl>                <chr> <dbl>     <dbl>
+1  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     1 0.9970131
+2  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     2 0.9970106
+3  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     3 0.9970198
+4  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     4 0.9970247
+5  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     1 0.9994148
+6  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     2 0.9994308
+7  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     3 0.9994177
+8  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     4 0.9994423
+9  Oracle         0.10 0.6|0.4|0.2|0.1|0.05     1 0.9997821
+10 Oracle         0.10 0.6|0.4|0.2|0.1|0.05     2 0.9997262
+# ... with 14 more rows
+Error in save_plot_timc_bcm_15(pl, "NumericVal_auc_with_lasso_L5e4_KOE.png") (from utils.R#75) : 
+  file exists
 #+end_example
 
 
-**** TODO with 2 5 10 % outlier and L = 50 000 K under estimated
+**** DONE with 2 5 10 % outlier and L = 50 000 K under estimated
+CLOSED: [2017-06-12 lun. 11:41]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-12 lun. 11:41]
 - State "TODO"       from              [2017-06-07 Mer 14:16]
 :END:
-***** RUNNING Run all even with lfmm lasso :D
+***** DONE Run all even with lfmm lasso :D
+CLOSED: [2017-06-12 lun. 10:45]
 :LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-06-12 lun. 10:45]
 - Note taken on [2017-06-09 ven. 16:21] \\
   32674.pts-14.krakenator
 - State "RUNNING"    from "DEBUG"      [2017-06-09 ven. 16:20]
@@ -2995,19 +3040,24 @@ Rien de discriminant, toujours PCA et lm qui derive.
                                     save = TRUE, bypass = FALSE)
 
 #+end_src
-***** WAITING plot
+***** DONE plot
+CLOSED: [2017-06-12 lun. 11:02]
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :eval no-export
 :END:
 :LOGBOOK:
+- State "DONE"       from "WAITING"    [2017-06-12 lun. 11:02]
 - State "WAITING"    from              [2017-06-07 Mer 14:30]
 :END:
 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
-  expr <- retrieveExperiment(?)
+  expr <- retrieveExperiment(155)
   expr$description
 #+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA.rds K=5 K.method=3 correctionByC=FALSE fast.only=FALSE n= L=50000 cs=c(0.6, 0.4, 0.2, 0.1, 0.05) cs.sum=FALSE sd.V.rho=1 rho.E=1 outlier.props=0.01|0.05|0.1|0.2|0.3|0.4 ridge.lambda=1e-05 lasso.sparse.prop=0.4 nb.rep=4 "
 
 
 #+begin_src R :results output :exports both
@@ -3017,6 +3067,29 @@ Rien de discriminant, toujours PCA et lm qui derive.
   save_plot_timc_bcm_15(pl, "NumericVal_gif_with_lasso_L5e4_KUE.png")
 #+end_src
 
+#+RESULTS:
+[[./Rplots/NumericVal_auc_with_lasso_L5e4_KUE.png]]
+[[./Rplots/NumericVal_gif_with_lasso_L5e4_KUE.png]]
+#+begin_example
+# A tibble: 24 × 5
+   method outlier.prop           `cor(U,X)`   rep       auc
+    <chr>        <dbl>                <chr> <dbl>     <dbl>
+1  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     1 0.9970335
+2  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     2 0.9970476
+3  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     3 0.9970142
+4  Oracle         0.01 0.6|0.4|0.2|0.1|0.05     4 0.9970716
+5  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     1 0.9994106
+6  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     2 0.9995337
+7  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     3 0.9994458
+8  Oracle         0.05 0.6|0.4|0.2|0.1|0.05     4 0.9994209
+9  Oracle         0.10 0.6|0.4|0.2|0.1|0.05     1 0.9997133
+10 Oracle         0.10 0.6|0.4|0.2|0.1|0.05     2 0.9997141
+# ... with 14 more rows
+#+end_example
+
+**** conclusion
+c'est pas avec ce jeu de données que je vais reussir à faire la différence entre
+les méthodes... Lasso merde mais je sais pas trop pk..
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
 *** ./Data/SSMPG2015/ 
@@ -8214,6 +8287,162 @@ ddl data
 
   write(colnames(dat$G)[candidate], file = "~/Projects/BcmPowerRangers/data2_submit.txt")
 #+end_src
+
+** Cate SVA et lfmm sur des simu générative
+
+*** =NormalSampler2=
+On simule des données avec le modèle génératif de lfmm
+#+begin_src R :results output :exports both
+  K <- 5
+  s <- NormalSampler2(n = 500,
+                      L = 2000,
+                      K = K,
+                      prop.outlier = 0.1,
+                      cs = c(0.6, 0.5, 0.0, 0.0, 0.0))
+
+  dat <- sampl(s)
+
+  methods <- finalBench(K = K, lambda = 1e-5, sparse.prop = 0.1, fast.only = TRUE, calibrate = FALSE)
+  methods$sva <- NULL
+
+  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
+
+  expr <- runExperiment(expr)
+#+end_src
+
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_pvalue.png :exports both :width 600 :height 400 
+  plot(expr, plot.type = "pvalue.grid")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_pvalue.png]]
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_precision.png :exports both :width 600 :height 400 
+plot(expr, plot.type = "precision.recall", summary_bin = TRUE, geom = "line")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_precision.png]]
+
+Il y a vraissemblablement un problème avec Cate. Dans ce cas le modèle utilisé
+est différent de celui de cate. On va essayer avec NormalSampler
+
+*** =NormalSampler=
+On simule des données avec le modèle génératif de lfmm
+#+begin_src R :results output :exports both
+  K <- 5
+  s <- NormalSampler(n = 500,
+                     L = 2000,
+                     K = K,
+                     prop.outlier = 0.05,
+                     c = 0.2)
+
+  dat <- sampl(s)
+
+  methods <- finalBench(K = 5, lambda = 1e-5, sparse.prop = 0.1, fast.only = TRUE, calibrate = FALSE)
+  methods$sva <- NULL
+  ## methods$lfmmRidge <- NULL
+  methods$pcaLm <- NULL
+
+  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
+
+  expr <- runExperiment(expr)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+DEBUG [2017-06-12 13:28:34] runExperiment.FDRControlExperiment: We set the seed
+DEBUG [2017-06-12 13:28:41] run.Method: running  lm+zscore|calibrate=FALSE
+TRACE [2017-06-12 13:28:41] attaching impute
+DEBUG [2017-06-12 13:28:41] FAMT::as.FAMTdata said:
+--------------------------------
+$`Rows with missing values`
+integer(0)
+
+$`Columns with missing values`
+integer(0)
+
+--------------------------------
+DEBUG [2017-06-12 13:28:43] FAMT::modelFAMT said:
+--------------------------------
+[1] "Fitting Factor Analysis Model with 5 factors"
+[1] "Fitting Factor Analysis Model with 5 factors"
+--------------------------------
+DEBUG [2017-06-12 13:28:44] run.Method: running  Zscore
+DEBUG [2017-06-12 13:28:44] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:44] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:45] run.Method: running  lm+zscore|calibrate=FALSE
+TRACE [2017-06-12 13:28:45] attaching impute
+DEBUG [2017-06-12 13:28:45] FAMT::as.FAMTdata said:
+--------------------------------
+$`Rows with missing values`
+integer(0)
+
+$`Columns with missing values`
+integer(0)
+
+--------------------------------
+DEBUG [2017-06-12 13:28:48] FAMT::modelFAMT said:
+--------------------------------
+[1] "Fitting Factor Analysis Model with 5 factors"
+[1] "Fitting Factor Analysis Model with 5 factors"
+--------------------------------
+DEBUG [2017-06-12 13:28:49] run.Method: running  Zscore
+DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
+TRACE [2017-06-12 13:28:49] attaching impute
+DEBUG [2017-06-12 13:28:49] FAMT::as.FAMTdata said:
+--------------------------------
+$`Rows with missing values`
+integer(0)
+
+$`Columns with missing values`
+integer(0)
+
+--------------------------------
+DEBUG [2017-06-12 13:28:52] FAMT::modelFAMT said:
+--------------------------------
+[1] "Fitting Factor Analysis Model with 5 factors"
+[1] "Fitting Factor Analysis Model with 5 factors"
+--------------------------------
+DEBUG [2017-06-12 13:28:53] run.Method: running  Zscore
+DEBUG [2017-06-12 13:28:54] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:54] run.Method: running  lm+zscore|calibrate=FALSE
+#+end_example
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_normalsampler_pvalue.png :exports both :width 600 :height 400 
+  plot(expr, plot.type = "pvalue.grid")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_normalsampler_pvalue.png]]
+
+
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_normalsampler_precision.png :exports both :width 600 :height 400 
+plot(expr, plot.type = "precision.recall", summary_bin = FALSE, geom = "point")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_normalsampler_precision.png]]
+
+C'est vraiment bizare si c est trop grand cate fait n'imp. Pk j'ai pas les mêmes
+résultats avec les vrais dataset ?
+
+*** TODO Sur des vrais données
+:LOGBOOK:
+- Note taken on [2017-06-12 lun. 14:39] \\
+  On verra ca plus tard...
+- State "TODO"       from              [2017-06-12 lun. 14:39]
+:END:
+
+
+
+#+begin_src R :results output :exports both
+
+#+end_src
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both
@@ -10457,10 +10686,10 @@ cite:dubois2010multiple C'est l'article du dataset Celiac
  
  cite:gerard2017unifying Un papier qui veut faire comme lfmm, cad identifier la
  vairance indesirable pour faire une association. 
-
-Papier bien ecrit et très proche de lfmm, j'ai l'impression qu'il font des
-simulation avec 50 % d'outlier dans ce cas LassoLFMM est bien :D. Mais dans quel
-cas c'est interessant autant d'outlier ?
+ 
+ Papier bien ecrit et très proche de lfmm, j'ai l'impression qu'il font des
+ simulation avec 50 % d'outlier dans ce cas LassoLFMM est bien :D. Mais dans quel
+ cas c'est interessant autant d'outlier ?
 
 
 ** TODO 2007 - PLINK: A Tool Set for Whole-Genome Association and  Population-Based Linkage Analyses
@@ -10551,3 +10780,23 @@ la biblio.
  :END:
 
 cite:phdGuedj Une thèse sur les thèse d'association mais en 2007, ca date. A voir.
+
+** TODO 2016 - TOPICS IN CAUSAL AND HIGH DIMENSIONAL INFERENCE
+ :PROPERTIES:
+  :Custom_ID: ZhaoThesis2016
+  :AUTHOR: Qingyuan Zhao
+  :JOURNAL: 
+  :YEAR: 2016
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:ZhaoThesis2016 C'est une thèse sur le développement théorique des modèle a
+facteur latents pour les test d'association et de la confusion. Il y a un
+résultat théorique que je comprends pas mais qui d'après OF a un grand interet.
+Les apporteurs c'est du lourd :D
+
+
+
