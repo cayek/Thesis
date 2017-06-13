@@ -3108,7 +3108,6 @@ les méthodes... Lasso merde mais je sais pas trop pk..
                         prop.outlier = NULL,
                         cs = NULL,
                         n = NULL, L = 50000)
-  dat <- sampl(s)
 
   expr <- Article3_MethodComparison(G.file,
                                     outlier.props = c(0.01, 0.05, 0.1),
@@ -3121,10 +3120,10 @@ les méthodes... Lasso merde mais je sais pas trop pk..
                                     cs = list(c1 = c(0.8, rep(0.0, K - 1))),
                                     cs.sum = FALSE,
                                     nb.rep = 4,
-                                    fast.only = FALSE,
+                                    fast.only = TRUE,
                                     cluster.nb = 4,
                                     s = s,
-                                    save = TRUE, bypass = FALSE)
+                                    save = FALSE, bypass = FALSE)
 
 
 #+end_src
