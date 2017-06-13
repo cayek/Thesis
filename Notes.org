@@ -3090,6 +3090,44 @@ CLOSED: [2017-06-12 lun. 11:02]
 **** conclusion
 c'est pas avec ce jeu de données que je vais reussir à faire la différence entre
 les méthodes... Lasso merde mais je sais pas trop pk..
+
+*** TODO =FromTrueSampler2=
+:LOGBOOK:
+- State "TODO"       from              [2017-06-13 mar. 10:54]
+:END:
+
+**** run
+#+begin_src R :results output :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000.rds"
+  pca.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000_PCA.rds"
+
+  s <- FromTrueSampler2(G.file = G.file,
+                        K = 5,
+                        pca.file = pca.file,
+                        prop.outlier = NULL,
+                        cs = NULL,
+                        n = NULL, L = 50000)
+  dat <- sampl(s)
+
+  expr <- Article3_MethodComparison(G.file,
+                                    outlier.props = c(0.01, 0.05, 0.1),
+                                    K = s$K,
+                                    n = s$n,
+                                    L = s$L,
+                                    K.method = s$K,
+                                    lasso.sparse.prop = 0.4,
+                                    ridge.lambda = 1e-5,
+                                    cs = list(c1 = c(0.8, rep(0.0, K - 1))),
+                                    cs.sum = FALSE,
+                                    nb.rep = 4,
+                                    fast.only = FALSE,
+                                    cluster.nb = 4,
+                                    s = s,
+                                    save = TRUE, bypass = FALSE)
+
+
+#+end_src
 ** Dataset
 How dataset in ./Data/ was generated. Some script and urls...
 *** ./Data/SSMPG2015/ 
@@ -8431,18 +8469,60 @@ plot(expr, plot.type = "precision.recall", summary_bin = FALSE, geom = "point")
 C'est vraiment bizare si c est trop grand cate fait n'imp. Pk j'ai pas les mêmes
 résultats avec les vrais dataset ?
 
-*** TODO Sur des vrais données
+*** DONE Sur des vrais données
+CLOSED: [2017-06-13 mar. 10:53]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-13 mar. 10:53]
 - Note taken on [2017-06-12 lun. 14:39] \\
   On verra ca plus tard...
 - State "TODO"       from              [2017-06-12 lun. 14:39]
 :END:
 
-
-
 #+begin_src R :results output :exports both
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
+  pca.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000_PCA.rds"
+
+
+  cs = c(0.8, 0.0, 0.0, 0.0, 0.0)
+  K <- 5
+  s <- FromTrueSampler2(G.file = G.file,
+                        K = K,
+                        prop.outlier = 0.2,
+                        cs = cs,
+                        pca.file = pca.file,
+                        rho.B = 3.0)
+  dat <- sampl(s)
+
+  methods <- finalBench(K = K, lambda = 1e-5, sparse.prop = 0.1, fast.only = TRUE, calibrate = FALSE)
+  methods$sva <- NULL
+  ## methods$lfmmRidge <- NULL
+  ## methods$pcaLm <- NULL
+
+  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
+
+  expr <- runExperiment(expr)
 
 #+end_src
+
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_fromtruesampler2_pvalue.png :exports both :width 600 :height 400 
+  plot(expr, plot.type = "pvalue.grid")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_fromtruesampler2_pvalue.png]]
+
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_fromtruesampler2_precision.png :exports both :width 600 :height 400 
+plot(expr, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_fromtruesampler2_precision.png]]
+
+
+Avec ce simlateur on arrive a simuler plus de situation j'ai l'impression !! On
+va lancer tout ca sur krakenator !!!
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both
@@ -10800,3 +10880,17 @@ Les apporteurs c'est du lourd :D
 
 
 
+
+** TODO 1999 - Probabilistic principal component analysis
+ :PROPERTIES:
+  :Custom_ID: tipping1999probabilistic
+  :AUTHOR: Tipping \& Bishop
+  :JOURNAL: Journal of the Royal Statistical Society: Series B (Statistical Methodology)
+  :YEAR: 1999
+  :VOLUME: 61
+  :PAGES: 611--622
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:tipping1999probabilistic c'est le papier de bishop sur un modèle probabilistic de l'acp.
