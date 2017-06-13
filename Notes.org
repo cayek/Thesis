@@ -3107,7 +3107,7 @@ les méthodes... Lasso merde mais je sais pas trop pk..
                         pca.file = pca.file,
                         prop.outlier = NULL,
                         cs = NULL,
-                        n = NULL, L = 50000)
+                        n = NULL, L = 500)
 
   expr <- Article3_MethodComparison(G.file,
                                     outlier.props = c(0.01, 0.05, 0.1),
