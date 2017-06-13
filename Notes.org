@@ -3109,12 +3109,13 @@ les méthodes... Lasso merde mais je sais pas trop pk..
                         cs = NULL,
                         n = NULL, L = 500)
 
+  K <- 4
   expr <- Article3_MethodComparison(G.file,
                                     outlier.props = c(0.01, 0.05, 0.1),
-                                    K = s$K,
+                                    K = K,
                                     n = s$n,
                                     L = s$L,
-                                    K.method = s$K,
+                                    K.method = K,
                                     lasso.sparse.prop = 0.4,
                                     ridge.lambda = 1e-5,
                                     cs = list(c1 = c(0.8, rep(0.0, K - 1))),
