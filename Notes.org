@@ -10898,3 +10898,18 @@ Les apporteurs c'est du lourd :D
  :END:
 
 cite:tipping1999probabilistic c'est le papier de bishop sur un modèle probabilistic de l'acp.
+
+** TODO - Quelle statistique pour les Big Data?
+ :PROPERTIES:
+  :Custom_ID: slides_sfds2015_saporta
+  :AUTHOR: Gilbert Saporta
+  :JOURNAL: 
+  :YEAR: 
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:slides_sfds2015_saporta Slide présenté par un grand stateux francais sur
+quelles stat pour le big data. Il y a plein de considération méta interessantes !!

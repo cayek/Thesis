@@ -360,15 +360,25 @@ that for such computed $\gamma$ the rank of $C$ returned by lasso algorithm was
 $K$.
 
 
-***** Heuristic to choice of $\lambda$ lasso
+***** TODO Heuristic to choice of $\lambda$ lasso
+:LOGBOOK:
+- Note taken on [2017-06-13 Mar 15:21] \\
+  changer dans le papier et dans le code + introduire la svd soft dans le papier !!
+- Note taken on [2017-06-13 Mar 15:20] \\
+  ce qui est implementé c'est reg de G - C avec la svd du couo il faut que je
+  commence par la svd pas par la reg linear !!!
+:END:
 This hyper-parameter impact the number of line set to zero in $B$. We know that
 only a part of observe variable $G_j$ are correlated with the variable $X$. So
 we can interpret the proportion on non zero line in $B$ as the proportion $p$ of
-variable which correlate with $X$. To find the lambda which correspond to the
+variables which correlate with $X$. To find the lambda which correspond to the
 proportion $p$ we propose an heuristic based on a regularization path of lambda
-value. We start with smallest value of $\lambda$ such that 
-- $C = D_{\gamma}(G)
-- B = argmin ....  = 0
+value inspired by cite:friedman10_regul_paths_gener_linear_model. We start with
+the smallest value of $\lambda$ such that the entire vector
+$$ \hat(B) = argmin \norm{(\Y - \C_{t = 0}) - \X \B^{T}} + \lambda |B|$$ 
+equal zero.
+
+
 
 Then we construct a sequence of m values of $\lambda$ decreasing from
 $\lambda_max to $\lambda_min$ on the log scale. Typical values are \epsilon =
