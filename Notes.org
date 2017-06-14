@@ -3106,23 +3106,25 @@ les méthodes... Lasso merde mais je sais pas trop pk..
   pca.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000_PCA.rds"
 
   K <- 5
+  cs <- c(0.8, 0.6, 0.2, 0.1, 0.1)
   s <- FromTrueSampler2(G.file = G.file,
                         K = K,
                         pca.file = pca.file,
-                        prop.outlier = NULL,
-                        cs = NULL,
+                        prop.outlier = 0.2,
+                        cs = cs,
                         n = NULL, L = 5000,
-                        rho.B = 2.0)
+                        rho.B = 1.0)
+  dat <- sampl(s)
 
   expr <- Article3_MethodComparison(G.file,
-                                    outlier.props = c(0.01, 0.05, 0.1, 0.2),
+                                    outlier.props = c( 0.1, 0.2, 0.3),
                                     K = K,
                                     n = s$n,
                                     L = s$L,
                                     K.method = K,
                                     lasso.sparse.prop = 0.4,
                                     ridge.lambda = 1e-5,
-                                    cs = list(c1 = c(0.8, 0.6, rep(0.0, K - 2))),
+                                    cs = list(c1 = cs),
                                     cs.sum = FALSE,
                                     nb.rep = 4,
                                     fast.only = TRUE,
