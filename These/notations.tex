@@ -18,13 +18,13 @@
 
 %% lattent factor model
 \newcommand{\K}{K} %% number of latent factor
-\newcommand{\U}{\matr{U}} %% factor score matrix
+\newcommand{\U}{\matr{U}} %% factor score matrix/ records latent variables
 \newcommand{\Ucol}{\K} %% U col dim
 \newcommand{\Urow}{\Yrow} %% U row dim
 \newcommand{\V}{\matr{V}} %% factor loading matrix
 \newcommand{\Vcol}{\K} %% V col dim
 \newcommand{\Vrow}{\Ycol} %% V row dim
-\newcommand{\X}{\matr{X}} %% primary variables matrix
+\newcommand{\X}{\matr{X}} %% primary matrix / record primary variable
 \newcommand{\Xcol}{d} %% X col dim
 \newcommand{\Xrow}{\Yrow} %% X row dim
 \newcommand{\B}{\matr{B}} %% primary effects matrix
@@ -34,17 +34,21 @@
 \newcommand{\C}{\matr{C}} %% approximation matrix with latent factor/
                           %% approximation matrix
 \newcommand{\obP}{\matr{P}_{\lambda}} %% U row dim
+\newcommand{\Lnoreg}{\mathrm{L}} %% L 
+\newcommand{\Llasso}{\mathrm{L_{lasso}}} %% L lasso 
+\newcommand{\Lridge}{\mathrm{L_{ridge}}} %% L ridge
+
 
 %% lfmm equation
 \newcommand{\LfmmLridge}{%
-L_{ridge}(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2 +
+\Lridge(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2 +
 \lambda \norm{\B}^{2}_{2}%
 }
 \newcommand{\LfmmL}{%
-L(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2 %
+\Lnoreg(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^T - \X \B^T}_{F}^2 %
 }
 \newcommand{\LfmmLlasso}{%
-L_{lasso}(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^{T} - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\U \V^{T}}_{*}%
+\Llasso(\U, \V, \B) =  \frac{1}{2} \norm{\Y - \U \V^{T} - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\U \V^{T}}_{*}%
 }
 \newcommand{\LfmmP}{%
 \obP = \Id_{\Yrow} - \X (\X^T \X + \lambda \Id_{\Yrow})^{-1}

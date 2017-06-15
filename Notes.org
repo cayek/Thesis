@@ -3096,8 +3096,11 @@ les méthodes... Lasso merde mais je sais pas trop pk..
 - State "TODO"       from              [2017-06-13 mar. 10:54]
 :END:
 
-**** RUNNING run
+**** STARTED run
 :LOGBOOK:
+- Note taken on [2017-06-14 mer. 08:23] \\
+  je joue avec les params
+- State "STARTED"    from "RUNNING"    [2017-06-14 mer. 08:23]
 - State "RUNNING"    from              [2017-06-13 mar. 12:13]
 :END:
 #+begin_src R :results output :exports both
@@ -3106,16 +3109,15 @@ les méthodes... Lasso merde mais je sais pas trop pk..
   pca.file <- "~/Projects/Thesis/Data/ThesisDataset/3Article/1000GenomesPhase3/1000GenomesPhase3_QC_norel_prunned_scaled_noNA_sampleL100000_PCA.rds"
 
   K <- 5
-  cs <- c(0.8, 0.6, 0.2, 0.1, 0.1)
+  ## sample cs such that Sigma si positives
+  cs <- cs_sampler(K)
   s <- FromTrueSampler2(G.file = G.file,
                         K = K,
                         pca.file = pca.file,
                         prop.outlier = 0.2,
                         cs = cs,
-                        n = NULL, L = 5000,
+                        n = NULL, L = 10000,
                         rho.B = 1.0)
-  dat <- sampl(s)
-
   expr <- Article3_MethodComparison(G.file,
                                     outlier.props = c( 0.1, 0.2, 0.3),
                                     K = K,
@@ -8488,19 +8490,21 @@ CLOSED: [2017-06-13 mar. 10:53]
   G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
   pca.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000_PCA.rds"
 
-
-  cs = c(0.8, 0.0, 0.0, 0.0, 0.0)
   K <- 5
+  cs <- cs_sampler(K)
+  cs
   s <- FromTrueSampler2(G.file = G.file,
                         K = K,
-                        prop.outlier = 0.2,
+                        prop.outlier = 0.1,
                         cs = cs,
                         pca.file = pca.file,
-                        rho.B = 3.0)
-  dat <- sampl(s)
+                        rho.B = 2.8,
+                        L = 1000)
+  ## dat <- sampl(s)
 
-  methods <- finalBench(K = K, lambda = 1e-5, sparse.prop = 0.1, fast.only = TRUE, calibrate = FALSE)
+  methods <- finalBench(K = K, lambda = 1e-5, sparse.prop = 0.15, fast.only = FALSE, calibrate = FALSE)
   methods$sva <- NULL
+  methods$famt <- NULL
   ## methods$lfmmRidge <- NULL
   ## methods$pcaLm <- NULL
 
@@ -10546,6 +10550,10 @@ estimer l'hypothese null sur les données, ca va lisser les erreur, regler
 les problème d'autocorélation, enlever les petits effets sans interet et
 mettre le test au bonne endroit (si la moyenne est non nul par exemple)!
 
+*** Rmks
+C'est aussi dans cette article qu'il liste les possibilité pour expliquer que
+les pvalue ne sont pas uniforme sous H0.
+Il parple aussi des diff philosophique entre test simple et multiple !! Bon pour la thèse.
 ** TODO 1999 - Genomic Control for Association Studies
 :PROPERTIES:
 :Custom_ID: Devlin_1999
@@ -10915,3 +10923,48 @@ cite:tipping1999probabilistic c'est le papier de bishop sur un modèle probabili
 
 cite:slides_sfds2015_saporta Slide présenté par un grand stateux francais sur
 quelles stat pour le big data. Il y a plein de considération méta interessantes !!
+
+** TODO - Introductory Genetics for Statisticians
+ :PROPERTIES:
+  :Custom_ID: url_slides_genet_stat
+  :AUTHOR: Ken Rice
+  :JOURNAL: 
+  :YEAR: 
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: Introductory Genetics for Statisticians
+ :END:
+
+cite:url_slides_genet_stat une page avec des slides sur la genet pour les
+stateux. Ca peut etre interessant a lire pour la these.
+
+** TODO 2014 - A Brief Survey of Modern Optimization for Statisticians
+ :PROPERTIES:
+  :Custom_ID: Lange_2014
+  :AUTHOR: Lange, Chi \& Zhou
+  :JOURNAL: International Statistical Review
+  :YEAR: 2014
+  :VOLUME: 82
+  :PAGES: 46–70
+  :DOI: 10.1111/insr.12022
+  :URL: http://dx.doi.org/10.1111/insr.12022
+ :END:
+
+cite:Lange_2014 Je vais le citer dans l'intro de ma thèse, il parle des algo
+que j'ai utilisé (block descent etc).
+
+** TODO 2014 - Next-Generation Statistical Genetics: Modeling, Penalization,  and Optimization in High-Dimensional Data
+ :PROPERTIES:
+  :Custom_ID: Lange_2014_2
+  :AUTHOR: Lange, Papp, Sinsheimer, \& Sobel
+  :JOURNAL: Annual Review of Statistics and Its Application
+  :YEAR: 2014
+  :VOLUME: 1
+  :PAGES: 279–300
+  :DOI: 10.1146/annurev-statistics-022513-115638
+  :URL: http://dx.doi.org/10.1146/annurev-statistics-022513-115638
+ :END:
+
+cite:Lange_2014_2 C'est le meme papier que cite:Lange_2014 mais dans une autre
+revue... L'autre est pas publié je crois.

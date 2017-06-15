@@ -1,4 +1,25 @@
 ################################################################################
+## Helpers
+
+#' @export
+cs_sampler <- function(K) {
+  cs <- runif(K, -1, 1)
+  Sigma <- diag(x = 1, nrow = K, ncol = K)
+  Sigma <- rbind(Sigma, matrix(cs, nrow = 1))
+  Sigma <- cbind(Sigma, matrix(c(cs, 1.0), ncol = 1)) ## correlation matrix
+  eis <- eigen(Sigma)$values
+  while(mean(eis > 0.0) != 1) {
+    cs <- runif(K, -1, 1)
+    Sigma <- diag(x = 1, nrow = K, ncol = K)
+    Sigma <- rbind(Sigma, matrix(cs, nrow = 1))
+    Sigma <- cbind(Sigma, matrix(c(cs, 1.0), ncol = 1)) ## correlation matrix
+    eis <- eigen(Sigma)$values
+  }
+  cs
+}
+
+
+################################################################################
 ## FromTrueSampler2
 
 #' see my notebook (13/06/2017), sample a generative model from

@@ -108,3 +108,6 @@ These/main.tex
 *.fls
 *.blg
 2Article/Slides/JourneePersyvalLab_2017/main.pdf
+
+# MatrixFactorization
+MatrixFactorization/
