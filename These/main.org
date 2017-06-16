@@ -46,6 +46,32 @@ In Code we trust, all others bring data.
   suffisament de données pour se rendre compte que nos test d'hypothèse sont faux
   :D et la on fait le lien avec les tests d'hypothèe multiple....
 :END:
+
+Cette dernière décennie est marqué par une accumulation des données dans tous les
+domaines de la sciences. Cette accumulation de données est une aubaine pour les
+scientifiques. Cependant, que faire d'autant de données et comment en tirer
+l'information qui permettrait de mieux comprendre le monde qui nous entoure ? Il
+s'agit là d'un défi majeur pour les statistiques cite:slides_sfds2015_saporta. 
+
+Les grandes données posent plusieurs problèmes. En effet, si l'on est capable d'obtenir
+des données rapidement, on veut pouvoir les analyser rapidement. Cependant de
+nombreux modèle statistiques classiques ne passent pas l'échelle des grands jeux
+de données. Il est donc nécessaire de repenser les modèles et algorithmes afin
+de les adapter au nous volumes des données. 
+... parler de l'inversement du processus d'aquisition des données .. cf
+seminaire Bosson
+
+
+
+Dans le cadre de cette thèse nous nous sommes intéressé a développer des méthodes
+statistiques utiles à deux problématique scientifiques. Le premier est l'estimation
+de la structure de population à partir de données génomique. Le deuxièmes est les
+problèmes des test d'association multiple. Toutes les méthodes statistiques
+developper lors de cette thèse repose sur la factorisation de matrice. Nous
+allons maintenant introduire plus en détails les problématiques ainsi que la
+factorisation de matrice en statistique.
+
+
 ** La génomique des populations
 :LOGBOOK:
 - Note taken on [2017-06-07 Mer 14:42] \\
@@ -54,7 +80,7 @@ In Code we trust, all others bring data.
   - ewas: refactor
 :END:
 ** Test d'association
-
+** La factorisation de matrice en statistique
 ** Problématique et plan
 * Inférence rapide des coefficients de métissage à l'aide des données géographique
 :LOGBOOK:

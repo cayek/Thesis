@@ -10968,3 +10968,46 @@ que j'ai utilisé (block descent etc).
 
 cite:Lange_2014_2 C'est le meme papier que cite:Lange_2014 mais dans une autre
 revue... L'autre est pas publié je crois.
+
+** TODO 2008 - THE END OF THEORY: THE DATA DELUGE MAKES THE SCIENTIFIC METHOD  OBSOLETE
+ :PROPERTIES:
+  :Custom_ID: endOfTheory
+  :AUTHOR: CHRIS ANDERSON
+  :JOURNAL: The Wire
+  :YEAR: 2008
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: https://www.wired.com/2008/06/pb-theory/
+ :END:
+
+cite:endOfTheory Un article provocateur sur le big data
+
+Ma review de cette article. En faite il confont tout dans cette article le fait
+d'avoir plus de données et de ne plus faire d'hypothèse n'a rien a voir. Dans
+l'exemple qu'il donne sur la decouverte d'espece est typique, le scientific fait
+l'hypothèse quand il rencontre une sequence qu'il la connait, cette hypothèse
+est rejeté... Il y a des hypothèses !!!! On rejetes des hypothèse ce n'est pas
+simplement des données. La comparaison avec google et internet est très mal
+honnete car nous avons construit internet, c'est une système simple a coté du
+vivant !! Encore une fois il y a des modèle et des hypothèses chez google !!
+
+Enfin, je ne connais pas l'étude bio dont il parle dans l'article mais devant
+une nouvelle séquence adn qui nous dit que ce n'ai pas le produit d'espece connu
+?? Il y a un enorme risque à laisser parler les données !! Si on ne comprend pas
+se qu'on observe (pas de modèle) on peut dire n'importe quoi ! 
+
+
+** TODO 2006 - Probabilit{\'e}s, analyse des donn{\'e}es et statistique
+ :PROPERTIES:
+  :Custom_ID: saporta2006probabilites
+  :AUTHOR: Saporta
+  :JOURNAL: 
+  :YEAR: 2006
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:saporta2006probabilites un super livre en francais sur les stat.
