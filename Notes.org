@@ -10875,7 +10875,7 @@ la biblio.
 
 cite:phdGuedj Une thèse sur les thèse d'association mais en 2007, ca date. A voir.
 
-** TODO 2016 - TOPICS IN CAUSAL AND HIGH DIMENSIONAL INFERENCE
+** TODO 2016 - TOPICS IN CAUSAL AND HIGH DIMENSIONAL INFERENCE      :Thesis:
  :PROPERTIES:
   :Custom_ID: ZhaoThesis2016
   :AUTHOR: Qingyuan Zhao
@@ -10892,6 +10892,7 @@ facteur latents pour les test d'association et de la confusion. Il y a un
 résultat théorique que je comprends pas mais qui d'après OF a un grand interet.
 Les apporteurs c'est du lourd :D
 
+Pour la thèse voir son developpement sur la causalité. 
 
 
 
@@ -11011,3 +11012,32 @@ se qu'on observe (pas de modèle) on peut dire n'importe quoi !
  :END:
 
 cite:saporta2006probabilites un super livre en francais sur les stat.
+
+** TODO 2017 - Genome-wide association meta-analysis of 78,308 individuals identifies  new loci and genes influencing human intelligence
+ :PROPERTIES:
+  :Custom_ID: sniekers2017genome
+  :AUTHOR: Sniekers {\it et al.}
+  :JOURNAL: Nature Genetics
+  :YEAR: 2017
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:sniekers2017genome Un GWAS avec l'inteligence, une grosse GWAS.
+
+** TODO 2017 - An Expanded View of Complex Traits: From Polygenic to Omnigenic
+ :PROPERTIES:
+  :Custom_ID: boyle2017expanded
+  :AUTHOR: Boyle, Li \& Pritchard
+  :JOURNAL: Cell
+  :YEAR: 2017
+  :VOLUME: 169
+  :PAGES: 1177--1186
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:boyle2017expanded Omnigenic, c'est a dire sur tout le génome, on se
+raproche du modèle a infinité d'allele de fisher.
