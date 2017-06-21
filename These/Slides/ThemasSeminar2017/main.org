@@ -4,7 +4,7 @@
 #+startup: beamer
 #+LINK_HOME:
 #+TITLE: Matrix factorization methods for association mapping
-#+AUTHOR:    Kevin Caye$^{1}$, Olivier Michel$^{2}$, Jean-Luc Bosson$^{1}$, Olivier Francois$^{1}$
+#+AUTHOR:    Kevin Caye$^{1}$, Olivier Michel$^{2}$, Olivier Francois$^{1}$
 #+BEAMER_HEADER: \institute{$^{1}$ TIMC-IMAG, $^{2}$ GIPSA-lab}
 #+EMAIL:     kevin.caye@imag.fr
 #+DATE:      2017-01-06  
@@ -15,11 +15,9 @@
 #+DESCRIPTION: 
 #+KEYWORDS: 
 #+LANGUAGE:  en
-#+BEAMER_HEADER: \usebackgroundtemplate{\includegraphics[width=\paperwidth]{background.pdf}}%
-#+BEAMER_HEADER: \addtobeamertemplate{frametitle}{\vskip2ex}{} 
-#+BEAMER_HEADER: \input{../../notations.tex}
-#+BEAMER_HEADER: \thankstitle{Thank you!}
-
+#+BEAMER_HEADER: \input{../../../MaThese/notations.tex}
+#+LATEX_HEADER: \input{header}
+#+PROPERTY: header-args    :exports none
 #  LocalWords:  dataset Celiac Genotypic SNP RidgeLFMM LassoLFMM LFMM genotype
 #  LocalWords:  methylation
 
@@ -31,7 +29,7 @@
   data et exemple de EWAS !
 :END:
 
-#+begin_src R :results output :exports none
+#+begin_src R :results output 
   G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/GSE42861/G.rds")
   dim(G)
   G[1:4, 1:4]
@@ -88,7 +86,8 @@ interest variable.
    where $\hat{\B_j}$ is an estimation of $\B_j$ and $\hat{\sigma_j}$ the
    estimation its standard deviation.
 
-** TODO Example: Linear Regression on RA Dataset 
+** DONE Example: Linear Regression on Rheumatoid Arthritis Dataset 
+CLOSED: [2017-06-21 mer. 14:59]
 :LOGBOOK:
 - Note taken on [2017-06-05 Mon 12:51] \\
   on voit pas la legende .
@@ -96,7 +95,7 @@ interest variable.
   faut que j'enleve pvalue et lm
 :END:
 
-#+begin_src R :results output :exports none
+#+begin_src R
   expr <- retrieveExperiment(110)
   pl <- MethodBatchExperiment_qqplot(expr)
   save_plot_timc_bcm_15(pl, "GSE42861_qqplot_lm.png", path.dir = "~/Projects/Thesis/These/Slides/JourneePersyvalLab/Rplots/")
@@ -108,8 +107,8 @@ interest variable.
 *** COMMENT comments
 There is *unwanded variation* which we want to detect and remove. 
 
-** Example: Principal Component Analysis of RA dataset 
-#+begin_src R :results output :exports none
+** Example: Principal Component Analysis of Rheumatoid Arthritis dataset 
+#+begin_src R :results output 
   library(ThesisRpackage)
 
   dat <- Article3_GSE42861_sampler() %>% sampl()
@@ -125,7 +124,7 @@ There is *unwanded variation* which we want to detect and remove.
 
 #+end_src
 
-#+begin_src R :results output :exports none
+#+begin_src R :results output 
   library(ThesisRpackage)
 
   expr <- retrieveExperiment(138)
@@ -166,7 +165,7 @@ In DNA methylation dataset there are unobserved variables which can be
 confounding for association the primary variable (Age, gender, smoking status,
 cellular composition).
 
-* Latent factor in Multiple Hypothesis Testing
+* Latent Factor in Multiple Hypothesis Testing
 ** Latent Factor Mixed Model
 Following the common notation in *latent factor mixed model* (LFMM) we write the following
 model cite:wang2015confounder,frichot13_testin_assoc_between_loci_envir
@@ -186,12 +185,12 @@ model cite:wang2015confounder,frichot13_testin_assoc_between_loci_envir
 \label{eq:optim_no_reg}
 \LfmmL
 \end{equation*}
-*The problem* is $L$ do not allow to separate source of unwanted variation from
-interested variation.
+*Identifiability problem:* $L$ does not allow to separate source of unwanted variation from
+interested variation citep:wang2015confounder.
 \begin{equation*}
 L(\U, \V, \B) = L(\U - \X \matr{C}, \V, \B + \V \matr{C}^{T})
 \end{equation*}
-** Regularized estimation
+** Regularized Estimation
 
 *Ridge* regularized LFMM
 
@@ -202,10 +201,10 @@ L(\U, \V, \B) = L(\U - \X \matr{C}, \V, \B + \V \matr{C}^{T})
 *Lasso* regularized LFMM
 
 \begin{equation*}
-L_{lasso}(\C, \B) =  \frac{1}{2} \norm{\Y - \C - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\C}_{*}
+L_{lasso}(\matr{W}, \B) =  \frac{1}{2} \norm{\Y - \matr{W} - \X \B^T}_{F}^2 + \lambda \norm{\B}_{1} + \gamma \norm{\matr{W}}_{*}
 \end{equation*}
 
-where $$\C = \U \V^{T}.$$
+where $$\matr{W} = \U \V^{T}.$$
 
 ** COMMENT Ridge regularized LFMM (RidgeLFMM)
 
@@ -239,8 +238,8 @@ L_{lasso}^{1}(\B) =  \frac{1}{2} ||(\Y - \C_{t-1}) - \X \B^T||_{F}^2 + \lambda |
 L_{lasso}^{2}(\C) = \frac{1}{2} ||(\Y - \X \B_t^T)- \C ||_{F}^2 + \gamma ||\C||_{*}.
 \end{equation}
 
-* Some results
-** Numerical validation
+* Some Results of Association Mapping
+** COMMENT Numerical validation
 We performed simulations of LFMM generative model $$\Y = \X \B^T + \U \V^T + \E$$ 
 
 with $$ B_{j} \neq 0$$ for some variables associated with the variable of
@@ -248,7 +247,7 @@ interest $\X$.
 
 With correlation between latent factor matrix score $\U$ and $\X$.
 
-** TODO Numerical validation
+** COMMENT Numerical validation
 :LOGBOOK:
 - Note taken on [2017-06-05 Mon 13:14] \\
   changer le nom des axes
@@ -258,7 +257,7 @@ With correlation between latent factor matrix score $\U$ and $\X$.
   je suis pas content du plot, il y a moyen de plus planter l'acp !!!
 :END:
 
-#+begin_src R :results output :exports none
+#+begin_src R :results output 
   library(ThesisRpackage)
 
   s <- NormalSampler2(n = 100,
@@ -290,21 +289,87 @@ With correlation between latent factor matrix score $\U$ and $\X$.
 [[./Rplots/method_comp.png]]
 #+CAPTION: TODO
 
-** TODO AR dataset
+** DONE Rheumatoid Arthritis dataset
+CLOSED: [2019-06-21 ven. 14:59]
 
-We retrieve main site found in other study using explicitly confounding
-variables (age, gender, smoking status, cellular composition).
-
-#+begin_src R :results output :exports none
+#+begin_src R 
   library(ThesisRpackage)
   expr <- retrieveExperiment(121)
   expr$description
-  expr$outlier
+  expr <- MethodBatchExperiment_calibrate(expr)
+  expr$method.batch <- expr$method.batch[6]
+  pl <- MethodBatchExperiment_qqplot(expr)
+  save_plot_timc_bcm_15(pl, filename = "ra_qqplot.png",
+                        path.dir = "~/Projects/Thesis/These/Slides/ThemasSeminar2017/Rplots/")
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       pvalue1    method     id rank
+1 1.571451e-11 RidgeLfmm  36714    1
+2 2.471069e-11 RidgeLfmm 101455    2
+3 1.325428e-10 RidgeLfmm  51546    3
+4 2.246499e-08 RidgeLfmm 125220    4
+5 1.085111e-07 RidgeLfmm 149131   12
+#+end_example
+
+#+CAPTION: Q-Q plot of significance $t$ test for the linear regression with latent variables computed with RidgeLFMM.
+[[./Rplots/ra_qqplot.png]]
+
+** Rheumatoid Arthritis dataset
+
+We retrieve main methylation probes found in other study using explicitly confounding
+variables (age, gender, smoking status, cellular composition) citep:Rahmani_2016.
+
+** Celiac Disease Dataset
+
+Association of SNPs with Celiac disease citep:dubois2010multiple. 
+- $\Y$ is the matrix of 281 122 SNPs for 15 155 individuals
+- $\X$ is the matrix recording disease state for the 15 155 individuals
+
+#+BEGIN_SRC R 
+  G <- readRDS("~/Projects/Thesis/Data/ThesisDataset/3Article/Celiac/G.rds")
+  dim(G)
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+  [1]  15155 281122
+#+end_example
+
+#+begin_src R :results output 
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(131)
+  expr$description
   expr <- MethodBatchExperiment_calibrate(expr)
 #+end_src
 
+#+begin_src R :results output 
+  res <- MethodBatchExperiment_qvalue(expr, fdr.threshold = 0.05)
+  pl <- ggplot(res, aes(x = index, y = -log10(pvalue), color = qvalue < 0.05)) +
+    geom_point() +
+    ggtitle("Manhattan plot")
+  save_plot_timc_bcm_15(pl, filename = "celiac_man.png",
+                        path.dir = "~/Projects/Thesis/These/Slides/ThemasSeminar2017/Rplots/")
+#+end_src
 
-** Thank you ! 
+** Celiac Disease Dataset
+
+#+CAPTION: Manhattan plot of the $t$ test pvalue for le linear regression with latent variables computed with RidgeLFMM.
+[[./Rplots/celiac_man.png]]
+
+** Celiac Disease Dataset
+
+If we control the false discovery rate (fdr) to $5 \%$ we retrieve $73 \%$
+associated with the Celiac disease according to GWAS catalog.
+
+
+** Summary 
+
+- We develop a new method to take into account confounding factors in association studies.
+- Our method enables to control the number of false discoveries
+- We discovered new candidate loci (CpG sites and SNPs) associated with
+  Rheumatoid Arthritis and Celiac disease.
 
 Thank you for your attention ! 
 

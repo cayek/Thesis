@@ -5741,9 +5741,10 @@ I download all association from [[https://www.ebi.ac.uk/gwas/home][gwas catalogu
 
   saveRDS(df, "~/Projects/Thesis/Data/GWASCatalog/gwas_catalog_v1.0.1-associations_e88_r2017-04-24.rds")
 #+end_src
-** DONE Étude de [[#Liu_2013][GSE42861]]                                         :3Article:
-CLOSED: [2017-05-23 mar. 15:56]
+** STARTED Étude de [[#Liu_2013][GSE42861]]                                      :3Article:
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-06-21 mer. 16:28]
+- State "TODO"       from "DONE"       [2017-06-21 mer. 16:22]
 - State "DONE"       from "STARTED"    [2017-05-23 mar. 15:56]
 - Note taken on [2017-05-16 mar. 16:32] \\
   Au passage, tous le monde detecte les outlier des autres papier. PCA detect que
@@ -6644,6 +6645,17 @@ disease.state
 : 5 RidgeLfmm    44    0.8863636                  1
 : 6       SVA 34404    0.9998547                  1
 [[./Rplots/GSE42861_count_intersect_fdr01.png]]
+
+*** TODO Identifier les autres candidats
+:LOGBOOK:
+- State "TODO"       from              [2017-06-21 mer. 16:22]
+:END:
+
+Je vais fournir une liste de candidats trouver par ma méthodes, comme dans les
+autres papiers. Pk ca foruni une liste plus grande ? Car ajoute plus de
+variables de confusion que dans les méthode type refactor, car on prend en
+compte la variable X dans l'estimation de celle ci. Du coup des sites qui avant
+était noyé dans la masse peuvent sortir associé :D.
 
 ** STARTED Étude de celiac                                        :3Article:
 :LOGBOOK:
@@ -7651,6 +7663,8 @@ le monde ne trouve pas les même listes. C'est normal que l'acp soit bonne pour
 trouver la liste du GWAScatalogue, la plupart on surment été trouvé comme ca !!
 De toute facon je pense que ma methode est bonne quand il y a beaucoups
 d'outlier !!
+
+Il faudrait faire un coup de clamping netoyer et fournir une liste de candidat non corrélé.
 
 ** DONE LEA lfmm tuto                                             :3Article:
 CLOSED: [2017-05-23 mar. 11:11]
@@ -11041,3 +11055,31 @@ cite:sniekers2017genome Un GWAS avec l'inteligence, une grosse GWAS.
 
 cite:boyle2017expanded Omnigenic, c'est a dire sur tout le génome, on se
 raproche du modèle a infinité d'allele de fisher.
+
+** TODO - Régression pénalisée : le Lasso
+ :PROPERTIES:
+  :Custom_ID: coursLasso
+  :AUTHOR: VIALLON
+  :JOURNAL: 
+  :YEAR: 
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:coursLasso Un cours sur le lasso avec des formules pour choisir le lambda.
+
+** TODO 2012 - Matrix analysis
+ :PROPERTIES:
+  :Custom_ID: johnson2012matrix
+  :AUTHOR: Johnson \& Horn
+  :JOURNAL: 
+  :YEAR: 2012
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:johnson2012matrix Un classic de l'analyse matricielle.
