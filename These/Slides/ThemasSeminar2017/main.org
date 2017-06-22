@@ -49,8 +49,6 @@
 - $\Y$ output observed matrix
 - $\X$ primary variables matrix.
   
-*We want* to detect output variables which are in relationship with the primary
-interest variable.
 
 *Example*
 - Association of DNA methylation with Rheumatoid Arthritis (RA) cite:Liu_2013
@@ -65,6 +63,13 @@ interest variable.
   - $\X$ records Celiac disease state for each individual
 
 
+** Goal
+*We want* to detect output variables which are in relationship with the primary
+interest variable.
+
+*Why*
+- Data mining (identify interesting variable for further study)
+- Personalized medicine (Polygenic Risk Score).
 
 ** Multiple Hypothesis Testing: Simple Linear Regression
    
@@ -101,8 +106,8 @@ CLOSED: [2017-06-21 mer. 14:59]
   save_plot_timc_bcm_15(pl, "GSE42861_qqplot_lm.png", path.dir = "~/Projects/Thesis/These/Slides/JourneePersyvalLab/Rplots/")
 #+end_src
 
-[[./Rplots/GSE42861_qqplot_lm.png]]
 #+CAPTION: Q-Q plot of significance $t$ test for the linear regression.
+[[./Rplots/GSE42861_qqplot_lm.png]]
 
 *** COMMENT comments
 There is *unwanded variation* which we want to detect and remove. 
@@ -157,8 +162,8 @@ There is *unwanded variation* which we want to detect and remove.
   save_plot_timc_bcm_15(pl, filename = "PC_RA.png", path.dir = "~/Projects/Thesis/These/Slides/JourneePersyvalLab/Rplots/")
 #+end_src
 
-[[./Rplots/PC_RA.png]]
 #+CAPTION: PCA of the RA dataset DNA methylation level matrix. 
+[[./Rplots/PC_RA.png]]
 
 *** COMMENT comments
 In DNA methylation dataset there are unobserved variables which can be
@@ -318,8 +323,13 @@ CLOSED: [2019-06-21 ven. 14:59]
 
 ** Rheumatoid Arthritis dataset
 
-We retrieve main methylation probes found in other study using explicitly confounding
-variables (age, gender, smoking status, cellular composition) citep:Rahmani_2016.
+If we control the number of false discovery to $5 \%$: 
+
+- we retrieve main methylation probes found in other study using explicitly
+  confounding variables (age, gender, smoking status, cellular composition)
+  citep:Rahmani_2016
+
+- and other candidates.
 
 ** Celiac Disease Dataset
 
@@ -360,16 +370,30 @@ Association of SNPs with Celiac disease citep:dubois2010multiple.
 
 ** Celiac Disease Dataset
 
-If we control the false discovery rate (fdr) to $5 \%$ we retrieve $73 \%$
-associated with the Celiac disease according to GWAS catalog.
+#+begin_src R :results output 
+  library(ThesisRpackage)
+  expr <- retrieveExperiment(131)
+  expr$description
+  expr <- MethodBatchExperiment_calibrate(expr)
+  cat("============= candidates with fdr < 0.05  \n")
+  res <- MethodBatchExperiment_candidates(expr, fdr.threshold = 0.05, print = TRUE)
+#+end_src
+
+If we control the number of false discovery to $5 \%$: 
+
+- we retrieve $73 \%$ of the SNPs associated with the Celiac disease according to GWAS
+  catalog found with other dataset and other methods
+
+- other candidates.
 
 
 ** Summary 
 
 - We develop a new method to take into account confounding factors in association studies.
-- Our method enables to control the number of false discoveries
+- Our method enables to control the number of false discoveries.
 - We discovered new candidate loci (CpG sites and SNPs) associated with
   Rheumatoid Arthritis and Celiac disease.
+- Methods which scale to big data.
 
 Thank you for your attention ! 
 
