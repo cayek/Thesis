@@ -12,7 +12,7 @@ Rpackage_install_nodep:
 	R -e 'devtools::install(pkg = "./ThesisRpackage/", dependencies = FALSE)'
 
 Rpackage_install:
-	R CMD INSTALL --no-multiarch --with-keep.source ThesisRpackage
+	R -e 'devtools::install(pkg = "./ThesisRpackage/")'
 
 Rpackage_test:
 	R -e 'devtools::test(pkg = "./ThesisRpackage/")'
