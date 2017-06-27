@@ -67,7 +67,7 @@ sampl.FromTrueSampler2 <- function(s) {
 
   L <- ncol(s$G)
   n <- nrow(s$G)
-  
+
   ## U X
   ## cov matrix
   U.sd <- sqrt(diag(cov(s$U)))
