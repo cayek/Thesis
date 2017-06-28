@@ -8347,7 +8347,6 @@ ddl data
 
   write(colnames(dat$G)[candidate], file = "~/Projects/BcmPowerRangers/data2_submit.txt")
 #+end_src
-
 ** Cate SVA et lfmm sur des simu générative
 
 *** =NormalSampler2=
@@ -8547,6 +8546,44 @@ plot(expr, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
 
 Avec ce simlateur on arrive a simuler plus de situation j'ai l'impression !! On
 va lancer tout ca sur krakenator !!!
+
+** gwas riz
+
+#+begin_src R :results output :exports both
+  library(data.table)
+
+  ## data
+  Y <- fread("/home/francois/gwas_riz/flowering/geno12.lfmm")
+  Y <- as.matrix(Y)
+  X <- read.table("/home/francois/gwas_riz/flowering/x1.env")[,1]
+  X[87] <- mean(X, na.rm = TRUE)
+  X <- as.matrix(X)
+  sp <- apply(Y, 2, sum)
+  boo <- sp > 3 & sp < 154
+  Y <- Y[,boo]
+  dim(Y)
+
+  ## lfmm ridge
+  library(ThesisRpackage)
+  dat <- list(G = scale(Y), X = scale(X))
+  m <- finalLfmmRdigeMethod(K = 4, lambda = 1e-4)
+  m <- run(m, dat)
+
+  pvalue <- m$pvalue[1,]
+  hist(pvalue)
+
+  ## cate
+  library(cate)
+
+  cate.m <- cate(.~X, X = data.frame(X), Y = Y, r = 3, calibrate=FALSE,
+                 fa.method = "pc")
+  pvalue.cate <- cate.m$beta.p.value
+  hist(pvalue.cate)
+
+  cor(pvalue.cate, pvalue)
+#+end_src
+
+CCl: avec le scale de X ca plante plus... bug dans lfmm ?
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both
