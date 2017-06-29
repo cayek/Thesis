@@ -8,7 +8,7 @@ Article2_figure3 <- function() {
   toplot <- exp$df %>%
     group_by(method, m.ms) %>%
     dplyr::mutate(auc.mean = mean(auc), N = length(auc), sd = sd(auc), se = sd / sqrt(N)) %>%
-    rename(Methods = method )
+    rename(Methods = method)
   levels(toplot$Methods)[1] <- "APLS"
   levels(toplot$Methods)[3] <- "before-admixure"
 
