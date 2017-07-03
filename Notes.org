@@ -11157,3 +11157,19 @@ likelihood du modèle a facteur.
 La vrai différence c'est la matrice de vairance diagonal du bruit. C'est
 expliqué dans cite:tipping1999probabilistic
 
+
+
+** TODO 1996 - Regression shrinkage and selection via the lasso
+ :PROPERTIES:
+  :Custom_ID: Tibshirani_1996
+  :AUTHOR: Tibshirani
+  :JOURNAL: Journal of the Royal Statistical Society. Series B (Methodological)
+  :YEAR: 1996
+  :VOLUME: 
+  :PAGES: 267--288
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:Tibshirani_1996
+C'est le papier pour citer le lasso
