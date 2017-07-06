@@ -11173,3 +11173,21 @@ expliqué dans cite:tipping1999probabilistic
 
 cite:Tibshirani_1996
 C'est le papier pour citer le lasso
+
+** TODO 2008 - Consistency of trace norm minimization          :NuclearNorm:
+ :PROPERTIES:
+  :Custom_ID: bach2008consistency
+  :AUTHOR: Bach
+  :JOURNAL: Journal of Machine Learning Research
+  :YEAR: 2008
+  :VOLUME: 9
+  :PAGES: 1019--1048
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:bach2008consistency Papier utilisé pour montrer que le rang du minimum d'un
+fonction régularisé par la trace norme décroit vers zero avec le paramètre de
+reg.
+
+Papier cité dans cite:article_Mishra_Meyer_Bach_Sepulchre_2011
