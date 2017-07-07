@@ -11205,3 +11205,22 @@ Papier cité dans cite:article_Mishra_Meyer_Bach_Sepulchre_2011
  :END:
 
 cite:Friedman_2007 C'est un papier pour citer un algo de coordinate descent pour le lasso.
+
+** DONE 2013 - Optimization                                           :Book:
+CLOSED: [2017-07-07 ven. 18:21]
+ :PROPERTIES:
+  :Custom_ID: Lange_2013
+  :AUTHOR: Lange
+  :JOURNAL: Springer Texts in Statistics
+  :YEAR: 2013
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 10.1007/978-1-4614-5838-8
+  :URL: http://dx.doi.org/10.1007/978-1-4614-5838-8
+ :END:
+ :LOGBOOK:
+ - State "DONE"       from "TODO"       [2017-07-07 ven. 18:21]
+ :END:
+
+cite:Lange_2013 C'est un livre connue d'optim pour les stat. Il parle d'ALS pour
+la factorisation de matrice, entre autre.
