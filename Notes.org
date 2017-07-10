@@ -8727,6 +8727,53 @@ a la release 88.
 D'après Thomas d'un release a l'autre les rs sont les mêmes ! Il y a de forte
 chance de celiac soit en GRCh37. Faudrait aller voir ca
 
+** VennDiagramm
+cite:Chen_2011
+#+begin_src R :results output :exports both
+venn.plot <- draw.quintuple.venn(
+    area1 = 301,
+    area2 = 321,
+    area3 = 311,
+    area4 = 321,
+    area5 = 301,
+    n12 = 188,
+    n13 = 191,
+    n14 = 184,
+    n15 = 177,
+    n23 = 194,
+    n24 = 197,
+    n25 = 190,
+    n34 = 190,
+    n35 = 173,
+    n45 = 186,
+    n123 = 112,
+    n124 = 108,
+    n125 = 108,
+    n134 = 111,
+    n135 = 104,
+    n145 = 104,
+    n234 = 111,
+    n235 = 107,
+    n245 = 110,
+    n345 = 100,
+    n1234 = 61,
+    n1235 = 60,
+    n1245 = 59,
+    n1345 = 58,
+    n2345 = 57,
+    n12345 = 31,
+    category = c("A", "B", "C", "D", "E"),
+    fill = c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3"),
+    cat.col = c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3"),
+    cat.cex = 2,
+    margin = 0.05,
+    cex = c(1.5, 1.5, 1.5, 1.5, 1.5, 1, 0.8, 1, 0.8, 1, 0.8, 1, 0.8, 1, 0.8,
+            1, 0.55, 1, 0.55, 1, 0.55, 1, 0.55, 1, 0.55, 1, 1, 1, 1, 1, 1.5),
+    ind = TRUE
+  )
+#+end_src
+
+
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
 :PROPERTIES:
@@ -11224,3 +11271,46 @@ CLOSED: [2017-07-07 ven. 18:21]
 
 cite:Lange_2013 C'est un livre connue d'optim pour les stat. Il parle d'ALS pour
 la factorisation de matrice, entre autre.
+
+** TODO 2011 - VennDiagram: a package for the generation of  highly-customizable Venn and Euler diagrams in R
+ :PROPERTIES:
+  :Custom_ID: Chen_2011
+  :AUTHOR: Chen \& Boutros
+  :JOURNAL: BMC Bioinformatics
+  :YEAR: 2011
+  :VOLUME: 12
+  :PAGES: 35
+  :DOI: 10.1186/1471-2105-12-35
+  :URL: http://dx.doi.org/10.1186/1471-2105-12-35
+ :END:
+
+ cite:Chen_2011 Des diagrams de Venn et Euler en R.
+
+** TODO 2006 - Numerical Optimization, second edition
+ :PROPERTIES:
+  :Custom_ID: Nocedal06
+  :AUTHOR: Jorge Nocedal \& Stephen Wright
+  :JOURNAL: 
+  :YEAR: 2006
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:Nocedal06 Un classic de l'optim
+
+** TODO 2001 - Convergence of a Block Coordinate Descent Method for  Nondifferentiable Minimization
+ :PROPERTIES:
+  :Custom_ID: Tseng_2001
+  :AUTHOR: Tseng
+  :JOURNAL: Journal of Optimization Theory and Applications
+  :YEAR: 2001
+  :VOLUME: 109
+  :PAGES: 475–494
+  :DOI: 10.1023/a:1017501703105
+  :URL: http://dx.doi.org/10.1023/a:1017501703105
+ :END:
+
+ cite:Tseng_2001 Pour justifier la convergence de lassoLFMM. J'ai trouvé la ref
+ dans ses [[https://www.cs.cmu.edu/~ggordon/10725-F12/slides/25-coord-desc.pdf][slides]] (ses slides sont pas mal, le cours complet est surement bien)
