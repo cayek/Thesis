@@ -19,754 +19,6 @@
 :header-args: :cache no :session *R* :dir ./ :eval no-export
 :END:
 Les autres notebooks de ma thèse sont un peu partout... :D
-** DONE Premier org notebook
-CLOSED: [2017-04-04 mar. 11:05]
-:LOGBOOK:
-- State "DONE"       from "STARTED"    [2017-04-04 mar. 11:05]
-- State "STARTED"    from "TODO"       [2017-04-04 mar. 10:28]
-- State "TODO"       from              [2017-04-04 mar. 10:27]
-:END:
-#+begin_src R :results output graphics :file Rplots/first_plot.png :exports both :width 600 :height 400 
-plot(1)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/first_plot.png]]
-
-** DONE Comparison of methods on generative simu cor(U1,X)=c      :3Article:
-CLOSED: [2017-04-13 jeu. 09:02]
-:LOGBOOK:
-- Note taken on [2017-04-13 jeu. 09:02] \\
-  On a pas lancé sur toutes les méthodes (cate et lea) mais on passe sur des
-  simulation plus dure !!
-- State "DONE"       from "STARTED"    [2017-04-13 jeu. 09:02]
-- Note taken on [2017-04-12 mer. 16:38] \\
-  Il faut vraiment que je trouve des simulation plus facile, peut etre en
-  augmentant la variance de B. Faut que j'essaie avec d'autre axe corrélé avec X
-  peut être qu'on y verra plus clair !!
-- Note taken on [2017-04-12 mer. 16:33] \\
-  Les resultats avec K over estimated sont pas mal. Au final tout le lfmmLasso est
-  bien robuste ! L'oracle fait comme PCAlm ... il faut que je modifie ca ! Je vais
-  faire un vrai oracle !!
-- Note taken on [2017-04-12 mer. 10:22] \\
-  Je pense que ces simulation sont un peut trop dure, mais on voit quand même que
-  mes lfmmRidge et lfmmLasso sont pas mal !
-- Note taken on [2017-04-11 mar. 17:18] \\
-  On a fait les courbe d'auc, ca rend pas mal. Ce qu'on voit c'est que FAMT et
-  lassoLFMM font les meilleurs résultats. L'avantave de ma méthode est sur le
-  control du FDR.
-- Note taken on [2017-04-07 ven. 10:30] \\
-  Courbe d'AUC ?
-- Note taken on [2017-04-07 ven. 10:27] \\
-  Les resultats sont pas clairs => mettre d'autre param (comme avant c(0.6,0.3)?)
-- State "STARTED"    from "RUNNING"    [2017-04-05 mer. 16:33]
-- State "RUNNING"    from "STARTED"    [2017-04-05 mer. 16:33]
-- State "STARTED"    from "WAITING"    [2017-04-04 mar. 16:55]
-- State "WAITING"    from "STARTED"    [2017-04-04 mar. 15:58]
-- State "STARTED"    from "TODO"       [2017-04-04 mar. 13:01]
-- State "TODO"       from              [2017-04-04 mar. 11:06]
-:END:
-*** With the same 10000 loci for every body 
-**** Run on krak
-#+begin_src R :results output :session *R* :exports both
-  require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
-  ## run all simulation on the same 10000 loci sample
-  exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = c(0.01, 0.05, 0.1),
-                                   n = NULL, L = 10000,
-                                   K = 4,
-                                   cs = c(0.2, 0.4, 0.6, 0.8),
-                                   nb.rep = 10,
-                                   fast.only = FALSE,
-                                   cluster.nb = 16,
-                                   save = TRUE, bypass = FALSE)
-#+end_src
-**** Plots
-:PROPERTIES:
-:header-args: :cache no :session *R* :dir ./ :eval no-export :width 1000 :height 800
-:END:
-
-We retrieve the experiment
-#+begin_src R :results output :exports both
-  exp <- retrieveExperiment(96)
-  exp$description
-#+end_src
-
-#+RESULTS:
-: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.sample.10000.rds K=4 n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=10 "
-
-***** C = 0.2
-#+begin_src R :results output graphics :file Rplots/1000_loci_c02.png :exports both
-  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/1000_loci_c02.png]]
-
-***** C = 0.6
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
-  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.6)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-4989Cvd.png]]
-***** precision-recall
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
-  Article3_MethodComparison_plot_precisionRecall(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-15107ugK.png]]
-
-On y voit pas grand chose. Faire des courbes d'AUC comme dans 2Article ? Je vais
-lancer sur tous le data set pour voir si c'est pas ces 10000 loci qui sont bizare.
-***** AUC
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
-  Article3_MethodComparison_plot_AUC(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071UEP.png]]
-***** Inflation factor
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
-  Article3_MethodComparison_plot_GIF(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071VFW.png]]
-
-*** By sampling loci every time
-**** DONE Run on krakenator or patator
-CLOSED: [2017-04-07 ven. 08:32]
-:LOGBOOK:
-- Note taken on [2017-04-07 ven. 08:33] \\
-  exp id = 100
-- State "DONE"       from "RUNNING"    [2017-04-07 ven. 08:32]
-- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 11:53]
-- Note taken on [2017-04-05 mer. 09:03] \\
-  Bug when running on krakenator
-- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 09:01]
-- State "RUNNING"    from              [2017-04-04 mar. 16:56]
-:END:
-#+begin_src R :results output :session *R* :exports both
-  require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
-  ## run all simulation on the same 10000 loci sample
-  exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = c(0.01, 0.05, 0.1),
-                                   n = NULL, L = 10000,
-                                   K = 4,
-                                   cs = c(0.2, 0.4, 0.6, 0.8),
-                                   nb.rep = 10,
-                                   fast.only = FALSE,
-                                   cluster.nb = 16,
-                                   save = TRUE, bypass = FALSE)
-#+end_src
-**** Plots
-We retrieve exp results
-#+begin_src R :results output :session *R* :exports both
-library(ThesisRpackage)
-exp <- retrieveExperiment(100)
-#+end_src
-
-#+RESULTS:
-
-***** C = 0.2
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
-Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560Z9V.png]]
-
-***** C = 0.6
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
-  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.6)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560Aco.png]]
-
-***** C = 0.8
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
-  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.8)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560aw0.png]]
-
-***** precision-recall
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
-  Article3_MethodComparison_plot_precisionRecall(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560ZEK.png]]
-
-***** AUC
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
-  Article3_MethodComparison_plot_AUC(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071hOV.png]]
-
-***** Inflation factor
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
-  Article3_MethodComparison_plot_GIF(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071vZi.png]]
-
-*** We over estimate K (K+1)
-**** DONE Run on krakenator
-CLOSED: [2017-04-12 mer. 16:32]
-:LOGBOOK:
-- State "DONE"       from "RUNNING"    [2017-04-12 mer. 16:32]
-- State "RUNNING"    from              [2017-04-12 mer. 10:56]
-:END:
-#+begin_src R :results output :session *R* :exports both
-  require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
-  ## run all simulation on the same 10000 loci sample
-  exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = c(0.01, 0.05, 0.1),
-                                   n = NULL, L = 10000,
-                                   K = 4,
-                                   K.method = 5,
-                                   cs = c(0.2, 0.4, 0.6, 0.8),
-                                   nb.rep = 5,
-                                   fast.only = TRUE,
-                                   cluster.nb = 16,
-                                   save = TRUE, bypass = FALSE)
-
-
-#+end_src
-**** plots
-#+begin_src R :results output :session *R* :exports both
-exp <- retrieveExperiment(103)
-exp$description
-#+end_src
-
-#+RESULTS:
-: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds K=4 K.method=5 fast.only=TRUE n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=5 "
-***** AUC
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
-  Article3_MethodComparison_plot_AUC(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994ouK.png]]
-
-***** Inflation factor
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
-  Article3_MethodComparison_plot_GIF(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-2799414Q.png]]
-
-
-*** We over estimate K (K+3)
-**** DONE On krakenator
-CLOSED: [2017-04-12 mer. 16:32]
-:LOGBOOK:
-- State "DONE"       from "RUNNING"    [2017-04-12 mer. 16:32]
-- State "RUNNING"    from              [2017-04-12 mer. 10:57]
-:END:
-#+begin_src R :results output :session *R* :exports both
-  require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
-  ## run all simulation on the same 10000 loci sample
-  exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = c(0.01, 0.05, 0.1),
-                                   n = NULL, L = 10000,
-                                   K = 4,
-                                   K.method = 7,
-                                   cs = c(0.2, 0.4, 0.6, 0.8),
-                                   nb.rep = 5,
-                                   fast.only = TRUE,
-                                   cluster.nb = 16,
-                                   save = TRUE, bypass = FALSE)
-
-
-#+end_src
-**** plots
-#+begin_src R :results output :session *R* :exports both
-exp <- retrieveExperiment(104)
-exp$description
-#+end_src
-
-#+RESULTS:
-: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds K=4 K.method=7 fast.only=TRUE n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=5 "
-***** AUC
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
-  Article3_MethodComparison_plot_AUC(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994PNd.png]]
-***** Inflation factor
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
-  Article3_MethodComparison_plot_GIF(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994php.png]]
-
-
-
-
-** CANCELLED EWAS for LFMM article                                :3Article:
-CLOSED: [2017-05-10 mer. 11:05]
-:LOGBOOK:
-- State "CANCELLED"  from "STARTED"    [2017-05-10 mer. 11:05]
-- Note taken on [2017-05-10 mer. 11:04] \\
-  On va reprendre cette analyse depuis le debut, au propre !
-- Note taken on [2017-04-13 jeu. 18:00] \\
-  Ok c'est on va retrouver les même resultats par contre lasso donne pas les même
-  reultats... A voir.
-- Note taken on [2017-04-13 jeu. 17:25] \\
-  Je vais essayer de reproduire les resultats que j'avais trouvé pour la pres
-  [[file:3Article/Slides/BCMSeminar/experiments.nb.html][seminarBCM]].
-- Note taken on [2017-04-11 mar. 12:39] \\
-  Il y a quelque chose qui ne va pas avec ces données je n'arrive même pas a
-  reproduire les resultats des papiers cite:Rahmani_2016 etc... Je voulais
-  retrouver les loci connu sans correction mais ca n'a pas l'aire de marcher.
-  Affaire a suivre !!
-- Note taken on [2017-04-10 lun. 17:43] \\
-  Il faut que je recalibre les tests. Pk. Je vais faire de la biblio la dessus et
-  identifier les causes du fdr pas controlé !!!! 
-  Debug ca aussi [[file:ThesisRpackage/tests/testthat/test_3Article_runExp.R::test_that("Article3_runExp_calibrate",%20{][Article3_runExp_calibrate]]
-- State "STARTED"    from "TODO"       [2017-04-04 mar. 16:19]
-- State "TODO"       from              [2017-04-04 mar. 12:06]
-:END:
-*** PCA on betanormalized_metylationlvl.filtered.rds
-**** on krakenator
-#+begin_src R :results output :session *R* :exports both
-library(ThesisRpackage)
-s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.rds",
-                 X.file = "../Data/GSE42861/X.rds",
-                 outlier.file = NULL,
-                 n = NULL,
-                 L = NULL)
-exp <- Article3_pcaExp(s = s,
-                       s.name = "GSE42861 filtered",
-                       cluster.nb = NULL,
-                       save = TRUE, bypass = FALSE)
-#+end_src
-**** Plots
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-  exp <- retrieveExperiment(40)
-  plot(exp)
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-28683uFt.png]]
-*** <<CV_GSE42861_not_corrected>> LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.rds
-**** On krakenator
-#+begin_src R :results output :session *R* :exports both
-library(ThesisRpackage)
-s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.rds",
-                 X.file = "../Data/GSE42861/X.rds",
-                 outlier.file = NULL,
-                 n = NULL,
-                 L = NULL)
-dat <- sampl(s)
-exp <- Article3_cvExp(s = s,
-                      s.name = "GSE42861 filtered",
-                      Ks = c(1,2,3, 4, 5, 6, 7, 8, 10,15),
-                      lambdas = c(1e-10, 1e0, 1e10, 1e20),
-                      row.left.out.func = left.out.kfold(5),
-                      col.left.out.func = left.out.sample(5, 0.2),
-                      cluster.nb = 2,
-                      save = TRUE, bypass = FALSE)
-#+end_src
-**** Plots
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-exp <- retrieveExperiment(41)
-plot(exp$cv, color = "K")
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-28683tZC.png]]
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-plot(exp$cv, color = "lambda")
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-286836jI.png]]
-
-*** LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.LMresidu.rds
-**** DONE On krakenator
-CLOSED: [2017-04-05 mer. 08:47]
-:LOGBOOK:
-- State "DONE"       from "RUNNING"    [2017-04-05 mer. 08:47]
-- State "RUNNING"    from              [2017-04-04 mar. 16:56]
-:END:
-#+begin_src R :results output :session *R* :exports both
-library(ThesisRpackage)
-  s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds",
-                   X.file = "../Data/GSE42861/X.rds",
-                   outlier.file = NULL,
-                   n = NULL,
-                   L = NULL)
-  dat <- sampl(s)
-  exp <- Article3_cvExp(dat = dat,
-                        dat.name = "GSE42861 filtered and LM residual",
-                        Ks = c(1,2,3, 4, 5, 6, 7, 8, 10,15),
-                        lambdas = c(1e-10, 1e0, 1e10, 1e20),
-                        row.left.out.func = left.out.kfold(5),
-                        col.left.out.func = left.out.sample(5, 0.2),
-                        cluster.nb = 2,
-                        save = TRUE, bypass = FALSE)
-#+end_src
-
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-exp <- retrieveExperiment(97)
-plot(exp$cv, color = 'K')
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-15107iJj.png]]
-
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
-plot(exp$cv, color = "lambda")
-#+end_src
-
-#+RESULTS:
-[[file:/home/cayek/Projects/Thesis/Rfigures/figure-151077xE.png]]
-
-La cross validation donne plutot K = 2 et pas d'importance pour le choix de
-lambda. Ce qui est interessant c'est que la [[CV_GSE42861_not_corrected][CV]] sur les données avec variables
-lattente donne plutot K = 4 et lambda petit.
-*** Run on betanormalized_metylationlvl.filtered.rds
-**** DONE on krakenator
-CLOSED: [2017-04-10 lun. 14:39]
-:LOGBOOK:
-- State "DONE"       from "RUNNING"    [2017-04-10 lun. 14:39]
-- State "RUNNING"    from "DONE"       [2017-04-07 ven. 13:56]
-- Note taken on [2017-04-07 ven. 13:17] \\
-  exp id = 99
-- State "DONE"       from "RUNNING"    [2017-04-07 ven. 13:17]
-- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 09:15]
-- State "WAITING"    from "RUNNING"    [2017-04-06 jeu. 08:35]
-- State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
-- Note taken on [2017-04-05 mer. 16:22] \\
-  krakenator va etre mis a jour, on relance après !
-- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 16:22]
-- State "RUNNING"    from "TODO"       [2017-04-05 mer. 12:33]
-- State "TODO"       from              [2017-04-05 mer. 08:58]
-:END:
-#+begin_src R :results output :session *R* :exports both
-  library(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.rds"
-  X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
-
-
-  s <- TrueSampler(G.file = G.file,
-                   X.file = X.file,
-                   outlier.file = NULL)
-  dat <- sampl(s)
-  dat$X <- dat$X[,1,drop=FALSE] ## keep only first covariate
-  exp <- Article3_GSE42861(dat = dat,
-                           dat.name = "betanormalized_metylationlvl.filtered.rds",
-                           cluster.nb = 4,
-                           Ks = c(2,3,4),
-                           lambdas = c(1e-4, 1e0, 1e10),
-                           sparse.prop = c(0.1),
-                           save = TRUE,
-                           bypass = FALSE)
-
-#+end_src
-**** plots
-#+begin_src R :results output :session *R* :exports both
-  exp <- retrieveExperiment(101)
-  exp$description
-#+end_src
-
-#+RESULTS:
-: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0152324128831718|0.0120402443893896|0.00992138012483149 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.rds "
-
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-Article3_runExp_manhattan(exp, 0.05,'refactor')
-#+end_src
-
-
-*** Run on betanormalized_metylationlvl.filtered.LMresidu.rds
-**** DONE on krakenator
-CLOSED: [2017-04-10 lun. 14:39]
-:LOGBOOK:
-- State "DONE"       from "RUNNING"    [2017-04-10 lun. 14:39]
-- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 09:16]
-- State "WAITING"    from "RUNNING"    [2017-04-06 jeu. 08:35]
-- State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
-- Note taken on [2017-04-05 mer. 16:23] \\
-  krakenator va etre mis a jour...
-- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 16:23]
-- State "RUNNING"    from "TODO"       [2017-04-05 mer. 12:33]
-- State "TODO"       from              [2017-04-05 mer. 08:59]
-:END:
-#+begin_src R :results output :session *R* :exports both
-  library(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds"
-  X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
-
-
-  s <- TrueSampler(G.file = G.file,
-                   X.file = X.file,
-                   outlier.file = NULL)
-  dat <- sampl(s)
-  dat$X <- dat$X[,1,drop=FALSE] ## keep only first covariate
-  exp <- Article3_GSE42861(dat = dat,
-                           dat.name = "betanormalized_metylationlvl.filtered.LMresidu.rds",
-                           cluster.nb = 4,
-                           Ks = c(2,3,4),
-                           lambdas = c(1e-4, 1e0, 1e10),
-                           sparse.prop = c(0.1),
-                           save = TRUE,
-                           bypass = FALSE)
-
-#+end_src
-**** plots
-#+begin_src R :results output :session *R* :exports both
-exp.LMresidu <- retrieveExperiment(102)
-exp.LMresidu$description
-#+end_src
-
-#+RESULTS:
-: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0118857550712915|0.00966331357938067|0.00901972710130546 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.LMresidu.rds "
-
-#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
-Article3_runExp_manhattan(exp.LMresidu, 0.05,'refactor')
-#+end_src
-
-*** Interesting loci
-List discuted in cite:Rahmani_2016 
-#+begin_src R :results output :session *R* :exports both
-  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
-  exp.LMresidu$df.res %>%
-    dplyr::filter(col.name %in% rahmani.outlier,
-                  method == "refactor")
-  exp$df.res %>%
-    dplyr::filter(col.name %in% rahmani.outlier,
-                  method == "refactor")
-
-  exp$df.res %>%
-    dplyr::filter(col.name %in% rahmani.outlier,
-                  method == "glm")
-#+end_src
-
-#+RESULTS:
-#+begin_example
-# A tibble: 9 × 10
-   index   col.name       pvalue     score     B       qvalue   method lambda
-   <int>      <chr>        <dbl>     <dbl> <dbl>        <dbl>    <chr>  <dbl>
-1  36714 cg05428452 9.339330e-16 -8.035243    NA 2.081697e-13 refactor     NA
-2  51546 cg07839457 1.286740e-10 -6.428731    NA 3.125326e-09 refactor     NA
-3 101455 cg16411857 4.428888e-12 -6.922772    NA 2.005025e-10 refactor     NA
-4  36714 cg05428452 4.787580e-13 -7.231196    NA 2.189824e-10 refactor     NA
-5  51546 cg07839457 4.877471e-09 -5.851299    NA 2.533710e-07 refactor     NA
-6 101455 cg16411857 5.670667e-11 -6.552171    NA 7.623022e-09 refactor     NA
-7  36714 cg05428452 3.221914e-12 -6.967688    NA 9.739772e-08 refactor     NA
-8  51546 cg07839457 2.888125e-09 -5.937834    NA 5.020182e-06 refactor     NA
-9 101455 cg16411857 5.414775e-10 -6.206587    NA 2.104871e-06 refactor     NA
-# ... with 2 more variables: K <dbl>, sparse.prop <dbl>
-# A tibble: 9 × 10
-   index   col.name       pvalue     score     B       qvalue   method lambda
-   <int>      <chr>        <dbl>     <dbl> <dbl>        <dbl>    <chr>  <dbl>
-1  36714 cg05428452 4.245903e-16 -8.131334    NA 1.108760e-13 refactor     NA
-2  51546 cg07839457 6.395240e-11 -6.534195    NA 1.771405e-09 refactor     NA
-3 101455 cg16411857 2.174284e-12 -7.022824    NA 1.117797e-10 refactor     NA
-4  36714 cg05428452 1.466297e-13 -7.390180    NA 1.000277e-10 refactor     NA
-5  51546 cg07839457 8.570508e-09 -5.756836    NA 4.075391e-07 refactor     NA
-6 101455 cg16411857 1.028115e-10 -6.462758    NA 1.311893e-08 refactor     NA
-7  36714 cg05428452 3.653304e-14 -7.572777    NA 6.668225e-12 refactor     NA
-8  51546 cg07839457 4.747825e-09 -5.855778    NA 9.198646e-08 refactor     NA
-9 101455 cg16411857 6.215250e-10 -6.184873    NA 1.747915e-08 refactor     NA
-# ... with 2 more variables: K <dbl>, sparse.prop <dbl>
-# A tibble: 3 × 10
-   index   col.name       pvalue      score            B       qvalue method
-   <int>      <chr>        <dbl>      <dbl>        <dbl>        <dbl>  <chr>
-1  36714 cg05428452 6.772196e-20 -9.1312355 -0.045467876 2.888329e-19    glm
-2  51546 cg07839457 5.077905e-01 -0.6622819 -0.002318433 1.710891e-01    glm
-3 101455 cg16411857 1.138380e-02 -2.5306913 -0.004700647 6.103030e-03    glm
-# ... with 3 more variables: lambda <dbl>, K <dbl>, sparse.prop <dbl>
-#+end_example
-
-**** Do we find these loci with lfmmLasso and lfmmRidge on betanormalized_metylationlvl.filtered.rds
-#+begin_src R :results output :session *R* :exports both
-exp <- retrieveExperiment(101)
-#+end_src
-***** Compute of the gif
-
-#+begin_src R :results output :session *R* :exports both
-  gif.func <- function(score) {
-    score2 <- score ^ 2
-    median(score2) / qchisq(0.5, df = 1)
-  }
-
-  exp$df.res %>%
-    group_by(K, lambda, sparse.prop, method) %>%
-    summarise(gif = gif.func(score))
-#+end_src
-
-#+RESULTS:
-#+begin_example
-Source: local data frame [16 x 5]
-Groups: K, lambda, sparse.prop [?]
-
-       K       lambda sparse.prop    method       gif
-   <dbl>        <dbl>       <dbl>     <chr>     <dbl>
-1      2 1.000000e-04          NA lfmmRidge 11.584908
-2      2 1.523241e-02         0.1 lfmmLasso 10.000808
-3      2 1.000000e+00          NA lfmmRidge 11.572514
-4      2 1.000000e+10          NA lfmmRidge  8.064392
-5      2           NA          NA  refactor  7.096974
-6      3 1.000000e-04          NA lfmmRidge  6.222251
-7      3 1.204024e-02         0.1 lfmmLasso  5.435089
-8      3 1.000000e+00          NA lfmmRidge  6.220483
-9      3 1.000000e+10          NA lfmmRidge  5.609513
-10     3           NA          NA  refactor  4.795921
-11     4 1.000000e-04          NA lfmmRidge  6.088887
-12     4 9.921380e-03         0.1 lfmmLasso  5.697559
-13     4 1.000000e+00          NA lfmmRidge  6.088300
-14     4 1.000000e+10          NA lfmmRidge  5.371812
-15     4           NA          NA  refactor  6.914059
-16    NA           NA          NA       glm 17.280261
-#+end_example
-***** Test calibration
-
-#+begin_src R :results output :session *R* :exports both
-  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
-  ## lfmm lasso with K = 4
-
-  lasso.df <- exp$df.res %>% dplyr::filter(method == "lfmmLasso", K == 4)
-  lasso.df %>% dplyr::filter(col.name %in% rahmani.outlier)
-
-  Article3_runExp_hist(exp, 0.05, "lfmmLasso")
-
-  lcfdr <- locfdr::locfdr(lasso.df$score, df = 9)
-
-  ggplot(lasso.df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
-    geom_point()
-#+end_src
-
-#+RESULTS:
-: # A tibble: 3 × 10
-:    index   col.name       pvalue     score           B       qvalue    method
-:    <int>      <chr>        <dbl>     <dbl>       <dbl>        <dbl>     <chr>
-: 1  36714 cg05428452 1.841763e-17 -8.503363 -0.03504021 8.391866e-16 lfmmLasso
-: 2  51546 cg07839457 4.022940e-10 -6.253135  0.00000000 4.573476e-09 lfmmLasso
-: 3 101455 cg16411857 1.751052e-10 -6.381724  0.00000000 2.154437e-09 lfmmLasso
-
-Ca va jusqu'a $10^{-30}$ ... on ne les a pas detecté.
-
-**** Do we find these loci with lfmmLasso and lfmmRidge on betanormalized_metylationlvl.filtered.LMresidu.rds
-#+begin_src R :results output :exports both
-exp <- retrieveExperiment(102)
-exp$description
-#+end_src
-
-#+RESULTS:
-: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0118857550712915|0.00966331357938067|0.00901972710130546 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.LMresidu.rds "
-
-***** Compute of the gif
-
-#+begin_src R :results output :exports both
-  gif.func <- function(score) {
-    score2 <- score ^ 2
-    median(score2) / qchisq(0.5, df = 1)
-  }
-
-  exp$df.res %>%
-    group_by(K, lambda, sparse.prop, method) %>%
-    summarise(gif = gif.func(score))
-
-#+end_src
-
-#+RESULTS:
-#+begin_example
-Source: local data frame [16 x 5]
-Groups: K, lambda, sparse.prop [?]
-
-       K       lambda sparse.prop    method       gif
-   <dbl>        <dbl>       <dbl>     <chr>     <dbl>
-1      2 1.000000e-04          NA lfmmRidge  6.231422
-2      2 1.188576e-02         0.1 lfmmLasso  5.530324
-3      2 1.000000e+00          NA lfmmRidge  6.229777
-4      2 1.000000e+10          NA lfmmRidge  5.689075
-5      2           NA          NA  refactor  7.618795
-6      3 1.000000e-04          NA lfmmRidge  6.383900
-7      3 9.663314e-03         0.1 lfmmLasso  5.923144
-8      3 1.000000e+00          NA lfmmRidge  6.383613
-9      3 1.000000e+10          NA lfmmRidge  5.690365
-10     3           NA          NA  refactor  4.968611
-11     4 1.000000e-04          NA lfmmRidge  2.432270
-12     4 9.019727e-03         0.1 lfmmLasso  2.286301
-13     4 1.000000e+00          NA lfmmRidge  2.431269
-14     4 1.000000e+10          NA lfmmRidge  2.057842
-15     4           NA          NA  refactor  2.409529
-16    NA           NA          NA       glm 17.286869
-#+end_example
-
-***** Methods comparison
-
-****** Ridge LFMM
-#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_ridge.png :exports both :width 600 :height 400 
-  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
-  ## lfmm lasso with K = 4
-
-  ridge.df <- exp$df.res %>% dplyr::filter(method == "lfmmRidge", K == 4, lambda == 1e-4)
-
-  ggplot(ridge.df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
-    geom_point()
-
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/GSE42861_LMResidu_rahmani.png]]
-
-Il sortent presque. Dans [[file:3Article/Slides/BCMSeminar/experiments.nb.html][la pres BCM]] on les retrouvait carément bien. Mais je
-pense que avec K = 6 c'est on trouvera comme refactor !!
-
-****** Refactor
-#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_refactor.png :exports both :width 600 :height 400 
-  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
-  ## lfmm lasso with K = 4
-
-  df <- exp$df.res %>% dplyr::filter(method == "refactor", K == 4)
-
-  ggplot(df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
-    geom_point()
-
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/GSE42861_LMResidu_rahmani_refactor.png]]
-
-On ne retrouve pas comme dans cite:Rahmani_2016 ca doit être a cause des batch
-effect que l'on a pas !!
-
-****** Lasso LFMM
-#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_lasso.png :exports both :width 600 :height 400 
-  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
-  ## lfmm lasso with K = 4
-
-  df <- exp$df.res %>% dplyr::filter(method == "lfmmLasso", K == 4)
-
-  ggplot(df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
-    geom_point()
-
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/GSE42861_LMResidu_rahmani_lasso.png]]
-
-Lasso ne trouve vraiment pas comme les autres ... bizare bizare. Il faudrait
-voir la vrai valeur de K après convergeance.
 ** STARTED EAS for LFMM article                                   :3Article:
 :LOGBOOK:
 - State "STARTED"    from "TODO"       [2017-05-23 mar. 15:59]
@@ -1349,568 +601,6 @@ make Rpackage_install
 
 #+RESULTS:
 [[file:/home/cayek/Projects/Thesis/Rfigures/figure-49257vx.png]]
-
-** DONE LEA lfmm debug                                            :3Article:
-CLOSED: [2017-05-03 mer. 08:57]
-:LOGBOOK:
-- State "DONE"       from "STARTED"    [2017-05-03 mer. 08:57]
-- Note taken on [2017-05-03 mer. 08:57] \\
-  Il faut combiner des run et recalibrer ! De toute facon je ne vais pas utiliser
-  LEA pour les resultat de l'article.
-- Note taken on [2017-04-12 mer. 09:01] \\
-  IL faut que je vois avec OF pourquoi ca ne marche pas.
-- Note taken on [2017-04-11 mar. 14:42] \\
-  L'objectif est de comprendre pourquoi ca donne d'aussi mauvais résultat sur mes
-  simu de [[file:Notes.org::*Comparaison%20of%20methods%20for%203Article][Comparaison of methods for 3Article]]
-- State "STARTED"    from              [2017-04-11 mar. 14:42]
-:END:
-
-#+begin_src R :results output :session *R* :exports both
-  require(ThesisRpackage)
-
-  ## sample data
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
-  K <- 4
-  s <- FromTrueSampler(G.file = G.file,
-                       n = NULL,
-                       L = 1000,
-                       K = K,
-                       prop.outlier = 0.05,
-                       rho = NULL,
-                       cs = 0.4,
-                       round = FALSE)
-  dat <- sampl(s)
-
-  ## run LEA
-  m <- LeaLFMMMethod(K = K,
-                     iterations = 20000,
-                     CPU = 16)
-  m <- run(m, dat)
-
-  ## plot
-  gplot_stat(m$pvalue[1,],
-             outlier = dat$outlier) +
-    geom_histogram(aes(stat, fill = outlier, y = ..density..))
-
-  gplot_stat(m$pvalue[1,],
-             outlier = dat$outlier) +
-    geom_point(aes(x = index, color = outlier, y = -log10(stat)))
-
-#+end_src
-
-*** LEA::lfmm
-:PROPERTIES:
-:header-args: :cache no :session *notebookR* :dir ./ :eval no-export
-:END:
-On krakenator
-**** Install of ThesisRpackage on krakenator
-#+BEGIN_SRC bash :dir /cayek@krakenator.imag.fr:~/Projects/Thesis/
-cd /home/cayek/Projects/Thesis
-make Rpackage_install
-#+END_SRC
-
-**** Simulate data with 0.05 % of outlier
-#+begin_src R :results output :exports both
-  library(ThesisRpackage)
-
-  ## sample data
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
-  K <- 4
-  s <- FromTrueSampler(G.file = G.file,
-                       n = NULL,
-                       L = 1000,
-                       K = K,
-                       prop.outlier = 0.05,
-                       rho = NULL,
-                       cs = 0.4,
-                       round = FALSE)
-
-  dat <- sampl(s)
-  names(dat)
-  saveRDS(dat, "./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
-#+end_src
-
-#+RESULTS:
-: [1] "G"       "X"       "U"       "V"       "B"       "epsilon" "outlier"
-: [8] "mu"
-
-**** Run LEA::lfmm
-#+begin_src R :results output :exports both
-  library(LEA)
-
-  ## read data
-  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
-
-  ## write to lfmm format
-  write.lfmm(dat$G, "./Simulation_outlier05_cor04.lfmm")
-  write.env(dat$X, "./Simulation_outlier05_cor04.env")
-
-  ## run lfmm
-  lfmm.res <- lfmm(input.file="./Simulation_outlier05_cor04.lfmm",
-                   environment.file="./Simulation_outlier05_cor04.env",
-                   K = 4,
-                   project="new",
-                   CPU = 4)
-
-
-#+end_src
-
-#+RESULTS:
-#+begin_example
-[1] "./Simulation_outlier05_cor04.lfmm"
-[1] "./Simulation_outlier05_cor04.env"
-The project is saved into :
- Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject 
-
-To load the project, use:
- project = load.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
-
-To remove the project, use:
- remove.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
-
-[1] "********************************"
-[1] "* K = 4  repetition 1  d = 1   *"
-[1] "********************************"
-Summary of the options:
-
-        -n (number of individuals)      503
-        -L (number of loci)             1000
-        -K (number of latent factors)   4
-        -o (output file)                Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1
-        -i (number of iterations)       10000
-        -b (burnin)                     5000
-        -s (seed random init)           61801602730908
-        -p (number of processes (CPU))  4
-        -x (genotype file)              Simulation_outlier05_cor04.lfmm
-        -v (variable file)              Simulation_outlier05_cor04.env
-        -D (number of covariables)      1
-        -d (the dth covariable)         1
-
-Read variable file:
- 	Simulation_outlier05_cor04.env		OK.
-
-Read genotype file:
- 	Simulation_outlier05_cor04.lfmm		OK.
-
-<<<<
-	 Analyse for variable 1
-
-		Start of the Gibbs Sampler algorithm.
-
-	[                                                                           ]
-	[===========================================================================]
-
-		End of the Gibbs Sampler algorithm.
-
-	ED:503000.1531	 DIC: 503001.0074 
-
-	The statistics for the run are registered in:
- 		Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1_s1.4.dic.
-
-	The zscores for variable 1 are registered in:
- 		Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1_s1.4.zscore.
-	The columns are: zscores, -log10(p-values), p-values.
-
-	-------------------------
-	The execution for variable 1 worked without error.
->>>>
-
-The project is saved into :
- Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject 
-
-To load the project, use:
- project = load.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
-
-To remove the project, use:
- remove.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
-#+end_example
-
-Histogram
-#+begin_src R :results output graphics :file Rplots/LEA/lea_histo.png :exports both :width 600 :height 400 
-## plot
-pvalue <- LEA::p.values(lfmm.res, K = 4)
-hist(pvalue)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/LEA/lea_histo.png]]
-
-Manhattan plot
-#+begin_src R :results output graphics :file Rplots/LEA/lea_man.png :exports both :width 600 :height 400 
-library(ggplot2)
-index <- seq_along(pvalue)
-qplot(index, -log10(pvalue), color = index %in% dat$outlier)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/LEA/lea_man.png]]
-
-**** Run of LassoLFMM
-#+begin_src R :results output :exports both
-  library(ThesisRpackage)
-
-  ## read data
-  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
-
-  ## run of lfmmLasso 
-  m <- finalLfmmLassoMethod(K = 4,
-                            sparse.prop = 0.05)
-  m <- run(m, dat)
-#+end_src
-
-
-Histogram
-#+begin_src R :results output graphics :file Rplots/LEA/lasso_hist.png :exports both :width 600 :height 400 
-  hist(m$pvalue)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/LEA/lasso_hist.png]]
-
-Manhattan plot
-#+begin_src R :results output graphics :file Rplots/LEA/lasso_man.png :exports both :width 600 :height 400 
-  library(ggplot2)
-  pvalue <- as.numeric(m$pvalue)
-  index <- seq_along(pvalue)
-
-  qplot(x = index, y = -log10(pvalue), color = index %in% dat$outlier)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/LEA/lasso_man.png]]
-
-**** Run of lm 
-#+begin_src R :results output :exports both
-  library(ThesisRpackage)
-
-  ## read data
-  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
-
-  ## run of lfmmLasso 
-  m <- finalLm()
-  m <- run(m, dat)
-#+end_src
-
-
-Histogram:
-#+begin_src R :results output graphics :file Rplots/LEA/lm_histo.png :exports both :width 600 :height 400 
-hist(m$pvalue)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/LEA/lm_histo.png]]
-
-C'est mal calibré.
-
-Manhattan plot:
-#+begin_src R :results output graphics :file Rplots/LEA/lm_man.png :exports both :width 600 :height 400 
-  library(ggplot2)
-  pvalue <- as.numeric(m$pvalue)
-  index <- seq_along(pvalue)
-
-  qplot(x = index, y = -log10(pvalue), color = index %in% dat$outlier)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/LEA/lm_man.png]]
-
-**** export notebook                                            :noexport:
-:PROPERTIES:
-:header-args: :cache no :session *bash* :dir ./ :eval no-export
-:END:
-#+BEGIN_SRC bash 
-  mkdir NOTEBOOK/
-  mkdir NOTEBOOK/Data
-  mkdir NOTEBOOK/Rplots
-  cp Notes.html NOTEBOOK/
-  cp -r Data/NotebookTMP/ NOTEBOOK/Data/
-  cp -r Rplots/LEA/ NOTEBOOK/Rplots/
-  tar -czvf NOTEBOOK.tar.gz NOTEBOOK
-  rm -rf NOTEBOOK
-  scp NOTEBOOK.tar.gz cayek@krakenator.imag.fr:~/Notebook_LEAdebug.tar.gz
-#+END_SRC
-
-
-
-
-** DONE Test of [[https://cran.r-project.org/web/packages/cate/index.html][cate]] CRAN package                                 :3Article:
-CLOSED: [2017-04-12 mer. 16:17]
-:LOGBOOK:
-- State "DONE"       from "STARTED"    [2017-04-12 mer. 16:17]
-- Note taken on [2017-04-12 mer. 16:17] \\
-  Je vais l'ajouter au methodes !!
-- State "STARTED"    from              [2017-04-12 mer. 15:45]
-:END:
-La [[file:Biblio/org-ref-pdfs/cate_vignette.pdf][vignette]]
-#+begin_src R :results output :session *R* :exports both
-  install.packages("cate")
-  library(cate)
-
-  data(gender.sm)
-  names(gender.sm)
-
-  ## compute t test
-  t.stats <- apply(gender.sm$Y, 2, function(y, x) t.test(y~x)$statistic, gender.sm$X)
-  hist(t.stats)
-
-  ## estimation of the number of lattent factor
-  n <- nrow(gender.sm$Y) # number of samples
-  gender.data <- data.frame(gender = gender.sm$X, gender.sm$Z)
-  factor.num <- est.confounder.num(~ gender | . - gender + 0,
-                                   gender.data, gender.sm$Y,
-                                   method = "bcv", bcv.plot = FALSE,
-                                   rmax = 30, nRepeat = 20)
-  factor.num$r
-
-  cate.results <- cate(~ gender | . - gender + 0,
-                       gender.data, gender.sm$Y, r = factor.num$r)
-  names(cate.results)
-
-  ## ....
-
-  ## factor analysis
-  mle <- factor.analysis(gender.sm$Y, r = 5) 
-  names(mle)
-#+end_src
-
-** CANCELLED Comparison of methods on generative simu cor(U1/2,X)=c :3Article:
-CLOSED: [2017-04-13 jeu. 18:16]
-:LOGBOOK:
-- Note taken on [2017-04-13 jeu. 18:16] \\
-  On va faire l'experience final pour le papier dirrect !!
-- State "CANCELLED"  from "STARTED"    [2017-04-13 jeu. 18:16]
-- State "STARTED"    from              [2017-04-13 jeu. 09:02]
-:END:
-**** Run on krak
-#+begin_src R :results output :session *R* :exports both
-  require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
-  ## run all simulation on the same 10000 loci sample
-  exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = c(0.01, 0.05, 0.1),
-                                   n = NULL, L = 10000,
-                                   K = 4,
-                                   cs = c(0.2, 0.4, 0.6, 0.8),
-                                   nb.rep = 10,
-                                   fast.only = FALSE,
-                                   cluster.nb = 16,
-                                   save = TRUE, bypass = FALSE)
-#+end_src
-
-** DONE Correction $G - U V^T$ on generative simulations          :3Article:
-CLOSED: [2017-04-14 ven. 14:56]
-:LOGBOOK:
-- State "DONE"       from "STARTED"    [2017-04-14 ven. 14:56]
-- State "STARTED"    from "TODO"       [2017-04-14 ven. 10:03]
-- State "TODO"       from              [2017-04-14 ven. 10:01]
-:END:
-
-*** DONE On krakenator
-CLOSED: [2017-04-14 ven. 14:49]
-:PROPERTIES:
-:CUSTOM_ID: simu with NA
-:END:
-:LOGBOOK:
-- State "DONE"       from "RUNNING"    [2017-04-14 ven. 14:49]
-- State "RUNNING"    from              [2017-04-14 ven. 10:08]
-:END:
-#+begin_src R :results output :exports both
-  require(ThesisRpackage)
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
-  ## run all simulation on the same 10000 loci sample
-  exp <- Article3_MethodComparison(G.file,
-                                   outlier.props = c(0.01, 0.05),
-                                   n = NULL, L = 10000,
-                                   K = 4,
-                                   cs = c(0.4, 0.6),
-                                   nb.rep = 5,
-                                   cluster.nb = 16,
-                                   save = TRUE, bypass = FALSE)
-#+end_src
-
-*** plots
-:PROPERTIES:
-:header-args: :cache no :session *R* :dir ./ :eval no-export :width 800 :height 600
-:END:
-
-We retrieve the experiment
-#+begin_src R :results output :exports both
-  exp <- retrieveExperiment(106)
-  exp$description
-#+end_src
-
-***** AUC
-#+begin_src R :results output graphics :file Rplots/G_UV.auc.png :exports both 
-Article3_MethodComparison_plot_AUC(exp)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/G_UV.auc.png]]
-
-***** gif
-#+begin_src R :results output graphics :file Rplots/G_UV.gif.png :exports both 
-Article3_MethodComparison_plot_GIF(exp)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/G_UV.gif.png]]
-
-** DONE Check NA in results                                       :3Article:
-CLOSED: [2017-05-03 mer. 08:56]
-:LOGBOOK:
-- State "DONE"       from "TODO"       [2017-05-03 mer. 08:56]
-- Note taken on [2017-04-14 ven. 14:57] \\
-  Tout est dans le titre, je veux m'assurer que les NA qu'on a en sorti parfois ne
-  sont pas des outlier !! J'en ai observé sur [[#simu with NA][cette simu]].
-- State "TODO"       from              [2017-04-14 ven. 14:57]
-:END:
-#+begin_src R :results output :exports both
-  ## sample data
-  s <- FromTrueSampler(G.file = "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds",
-                       n = NULL,
-                       L = 10000,
-                       K = 4,
-                       cs = 0.4,
-                       rho = NULL,
-                       prop.outlier = 0.01,
-                       round = FALSE)
-  dat <- sampl(s)
-
-  ## var of loci
-  sum( apply(dat$G, 2, var) == 0)
-
-  ## run of a method
-  m <- finalLfmmRdigeMethod(K = 4, lambda = 1e-3)
-  m <- run(m, dat)
-
-  ## NA ?
-  sum(is.na(m$score))
-
-  ## NA and var = 0 ?
-  m$score[1, apply(dat$G, 2, var) == 0]
-#+end_src
-
-#+RESULTS:
-: [1] 1
-: DEBUG [2017-05-03 08:54:26] run.Method: running  lm+zscore|calibrate=FALSE
-: [1] 1
-: rs1747928 
-:       NaN
-
-Il y a un locus sans variance .... De toute facon je vais regénérer des dataset
-pour les resultats ! 
-
-** DONE Redundancy Analysis (RDA)                                 :3Article:
-CLOSED: [2017-05-02 mar. 15:40]
-:LOGBOOK:
-- Note taken on [2017-05-02 mar. 16:07] \\
-  On laisse ca de coté les papiers de Forester sont trop légé sur les méthodes...
-- State "DONE"       from "TODO"       [2017-05-02 mar. 15:40]
-- Note taken on [2017-05-02 mar. 15:32] \\
-  Il y a tout une litérature des ordination methods... J'ai l'impression que rda
-  est bien une méthode pour faire des association. Mais ca ne prend pas en compte
-  une structure lattente. Ou alors il faut la calculer avec une autre méthode et
-  l'ajouté en covariable dans rda ([[cite:Forester_2017][see page 6]])
-- Note taken on [2017-05-02 mar. 12:00] \\
-  Faut que je comprenne le principe de cette methode ! A table.
-- Note taken on [2017-05-02 mar. 10:20] \\
-  Comment ca réagis sur mes simulations genérative. On l'ajoute dans les méthodes
-  du papier ?
-- State "TODO"       from              [2017-05-02 mar. 09:22]
-:END:
-
-Dans cite:Forester_2015 ils utilisent RDA pour trouver des locus outlier en
-passant par un PCA de XB (dans le modèle G = XB + E). Après ils calculent des
-pvaleur en ces locus plus précisement (avec un lm).
-
-Je comprends que : 
-- il n'y aura pas de correction pour la structure de populations
-- c'est juste un moyen de ne pas passer par le controle du FDR
-*** Sur une simulations
-
-#+begin_src R :results output :exports both
-  ## sampler data with lfmm generative model
-  library(ThesisRpackage)
-  s <- NormalSampler2(n = 100,
-                      L = 1000,
-                      K = 3,
-                      prop.outlier = 0.02,
-                      cs = c(0.6, 0.0, 0.0))
-  dat <- sampl(s)
-
-  ## run rda
-  library(vegan)
-
-  rda.res <- rda(dat$G ~ dat$X)
-  names(rda.res)
-
-#+end_src
-
-#+RESULTS:
-:  [1] "call"        "grand.total" "rowsum"      "colsum"      "tot.chi"    
-:  [6] "pCCA"        "CCA"         "CA"          "method"      "inertia"    
-: [11] "terms"       "terminfo"
-
-#+begin_src R :results output graphics :file Rplots/RDA_1.png :exports both :width 600 :height 400
-  plot(rda.res)
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/RDA_1.png]]
-
-A quoi correspond les rouges et les autres ? C'est les indiv et les locus...
-
-#+begin_src R :results output graphics :file Rplots/RDA_2.png :exports both :width 600 :height 400 
-  library(tidyverse)
-
-  toplot <- cbind(as.data.frame(rda.res$CA$v),
-                  as.data.frame(rda.res$CCA$v))
-  toplot <- toplot %>%
-    mutate(index = 1:nrow(toplot),
-           outlier = index %in% dat$outlier)
-
-  ggplot(toplot, aes(x = RDA1, y = PC1, color = outlier)) +
-    geom_point()
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/RDA_2.png]]
-
-Je n'arrive pas a reproduire le graphe précédent.
-
-MAIS on voit que RDA1 ne permet capte la variable lattente.
-
-**** Si on utilise lfmm 
-
-#+begin_src R :results output graphics :file Rplots/RDA_3.png :exports both :width 600 :height 400 
-  ## run of lfmm ridge
-  lfmm.ridge <- finalLfmmRdigeMethod(K = 3,lambda = 1e-1)
-  lfmm.ridge <- run(lfmm.ridge, dat)
-
-  gplot_stat(B = lfmm.ridge$B[1,], outlier = dat$outlier) +
-    geom_point(aes(x = index, y = stat, color = outlier))
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/RDA_3.png]]
-
-On arrive bien a avoir ceux qui sont vraiment associé a X et pas avec la
-variable lattentes.
-
-**** Si on utilise lm
-#+begin_src R :results output graphics :file Rplots/RDA_4.png :exports both :width 600 :height 400 
-  ## run of lfmm ridge
-  lm.res <- finalLm()
-  lm.res <- run(lm.res, dat)
-
-  gplot_stat(B = lm.res$B[1,], outlier = dat$outlier) +
-    geom_point(aes(x = index, y = stat, color = outlier))
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/RDA_4.png]]
-
-C'est comparable a les loadings RDA1
 
 ** STARTED Validation numérique pour l'article "LFMM"             :3Article:
 :LOGBOOK:
@@ -7107,7 +5797,7 @@ CLOSED: [2017-06-01 jeu. 16:45]
 - State "TODO"       from "DONE"       [2017-05-29 lun. 13:23]
 :END:
 
-We only run the computation of lattent factor score. 
+We only run the computation of latent factor score. 
 #+begin_src R :results output :exports both
   library(ThesisRpackage)
   K <- 9
@@ -7793,6 +6483,432 @@ outliers. C'est pour ca que la calibration par maf et mad echoue.
 C'est juste que l'on ne peut pas recalibré car il y a 12.5 % d'outlier mais
 sinon tout le monde a les mêmes resultats y compris lm.
 
+** Cate SVA et lfmm sur des simu générative
+
+*** =NormalSampler2=
+On simule des données avec le modèle génératif de lfmm
+#+begin_src R :results output :exports both
+  K <- 5
+  s <- NormalSampler2(n = 500,
+                      L = 2000,
+                      K = K,
+                      prop.outlier = 0.1,
+                      cs = c(0.6, 0.5, 0.0, 0.0, 0.0))
+
+  dat <- sampl(s)
+
+  methods <- finalBench(K = K, lambda = 1e-5, sparse.prop = 0.1, fast.only = TRUE, calibrate = FALSE)
+  methods$sva <- NULL
+
+  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
+
+  expr <- runExperiment(expr)
+#+end_src
+
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_pvalue.png :exports both :width 600 :height 400 
+  plot(expr, plot.type = "pvalue.grid")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_pvalue.png]]
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_precision.png :exports both :width 600 :height 400 
+plot(expr, plot.type = "precision.recall", summary_bin = TRUE, geom = "line")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_precision.png]]
+
+Il y a vraissemblablement un problème avec Cate. Dans ce cas le modèle utilisé
+est différent de celui de cate. On va essayer avec NormalSampler
+
+*** =NormalSampler=
+On simule des données avec le modèle génératif de lfmm
+#+begin_src R :results output :exports both
+  K <- 5
+  s <- NormalSampler(n = 500,
+                     L = 2000,
+                     K = K,
+                     prop.outlier = 0.05,
+                     c = 0.2)
+
+  dat <- sampl(s)
+
+  methods <- finalBench(K = 5, lambda = 1e-5, sparse.prop = 0.1, fast.only = TRUE, calibrate = FALSE)
+  methods$sva <- NULL
+  ## methods$lfmmRidge <- NULL
+  methods$pcaLm <- NULL
+
+  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
+
+  expr <- runExperiment(expr)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+DEBUG [2017-06-12 13:28:34] runExperiment.FDRControlExperiment: We set the seed
+DEBUG [2017-06-12 13:28:41] run.Method: running  lm+zscore|calibrate=FALSE
+TRACE [2017-06-12 13:28:41] attaching impute
+DEBUG [2017-06-12 13:28:41] FAMT::as.FAMTdata said:
+--------------------------------
+$`Rows with missing values`
+integer(0)
+
+$`Columns with missing values`
+integer(0)
+
+--------------------------------
+DEBUG [2017-06-12 13:28:43] FAMT::modelFAMT said:
+--------------------------------
+[1] "Fitting Factor Analysis Model with 5 factors"
+[1] "Fitting Factor Analysis Model with 5 factors"
+--------------------------------
+DEBUG [2017-06-12 13:28:44] run.Method: running  Zscore
+DEBUG [2017-06-12 13:28:44] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:44] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:45] run.Method: running  lm+zscore|calibrate=FALSE
+TRACE [2017-06-12 13:28:45] attaching impute
+DEBUG [2017-06-12 13:28:45] FAMT::as.FAMTdata said:
+--------------------------------
+$`Rows with missing values`
+integer(0)
+
+$`Columns with missing values`
+integer(0)
+
+--------------------------------
+DEBUG [2017-06-12 13:28:48] FAMT::modelFAMT said:
+--------------------------------
+[1] "Fitting Factor Analysis Model with 5 factors"
+[1] "Fitting Factor Analysis Model with 5 factors"
+--------------------------------
+DEBUG [2017-06-12 13:28:49] run.Method: running  Zscore
+DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
+TRACE [2017-06-12 13:28:49] attaching impute
+DEBUG [2017-06-12 13:28:49] FAMT::as.FAMTdata said:
+--------------------------------
+$`Rows with missing values`
+integer(0)
+
+$`Columns with missing values`
+integer(0)
+
+--------------------------------
+DEBUG [2017-06-12 13:28:52] FAMT::modelFAMT said:
+--------------------------------
+[1] "Fitting Factor Analysis Model with 5 factors"
+[1] "Fitting Factor Analysis Model with 5 factors"
+--------------------------------
+DEBUG [2017-06-12 13:28:53] run.Method: running  Zscore
+DEBUG [2017-06-12 13:28:54] run.Method: running  lm+zscore|calibrate=FALSE
+DEBUG [2017-06-12 13:28:54] run.Method: running  lm+zscore|calibrate=FALSE
+#+end_example
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_normalsampler_pvalue.png :exports both :width 600 :height 400 
+  plot(expr, plot.type = "pvalue.grid")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_normalsampler_pvalue.png]]
+
+
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_normalsampler_precision.png :exports both :width 600 :height 400 
+plot(expr, plot.type = "precision.recall", summary_bin = FALSE, geom = "point")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_normalsampler_precision.png]]
+
+C'est vraiment bizare si c est trop grand cate fait n'imp. Pk j'ai pas les mêmes
+résultats avec les vrais dataset ?
+
+*** DONE Sur des vrais données
+CLOSED: [2017-06-13 mar. 10:53]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2017-06-13 mar. 10:53]
+- Note taken on [2017-06-12 lun. 14:39] \\
+  On verra ca plus tard...
+- State "TODO"       from              [2017-06-12 lun. 14:39]
+:END:
+
+#+begin_src R :results output :exports both
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
+  pca.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000_PCA.rds"
+
+  K <- 5
+  cs <- cs_sampler(K)
+  cs
+  s <- FromTrueSampler2(G.file = G.file,
+                        K = K,
+                        prop.outlier = 0.1,
+                        cs = cs,
+                        pca.file = pca.file,
+                        rho.B = 2.8,
+                        L = 1000)
+  ## dat <- sampl(s)
+
+  methods <- finalBench(K = K, lambda = 1e-5, sparse.prop = 0.15, fast.only = FALSE, calibrate = FALSE)
+  methods$sva <- NULL
+  methods$famt <- NULL
+  ## methods$lfmmRidge <- NULL
+  ## methods$pcaLm <- NULL
+
+  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
+
+  expr <- runExperiment(expr)
+
+#+end_src
+
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_fromtruesampler2_pvalue.png :exports both :width 600 :height 400 
+  plot(expr, plot.type = "pvalue.grid")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_fromtruesampler2_pvalue.png]]
+
+
+#+begin_src R :results output graphics :file Rplots/cate_comp_fromtruesampler2_precision.png :exports both :width 600 :height 400 
+plot(expr, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/cate_comp_fromtruesampler2_precision.png]]
+
+
+Avec ce simlateur on arrive a simuler plus de situation j'ai l'impression !! On
+va lancer tout ca sur krakenator !!!
+
+** gwas riz
+
+#+begin_src R :results output :exports both
+  library(data.table)
+
+  ## data
+  Y <- fread("/home/francois/gwas_riz/flowering/geno12.lfmm")
+  Y <- as.matrix(Y)
+  X <- read.table("/home/francois/gwas_riz/flowering/x1.env")[,1]
+  X[87] <- mean(X, na.rm = TRUE)
+  X <- as.matrix(X)
+  sp <- apply(Y, 2, sum)
+  boo <- sp > 3 & sp < 154
+  Y <- Y[,boo]
+  dim(Y)
+
+  ## lfmm ridge
+  library(ThesisRpackage)
+  dat <- list(G = scale(Y), X = scale(X))
+  m <- finalLfmmRdigeMethod(K = 4, lambda = 1e-4)
+  m <- run(m, dat)
+
+  pvalue <- m$pvalue[1,]
+  hist(pvalue)
+
+  ## cate
+  library(cate)
+
+  cate.m <- cate(.~X, X = data.frame(X), Y = Y, r = 3, calibrate=FALSE,
+                 fa.method = "pc")
+  pvalue.cate <- cate.m$beta.p.value
+  hist(pvalue.cate)
+
+  cor(pvalue.cate, pvalue)
+#+end_src
+
+CCl: avec le scale de X ca plante plus... bug dans lfmm ?
+* Sandbox
+** Test of bigsnpr
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  big_univLogReg
+  snp_clumping
+#+end_src
+
+** Test of R5 object in R
+#+begin_src R :results output :exports both
+  Person <- setRefClass("Person", fields = c("a"))
+  p <- Person$new(a = 1)
+
+  hello  <- function(p){
+    UseMethod("hello")
+  }
+
+  hello.Person <- function(p) {
+    print("hello")
+    print(p$a)
+  }
+
+  hello(p)
+  str(p)
+
+  p.bis <- list(a = 2)
+  class(p.bis) <- "Person"
+  hello(p.bis)
+  str(p.bis)
+#+end_src
+
+** Plink
+*** Extract a sample
+See [[http://zzz.bwh.harvard.edu/plink/dataman.shtml#extract][doc]]
+
+#+begin_src shell :results output :exports both 
+  cd ~/Projects/Thesis/Data/Celiac/dubois_2010/
+  plink --bfile FinnuncorrNLITUK1UK3hap300 --chr 1 --from-kb 1 --to-kb 10000 --make-bed --out FinnuncorrNLITUK1UK3hap300_sample
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to FinnuncorrNLITUK1UK3hap300_sample.log.
+Options in effect:
+  --bfile FinnuncorrNLITUK1UK3hap300
+  --chr 1
+  --from-kb 1
+  --make-bed
+  --out FinnuncorrNLITUK1UK3hap300_sample
+  --to-kb 10000
+
+7761 MB RAM detected; reserving 3880 MB for main workspace.
+1024 out of 295453 variants loaded from .bim file.
+15283 people (6713 males, 8570 females) loaded from .fam.
+15283 phenotype values loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 15283 founders and 0 nonfounders present.
+Total genotyping rate is 0.999556.
+1024 variants and 15283 people pass filters and QC.
+Among remaining phenotypes, 4533 are cases and 10750 are controls.
+--make-bed to FinnuncorrNLITUK1UK3hap300_sample.bed +
+FinnuncorrNLITUK1UK3hap300_sample.bim + FinnuncorrNLITUK1UK3hap300_sample.fam
+#+end_example
+
+#+begin_src shell :results output :exports both 
+  cd ~/Projects/Thesis/Data/Celiac/dubois_2010/
+  plink --bfile FinnuncorrNLITUK1UK3hap300 --thin 0.1 --make-bed --out FinnuncorrNLITUK1UK3hap300_sample
+#+end_src
+
+#+RESULTS:
+#+begin_example
+PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to FinnuncorrNLITUK1UK3hap300_sample.log.
+Options in effect:
+  --bfile FinnuncorrNLITUK1UK3hap300
+  --make-bed
+  --out FinnuncorrNLITUK1UK3hap300_sample
+  --thin 0.1
+
+7761 MB RAM detected; reserving 3880 MB for main workspace.
+295453 variants loaded from .bim file.
+15283 people (6713 males, 8570 females) loaded from .fam.
+15283 phenotype values loaded from .fam.
+--thin: 265860 variants removed (29593 remaining).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 15283 founders and 0 nonfounders present.
+Total genotyping rate is 0.999583.
+29593 variants and 15283 people pass filters and QC.
+Among remaining phenotypes, 4533 are cases and 10750 are controls.
+--make-bed to FinnuncorrNLITUK1UK3hap300_sample.bed +
+FinnuncorrNLITUK1UK3hap300_sample.bim + FinnuncorrNLITUK1UK3hap300_sample.fam
+#+end_example
+
+** rsnps
+[[https://cran.r-project.org/web/packages/rsnps/rsnps.pdf][Doc]]
+#+begin_src R :results output :exports both
+  library(rsnps)
+  ld_search('rs2836443')
+  ncbi_snp_query("rs420358")
+  ncbi_snp_query2("rs420358")
+#+end_src
+Ca sert a rien il y a pas les genes.
+
+** biomaRt
+#+begin_src R :results output :exports both
+  library(biomaRt) # biomaRt_2.30.0, R version 3.3.2 (2016-10-31)
+
+  ## list db
+  listMarts()
+
+  ## test on a celiac snps
+  snp.db <- useMart("ENSEMBL_MART_SNP", dataset="hsapiens_snp")
+
+
+  listFilters(snp.db)
+  att <- listAttributes(snp.db)
+  att
+
+  the.snps <- c("rs13010713")
+
+  nt.biomart <- getBM(c("refsnp_id",
+                        "refsnp_source",
+                        "chr_name",
+                        "chrom_start",
+                        'phenotype_name',
+                        "phenotype_description"),
+                      filters="snp_filter",
+                      values=the.snps,
+                      mart=snp.db)
+  nt.biomart
+#+end_src
+
+Ce que je comprends c'est que le top pour faire des annotation de SNP c'est
+[[http://www.ensembl.org/index.html][ensembl]] (voir ce [[https://www.biostars.org/p/1332/][topic]]). Ensembl lui prend les info de dbSNP. MAIS je ne sais
+pas si les rs sont les même d'une release a l'autre... [2017-05-23 mar.] on est
+a la release 88.
+
+D'après Thomas d'un release a l'autre les rs sont les mêmes ! Il y a de forte
+chance de celiac soit en GRCh37. Faudrait aller voir ca
+
+** VennDiagramm
+cite:Chen_2011
+#+begin_src R :results output :exports both
+venn.plot <- draw.quintuple.venn(
+    area1 = 301,
+    area2 = 321,
+    area3 = 311,
+    area4 = 321,
+    area5 = 301,
+    n12 = 188,
+    n13 = 191,
+    n14 = 184,
+    n15 = 177,
+    n23 = 194,
+    n24 = 197,
+    n25 = 190,
+    n34 = 190,
+    n35 = 173,
+    n45 = 186,
+    n123 = 112,
+    n124 = 108,
+    n125 = 108,
+    n134 = 111,
+    n135 = 104,
+    n145 = 104,
+    n234 = 111,
+    n235 = 107,
+    n245 = 110,
+    n345 = 100,
+    n1234 = 61,
+    n1235 = 60,
+    n1245 = 59,
+    n1345 = 58,
+    n2345 = 57,
+    n12345 = 31,
+    category = c("A", "B", "C", "D", "E"),
+    fill = c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3"),
+    cat.col = c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3"),
+    cat.cex = 2,
+    margin = 0.05,
+    cex = c(1.5, 1.5, 1.5, 1.5, 1.5, 1, 0.8, 1, 0.8, 1, 0.8, 1, 0.8, 1, 0.8,
+            1, 0.55, 1, 0.55, 1, 0.55, 1, 0.55, 1, 0.55, 1, 1, 1, 1, 1, 1.5),
+    ind = TRUE
+  )
+#+end_src
+* Archive
 ** Epigenome challenge
 *** Mike data
 ddl data
@@ -8347,432 +7463,1316 @@ ddl data
 
   write(colnames(dat$G)[candidate], file = "~/Projects/BcmPowerRangers/data2_submit.txt")
 #+end_src
-** Cate SVA et lfmm sur des simu générative
-
-*** =NormalSampler2=
-On simule des données avec le modèle génératif de lfmm
-#+begin_src R :results output :exports both
-  K <- 5
-  s <- NormalSampler2(n = 500,
-                      L = 2000,
-                      K = K,
-                      prop.outlier = 0.1,
-                      cs = c(0.6, 0.5, 0.0, 0.0, 0.0))
-
-  dat <- sampl(s)
-
-  methods <- finalBench(K = K, lambda = 1e-5, sparse.prop = 0.1, fast.only = TRUE, calibrate = FALSE)
-  methods$sva <- NULL
-
-  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
-
-  expr <- runExperiment(expr)
-#+end_src
-
-
-#+begin_src R :results output graphics :file Rplots/cate_comp_pvalue.png :exports both :width 600 :height 400 
-  plot(expr, plot.type = "pvalue.grid")
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/cate_comp_pvalue.png]]
-
-#+begin_src R :results output graphics :file Rplots/cate_comp_precision.png :exports both :width 600 :height 400 
-plot(expr, plot.type = "precision.recall", summary_bin = TRUE, geom = "line")
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/cate_comp_precision.png]]
-
-Il y a vraissemblablement un problème avec Cate. Dans ce cas le modèle utilisé
-est différent de celui de cate. On va essayer avec NormalSampler
-
-*** =NormalSampler=
-On simule des données avec le modèle génératif de lfmm
-#+begin_src R :results output :exports both
-  K <- 5
-  s <- NormalSampler(n = 500,
-                     L = 2000,
-                     K = K,
-                     prop.outlier = 0.05,
-                     c = 0.2)
-
-  dat <- sampl(s)
-
-  methods <- finalBench(K = 5, lambda = 1e-5, sparse.prop = 0.1, fast.only = TRUE, calibrate = FALSE)
-  methods$sva <- NULL
-  ## methods$lfmmRidge <- NULL
-  methods$pcaLm <- NULL
-
-  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
-
-  expr <- runExperiment(expr)
-#+end_src
-
-#+RESULTS:
-#+begin_example
-DEBUG [2017-06-12 13:28:34] runExperiment.FDRControlExperiment: We set the seed
-DEBUG [2017-06-12 13:28:41] run.Method: running  lm+zscore|calibrate=FALSE
-TRACE [2017-06-12 13:28:41] attaching impute
-DEBUG [2017-06-12 13:28:41] FAMT::as.FAMTdata said:
---------------------------------
-$`Rows with missing values`
-integer(0)
-
-$`Columns with missing values`
-integer(0)
-
---------------------------------
-DEBUG [2017-06-12 13:28:43] FAMT::modelFAMT said:
---------------------------------
-[1] "Fitting Factor Analysis Model with 5 factors"
-[1] "Fitting Factor Analysis Model with 5 factors"
---------------------------------
-DEBUG [2017-06-12 13:28:44] run.Method: running  Zscore
-DEBUG [2017-06-12 13:28:44] run.Method: running  lm+zscore|calibrate=FALSE
-DEBUG [2017-06-12 13:28:44] run.Method: running  lm+zscore|calibrate=FALSE
-DEBUG [2017-06-12 13:28:45] run.Method: running  lm+zscore|calibrate=FALSE
-TRACE [2017-06-12 13:28:45] attaching impute
-DEBUG [2017-06-12 13:28:45] FAMT::as.FAMTdata said:
---------------------------------
-$`Rows with missing values`
-integer(0)
-
-$`Columns with missing values`
-integer(0)
-
---------------------------------
-DEBUG [2017-06-12 13:28:48] FAMT::modelFAMT said:
---------------------------------
-[1] "Fitting Factor Analysis Model with 5 factors"
-[1] "Fitting Factor Analysis Model with 5 factors"
---------------------------------
-DEBUG [2017-06-12 13:28:49] run.Method: running  Zscore
-DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
-DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
-DEBUG [2017-06-12 13:28:49] run.Method: running  lm+zscore|calibrate=FALSE
-TRACE [2017-06-12 13:28:49] attaching impute
-DEBUG [2017-06-12 13:28:49] FAMT::as.FAMTdata said:
---------------------------------
-$`Rows with missing values`
-integer(0)
-
-$`Columns with missing values`
-integer(0)
-
---------------------------------
-DEBUG [2017-06-12 13:28:52] FAMT::modelFAMT said:
---------------------------------
-[1] "Fitting Factor Analysis Model with 5 factors"
-[1] "Fitting Factor Analysis Model with 5 factors"
---------------------------------
-DEBUG [2017-06-12 13:28:53] run.Method: running  Zscore
-DEBUG [2017-06-12 13:28:54] run.Method: running  lm+zscore|calibrate=FALSE
-DEBUG [2017-06-12 13:28:54] run.Method: running  lm+zscore|calibrate=FALSE
-#+end_example
-
-#+begin_src R :results output graphics :file Rplots/cate_comp_normalsampler_pvalue.png :exports both :width 600 :height 400 
-  plot(expr, plot.type = "pvalue.grid")
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/cate_comp_normalsampler_pvalue.png]]
-
-
-
-#+begin_src R :results output graphics :file Rplots/cate_comp_normalsampler_precision.png :exports both :width 600 :height 400 
-plot(expr, plot.type = "precision.recall", summary_bin = FALSE, geom = "point")
-#+end_src
-
-#+RESULTS:
-[[file:Rplots/cate_comp_normalsampler_precision.png]]
-
-C'est vraiment bizare si c est trop grand cate fait n'imp. Pk j'ai pas les mêmes
-résultats avec les vrais dataset ?
-
-*** DONE Sur des vrais données
-CLOSED: [2017-06-13 mar. 10:53]
+** DONE Premier org notebook
+CLOSED: [2017-04-04 mar. 11:05]
 :LOGBOOK:
-- State "DONE"       from "TODO"       [2017-06-13 mar. 10:53]
-- Note taken on [2017-06-12 lun. 14:39] \\
-  On verra ca plus tard...
-- State "TODO"       from              [2017-06-12 lun. 14:39]
+- State "DONE"       from "STARTED"    [2017-04-04 mar. 11:05]
+- State "STARTED"    from "TODO"       [2017-04-04 mar. 10:28]
+- State "TODO"       from              [2017-04-04 mar. 10:27]
+:END:
+#+begin_src R :results output graphics :file Rplots/first_plot.png :exports both :width 600 :height 400 
+plot(1)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/first_plot.png]]
+
+** DONE Comparison of methods on generative simu cor(U1,X)=c      :3Article:
+CLOSED: [2017-04-13 jeu. 09:02]
+:LOGBOOK:
+- Note taken on [2017-04-13 jeu. 09:02] \\
+  On a pas lancé sur toutes les méthodes (cate et lea) mais on passe sur des
+  simulation plus dure !!
+- State "DONE"       from "STARTED"    [2017-04-13 jeu. 09:02]
+- Note taken on [2017-04-12 mer. 16:38] \\
+  Il faut vraiment que je trouve des simulation plus facile, peut etre en
+  augmentant la variance de B. Faut que j'essaie avec d'autre axe corrélé avec X
+  peut être qu'on y verra plus clair !!
+- Note taken on [2017-04-12 mer. 16:33] \\
+  Les resultats avec K over estimated sont pas mal. Au final tout le lfmmLasso est
+  bien robuste ! L'oracle fait comme PCAlm ... il faut que je modifie ca ! Je vais
+  faire un vrai oracle !!
+- Note taken on [2017-04-12 mer. 10:22] \\
+  Je pense que ces simulation sont un peut trop dure, mais on voit quand même que
+  mes lfmmRidge et lfmmLasso sont pas mal !
+- Note taken on [2017-04-11 mar. 17:18] \\
+  On a fait les courbe d'auc, ca rend pas mal. Ce qu'on voit c'est que FAMT et
+  lassoLFMM font les meilleurs résultats. L'avantave de ma méthode est sur le
+  control du FDR.
+- Note taken on [2017-04-07 ven. 10:30] \\
+  Courbe d'AUC ?
+- Note taken on [2017-04-07 ven. 10:27] \\
+  Les resultats sont pas clairs => mettre d'autre param (comme avant c(0.6,0.3)?)
+- State "STARTED"    from "RUNNING"    [2017-04-05 mer. 16:33]
+- State "RUNNING"    from "STARTED"    [2017-04-05 mer. 16:33]
+- State "STARTED"    from "WAITING"    [2017-04-04 mar. 16:55]
+- State "WAITING"    from "STARTED"    [2017-04-04 mar. 15:58]
+- State "STARTED"    from "TODO"       [2017-04-04 mar. 13:01]
+- State "TODO"       from              [2017-04-04 mar. 11:06]
+:END:
+*** With the same 10000 loci for every body 
+**** Run on krak
+#+begin_src R :results output :session *R* :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
+  ## run all simulation on the same 10000 loci sample
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.01, 0.05, 0.1),
+                                   n = NULL, L = 10000,
+                                   K = 4,
+                                   cs = c(0.2, 0.4, 0.6, 0.8),
+                                   nb.rep = 10,
+                                   fast.only = FALSE,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
+#+end_src
+**** Plots
+:PROPERTIES:
+:header-args: :cache no :session *R* :dir ./ :eval no-export :width 1000 :height 800
 :END:
 
+We retrieve the experiment
 #+begin_src R :results output :exports both
-  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
-  pca.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000_PCA.rds"
-
-  K <- 5
-  cs <- cs_sampler(K)
-  cs
-  s <- FromTrueSampler2(G.file = G.file,
-                        K = K,
-                        prop.outlier = 0.1,
-                        cs = cs,
-                        pca.file = pca.file,
-                        rho.B = 2.8,
-                        L = 1000)
-  ## dat <- sampl(s)
-
-  methods <- finalBench(K = K, lambda = 1e-5, sparse.prop = 0.15, fast.only = FALSE, calibrate = FALSE)
-  methods$sva <- NULL
-  methods$famt <- NULL
-  ## methods$lfmmRidge <- NULL
-  ## methods$pcaLm <- NULL
-
-  expr <- do.call(FDRControlExperiment, c(list(nb.rep = 3, sampler = s), methods))
-
-  expr <- runExperiment(expr)
-
-#+end_src
-
-
-#+begin_src R :results output graphics :file Rplots/cate_comp_fromtruesampler2_pvalue.png :exports both :width 600 :height 400 
-  plot(expr, plot.type = "pvalue.grid")
+  exp <- retrieveExperiment(96)
+  exp$description
 #+end_src
 
 #+RESULTS:
-[[file:Rplots/cate_comp_fromtruesampler2_pvalue.png]]
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3Chrm22/European_Chrm22.maf.05.sample.10000.rds K=4 n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=10 "
 
-
-#+begin_src R :results output graphics :file Rplots/cate_comp_fromtruesampler2_precision.png :exports both :width 600 :height 400 
-plot(expr, plot.type = "precision.recall", summary_bin = TRUE, geom = "point")
+***** C = 0.2
+#+begin_src R :results output graphics :file Rplots/1000_loci_c02.png :exports both
+  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
 #+end_src
 
 #+RESULTS:
-[[file:Rplots/cate_comp_fromtruesampler2_precision.png]]
+[[file:Rplots/1000_loci_c02.png]]
+
+***** C = 0.6
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.6)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-4989Cvd.png]]
+***** precision-recall
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_precisionRecall(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-15107ugK.png]]
+
+On y voit pas grand chose. Faire des courbes d'AUC comme dans 2Article ? Je vais
+lancer sur tous le data set pour voir si c'est pas ces 10000 loci qui sont bizare.
+***** AUC
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_AUC(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071UEP.png]]
+***** Inflation factor
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_GIF(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071VFW.png]]
+
+*** By sampling loci every time
+**** DONE Run on krakenator or patator
+CLOSED: [2017-04-07 ven. 08:32]
+:LOGBOOK:
+- Note taken on [2017-04-07 ven. 08:33] \\
+  exp id = 100
+- State "DONE"       from "RUNNING"    [2017-04-07 ven. 08:32]
+- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 11:53]
+- Note taken on [2017-04-05 mer. 09:03] \\
+  Bug when running on krakenator
+- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 09:01]
+- State "RUNNING"    from              [2017-04-04 mar. 16:56]
+:END:
+#+begin_src R :results output :session *R* :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
+  ## run all simulation on the same 10000 loci sample
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.01, 0.05, 0.1),
+                                   n = NULL, L = 10000,
+                                   K = 4,
+                                   cs = c(0.2, 0.4, 0.6, 0.8),
+                                   nb.rep = 10,
+                                   fast.only = FALSE,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
+#+end_src
+**** Plots
+We retrieve exp results
+#+begin_src R :results output :session *R* :exports both
+library(ThesisRpackage)
+exp <- retrieveExperiment(100)
+#+end_src
+
+#+RESULTS:
+
+***** C = 0.2
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.2)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560Z9V.png]]
+
+***** C = 0.6
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.6)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560Aco.png]]
+
+***** C = 0.8
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_pvalueGrid(exp, c = 0.8)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560aw0.png]]
+
+***** precision-recall
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+  Article3_MethodComparison_plot_precisionRecall(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-5560ZEK.png]]
+
+***** AUC
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_AUC(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071hOV.png]]
+
+***** Inflation factor
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_GIF(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-6071vZi.png]]
+
+*** We over estimate K (K+1)
+**** DONE Run on krakenator
+CLOSED: [2017-04-12 mer. 16:32]
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-12 mer. 16:32]
+- State "RUNNING"    from              [2017-04-12 mer. 10:56]
+:END:
+#+begin_src R :results output :session *R* :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
+  ## run all simulation on the same 10000 loci sample
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.01, 0.05, 0.1),
+                                   n = NULL, L = 10000,
+                                   K = 4,
+                                   K.method = 5,
+                                   cs = c(0.2, 0.4, 0.6, 0.8),
+                                   nb.rep = 5,
+                                   fast.only = TRUE,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
 
 
-Avec ce simlateur on arrive a simuler plus de situation j'ai l'impression !! On
-va lancer tout ca sur krakenator !!!
+#+end_src
+**** plots
+#+begin_src R :results output :session *R* :exports both
+exp <- retrieveExperiment(103)
+exp$description
+#+end_src
 
-** gwas riz
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds K=4 K.method=5 fast.only=TRUE n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=5 "
+***** AUC
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_AUC(exp)
+#+end_src
 
-#+begin_src R :results output :exports both
-  library(data.table)
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994ouK.png]]
 
-  ## data
-  Y <- fread("/home/francois/gwas_riz/flowering/geno12.lfmm")
-  Y <- as.matrix(Y)
-  X <- read.table("/home/francois/gwas_riz/flowering/x1.env")[,1]
-  X[87] <- mean(X, na.rm = TRUE)
-  X <- as.matrix(X)
-  sp <- apply(Y, 2, sum)
-  boo <- sp > 3 & sp < 154
-  Y <- Y[,boo]
-  dim(Y)
+***** Inflation factor
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_GIF(exp)
+#+end_src
 
-  ## lfmm ridge
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-2799414Q.png]]
+
+
+*** We over estimate K (K+3)
+**** DONE On krakenator
+CLOSED: [2017-04-12 mer. 16:32]
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-12 mer. 16:32]
+- State "RUNNING"    from              [2017-04-12 mer. 10:57]
+:END:
+#+begin_src R :results output :session *R* :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
+  ## run all simulation on the same 10000 loci sample
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.01, 0.05, 0.1),
+                                   n = NULL, L = 10000,
+                                   K = 4,
+                                   K.method = 7,
+                                   cs = c(0.2, 0.4, 0.6, 0.8),
+                                   nb.rep = 5,
+                                   fast.only = TRUE,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
+
+
+#+end_src
+**** plots
+#+begin_src R :results output :session *R* :exports both
+exp <- retrieveExperiment(104)
+exp$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_MethodComparison with G.file=~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds K=4 K.method=7 fast.only=TRUE n= L=10000 cs=0.2|0.4|0.6|0.8 outlier.props=0.01|0.05|0.1 nb.rep=5 "
+***** AUC
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_AUC(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994PNd.png]]
+***** Inflation factor
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 1000 :height 800 :session *R* 
+  Article3_MethodComparison_plot_GIF(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-27994php.png]]
+
+
+
+
+** CANCELLED EWAS for LFMM article                                :3Article:
+CLOSED: [2017-05-10 mer. 11:05]
+:LOGBOOK:
+- State "CANCELLED"  from "STARTED"    [2017-05-10 mer. 11:05]
+- Note taken on [2017-05-10 mer. 11:04] \\
+  On va reprendre cette analyse depuis le debut, au propre !
+- Note taken on [2017-04-13 jeu. 18:00] \\
+  Ok c'est on va retrouver les même resultats par contre lasso donne pas les même
+  reultats... A voir.
+- Note taken on [2017-04-13 jeu. 17:25] \\
+  Je vais essayer de reproduire les resultats que j'avais trouvé pour la pres
+  [[file:3Article/Slides/BCMSeminar/experiments.nb.html][seminarBCM]].
+- Note taken on [2017-04-11 mar. 12:39] \\
+  Il y a quelque chose qui ne va pas avec ces données je n'arrive même pas a
+  reproduire les resultats des papiers cite:Rahmani_2016 etc... Je voulais
+  retrouver les loci connu sans correction mais ca n'a pas l'aire de marcher.
+  Affaire a suivre !!
+- Note taken on [2017-04-10 lun. 17:43] \\
+  Il faut que je recalibre les tests. Pk. Je vais faire de la biblio la dessus et
+  identifier les causes du fdr pas controlé !!!! 
+  Debug ca aussi [[file:ThesisRpackage/tests/testthat/test_3Article_runExp.R::test_that("Article3_runExp_calibrate",%20{][Article3_runExp_calibrate]]
+- State "STARTED"    from "TODO"       [2017-04-04 mar. 16:19]
+- State "TODO"       from              [2017-04-04 mar. 12:06]
+:END:
+*** PCA on betanormalized_metylationlvl.filtered.rds
+**** on krakenator
+#+begin_src R :results output :session *R* :exports both
+library(ThesisRpackage)
+s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.rds",
+                 X.file = "../Data/GSE42861/X.rds",
+                 outlier.file = NULL,
+                 n = NULL,
+                 L = NULL)
+exp <- Article3_pcaExp(s = s,
+                       s.name = "GSE42861 filtered",
+                       cluster.nb = NULL,
+                       save = TRUE, bypass = FALSE)
+#+end_src
+**** Plots
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+  exp <- retrieveExperiment(40)
+  plot(exp)
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-28683uFt.png]]
+*** <<CV_GSE42861_not_corrected>> LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.rds
+**** On krakenator
+#+begin_src R :results output :session *R* :exports both
+library(ThesisRpackage)
+s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.rds",
+                 X.file = "../Data/GSE42861/X.rds",
+                 outlier.file = NULL,
+                 n = NULL,
+                 L = NULL)
+dat <- sampl(s)
+exp <- Article3_cvExp(s = s,
+                      s.name = "GSE42861 filtered",
+                      Ks = c(1,2,3, 4, 5, 6, 7, 8, 10,15),
+                      lambdas = c(1e-10, 1e0, 1e10, 1e20),
+                      row.left.out.func = left.out.kfold(5),
+                      col.left.out.func = left.out.sample(5, 0.2),
+                      cluster.nb = 2,
+                      save = TRUE, bypass = FALSE)
+#+end_src
+**** Plots
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+exp <- retrieveExperiment(41)
+plot(exp$cv, color = "K")
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-28683tZC.png]]
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+plot(exp$cv, color = "lambda")
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-286836jI.png]]
+
+*** LFMM ridge crossvalidation on betanormalized_metylationlvl.filtered.LMresidu.rds
+**** DONE On krakenator
+CLOSED: [2017-04-05 mer. 08:47]
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-05 mer. 08:47]
+- State "RUNNING"    from              [2017-04-04 mar. 16:56]
+:END:
+#+begin_src R :results output :session *R* :exports both
+library(ThesisRpackage)
+  s <- TrueSampler(G.file = "../Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds",
+                   X.file = "../Data/GSE42861/X.rds",
+                   outlier.file = NULL,
+                   n = NULL,
+                   L = NULL)
+  dat <- sampl(s)
+  exp <- Article3_cvExp(dat = dat,
+                        dat.name = "GSE42861 filtered and LM residual",
+                        Ks = c(1,2,3, 4, 5, 6, 7, 8, 10,15),
+                        lambdas = c(1e-10, 1e0, 1e10, 1e20),
+                        row.left.out.func = left.out.kfold(5),
+                        col.left.out.func = left.out.sample(5, 0.2),
+                        cluster.nb = 2,
+                        save = TRUE, bypass = FALSE)
+#+end_src
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+exp <- retrieveExperiment(97)
+plot(exp$cv, color = 'K')
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-15107iJj.png]]
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 800 :height 800 :session *R* 
+plot(exp$cv, color = "lambda")
+#+end_src
+
+#+RESULTS:
+[[file:/home/cayek/Projects/Thesis/Rfigures/figure-151077xE.png]]
+
+La cross validation donne plutot K = 2 et pas d'importance pour le choix de
+lambda. Ce qui est interessant c'est que la [[CV_GSE42861_not_corrected][CV]] sur les données avec variables
+lattente donne plutot K = 4 et lambda petit.
+*** Run on betanormalized_metylationlvl.filtered.rds
+**** DONE on krakenator
+CLOSED: [2017-04-10 lun. 14:39]
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-10 lun. 14:39]
+- State "RUNNING"    from "DONE"       [2017-04-07 ven. 13:56]
+- Note taken on [2017-04-07 ven. 13:17] \\
+  exp id = 99
+- State "DONE"       from "RUNNING"    [2017-04-07 ven. 13:17]
+- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 09:15]
+- State "WAITING"    from "RUNNING"    [2017-04-06 jeu. 08:35]
+- State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
+- Note taken on [2017-04-05 mer. 16:22] \\
+  krakenator va etre mis a jour, on relance après !
+- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 16:22]
+- State "RUNNING"    from "TODO"       [2017-04-05 mer. 12:33]
+- State "TODO"       from              [2017-04-05 mer. 08:58]
+:END:
+#+begin_src R :results output :session *R* :exports both
   library(ThesisRpackage)
-  dat <- list(G = scale(Y), X = scale(X))
-  m <- finalLfmmRdigeMethod(K = 4, lambda = 1e-4)
+  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.rds"
+  X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
+
+
+  s <- TrueSampler(G.file = G.file,
+                   X.file = X.file,
+                   outlier.file = NULL)
+  dat <- sampl(s)
+  dat$X <- dat$X[,1,drop=FALSE] ## keep only first covariate
+  exp <- Article3_GSE42861(dat = dat,
+                           dat.name = "betanormalized_metylationlvl.filtered.rds",
+                           cluster.nb = 4,
+                           Ks = c(2,3,4),
+                           lambdas = c(1e-4, 1e0, 1e10),
+                           sparse.prop = c(0.1),
+                           save = TRUE,
+                           bypass = FALSE)
+
+#+end_src
+**** plots
+#+begin_src R :results output :session *R* :exports both
+  exp <- retrieveExperiment(101)
+  exp$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0152324128831718|0.0120402443893896|0.00992138012483149 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.rds "
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+Article3_runExp_manhattan(exp, 0.05,'refactor')
+#+end_src
+
+
+*** Run on betanormalized_metylationlvl.filtered.LMresidu.rds
+**** DONE on krakenator
+CLOSED: [2017-04-10 lun. 14:39]
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-10 lun. 14:39]
+- State "RUNNING"    from "WAITING"    [2017-04-06 jeu. 09:16]
+- State "WAITING"    from "RUNNING"    [2017-04-06 jeu. 08:35]
+- State "RUNNING"    from "WAITING"    [2017-04-05 mer. 16:34]
+- Note taken on [2017-04-05 mer. 16:23] \\
+  krakenator va etre mis a jour...
+- State "WAITING"    from "RUNNING"    [2017-04-05 mer. 16:23]
+- State "RUNNING"    from "TODO"       [2017-04-05 mer. 12:33]
+- State "TODO"       from              [2017-04-05 mer. 08:59]
+:END:
+#+begin_src R :results output :session *R* :exports both
+  library(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/GSE42861/betanormalized_metylationlvl.filtered.LMresidu.rds"
+  X.file <- "~/Projects/Thesis/Data/GSE42861/X.rds"
+
+
+  s <- TrueSampler(G.file = G.file,
+                   X.file = X.file,
+                   outlier.file = NULL)
+  dat <- sampl(s)
+  dat$X <- dat$X[,1,drop=FALSE] ## keep only first covariate
+  exp <- Article3_GSE42861(dat = dat,
+                           dat.name = "betanormalized_metylationlvl.filtered.LMresidu.rds",
+                           cluster.nb = 4,
+                           Ks = c(2,3,4),
+                           lambdas = c(1e-4, 1e0, 1e10),
+                           sparse.prop = c(0.1),
+                           save = TRUE,
+                           bypass = FALSE)
+
+#+end_src
+**** plots
+#+begin_src R :results output :session *R* :exports both
+exp.LMresidu <- retrieveExperiment(102)
+exp.LMresidu$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0118857550712915|0.00966331357938067|0.00901972710130546 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.LMresidu.rds "
+
+#+begin_src R :results output graphics :file  (org-babel-temp-file (concat (file-name-directory (or load-file-name buffer-file-name)) "Rfigures/figure-") ".png") :exports both :width 600 :height 400 :session *R* 
+Article3_runExp_manhattan(exp.LMresidu, 0.05,'refactor')
+#+end_src
+
+*** Interesting loci
+List discuted in cite:Rahmani_2016 
+#+begin_src R :results output :session *R* :exports both
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  exp.LMresidu$df.res %>%
+    dplyr::filter(col.name %in% rahmani.outlier,
+                  method == "refactor")
+  exp$df.res %>%
+    dplyr::filter(col.name %in% rahmani.outlier,
+                  method == "refactor")
+
+  exp$df.res %>%
+    dplyr::filter(col.name %in% rahmani.outlier,
+                  method == "glm")
+#+end_src
+
+#+RESULTS:
+#+begin_example
+# A tibble: 9 × 10
+   index   col.name       pvalue     score     B       qvalue   method lambda
+   <int>      <chr>        <dbl>     <dbl> <dbl>        <dbl>    <chr>  <dbl>
+1  36714 cg05428452 9.339330e-16 -8.035243    NA 2.081697e-13 refactor     NA
+2  51546 cg07839457 1.286740e-10 -6.428731    NA 3.125326e-09 refactor     NA
+3 101455 cg16411857 4.428888e-12 -6.922772    NA 2.005025e-10 refactor     NA
+4  36714 cg05428452 4.787580e-13 -7.231196    NA 2.189824e-10 refactor     NA
+5  51546 cg07839457 4.877471e-09 -5.851299    NA 2.533710e-07 refactor     NA
+6 101455 cg16411857 5.670667e-11 -6.552171    NA 7.623022e-09 refactor     NA
+7  36714 cg05428452 3.221914e-12 -6.967688    NA 9.739772e-08 refactor     NA
+8  51546 cg07839457 2.888125e-09 -5.937834    NA 5.020182e-06 refactor     NA
+9 101455 cg16411857 5.414775e-10 -6.206587    NA 2.104871e-06 refactor     NA
+# ... with 2 more variables: K <dbl>, sparse.prop <dbl>
+# A tibble: 9 × 10
+   index   col.name       pvalue     score     B       qvalue   method lambda
+   <int>      <chr>        <dbl>     <dbl> <dbl>        <dbl>    <chr>  <dbl>
+1  36714 cg05428452 4.245903e-16 -8.131334    NA 1.108760e-13 refactor     NA
+2  51546 cg07839457 6.395240e-11 -6.534195    NA 1.771405e-09 refactor     NA
+3 101455 cg16411857 2.174284e-12 -7.022824    NA 1.117797e-10 refactor     NA
+4  36714 cg05428452 1.466297e-13 -7.390180    NA 1.000277e-10 refactor     NA
+5  51546 cg07839457 8.570508e-09 -5.756836    NA 4.075391e-07 refactor     NA
+6 101455 cg16411857 1.028115e-10 -6.462758    NA 1.311893e-08 refactor     NA
+7  36714 cg05428452 3.653304e-14 -7.572777    NA 6.668225e-12 refactor     NA
+8  51546 cg07839457 4.747825e-09 -5.855778    NA 9.198646e-08 refactor     NA
+9 101455 cg16411857 6.215250e-10 -6.184873    NA 1.747915e-08 refactor     NA
+# ... with 2 more variables: K <dbl>, sparse.prop <dbl>
+# A tibble: 3 × 10
+   index   col.name       pvalue      score            B       qvalue method
+   <int>      <chr>        <dbl>      <dbl>        <dbl>        <dbl>  <chr>
+1  36714 cg05428452 6.772196e-20 -9.1312355 -0.045467876 2.888329e-19    glm
+2  51546 cg07839457 5.077905e-01 -0.6622819 -0.002318433 1.710891e-01    glm
+3 101455 cg16411857 1.138380e-02 -2.5306913 -0.004700647 6.103030e-03    glm
+# ... with 3 more variables: lambda <dbl>, K <dbl>, sparse.prop <dbl>
+#+end_example
+
+**** Do we find these loci with lfmmLasso and lfmmRidge on betanormalized_metylationlvl.filtered.rds
+#+begin_src R :results output :session *R* :exports both
+exp <- retrieveExperiment(101)
+#+end_src
+***** Compute of the gif
+
+#+begin_src R :results output :session *R* :exports both
+  gif.func <- function(score) {
+    score2 <- score ^ 2
+    median(score2) / qchisq(0.5, df = 1)
+  }
+
+  exp$df.res %>%
+    group_by(K, lambda, sparse.prop, method) %>%
+    summarise(gif = gif.func(score))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Source: local data frame [16 x 5]
+Groups: K, lambda, sparse.prop [?]
+
+       K       lambda sparse.prop    method       gif
+   <dbl>        <dbl>       <dbl>     <chr>     <dbl>
+1      2 1.000000e-04          NA lfmmRidge 11.584908
+2      2 1.523241e-02         0.1 lfmmLasso 10.000808
+3      2 1.000000e+00          NA lfmmRidge 11.572514
+4      2 1.000000e+10          NA lfmmRidge  8.064392
+5      2           NA          NA  refactor  7.096974
+6      3 1.000000e-04          NA lfmmRidge  6.222251
+7      3 1.204024e-02         0.1 lfmmLasso  5.435089
+8      3 1.000000e+00          NA lfmmRidge  6.220483
+9      3 1.000000e+10          NA lfmmRidge  5.609513
+10     3           NA          NA  refactor  4.795921
+11     4 1.000000e-04          NA lfmmRidge  6.088887
+12     4 9.921380e-03         0.1 lfmmLasso  5.697559
+13     4 1.000000e+00          NA lfmmRidge  6.088300
+14     4 1.000000e+10          NA lfmmRidge  5.371812
+15     4           NA          NA  refactor  6.914059
+16    NA           NA          NA       glm 17.280261
+#+end_example
+***** Test calibration
+
+#+begin_src R :results output :session *R* :exports both
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  ## lfmm lasso with K = 4
+
+  lasso.df <- exp$df.res %>% dplyr::filter(method == "lfmmLasso", K == 4)
+  lasso.df %>% dplyr::filter(col.name %in% rahmani.outlier)
+
+  Article3_runExp_hist(exp, 0.05, "lfmmLasso")
+
+  lcfdr <- locfdr::locfdr(lasso.df$score, df = 9)
+
+  ggplot(lasso.df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
+    geom_point()
+#+end_src
+
+#+RESULTS:
+: # A tibble: 3 × 10
+:    index   col.name       pvalue     score           B       qvalue    method
+:    <int>      <chr>        <dbl>     <dbl>       <dbl>        <dbl>     <chr>
+: 1  36714 cg05428452 1.841763e-17 -8.503363 -0.03504021 8.391866e-16 lfmmLasso
+: 2  51546 cg07839457 4.022940e-10 -6.253135  0.00000000 4.573476e-09 lfmmLasso
+: 3 101455 cg16411857 1.751052e-10 -6.381724  0.00000000 2.154437e-09 lfmmLasso
+
+Ca va jusqu'a $10^{-30}$ ... on ne les a pas detecté.
+
+**** Do we find these loci with lfmmLasso and lfmmRidge on betanormalized_metylationlvl.filtered.LMresidu.rds
+#+begin_src R :results output :exports both
+exp <- retrieveExperiment(102)
+exp$description
+#+end_src
+
+#+RESULTS:
+: [1] "Article3_runExp with methods=lfmmRidge|glm|refactor|lfmmLasso lambdas=1e-04|1|1e+10|NA|0.0118857550712915|0.00966331357938067|0.00901972710130546 Ks=2|3|4|NA sparse.prop=NA|0.1 dat.name=betanormalized_metylationlvl.filtered.LMresidu.rds "
+
+***** Compute of the gif
+
+#+begin_src R :results output :exports both
+  gif.func <- function(score) {
+    score2 <- score ^ 2
+    median(score2) / qchisq(0.5, df = 1)
+  }
+
+  exp$df.res %>%
+    group_by(K, lambda, sparse.prop, method) %>%
+    summarise(gif = gif.func(score))
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Source: local data frame [16 x 5]
+Groups: K, lambda, sparse.prop [?]
+
+       K       lambda sparse.prop    method       gif
+   <dbl>        <dbl>       <dbl>     <chr>     <dbl>
+1      2 1.000000e-04          NA lfmmRidge  6.231422
+2      2 1.188576e-02         0.1 lfmmLasso  5.530324
+3      2 1.000000e+00          NA lfmmRidge  6.229777
+4      2 1.000000e+10          NA lfmmRidge  5.689075
+5      2           NA          NA  refactor  7.618795
+6      3 1.000000e-04          NA lfmmRidge  6.383900
+7      3 9.663314e-03         0.1 lfmmLasso  5.923144
+8      3 1.000000e+00          NA lfmmRidge  6.383613
+9      3 1.000000e+10          NA lfmmRidge  5.690365
+10     3           NA          NA  refactor  4.968611
+11     4 1.000000e-04          NA lfmmRidge  2.432270
+12     4 9.019727e-03         0.1 lfmmLasso  2.286301
+13     4 1.000000e+00          NA lfmmRidge  2.431269
+14     4 1.000000e+10          NA lfmmRidge  2.057842
+15     4           NA          NA  refactor  2.409529
+16    NA           NA          NA       glm 17.286869
+#+end_example
+
+***** Methods comparison
+
+****** Ridge LFMM
+#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_ridge.png :exports both :width 600 :height 400 
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  ## lfmm lasso with K = 4
+
+  ridge.df <- exp$df.res %>% dplyr::filter(method == "lfmmRidge", K == 4, lambda == 1e-4)
+
+  ggplot(ridge.df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
+    geom_point()
+
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/GSE42861_LMResidu_rahmani.png]]
+
+Il sortent presque. Dans [[file:3Article/Slides/BCMSeminar/experiments.nb.html][la pres BCM]] on les retrouvait carément bien. Mais je
+pense que avec K = 6 c'est on trouvera comme refactor !!
+
+****** Refactor
+#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_refactor.png :exports both :width 600 :height 400 
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  ## lfmm lasso with K = 4
+
+  df <- exp$df.res %>% dplyr::filter(method == "refactor", K == 4)
+
+  ggplot(df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
+    geom_point()
+
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/GSE42861_LMResidu_rahmani_refactor.png]]
+
+On ne retrouve pas comme dans cite:Rahmani_2016 ca doit être a cause des batch
+effect que l'on a pas !!
+
+****** Lasso LFMM
+#+begin_src R :results output graphics :file Rplots/GSE42861_LMResidu_rahmani_lasso.png :exports both :width 600 :height 400 
+  rahmani.outlier <- c("cg05428452", "cg07839457", "cg16411857")
+  ## lfmm lasso with K = 4
+
+  df <- exp$df.res %>% dplyr::filter(method == "lfmmLasso", K == 4)
+
+  ggplot(df, aes(x = index, -log10(pvalue), color = col.name %in% rahmani.outlier)) +
+    geom_point()
+
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/GSE42861_LMResidu_rahmani_lasso.png]]
+
+Lasso ne trouve vraiment pas comme les autres ... bizare bizare. Il faudrait
+voir la vrai valeur de K après convergeance.
+
+** DONE LEA lfmm debug                                            :3Article:
+CLOSED: [2017-05-03 mer. 08:57]
+:LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-05-03 mer. 08:57]
+- Note taken on [2017-05-03 mer. 08:57] \\
+  Il faut combiner des run et recalibrer ! De toute facon je ne vais pas utiliser
+  LEA pour les resultat de l'article.
+- Note taken on [2017-04-12 mer. 09:01] \\
+  IL faut que je vois avec OF pourquoi ca ne marche pas.
+- Note taken on [2017-04-11 mar. 14:42] \\
+  L'objectif est de comprendre pourquoi ca donne d'aussi mauvais résultat sur mes
+  simu de [[file:Notes.org::*Comparaison%20of%20methods%20for%203Article][Comparaison of methods for 3Article]]
+- State "STARTED"    from              [2017-04-11 mar. 14:42]
+:END:
+
+#+begin_src R :results output :session *R* :exports both
+  require(ThesisRpackage)
+
+  ## sample data
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
+  K <- 4
+  s <- FromTrueSampler(G.file = G.file,
+                       n = NULL,
+                       L = 1000,
+                       K = K,
+                       prop.outlier = 0.05,
+                       rho = NULL,
+                       cs = 0.4,
+                       round = FALSE)
+  dat <- sampl(s)
+
+  ## run LEA
+  m <- LeaLFMMMethod(K = K,
+                     iterations = 20000,
+                     CPU = 16)
   m <- run(m, dat)
 
-  pvalue <- m$pvalue[1,]
-  hist(pvalue)
+  ## plot
+  gplot_stat(m$pvalue[1,],
+             outlier = dat$outlier) +
+    geom_histogram(aes(stat, fill = outlier, y = ..density..))
 
-  ## cate
+  gplot_stat(m$pvalue[1,],
+             outlier = dat$outlier) +
+    geom_point(aes(x = index, color = outlier, y = -log10(stat)))
+
+#+end_src
+
+*** LEA::lfmm
+:PROPERTIES:
+:header-args: :cache no :session *notebookR* :dir ./ :eval no-export
+:END:
+On krakenator
+**** Install of ThesisRpackage on krakenator
+#+BEGIN_SRC bash :dir /cayek@krakenator.imag.fr:~/Projects/Thesis/
+cd /home/cayek/Projects/Thesis
+make Rpackage_install
+#+END_SRC
+
+**** Simulate data with 0.05 % of outlier
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  ## sample data
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.rds"
+  K <- 4
+  s <- FromTrueSampler(G.file = G.file,
+                       n = NULL,
+                       L = 1000,
+                       K = K,
+                       prop.outlier = 0.05,
+                       rho = NULL,
+                       cs = 0.4,
+                       round = FALSE)
+
+  dat <- sampl(s)
+  names(dat)
+  saveRDS(dat, "./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
+#+end_src
+
+#+RESULTS:
+: [1] "G"       "X"       "U"       "V"       "B"       "epsilon" "outlier"
+: [8] "mu"
+
+**** Run LEA::lfmm
+#+begin_src R :results output :exports both
+  library(LEA)
+
+  ## read data
+  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
+
+  ## write to lfmm format
+  write.lfmm(dat$G, "./Simulation_outlier05_cor04.lfmm")
+  write.env(dat$X, "./Simulation_outlier05_cor04.env")
+
+  ## run lfmm
+  lfmm.res <- lfmm(input.file="./Simulation_outlier05_cor04.lfmm",
+                   environment.file="./Simulation_outlier05_cor04.env",
+                   K = 4,
+                   project="new",
+                   CPU = 4)
+
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[1] "./Simulation_outlier05_cor04.lfmm"
+[1] "./Simulation_outlier05_cor04.env"
+The project is saved into :
+ Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject 
+
+To load the project, use:
+ project = load.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
+
+To remove the project, use:
+ remove.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
+
+[1] "********************************"
+[1] "* K = 4  repetition 1  d = 1   *"
+[1] "********************************"
+Summary of the options:
+
+        -n (number of individuals)      503
+        -L (number of loci)             1000
+        -K (number of latent factors)   4
+        -o (output file)                Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1
+        -i (number of iterations)       10000
+        -b (burnin)                     5000
+        -s (seed random init)           61801602730908
+        -p (number of processes (CPU))  4
+        -x (genotype file)              Simulation_outlier05_cor04.lfmm
+        -v (variable file)              Simulation_outlier05_cor04.env
+        -D (number of covariables)      1
+        -d (the dth covariable)         1
+
+Read variable file:
+ 	Simulation_outlier05_cor04.env		OK.
+
+Read genotype file:
+ 	Simulation_outlier05_cor04.lfmm		OK.
+
+<<<<
+	 Analyse for variable 1
+
+		Start of the Gibbs Sampler algorithm.
+
+	[                                                                           ]
+	[===========================================================================]
+
+		End of the Gibbs Sampler algorithm.
+
+	ED:503000.1531	 DIC: 503001.0074 
+
+	The statistics for the run are registered in:
+ 		Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1_s1.4.dic.
+
+	The zscores for variable 1 are registered in:
+ 		Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmm/K4/run1/Simulation_outlier05_cor04_r1_s1.4.zscore.
+	The columns are: zscores, -log10(p-values), p-values.
+
+	-------------------------
+	The execution for variable 1 worked without error.
+>>>>
+
+The project is saved into :
+ Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject 
+
+To load the project, use:
+ project = load.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
+
+To remove the project, use:
+ remove.lfmmProject("Simulation_outlier05_cor04_Simulation_outlier05_cor04.lfmmProject")
+#+end_example
+
+Histogram
+#+begin_src R :results output graphics :file Rplots/LEA/lea_histo.png :exports both :width 600 :height 400 
+## plot
+pvalue <- LEA::p.values(lfmm.res, K = 4)
+hist(pvalue)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/LEA/lea_histo.png]]
+
+Manhattan plot
+#+begin_src R :results output graphics :file Rplots/LEA/lea_man.png :exports both :width 600 :height 400 
+library(ggplot2)
+index <- seq_along(pvalue)
+qplot(index, -log10(pvalue), color = index %in% dat$outlier)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/LEA/lea_man.png]]
+
+**** Run of LassoLFMM
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  ## read data
+  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
+
+  ## run of lfmmLasso 
+  m <- finalLfmmLassoMethod(K = 4,
+                            sparse.prop = 0.05)
+  m <- run(m, dat)
+#+end_src
+
+
+Histogram
+#+begin_src R :results output graphics :file Rplots/LEA/lasso_hist.png :exports both :width 600 :height 400 
+  hist(m$pvalue)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/LEA/lasso_hist.png]]
+
+Manhattan plot
+#+begin_src R :results output graphics :file Rplots/LEA/lasso_man.png :exports both :width 600 :height 400 
+  library(ggplot2)
+  pvalue <- as.numeric(m$pvalue)
+  index <- seq_along(pvalue)
+
+  qplot(x = index, y = -log10(pvalue), color = index %in% dat$outlier)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/LEA/lasso_man.png]]
+
+**** Run of lm 
+#+begin_src R :results output :exports both
+  library(ThesisRpackage)
+
+  ## read data
+  dat <- readRDS("./Data/NotebookTMP/Simulation_outlier05_cor04.rds")
+
+  ## run of lfmmLasso 
+  m <- finalLm()
+  m <- run(m, dat)
+#+end_src
+
+
+Histogram:
+#+begin_src R :results output graphics :file Rplots/LEA/lm_histo.png :exports both :width 600 :height 400 
+hist(m$pvalue)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/LEA/lm_histo.png]]
+
+C'est mal calibré.
+
+Manhattan plot:
+#+begin_src R :results output graphics :file Rplots/LEA/lm_man.png :exports both :width 600 :height 400 
+  library(ggplot2)
+  pvalue <- as.numeric(m$pvalue)
+  index <- seq_along(pvalue)
+
+  qplot(x = index, y = -log10(pvalue), color = index %in% dat$outlier)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/LEA/lm_man.png]]
+
+**** export notebook                                            :noexport:
+:PROPERTIES:
+:header-args: :cache no :session *bash* :dir ./ :eval no-export
+:END:
+#+BEGIN_SRC bash 
+  mkdir NOTEBOOK/
+  mkdir NOTEBOOK/Data
+  mkdir NOTEBOOK/Rplots
+  cp Notes.html NOTEBOOK/
+  cp -r Data/NotebookTMP/ NOTEBOOK/Data/
+  cp -r Rplots/LEA/ NOTEBOOK/Rplots/
+  tar -czvf NOTEBOOK.tar.gz NOTEBOOK
+  rm -rf NOTEBOOK
+  scp NOTEBOOK.tar.gz cayek@krakenator.imag.fr:~/Notebook_LEAdebug.tar.gz
+#+END_SRC
+
+
+
+
+** DONE Test of [[https://cran.r-project.org/web/packages/cate/index.html][cate]] CRAN package                                 :3Article:
+CLOSED: [2017-04-12 mer. 16:17]
+:LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-04-12 mer. 16:17]
+- Note taken on [2017-04-12 mer. 16:17] \\
+  Je vais l'ajouter au methodes !!
+- State "STARTED"    from              [2017-04-12 mer. 15:45]
+:END:
+La [[file:Biblio/org-ref-pdfs/cate_vignette.pdf][vignette]]
+#+begin_src R :results output :session *R* :exports both
+  install.packages("cate")
   library(cate)
 
-  cate.m <- cate(.~X, X = data.frame(X), Y = Y, r = 3, calibrate=FALSE,
-                 fa.method = "pc")
-  pvalue.cate <- cate.m$beta.p.value
-  hist(pvalue.cate)
+  data(gender.sm)
+  names(gender.sm)
 
-  cor(pvalue.cate, pvalue)
+  ## compute t test
+  t.stats <- apply(gender.sm$Y, 2, function(y, x) t.test(y~x)$statistic, gender.sm$X)
+  hist(t.stats)
+
+  ## estimation of the number of lattent factor
+  n <- nrow(gender.sm$Y) # number of samples
+  gender.data <- data.frame(gender = gender.sm$X, gender.sm$Z)
+  factor.num <- est.confounder.num(~ gender | . - gender + 0,
+                                   gender.data, gender.sm$Y,
+                                   method = "bcv", bcv.plot = FALSE,
+                                   rmax = 30, nRepeat = 20)
+  factor.num$r
+
+  cate.results <- cate(~ gender | . - gender + 0,
+                       gender.data, gender.sm$Y, r = factor.num$r)
+  names(cate.results)
+
+  ## ....
+
+  ## factor analysis
+  mle <- factor.analysis(gender.sm$Y, r = 5) 
+  names(mle)
 #+end_src
 
-CCl: avec le scale de X ca plante plus... bug dans lfmm ?
-* Sandbox
-** Test of bigsnpr
+** CANCELLED Comparison of methods on generative simu cor(U1/2,X)=c :3Article:
+CLOSED: [2017-04-13 jeu. 18:16]
+:LOGBOOK:
+- Note taken on [2017-04-13 jeu. 18:16] \\
+  On va faire l'experience final pour le papier dirrect !!
+- State "CANCELLED"  from "STARTED"    [2017-04-13 jeu. 18:16]
+- State "STARTED"    from              [2017-04-13 jeu. 09:02]
+:END:
+**** Run on krak
+#+begin_src R :results output :session *R* :exports both
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
+  ## run all simulation on the same 10000 loci sample
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.01, 0.05, 0.1),
+                                   n = NULL, L = 10000,
+                                   K = 4,
+                                   cs = c(0.2, 0.4, 0.6, 0.8),
+                                   nb.rep = 10,
+                                   fast.only = FALSE,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
+#+end_src
+
+** DONE Correction $G - U V^T$ on generative simulations          :3Article:
+CLOSED: [2017-04-14 ven. 14:56]
+:LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-04-14 ven. 14:56]
+- State "STARTED"    from "TODO"       [2017-04-14 ven. 10:03]
+- State "TODO"       from              [2017-04-14 ven. 10:01]
+:END:
+
+*** DONE On krakenator
+CLOSED: [2017-04-14 ven. 14:49]
+:PROPERTIES:
+:CUSTOM_ID: simu with NA
+:END:
+:LOGBOOK:
+- State "DONE"       from "RUNNING"    [2017-04-14 ven. 14:49]
+- State "RUNNING"    from              [2017-04-14 ven. 10:08]
+:END:
 #+begin_src R :results output :exports both
-  library(bigsnpr)
-  big_univLogReg
-  snp_clumping
+  require(ThesisRpackage)
+  G.file <- "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds"
+  ## run all simulation on the same 10000 loci sample
+  exp <- Article3_MethodComparison(G.file,
+                                   outlier.props = c(0.01, 0.05),
+                                   n = NULL, L = 10000,
+                                   K = 4,
+                                   cs = c(0.4, 0.6),
+                                   nb.rep = 5,
+                                   cluster.nb = 16,
+                                   save = TRUE, bypass = FALSE)
 #+end_src
 
-** Test of R5 object in R
+*** plots
+:PROPERTIES:
+:header-args: :cache no :session *R* :dir ./ :eval no-export :width 800 :height 600
+:END:
+
+We retrieve the experiment
 #+begin_src R :results output :exports both
-  Person <- setRefClass("Person", fields = c("a"))
-  p <- Person$new(a = 1)
-
-  hello  <- function(p){
-    UseMethod("hello")
-  }
-
-  hello.Person <- function(p) {
-    print("hello")
-    print(p$a)
-  }
-
-  hello(p)
-  str(p)
-
-  p.bis <- list(a = 2)
-  class(p.bis) <- "Person"
-  hello(p.bis)
-  str(p.bis)
+  exp <- retrieveExperiment(106)
+  exp$description
 #+end_src
 
-** Plink
-*** Extract a sample
-See [[http://zzz.bwh.harvard.edu/plink/dataman.shtml#extract][doc]]
-
-#+begin_src shell :results output :exports both 
-  cd ~/Projects/Thesis/Data/Celiac/dubois_2010/
-  plink --bfile FinnuncorrNLITUK1UK3hap300 --chr 1 --from-kb 1 --to-kb 10000 --make-bed --out FinnuncorrNLITUK1UK3hap300_sample
+***** AUC
+#+begin_src R :results output graphics :file Rplots/G_UV.auc.png :exports both 
+Article3_MethodComparison_plot_AUC(exp)
 #+end_src
 
 #+RESULTS:
-#+begin_example
-PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
-(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
-Logging to FinnuncorrNLITUK1UK3hap300_sample.log.
-Options in effect:
-  --bfile FinnuncorrNLITUK1UK3hap300
-  --chr 1
-  --from-kb 1
-  --make-bed
-  --out FinnuncorrNLITUK1UK3hap300_sample
-  --to-kb 10000
+[[file:Rplots/G_UV.auc.png]]
 
-7761 MB RAM detected; reserving 3880 MB for main workspace.
-1024 out of 295453 variants loaded from .bim file.
-15283 people (6713 males, 8570 females) loaded from .fam.
-15283 phenotype values loaded from .fam.
-Using 1 thread (no multithreaded calculations invoked).
-Before main variant filters, 15283 founders and 0 nonfounders present.
-Total genotyping rate is 0.999556.
-1024 variants and 15283 people pass filters and QC.
-Among remaining phenotypes, 4533 are cases and 10750 are controls.
---make-bed to FinnuncorrNLITUK1UK3hap300_sample.bed +
-FinnuncorrNLITUK1UK3hap300_sample.bim + FinnuncorrNLITUK1UK3hap300_sample.fam
-#+end_example
-
-#+begin_src shell :results output :exports both 
-  cd ~/Projects/Thesis/Data/Celiac/dubois_2010/
-  plink --bfile FinnuncorrNLITUK1UK3hap300 --thin 0.1 --make-bed --out FinnuncorrNLITUK1UK3hap300_sample
+***** gif
+#+begin_src R :results output graphics :file Rplots/G_UV.gif.png :exports both 
+Article3_MethodComparison_plot_GIF(exp)
 #+end_src
 
 #+RESULTS:
-#+begin_example
-PLINK v1.90b4.3 64-bit (9 May 2017)            www.cog-genomics.org/plink/1.9/
-(C) 2005-2017 Shaun Purcell, Christopher Chang   GNU General Public License v3
-Logging to FinnuncorrNLITUK1UK3hap300_sample.log.
-Options in effect:
-  --bfile FinnuncorrNLITUK1UK3hap300
-  --make-bed
-  --out FinnuncorrNLITUK1UK3hap300_sample
-  --thin 0.1
+[[file:Rplots/G_UV.gif.png]]
 
-7761 MB RAM detected; reserving 3880 MB for main workspace.
-295453 variants loaded from .bim file.
-15283 people (6713 males, 8570 females) loaded from .fam.
-15283 phenotype values loaded from .fam.
---thin: 265860 variants removed (29593 remaining).
-Using 1 thread (no multithreaded calculations invoked).
-Before main variant filters, 15283 founders and 0 nonfounders present.
-Total genotyping rate is 0.999583.
-29593 variants and 15283 people pass filters and QC.
-Among remaining phenotypes, 4533 are cases and 10750 are controls.
---make-bed to FinnuncorrNLITUK1UK3hap300_sample.bed +
-FinnuncorrNLITUK1UK3hap300_sample.bim + FinnuncorrNLITUK1UK3hap300_sample.fam
-#+end_example
-
-** rsnps
-[[https://cran.r-project.org/web/packages/rsnps/rsnps.pdf][Doc]]
+** DONE Check NA in results                                       :3Article:
+CLOSED: [2017-05-03 mer. 08:56]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2017-05-03 mer. 08:56]
+- Note taken on [2017-04-14 ven. 14:57] \\
+  Tout est dans le titre, je veux m'assurer que les NA qu'on a en sorti parfois ne
+  sont pas des outlier !! J'en ai observé sur [[#simu with NA][cette simu]].
+- State "TODO"       from              [2017-04-14 ven. 14:57]
+:END:
 #+begin_src R :results output :exports both
-  library(rsnps)
-  ld_search('rs2836443')
-  ncbi_snp_query("rs420358")
-  ncbi_snp_query2("rs420358")
-#+end_src
-Ca sert a rien il y a pas les genes.
+  ## sample data
+  s <- FromTrueSampler(G.file = "~/Projects/Thesis/Data/1000Genomes/Phase3/European_Chrm22.maf.05.sample.10000.rds",
+                       n = NULL,
+                       L = 10000,
+                       K = 4,
+                       cs = 0.4,
+                       rho = NULL,
+                       prop.outlier = 0.01,
+                       round = FALSE)
+  dat <- sampl(s)
 
-** biomaRt
-#+begin_src R :results output :exports both
-  library(biomaRt) # biomaRt_2.30.0, R version 3.3.2 (2016-10-31)
+  ## var of loci
+  sum( apply(dat$G, 2, var) == 0)
 
-  ## list db
-  listMarts()
+  ## run of a method
+  m <- finalLfmmRdigeMethod(K = 4, lambda = 1e-3)
+  m <- run(m, dat)
 
-  ## test on a celiac snps
-  snp.db <- useMart("ENSEMBL_MART_SNP", dataset="hsapiens_snp")
+  ## NA ?
+  sum(is.na(m$score))
 
-
-  listFilters(snp.db)
-  att <- listAttributes(snp.db)
-  att
-
-  the.snps <- c("rs13010713")
-
-  nt.biomart <- getBM(c("refsnp_id",
-                        "refsnp_source",
-                        "chr_name",
-                        "chrom_start",
-                        'phenotype_name',
-                        "phenotype_description"),
-                      filters="snp_filter",
-                      values=the.snps,
-                      mart=snp.db)
-  nt.biomart
+  ## NA and var = 0 ?
+  m$score[1, apply(dat$G, 2, var) == 0]
 #+end_src
 
-Ce que je comprends c'est que le top pour faire des annotation de SNP c'est
-[[http://www.ensembl.org/index.html][ensembl]] (voir ce [[https://www.biostars.org/p/1332/][topic]]). Ensembl lui prend les info de dbSNP. MAIS je ne sais
-pas si les rs sont les même d'une release a l'autre... [2017-05-23 mar.] on est
-a la release 88.
+#+RESULTS:
+: [1] 1
+: DEBUG [2017-05-03 08:54:26] run.Method: running  lm+zscore|calibrate=FALSE
+: [1] 1
+: rs1747928 
+:       NaN
 
-D'après Thomas d'un release a l'autre les rs sont les mêmes ! Il y a de forte
-chance de celiac soit en GRCh37. Faudrait aller voir ca
+Il y a un locus sans variance .... De toute facon je vais regénérer des dataset
+pour les resultats ! 
 
-** VennDiagramm
-cite:Chen_2011
+** DONE Redundancy Analysis (RDA)                                 :3Article:
+CLOSED: [2017-05-02 mar. 15:40]
+:LOGBOOK:
+- Note taken on [2017-05-02 mar. 16:07] \\
+  On laisse ca de coté les papiers de Forester sont trop légé sur les méthodes...
+- State "DONE"       from "TODO"       [2017-05-02 mar. 15:40]
+- Note taken on [2017-05-02 mar. 15:32] \\
+  Il y a tout une litérature des ordination methods... J'ai l'impression que rda
+  est bien une méthode pour faire des association. Mais ca ne prend pas en compte
+  une structure lattente. Ou alors il faut la calculer avec une autre méthode et
+  l'ajouté en covariable dans rda ([[cite:Forester_2017][see page 6]])
+- Note taken on [2017-05-02 mar. 12:00] \\
+  Faut que je comprenne le principe de cette methode ! A table.
+- Note taken on [2017-05-02 mar. 10:20] \\
+  Comment ca réagis sur mes simulations genérative. On l'ajoute dans les méthodes
+  du papier ?
+- State "TODO"       from              [2017-05-02 mar. 09:22]
+:END:
+
+Dans cite:Forester_2015 ils utilisent RDA pour trouver des locus outlier en
+passant par un PCA de XB (dans le modèle G = XB + E). Après ils calculent des
+pvaleur en ces locus plus précisement (avec un lm).
+
+Je comprends que : 
+- il n'y aura pas de correction pour la structure de populations
+- c'est juste un moyen de ne pas passer par le controle du FDR
+*** Sur une simulations
+
 #+begin_src R :results output :exports both
-venn.plot <- draw.quintuple.venn(
-    area1 = 301,
-    area2 = 321,
-    area3 = 311,
-    area4 = 321,
-    area5 = 301,
-    n12 = 188,
-    n13 = 191,
-    n14 = 184,
-    n15 = 177,
-    n23 = 194,
-    n24 = 197,
-    n25 = 190,
-    n34 = 190,
-    n35 = 173,
-    n45 = 186,
-    n123 = 112,
-    n124 = 108,
-    n125 = 108,
-    n134 = 111,
-    n135 = 104,
-    n145 = 104,
-    n234 = 111,
-    n235 = 107,
-    n245 = 110,
-    n345 = 100,
-    n1234 = 61,
-    n1235 = 60,
-    n1245 = 59,
-    n1345 = 58,
-    n2345 = 57,
-    n12345 = 31,
-    category = c("A", "B", "C", "D", "E"),
-    fill = c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3"),
-    cat.col = c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3"),
-    cat.cex = 2,
-    margin = 0.05,
-    cex = c(1.5, 1.5, 1.5, 1.5, 1.5, 1, 0.8, 1, 0.8, 1, 0.8, 1, 0.8, 1, 0.8,
-            1, 0.55, 1, 0.55, 1, 0.55, 1, 0.55, 1, 0.55, 1, 1, 1, 1, 1, 1.5),
-    ind = TRUE
-  )
+  ## sampler data with lfmm generative model
+  library(ThesisRpackage)
+  s <- NormalSampler2(n = 100,
+                      L = 1000,
+                      K = 3,
+                      prop.outlier = 0.02,
+                      cs = c(0.6, 0.0, 0.0))
+  dat <- sampl(s)
+
+  ## run rda
+  library(vegan)
+
+  rda.res <- rda(dat$G ~ dat$X)
+  names(rda.res)
+
 #+end_src
 
+#+RESULTS:
+:  [1] "call"        "grand.total" "rowsum"      "colsum"      "tot.chi"    
+:  [6] "pCCA"        "CCA"         "CA"          "method"      "inertia"    
+: [11] "terms"       "terminfo"
+
+#+begin_src R :results output graphics :file Rplots/RDA_1.png :exports both :width 600 :height 400
+  plot(rda.res)
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/RDA_1.png]]
+
+A quoi correspond les rouges et les autres ? C'est les indiv et les locus...
+
+#+begin_src R :results output graphics :file Rplots/RDA_2.png :exports both :width 600 :height 400 
+  library(tidyverse)
+
+  toplot <- cbind(as.data.frame(rda.res$CA$v),
+                  as.data.frame(rda.res$CCA$v))
+  toplot <- toplot %>%
+    mutate(index = 1:nrow(toplot),
+           outlier = index %in% dat$outlier)
+
+  ggplot(toplot, aes(x = RDA1, y = PC1, color = outlier)) +
+    geom_point()
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/RDA_2.png]]
+
+Je n'arrive pas a reproduire le graphe précédent.
+
+MAIS on voit que RDA1 ne permet capte la variable lattente.
+
+**** Si on utilise lfmm 
+
+#+begin_src R :results output graphics :file Rplots/RDA_3.png :exports both :width 600 :height 400 
+  ## run of lfmm ridge
+  lfmm.ridge <- finalLfmmRdigeMethod(K = 3,lambda = 1e-1)
+  lfmm.ridge <- run(lfmm.ridge, dat)
+
+  gplot_stat(B = lfmm.ridge$B[1,], outlier = dat$outlier) +
+    geom_point(aes(x = index, y = stat, color = outlier))
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/RDA_3.png]]
+
+On arrive bien a avoir ceux qui sont vraiment associé a X et pas avec la
+variable lattentes.
+
+**** Si on utilise lm
+#+begin_src R :results output graphics :file Rplots/RDA_4.png :exports both :width 600 :height 400 
+  ## run of lfmm ridge
+  lm.res <- finalLm()
+  lm.res <- run(lm.res, dat)
+
+  gplot_stat(B = lm.res$B[1,], outlier = dat$outlier) +
+    geom_point(aes(x = index, y = stat, color = outlier))
+#+end_src
+
+#+RESULTS:
+[[file:Rplots/RDA_4.png]]
+
+C'est comparable a les loadings RDA1
 
 * Articles
 ** 2014 - Advantages and Pitfalls in the Application of Mixed-Model  Association Methods :LFMM:
