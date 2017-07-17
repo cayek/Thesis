@@ -11314,3 +11314,32 @@ cite:Nocedal06 Un classic de l'optim
 
  cite:Tseng_2001 Pour justifier la convergence de lassoLFMM. J'ai trouvé la ref
  dans ses [[https://www.cs.cmu.edu/~ggordon/10725-F12/slides/25-coord-desc.pdf][slides]] (ses slides sont pas mal, le cours complet est surement bien)
+
+** TODO 2014 - Selecting the number of principal components: Estimation of the true rank of a noisy matrix
+ :PROPERTIES:
+  :Custom_ID: choi2014selecting
+  :AUTHOR: Choi, Taylor \& Tibshirani
+  :JOURNAL: arXiv preprint arXiv:1410.8260
+  :YEAR: 2014
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:choi2014selecting Choix du nombre de composante principale dans l'ACP ! 
+
+** TODO 1986 - Principal Component Analysis
+ :PROPERTIES:
+  :Custom_ID: jolliffe1986principal
+  :AUTHOR: Jolliffe
+  :JOURNAL: 
+  :YEAR: 1986
+  :VOLUME: 
+  :PAGES: 115--128
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:jolliffe1986principal Un gros livre sur l ACP ! cité dans
+cite:choi2014selecting pour parler des méthodes d'estimation de K
