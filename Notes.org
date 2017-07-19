@@ -9288,7 +9288,7 @@ tout les simulations son avantagueuse par rapport a l'algo SVA.
 
 cite:friguet09_factor_model_approac_to_multip
 *** Poster
-file:./org-ref-pdfs/poster_friguet09_factor_model_approac_to_multip.pdf
+file:./Biblio/org-ref-pdfs/poster_friguet09_factor_model_approac_to_multip.pdf
 On retrouve les même chose que dans tous les papier LFMMLike
 *** R package                                                      :Rpackage:
 http://famt.free.fr/
@@ -10143,6 +10143,9 @@ faible.
 
 Je pense que l'idée c'est de faire des projections aléatoires et trouver a
 décomposition. C'est peut être interessant pour améloirer les perfs de lfmm.
+
+C'est surtout très interessant pour les calculs de compléxité détaillé de la
+truncated svd :D
 
 ** 2010 - Correction for hidden confounders in the genetic analysis of  gene expression :LFMM:LFMMLike:
 :PROPERTIES:
@@ -11343,3 +11346,32 @@ cite:choi2014selecting Choix du nombre de composante principale dans l'ACP !
 
 cite:jolliffe1986principal Un gros livre sur l ACP ! cité dans
 cite:choi2014selecting pour parler des méthodes d'estimation de K
+
+** TODO 2000 - The best of the 20th century: Editors name top 10 algorithms
+ :PROPERTIES:
+  :Custom_ID: cipra2000best
+  :AUTHOR: Cipra
+  :JOURNAL: SIAM news
+  :YEAR: 2000
+  :VOLUME: 33
+  :PAGES: 1--2
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:cipra2000best Le top 10 des algo du 20ieme siecle ! le premier c'est les
+MCMC :D
+
+** TODO 2008 - Top 10 algorithms in data mining
+ :PROPERTIES:
+  :Custom_ID: wu2008top
+  :AUTHOR: Wu {\it et al.}
+  :JOURNAL: Knowledge and information systems
+  :YEAR: 2008
+  :VOLUME: 14
+  :PAGES: 1--37
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:wu2008top C'est des algo très utilisé en analyse de données.
