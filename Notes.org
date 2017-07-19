@@ -11375,3 +11375,16 @@ MCMC :D
  :END:
 
 cite:wu2008top C'est des algo très utilisé en analyse de données.
+
+** Démonstration du théorème de convergence 2 
+J'ai pas réussis a trouver une démonstration qui ne passe pas par le subgradient
+!!! C'est le résultat de calcul du sub gradient de somme de fonction qui me
+manque ... pas grave on comprend come ca.
+*** Subgradients
+- [[https://see.stanford.edu/materials/lsocoee364b/01-subgradients_notes.pdf][cours de stanford]] : définition et résultats ([[https://web.stanford.edu/class/ee392o/subgrad.pdf][slides]])
+- [[https://fr.wikipedia.org/wiki/Fonction_convexe][wiki fct convexe]] : tous les résultats classiques sur les fonctions concexe
+- [[http://ljk.imag.fr/membres/Anatoli.Iouditski/cours/convex/chapitre_3.pdf][cours d'anatolie]] : il démontre le résultat de calcule du subgradient de somme
+  de fonction convexe mais c'est criptique. 
+*** block coordiante descente
+- [[https://en.wikipedia.org/wiki/Coordinate_descent][wikipedia]] : pk ca coverge pas quand c'est pas différentiable
+- [[https://www.cs.cmu.edu/~ggordon/10725-F12/slides/25-coord-desc.pdf][slide Tibshirani]] : point clé de la démonstration
