@@ -11388,3 +11388,24 @@ manque ... pas grave on comprend come ca.
 *** block coordiante descente
 - [[https://en.wikipedia.org/wiki/Coordinate_descent][wikipedia]] : pk ca coverge pas quand c'est pas différentiable
 - [[https://www.cs.cmu.edu/~ggordon/10725-F12/slides/25-coord-desc.pdf][slide Tibshirani]] : point clé de la démonstration
+
+** DONE 1936 - The approximation of one matrix by another of lower rank
+CLOSED: [2017-07-20 Thu 14:17]
+ :PROPERTIES:
+  :Custom_ID: Eckart_1936
+  :AUTHOR: Eckart \& Young
+  :JOURNAL: Psychometrika
+  :YEAR: 1936
+  :VOLUME: 1
+  :PAGES: 211–218
+  :DOI: 10.1007/bf02288367
+  :URL: http://dx.doi.org/10.1007/bf02288367
+ :END:
+ :LOGBOOK:
+ - State "DONE"       from "TODO"       [2017-07-20 Thu 14:17]
+ :END:
+
+cite:Eckart_1936 C'est papier pour justifier l'approximation d'une matrice par
+une matrice de rank K grace a la svd. 
+
+Dans [[https://en.wikipedia.org/wiki/Low-rank_approximation][wikipedia]] il par du Eckart–Young–Mirsky theorem.
