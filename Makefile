@@ -108,3 +108,15 @@ GO: biblio_sync krakenator_mount_OUTPUT krakenator_mount_data
 backup_to_password:
 	 echo `date -u` >> backup.log
 	rsync -aP --delete ./ /run/media/cayek/My\ Passport/Thesis
+
+## All
+all_pull:
+	git pull
+	cd ./MatrixFactorizationR/; git pull
+	cd ./MaThese/; git pull
+	cd ./ExpRiment/; git pull
+
+all_install:
+	cd ./MatrixFactorizationR/; make MatrixFactorizationR_install
+	cd ./MaThese/; make MaTheseR_install
+	cd ./ExpRiment/; make ExpRiment_install
