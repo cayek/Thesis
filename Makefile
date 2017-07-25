@@ -120,3 +120,10 @@ all_install:
 	cd ./MatrixFactorizationR/; make MatrixFactorizationR_install
 	cd ./MaThese/; make MaTheseR_install
 	cd ./ExpRiment/; make ExpRiment_install
+
+all_status:
+	git status
+	cd ./MatrixFactorizationR/; git status
+	cd ./Biblio/; git status
+	cd ./MaThese/; git status
+	cd ./ExpRiment/; git status
