@@ -11409,3 +11409,94 @@ cite:Eckart_1936 C'est papier pour justifier l'approximation d'une matrice par
 une matrice de rank K grace a la svd. 
 
 Dans [[https://en.wikipedia.org/wiki/Low-rank_approximation][wikipedia]] il par du Eckart–Young–Mirsky theorem.
+
+** TODO 2006 - A tutorial on statistical methods for population association  studies
+ :PROPERTIES:
+  :Custom_ID: Balding_2006
+  :AUTHOR: Balding
+  :JOURNAL: Nature Reviews Genetics
+  :YEAR: 2006
+  :VOLUME: 7
+  :PAGES: 781–791
+  :DOI: 10.1038/nrg1916
+  :URL: http://dx.doi.org/10.1038/nrg1916
+ :END:
+
+cite:Balding_2006
+Cité par OF dans l'intro de l'article 3 pour montrer un exemple de GWAS
+
+** TODO 2002 - From patterns to pathways: gene expression data analysis comes  of age
+ :PROPERTIES:
+  :Custom_ID: Slonim_2002
+  :AUTHOR: Slonim
+  :JOURNAL: Nature Genetics
+  :YEAR: 2002
+  :VOLUME: 32
+  :PAGES: 502–508
+  :DOI: 10.1038/ng1033
+  :URL: http://dx.doi.org/10.1038/ng1033
+ :END:
+
+cite:Slonim_2002 
+
+Pour parler des étude d'association aec de l'ARN.
+
+** TODO 1937 - The design of experiments
+ :PROPERTIES:
+  :Custom_ID: fisher1937design
+  :AUTHOR: Fisher
+  :JOURNAL: 
+  :YEAR: 1937
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:fisher1937design Le livre de fisher qui a introduit l hypothèse nulle. Il
+parlait deja des facteur de confusions. 
+
+** TODO 2017 - Fast and robust adjustment of cell mixtures in epigenome-wide  association studies with SmartSVA
+ :PROPERTIES:
+  :Custom_ID: Chen_2017
+  :AUTHOR: Chen, Behnam, Huang, Moffatt, Miriam, Schaid, Liang, Lin \& Xihong
+  :JOURNAL: BMC Genomics
+  :YEAR: 2017
+  :VOLUME: 18
+  :PAGES: 
+  :DOI: 10.1186/s12864-017-3808-1
+  :URL: http://dx.doi.org/10.1186/s12864-017-3808-1
+ :END:
+
+cite:Chen_2017 C'est la papier du package [[https://cran.r-project.org/web/packages/SmartSVA/SmartSVA.pdf][smartSVA]]. Dans un monde parfait il
+faudrait que l'ajoute a l'analyse...
+
+** TODO 2011 - Using control genes to correct for unwanted variation in  microarray data
+ :PROPERTIES:
+  :Custom_ID: Gagnon_Bartsch_2011
+  :AUTHOR: Gagnon-Bartsch \& Speed
+  :JOURNAL: Biostatistics
+  :YEAR: 2011
+  :VOLUME: 13
+  :PAGES: 539–552
+  :DOI: 10.1093/biostatistics/kxr034
+  :URL: http://dx.doi.org/10.1093/biostatistics/kxr034
+ :END:
+
+cite:Gagnon_Bartsch_2011 Une méthode de correction des variables de confusion a
+partir de gêne de controles !!
+
+** TODO 2012 - The nature of confounding in genome-wide association studies
+ :PROPERTIES:
+  :Custom_ID: Vilhj_lmsson_2012
+  :AUTHOR: Vilhjálmsson \& Nordborg
+  :JOURNAL: Nature Reviews Genetics
+  :YEAR: 2012
+  :VOLUME: 14
+  :PAGES: 1–2
+  :DOI: 10.1038/nrg3382
+  :URL: http://dx.doi.org/10.1038/nrg3382
+ :END:
+
+cite:Vilhj_lmsson_2012 Un papier pour expliquer d'ou viennent les facteur de
+confusion dans les GWAS.
