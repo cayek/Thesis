@@ -8981,11 +8981,13 @@ meilleur sur tous les autres problèmes.
 :URL:      https://doi.org/10.1186/gb-2014-15-2-r31
 :END:
 
-cite:jaffe14_accoun_cellul_heter_is_critic
-EWAS data used in this article can be ddl here https://www.ncbi.nlm.nih.gov/gds/?term=GSE20242
-d'après O.F. la méthode est du même genre que dans lfmm. (la strucutre de pop est la composition cellulaire)
+cite:jaffe14_accoun_cellul_heter_is_critic EWAS data used in this article can be
+ddl here https://www.ncbi.nlm.nih.gov/gds/?term=GSE20242 d'après O.F. la méthode
+est du même genre que dans lfmm. (la strucutre de pop est la composition
+cellulaire)
 *** Abstract
-Il propose une méthode qui prend en compte la composition cellulaire dans les etudes d'associations entre EWAS et des phénotypes ici l'age.
+Il propose une méthode qui prend en compte la composition cellulaire dans les
+etudes d'associations entre EWAS et des phénotypes ici l'age.
 
 ** 2016 - Epigenome-Wide Association Study of Body Mass Index, and the  Adverse Outcomes of Adiposity :EWAS:
 :PROPERTIES:
@@ -11486,6 +11488,8 @@ faudrait que l'ajoute a l'analyse...
 cite:Gagnon_Bartsch_2011 Une méthode de correction des variables de confusion a
 partir de gêne de controles !!
 
+
+
 ** TODO 2012 - The nature of confounding in genome-wide association studies
  :PROPERTIES:
   :Custom_ID: Vilhj_lmsson_2012
@@ -11500,3 +11504,34 @@ partir de gêne de controles !!
 
 cite:Vilhj_lmsson_2012 Un papier pour expliquer d'ou viennent les facteur de
 confusion dans les GWAS.
+
+** TODO 2012 - Batch effect removal methods for microarray gene expression  data integration: a survey
+ :PROPERTIES:
+  :Custom_ID: Lazar_2012
+  :AUTHOR: Lazar {\it et al.}
+  :JOURNAL: Briefings in Bioinformatics
+  :YEAR: 2012
+  :VOLUME: 14
+  :PAGES: 469–490
+  :DOI: 10.1093/bib/bbs037
+  :URL: http://dx.doi.org/10.1093/bib/bbs037
+ :END:
+
+cite:Lazar_2012 
+
+Cité dans pour parler des facteurs de confusion pour les assotiation avec
+l'expession génique.
+
+** TODO 2013 - Removing unwanted variation from high dimensional data with negative controls
+ :PROPERTIES:
+  :Custom_ID: gagnon2013removing
+  :AUTHOR: Gagnon-Bartsch, Jacob \& Speed
+  :JOURNAL: Berkeley: Tech Reports from Dep Stat Univ California
+  :YEAR: 2013
+  :VOLUME: 
+  :PAGES: 1--112
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:gagnon2013removing c'est le papier de ruv-4
