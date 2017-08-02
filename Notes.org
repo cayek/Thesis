@@ -6908,6 +6908,78 @@ venn.plot <- draw.quintuple.venn(
     ind = TRUE
   )
 #+end_src
+
+** Regression dans les deux sens
+
+#+begin_src R :results output :exports both
+  library(broom)
+  library(MASS)
+
+  n <- 100000
+  X <- rnorm(n)
+  E <- rnorm(n, sd = 1)
+  Y <- 0.01 * X + E
+  Y <- scale(Y)
+
+  plot(X, Y)
+
+  ## Y ~ X
+  lm.YX <- lm(Y ~ X)
+  df.YX <- glance(lm.YX)
+  df.YX
+  tidy(lm.YX)
+  a_ <- tidy(lm.YX)$estimate[2]
+
+  ## X ~ Y
+  lm.XY <- lm(X ~ Y)
+  summary(lm.XY)
+  df.XY <- glance(lm.XY)
+  tidy(lm.XY)
+  b_ <- tidy(lm.XY)$estimate[2]
+  df.XY
+
+  ## R2
+  df.YX$r.squared
+  df.XY$r.squared
+  a_ * b_
+
+#+end_src
+
+#+begin_src R :results output :exports both
+  library(broom)
+  library(MASS)
+
+  n <- 100
+  Sigma <- matrix(1, )
+  XU <- mvrnorm(n, c(0,0), Sigma = matrix(c(1,0.2,0.2, 1), 2, 2))
+  X <- XU[,1]
+  U <- XU[,2]
+  E <- rnorm(n, sd = 0.01)
+  Y <- 0.3 * X + 0.3 * U + E
+  Y <- scale(Y)
+
+  ## Y ~ X
+  lm.YX <- lm(Y ~ X + U)
+  df.YX <- glance(lm.YX)
+  df.YX
+  tidy(lm.YX)
+  a_ <- tidy(lm.YX)$estimate[2]
+
+  ## X ~ Y
+  lm.XY <- lm(X ~ Y + U)
+  summary(lm.XY)
+  df.XY <- glance(lm.XY)
+  tidy(lm.XY)
+  b_ <- tidy(lm.XY)$estimate[2]
+  df.XY
+
+  ## R2
+  df.YX$r.squared
+  df.XY$r.squared
+  a_
+  b_
+#+end_src
+
 * Archive
 ** Epigenome challenge
 *** Mike data
@@ -11535,3 +11607,17 @@ l'expession génique.
  :END:
 
 cite:gagnon2013removing c'est le papier de ruv-4
+
+** TODO 2008 - Efficient Control of Population Structure in Model Organism  Association Mapping
+ :PROPERTIES:
+  :Custom_ID: Kang_2008
+  :AUTHOR: Kang, Zaitlen, Wade, Kirby, , Heckerman, Daly \& Eskin
+  :JOURNAL: Genetics
+  :YEAR: 2008
+  :VOLUME: 178
+  :PAGES: 1709–1723
+  :DOI: 10.1534/genetics.107.080101
+  :URL: http://dx.doi.org/10.1534/genetics.107.080101
+ :END:
+
+cite:Kang_2008
