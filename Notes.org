@@ -6925,6 +6925,7 @@ venn.plot <- draw.quintuple.venn(
 
   ## Y ~ X
   lm.YX <- lm(Y ~ X)
+  summary(lm.YX)
   df.YX <- glance(lm.YX)
   df.YX
   tidy(lm.YX)
