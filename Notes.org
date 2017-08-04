@@ -6981,6 +6981,17 @@ venn.plot <- draw.quintuple.venn(
   b_
 #+end_src
 
+** Calcule matricielle
+#+begin_src R :results output :exports both
+  r1 = diag(c(1,2,3))
+  r2 = diag(c(1,2,10))
+  m = matrix(1:9,3,3)
+
+  norm(r1 %*% m, type = "F")^2 +
+  norm(r2 %*% m, type = "F")^2
+
+  norm(sqrt(r1^2 + r2^2)  %*% m, type = "F")^2
+#+end_src
 * Archive
 ** Epigenome challenge
 *** Mike data
@@ -11622,3 +11633,18 @@ cite:gagnon2013removing c'est le papier de ruv-4
  :END:
 
 cite:Kang_2008
+
+** TODO 1972 - Structural Equation Methods in the Social Sciences
+ :PROPERTIES:
+  :Custom_ID: Goldberger_1972
+  :AUTHOR: Goldberger
+  :JOURNAL: Econometrica
+  :YEAR: 1972
+  :VOLUME: 40
+  :PAGES: 979
+  :DOI: 10.2307/1913851
+  :URL: http://dx.doi.org/10.2307/1913851
+ :END:
+
+cite:Goldberger_1972 C'est le papier pour parler des structural equation
+medeling (SEM)
