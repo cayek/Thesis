@@ -6992,6 +6992,32 @@ venn.plot <- draw.quintuple.venn(
 
   norm(sqrt(r1^2 + r2^2)  %*% m, type = "F")^2
 #+end_src
+
+** Emma
+#+begin_src shell :session foo :results output :exports both 
+  wget http://mouse.cs.ucla.edu/emma/emma_1.1.2.tar.gz
+  R --vanilla CMD INSTALL emma_1.1.2.tar.gz
+#+end_src
+
+#+begin_src R :results output :exports both
+  library(emma)
+  library(MaTheseR)
+
+  dat <- ExpRsampler_generativeData(n = 100,
+                                    p = 1000,
+                                    K = 3,
+                                    outlier.prop =  0.05,
+                                    cs = 0.6) %>% ExpRmouline()
+  rel.matrix <- tcrossprod(dat$Y)
+
+  emma.res <- emma.ML.LRT(ys = t(dat$X),
+                          xs = t(dat$Y),
+                          K = rel.matrix)
+
+  hist(emma.res$ps)
+  plot(1:1000, -log10(emma.res$ps))
+#+end_src
+Ca marche pas :(
 * Archive
 ** Epigenome challenge
 *** Mike data
