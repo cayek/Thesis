@@ -11674,3 +11674,32 @@ cite:Kang_2008 C'est le papier pour le model mixe utilisé en GWAS EMMA
 
 cite:Goldberger_1972 C'est le papier pour parler des structural equation
 medeling (SEM)
+
+** TODO 2011 - False Discovery Rate
+ :PROPERTIES:
+  :Custom_ID: Storey_2011
+  :AUTHOR: Storey
+  :JOURNAL: International Encyclopedia of Statistical Science
+  :YEAR: 2011
+  :VOLUME: 
+  :PAGES: 504–508
+  :DOI: 10.1007/978-3-642-04898-2_248
+  :URL: http://dx.doi.org/10.1007/978-3-642-04898-2_248
+ :END:
+
+cite:Storey_2011 C'est pour citer le package qvalue
+
+** TODO 2012 - Celiac disease: Prevalence, diagnosis, pathogenesis and  treatment
+ :PROPERTIES:
+  :Custom_ID: Gujral_2012
+  :AUTHOR: Gujral
+  :JOURNAL: World Journal of Gastroenterology
+  :YEAR: 2012
+  :VOLUME: 18
+  :PAGES: 6036
+  :DOI: 10.3748/wjg.v18.i42.6036
+  :URL: http://dx.doi.org/10.3748/wjg.v18.i42.6036
+ :END:
+
+cite:Gujral_2012 C'est pour parler de la prévalence de la maladie celiac j'ai
+trouvé ca dans le wikipedia francais...
