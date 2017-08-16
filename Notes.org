@@ -4044,7 +4044,7 @@ Celiac dataset cite:dubois2010multiple
 :PROPERTIES:
 :header-args: :cache no :session *ssh krakenator* :dir ./ :eval no-export
 :END:
-FromTrueSampler these [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html#28][slides]]
+these [[https://privefl.github.io/bigsnpr/articles/bcm-seminar-packages.html#28][slides]]
 
 ***** Control quality
 
