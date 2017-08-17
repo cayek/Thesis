@@ -11703,3 +11703,17 @@ cite:Storey_2011 C'est pour citer le package qvalue
 
 cite:Gujral_2012 C'est pour parler de la prévalence de la maladie celiac j'ai
 trouvé ca dans le wikipedia francais...
+
+** TODO 2016 - The new NHGRI-EBI Catalog of published genome-wide association  studies (GWAS Catalog)
+ :PROPERTIES:
+  :Custom_ID: MacArthur_2016
+  :AUTHOR: MacArthur {\it et al.}
+  :JOURNAL: Nucleic Acids Research
+  :YEAR: 2016
+  :VOLUME: 45
+  :PAGES: D896–D901
+  :DOI: 10.1093/nar/gkw1133
+  :URL: http://dx.doi.org/10.1093/nar/gkw1133
+ :END:
+
+cite:MacArthur_2016 C'est pour citer le GWAS catalog, d'après [[https://www.ebi.ac.uk/gwas/docs/about][here]]
