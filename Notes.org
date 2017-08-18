@@ -10796,7 +10796,7 @@ cite:Devlin_1999 C'est le papier du genomic inflation factor (le gif)
 :URL:      https://doi.org/10.1038~/Projects/Biblio/org-ref-pdfs/Auton_2015.pdfnature15393
 :END:
 
-cite:Auton_2015 To cite the 1000genomes (found [[http://www.internationalgenome.org/faq/how-do-i-cite-1000-genomes-project/][here]])
+cite:1000Genome_2015 To cite the 1000genomes (found [[http://www.internationalgenome.org/faq/how-do-i-cite-1000-genomes-project/][here]])
 
 ** TODO 2008 - Cross-validation of component models: A critical look at  current methods
 :PROPERTIES:
@@ -11717,3 +11717,32 @@ trouvé ca dans le wikipedia francais...
  :END:
 
 cite:MacArthur_2016 C'est pour citer le GWAS catalog, d'après [[https://www.ebi.ac.uk/gwas/docs/about][here]]
+
+** TODO 1859 - On the origin of species by means of natural selection, or,  The preservation of favoured races in the struggle for life.
+ :PROPERTIES:
+  :Custom_ID: Darwin
+  :AUTHOR: Darwin
+  :JOURNAL: 
+  :YEAR: 1859
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 10.5962/bhl.title.2109
+  :URL: http://dx.doi.org/10.5962/bhl.title.2109
+ :END:
+
+cite:Darwin Livre considéré comme le texte fondateur de la théorie de
+l'évolution. [[https://fr.wikipedia.org/wiki/L%2527Origine_des_esp%25C3%25A8ces][wiki]]
+
+** TODO 2017 - WorldClim 2: new 1-km spatial resolution climate surfaces for  global land areas
+ :PROPERTIES:
+  :Custom_ID: Fick_2017
+  :AUTHOR: Fick \& Hijmans
+  :JOURNAL: International Journal of Climatology
+  :YEAR: 2017
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 10.1002/joc.5086
+  :URL: http://dx.doi.org/10.1002/joc.5086
+ :END:
+
+cite:Fick_2017 reférence pour wordclim database [[http://worldclim.org/][website]]
