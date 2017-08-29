@@ -11746,3 +11746,22 @@ l'évolution. [[https://fr.wikipedia.org/wiki/L%2527Origine_des_esp%25C3%25A8ces
  :END:
 
 cite:Fick_2017 reférence pour wordclim database [[http://worldclim.org/][website]]
+
+** TODO 2014 - Ancestry Composition: A Novel, Efficient Pipeline for Ancestry  Deconvolution
+ :PROPERTIES:
+  :Custom_ID: Durand_2014
+  :AUTHOR: Durand, Do, Mountain, \& Macpherson
+  :JOURNAL: 
+  :YEAR: 2014
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 10.1101/010512
+  :URL: http://dx.doi.org/10.1101/010512
+ :END:
+
+cite:Durand_2014 Interessant ! utilisation du kernel kmer pour faire le la local
+ancestry ! 
+
+Ce qu ej comprends c'est ca prend en compte le LD c'est le nombre de sous chaine
+commune entre les individu ! Thomas dias a obetenu des bon résultats pour
+séparer des populations ! Ca pourrait s'appliquer a n'importe quelle méthode ?
