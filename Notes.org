@@ -10711,6 +10711,11 @@ Mais c'est rassurant de voir des gens qui travail sur les même chose !
 
 *** CRAN R package
 [[https://cran.r-project.org/web/packages/cate/index.html][cate]]
+La regression robuste utilisé dans cate est la meme que =MASS:rlm= : [[https://github.com/cran/cate/blob/master/R/adjust_functions.R#L102][cate
+github]].
+Il y a pas mal de paramètre fixé, je ne suis pas bien sur de leur impact. Je
+pense que cate as mis les paramètre les plus robustes.
+
 ** TODO 2007 - Correlation and Large-Scale Simultaneous Significance Testing
 :PROPERTIES:
 :Custom_ID: Efron_2007
