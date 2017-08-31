@@ -9071,7 +9071,7 @@ Ca fait un peu naif comme modèle, on dirrait que les grands concepts on tous é
 a la lettre (c'est une belle modélisation bayesienne en esperant qu ca va marcher a la fin) 
 mais en fait ca donne un modèle qui a l'arrivé est dure a fitter et qui a surement des problèmes
 mathématiques ...
-*** Pourquoi cette profusion de méthodes ? file:./Thesis/thesis_Devillemereuil_2016.pdf::73
+*** Pourquoi cette profusion de méthodes ? file:~/Projects/Thesis/Biblio/org-ref-pdfs/thesis_Devillemereuil_2016.pdf::73
 "course a la méthode idéale ..." 
 on peut justifier ca par le No Free Lunch theorem (https://en.wikipedia.org/wiki/No_free_lunch_theorem) 
 Ca dit que si un algo perform bien sur une classe de problème alors il ne sera pas le
@@ -11770,3 +11770,19 @@ ancestry !
 Ce qu ej comprends c'est ca prend en compte le LD c'est le nombre de sous chaine
 commune entre les individu ! Thomas dias a obetenu des bon résultats pour
 séparer des populations ! Ca pourrait s'appliquer a n'importe quelle méthode ?
+
+** TODO 1997 - No free lunch theorems for optimization
+ :PROPERTIES:
+  :Custom_ID: Wolpert_1997
+  :AUTHOR: Wolpert \& Macready
+  :JOURNAL: IEEE Transactions on Evolutionary Computation
+  :YEAR: 1997
+  :VOLUME: 1
+  :PAGES: 67–82
+  :DOI: 10.1109/4235.585893
+  :URL: http://dx.doi.org/10.1109/4235.585893
+ :END:
+
+cite:Wolpert_1997 C'est le papier du no free lunch théoreme qui dit que pour
+tout pb d'obtim et algo on peut trouver des données qui font que cette algo
+performe mieux qu'un autre.
