@@ -11786,3 +11786,17 @@ séparer des populations ! Ca pourrait s'appliquer a n'importe quelle méthode ?
 cite:Wolpert_1997 C'est le papier du no free lunch théoreme qui dit que pour
 tout pb d'obtim et algo on peut trouver des données qui font que cette algo
 performe mieux qu'un autre.
+
+** TODO 2016 - The Ensembl Variant Effect Predictor
+ :PROPERTIES:
+  :Custom_ID: McLaren_2016
+  :AUTHOR: McLaren {\it et al.}
+  :JOURNAL: 
+  :YEAR: 2016
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 10.1101/042374
+  :URL: http://dx.doi.org/10.1101/042374
+ :END:
+
+cite:McLaren_2016 Pour citer VEP citation trouver sur le site de ensemble : [[http://www.ensembl.org/info/about/publications.html][here]]
