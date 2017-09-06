@@ -11800,3 +11800,238 @@ performe mieux qu'un autre.
  :END:
 
 cite:McLaren_2016 Pour citer VEP citation trouver sur le site de ensemble : [[http://www.ensembl.org/info/about/publications.html][here]]
+
+
+
+** TODO 2014 - Latent factor models for ecological association studies in population genetics
+ :PROPERTIES:
+  :Custom_ID: frichot_thesis
+  :AUTHOR: Frichot
+  :JOURNAL: 
+  :YEAR: 2014
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: https://tel.archives-ouvertes.fr/tel-01557506
+ :END:
+
+cite:frichot_thesis
+
+** TODO 2016 - A Spatial Framework for Understanding Population Structure and  Admixture :2Article:
+ :PROPERTIES:
+  :Custom_ID: Bradburd_2016
+  :AUTHOR: Bradburd, Ralph \& Coop
+  :JOURNAL: PLOS Genetics
+  :YEAR: 2016
+  :VOLUME: 12
+  :PAGES: e1005703
+  :DOI: 10.1371/journal.pgen.1005703
+  :URL: http://dx.doi.org/10.1371/journal.pgen.1005703
+ :END:
+
+cite:Bradburd_2016 
+
+Il y a un package R [[https://github.com/gbradburd/SpaceMix][SpaceMix]]. La vignette est bien faite
+
+#+begin_src R :results output :exports both
+browseVignettes("SpaceMix")
+#+end_src
+
+Je comprends pas tout... mais rien qu'a voir les données pris en entré ca marche
+pour des dataset type poolseq.
+
+Dans la vigentte il parle de 4 model. Celui qui pourrait être comme tess3 c'est
+le 4.
+
+** DONE 2015 - TESS3: fast inference of spatial population structure and  genome scans for selection
+CLOSED: [2017-09-06 mer. 13:30]
+ :PROPERTIES:
+  :Custom_ID: Caye_2015
+  :AUTHOR: Caye, Deist, Martins, Michel, Olivier \& François
+  :JOURNAL: Molecular Ecology Resources
+  :YEAR: 2015
+  :VOLUME: 16
+  :PAGES: 540–548
+  :DOI: 10.1111/1755-0998.12471
+  :URL: http://dx.doi.org/10.1111/1755-0998.12471
+ :END:
+ :LOGBOOK:
+ - State "DONE"       from "TODO"       [2017-09-06 mer. 13:30]
+ :END:
+
+cite:Caye_2015 C'est le premier papier sur TESS3R
+
+** TODO 2007 - Bayesian clustering algorithms ascertaining spatial population  structure: a new computer program and a comparison study :2Article:
+ :PROPERTIES:
+  :Custom_ID: CHEN_2007
+  :AUTHOR: CHEN, DURAND, FORBES, \& FRANÇOIS
+  :JOURNAL: Molecular Ecology Notes
+  :YEAR: 2007
+  :VOLUME: 7
+  :PAGES: 747–756
+  :DOI: 10.1111/j.1471-8286.2007.01769.x
+  :URL: http://dx.doi.org/10.1111/j.1471-8286.2007.01769.x
+ :END:
+
+cite:CHEN_2007 C'est un des papier de tess.
+
+** TODO 2008 - Bayesian spatial modeling of genetic population structure :2Article:
+ :PROPERTIES:
+  :Custom_ID: Corander2008
+  :AUTHOR: Corander, Sir\'en \& Arjas
+  :JOURNAL: Computational Statistics
+  :YEAR: 2008
+  :VOLUME: 23
+  :PAGES: 111--129
+  :DOI: 10.1007/s00180-007-0072-x
+  :URL: http://link.springer.com/10.1007/s00180-007-0072-x
+ :END:
+
+cite:Corander2008 Je crois que c'est un concurent à tess3.
+
+** TODO 2009 - Spatial Inference of Admixture Proportions and Secondary  Contact Zones :2Article:
+ :PROPERTIES:
+  :Custom_ID: Durand_2009
+  :AUTHOR: Durand, Jay, Gaggiotti \& Francois
+  :JOURNAL: Molecular Biology and Evolution
+  :YEAR: 2009
+  :VOLUME: 26
+  :PAGES: 1963–1973
+  :DOI: 10.1093/molbev/msp106
+  :URL: http://dx.doi.org/10.1093/molbev/msp106
+ :END:
+
+cite:Durand_2009 Il me semble que c'est un autre papier sur le modèle TESS.
+
+** DONE 2013 - Enhanced Localization of Genetic Samples through  Linkage-Disequilibrium Correction :2Article:
+CLOSED: [2017-09-06 mer. 17:04]
+ :PROPERTIES:
+  :Custom_ID: Baran_2013
+  :AUTHOR: Baran, Quintela, Carracedo, , Pasaniuc \& Halperin
+  :JOURNAL: The American Journal of Human Genetics
+  :YEAR: 2013
+  :VOLUME: 92
+  :PAGES: 882–894
+  :DOI: 10.1016/j.ajhg.2013.04.023
+  :URL: http://dx.doi.org/10.1016/j.ajhg.2013.04.023
+ :END:
+ :LOGBOOK:
+ - State "DONE"       from "TODO"       [2017-09-06 mer. 17:04]
+ :END:
+
+cite:Baran_2013
+Papier de présentation de la méthode LOCO-LD. C'est un modèle de prédiction en
+connaissant les coordonnées spatiale.
+
+C'est une méthode qui permet d'inferer la position géographique a partir du
+génome cite:Yang_2012.
+
+** DONE 2014 - GAGA: A New Algorithm for Genomic Inference of Geographic  Ancestry Reveals Fine Level Population Substructure in  Europeans :2Article:
+CLOSED: [2017-09-06 mer. 17:49]
+ :PROPERTIES:
+  :Custom_ID: Lao_2014
+  :AUTHOR: Lao, Liu, Wollstein, Kayser \& Manfred
+  :JOURNAL: PLoS Computational Biology
+  :YEAR: 2014
+  :VOLUME: 10
+  :PAGES: e1003480
+  :DOI: 10.1371/journal.pcbi.1003480
+  :URL: http://dx.doi.org/10.1371/journal.pcbi.1003480
+ :END:
+ :LOGBOOK:
+ - State "DONE"       from "TODO"       [2017-09-06 mer. 17:49]
+ :END:
+
+cite:Lao_2014
+
+La méthode s'appel GAGA? C'est un algorithme qui permet de transformer la
+matrice de distance génétique en utilisant les coordonnées spatiales. Du coup la
+matrice de distance génétique transformé est mieux addapté pour etre expliqué
+par les analyse factoriel. Il parle pas de l'acp mais de l'anova et de MDS. Mais
+il ne parle explicitement d'estimation des coeficients de metissage.
+
+** DONE 2012 - A model-based approach for analysis of spatial structure in  genetic data :2Article:
+CLOSED: [2017-09-06 mer. 19:24]
+ :PROPERTIES:
+  :Custom_ID: Yang_2012
+  :AUTHOR: Yang, Novembre, Eskin, \& Halperin
+  :JOURNAL: Nature Genetics
+  :YEAR: 2012
+  :VOLUME: 44
+  :PAGES: 725–731
+  :DOI: 10.1038/ng.2285
+  :URL: http://dx.doi.org/10.1038/ng.2285
+ :END:
+ :LOGBOOK:
+ - State "DONE"       from "TODO"       [2017-09-06 mer. 19:24]
+ :END:
+
+cite:Yang_2012 
+
+La méthode s'appel SPA. Les fréquence d'allel sont modélisé comme etant un
+fonction des coordonnées. Du coup c'est une regression logistique !! C'est une
+méthode qui permet d'inferer la position géographique a partir du génome. 
+
+MAIS on n'utilise pas les position géographiques pour faire fitter le modèle !!
+On apprend les position géographique juste  partir des données génétique. C'est
+une projection en 2D des données génétique.
+
+** DONE 2008 - Genes mirror geography within Europe               :2Article:
+CLOSED: [2017-09-06 mer. 18:18]
+ :PROPERTIES:
+  :Custom_ID: Novembre_2008
+  :AUTHOR: Novembre {\it et al.}
+  :JOURNAL: Nature
+  :YEAR: 2008
+  :VOLUME: 456
+  :PAGES: 274–274
+  :DOI: 10.1038/nature07566
+  :URL: http://dx.doi.org/10.1038/nature07566
+ :END:
+ :LOGBOOK:
+ - State "DONE"       from "TODO"       [2017-09-06 mer. 18:18]
+ :END:
+
+cite:Novembre_2008 C'est la fameuse ACP de Novembre qui match avec l'europe. Il
+prend PC1 PC2 il fait un transformation linéaire pour que ca match avec les
+coordonnées indiv et il regarde sur le mec qui était mis a coté si on retrouve
+bien sa position géographique !!
+
+** DONE 2016 - Novel probabilistic models of spatial genetic ancestry with  applications to stratification correction in genome-wide  association studies
+CLOSED: [2017-09-06 mer. 18:49]
+ :PROPERTIES:
+  :Custom_ID: Bhaskar_2016
+  :AUTHOR: Bhaskar, Javanmard, Courtade, \& Tse
+  :JOURNAL: Bioinformatics
+  :YEAR: 2016
+  :VOLUME: 
+  :PAGES: btw720
+  :DOI: 10.1093/bioinformatics/btw720
+  :URL: http://dx.doi.org/10.1093/bioinformatics/btw720
+ :END:
+ :LOGBOOK:
+ - State "DONE"       from "TODO"       [2017-09-06 mer. 18:49]
+ :END:
+
+cite:Bhaskar_2016
+
+Leur méthode s'appel GAP. Ce que je comprends : la méthode trouve des
+coordonnées a partir des données génétique. C'est pas pareil que d'utiliser les
+données spatial pour trouver la structure de population....
+
+** TODO 2014 - Fast spatial ancestry via flexible allele frequency surfaces :2Article:
+ :PROPERTIES:
+  :Custom_ID: Ra_ola_2014
+  :AUTHOR: Rañola, Novembre \& Lange
+  :JOURNAL: Bioinformatics
+  :YEAR: 2014
+  :VOLUME: 30
+  :PAGES: 2915–2922
+  :DOI: 10.1093/bioinformatics/btu418
+  :URL: http://dx.doi.org/10.1093/bioinformatics/btu418
+ :END:
+
+cite:Ra_ola_2014 
+
+Pareil que pour cite:Bhaskar_2016 le jeu c'est de placer les individus à partir
+de leur données génétique. xD c'est un algo d'imagerie...
