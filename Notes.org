@@ -10009,6 +10009,9 @@ cite:Zou_2014,Rahmani_2016.
 cite:Li_2008
 C'est l'article du dataset HGDP utilisé dans cite:frichot13_testin_assoc_between_loci_envir. 
 
+Je cite cette article comme utilisation de la structure de pop pour étudier la
+démographie et l'histoire.
+
 ** 2009 - Gestion des donn{\'e}es manquantes en analyse en composantes principales :LFMM:PCA:
 :PROPERTIES:
 :Custom_ID: josse2009gestion
@@ -11834,7 +11837,7 @@ cite:Bradburd_2016
 Il y a un package R [[https://github.com/gbradburd/SpaceMix][SpaceMix]]. La vignette est bien faite
 
 #+begin_src R :results output :exports both
-browseVignettes("SpaceMix")
+  browseVignettes("SpaceMix")
 #+end_src
 
 Je comprends pas tout... mais rien qu'a voir les données pris en entré ca marche
@@ -11842,6 +11845,7 @@ pour des dataset type poolseq.
 
 Dans la vigentte il parle de 4 model. Celui qui pourrait être comme tess3 c'est
 le 4.
+
 
 ** DONE 2015 - TESS3: fast inference of spatial population structure and  genome scans for selection
 CLOSED: [2017-09-06 mer. 13:30]
@@ -11859,7 +11863,7 @@ CLOSED: [2017-09-06 mer. 13:30]
  - State "DONE"       from "TODO"       [2017-09-06 mer. 13:30]
  :END:
 
-cite:Caye_2015 C'est le premier papier sur TESS3R
+cite:Caye_2015 C'est le premier papier sur TESS3
 
 ** TODO 2007 - Bayesian clustering algorithms ascertaining spatial population  structure: a new computer program and a comparison study :2Article:
  :PROPERTIES:
@@ -12035,3 +12039,187 @@ cite:Ra_ola_2014
 
 Pareil que pour cite:Bhaskar_2016 le jeu c'est de placer les individus à partir
 de leur données génétique. xD c'est un algo d'imagerie...
+
+** TODO 1996 - Measurement of genetic structure within populations using  Moran’s spatial autocorrelation statistics. :2Article:
+ :PROPERTIES:
+  :Custom_ID: Epperson_1996
+  :AUTHOR: Epperson \& Li
+  :JOURNAL: Proceedings of the National Academy of Sciences
+  :YEAR: 1996
+  :VOLUME: 93
+  :PAGES: 10528–10532
+  :DOI: 10.1073/pnas.93.19.10528
+  :URL: http://dx.doi.org/10.1073/pnas.93.19.10528
+ :END:
+
+cite:Epperson_1996 
+
+Pour parler de l'étude de la corrélation spatial dans les données génétique
+
+** TODO 1999 - Isolation by distance in a continuous population:  reconciliation between spatial autocorrelation analysis and  population genetics models :2Article:
+ :PROPERTIES:
+  :Custom_ID: HARDY_1999
+  :AUTHOR: HARDY
+  :JOURNAL: Heredity
+  :YEAR: 1999
+  :VOLUME: 83
+  :PAGES: 145
+  :DOI: 10.1046/j.1365-2540.1999.00558.x
+  :URL: http://dx.doi.org/10.1046/j.1365-2540.1999.00558.x
+ :END:
+
+cite:HARDY_1999
+
+Pour parler de l'étude de la corrélation spatial dans les données génétique
+
+** TODO 2004 - The effects of human population structure on large genetic association studies :2Article:
+ :PROPERTIES:
+  :Custom_ID: marchini2004effects
+  :AUTHOR: Marchini, Cardon, Phillips \& Donnelly
+  :JOURNAL: Nature genetics
+  :YEAR: 2004
+  :VOLUME: 36
+  :PAGES: 512
+  :DOI: 
+  :URL: http://www.nature.com/ng/journal/v36/n5/full/ng1337.html
+ :END:
+
+cite:marchini2004effects
+
+Pour montrer l'interet de l'estimation de la structure de pop pour les GWAS
+
+** TODO 2013 - Pitfalls of predicting complex traits from SNPs
+ :PROPERTIES:
+  :Custom_ID: Wray_2013
+  :AUTHOR: Wray, Yang, Hayes, Price, Alkes, Goddard \& Visscher
+  :JOURNAL: Nature Reviews Genetics
+  :YEAR: 2013
+  :VOLUME: 14
+  :PAGES: 507–515
+  :DOI: 10.1038/nrg3457
+  :URL: http://dx.doi.org/10.1038/nrg3457
+ :END:
+
+cite:Wray_2013 
+
+C'est un papier qui discute de ce qu'il faut faire et pas faire prédir un trait
+à partir des SNPs. C'est le prolongement des associations, (dans les assocaitions
+on a des modèles avec trop de bruit pour prédir quoi que ce soit). Et dans ce
+papier ils disent que c'est important de prendre en compte la structure de pop ! 
+
+** TODO 2000 - Inference of population structure using multilocus genotype data
+ :PROPERTIES:
+  :Custom_ID: Pritchard2000
+  :AUTHOR: Pritchard, Stephens \& Donnelly
+  :JOURNAL: Genetics
+  :YEAR: 2000
+  :VOLUME: 155
+  :PAGES: 945--959
+  :DOI: 10.1111/j.1471-8286.2007.01758.x
+  :URL: http://www.ncbi.nlm.nih.gov/pubmed/10835412 http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC1461096
+ :END:
+
+cite:Pritchard2000
+
+** TODO 2005 - Estimation of individual admixture: Analytical and study  design considerations :2Article:
+ :PROPERTIES:
+  :Custom_ID: Tang_2005
+  :AUTHOR: Tang, Peng, Wang \& Risch
+  :JOURNAL: Genetic Epidemiology
+  :YEAR: 2005
+  :VOLUME: 28
+  :PAGES: 289–301
+  :DOI: 10.1002/gepi.20064
+  :URL: http://dx.doi.org/10.1002/gepi.20064
+ :END:
+
+cite:Tang_2005 C'est une amélioration de structure avec un EM (d'après l'intro
+de l'article 2 :D)
+
+** TODO 2011 - Enhancements to the ADMIXTURE algorithm for individual  ancestry estimation
+ :PROPERTIES:
+  :Custom_ID: Alexander_2011
+  :AUTHOR: Alexander \& Lange
+  :JOURNAL: BMC Bioinformatics
+  :YEAR: 2011
+  :VOLUME: 12
+  :PAGES: 246
+  :DOI: 10.1186/1471-2105-12-246
+  :URL: http://dx.doi.org/10.1186/1471-2105-12-246
+ :END:
+
+cite:Alexander_2011 Une amélioration de l'algorithme de structure avec kenneth
+Lange :D C'est le logiciel admixture.
+
+** TODO 2014 - Fast and Efficient Estimation of Individual Ancestry  Coefficients :2Article:
+ :PROPERTIES:
+  :Custom_ID: Frichot_2014
+  :AUTHOR: Frichot, Mathieu, Trouillon, , Bouchard \& François
+  :JOURNAL: Genetics
+  :YEAR: 2014
+  :VOLUME: 196
+  :PAGES: 973–983
+  :DOI: 10.1534/genetics.113.160572
+  :URL: http://dx.doi.org/10.1534/genetics.113.160572
+ :END:
+
+cite:Frichot_2014a C'est le papier de sNMF.
+
+** TODO 2014 - fastSTRUCTURE: Variational Inference of Population Structure  in Large SNP Data Sets
+ :PROPERTIES:
+  :Custom_ID: Raj_2014
+  :AUTHOR: Raj, Stephens \& Pritchard
+  :JOURNAL: Genetics
+  :YEAR: 2014
+  :VOLUME: 197
+  :PAGES: 573–589
+  :DOI: 10.1534/genetics.114.164350
+  :URL: http://dx.doi.org/10.1534/genetics.114.164350
+ :END:
+
+cite:Raj_2014 C'est le papier de FastStructure
+
+** TODO 2010 - Analysis of Population Structure: A Unifying Framework and  Novel Methods Based on Sparse Factor Analysis :2Article:
+ :PROPERTIES:
+  :Custom_ID: Engelhardt_2010
+  :AUTHOR: Engelhardt \& Stephens
+  :JOURNAL: PLoS Genetics
+  :YEAR: 2010
+  :VOLUME: 6
+  :PAGES: e1001117
+  :DOI: 10.1371/journal.pgen.1001117
+  :URL: http://dx.doi.org/10.1371/journal.pgen.1001117
+ :END:
+
+cite:Engelhardt_2010 C'est modèle d'estimation de la structure basé avec des
+méthode stat moderne (cad basé sur une fonction d'optim:D)
+
+** TODO 2014 - A Novel and Fast Approach for Population Structure Inference  Using Kernel-PCA and Optimization :2Article:
+ :PROPERTIES:
+  :Custom_ID: Popescu_2014
+  :AUTHOR: Popescu, Harper, Trick, , Bancroft \& Huber
+  :JOURNAL: Genetics
+  :YEAR: 2014
+  :VOLUME: 198
+  :PAGES: 1421–1431
+  :DOI: 10.1534/genetics.114.171314
+  :URL: http://dx.doi.org/10.1534/genetics.114.171314
+ :END:
+
+cite:Popescu_2014 C'est un algo d'estimation de la structure qui fait une ACP et
+estime les coeficient de métissage en faisant un genre de calcul de coordonnées
+baricentrique... En tout cas le kernel c'est de la poudre au yeux :D
+
+** TODO 2010 - Spatially explicit Bayesian clustering models in population  genetics
+ :PROPERTIES:
+  :Custom_ID: FRAN_OIS_2010
+  :AUTHOR: FRANÇOIS \& DURAND
+  :JOURNAL: Molecular Ecology Resources
+  :YEAR: 2010
+  :VOLUME: 10
+  :PAGES: 773–784
+  :DOI: 10.1111/j.1755-0998.2010.02868.x
+  :URL: http://dx.doi.org/10.1111/j.1755-0998.2010.02868.x
+ :END:
+
+cite:FRAN_OIS_2010 C'est une review des méthodes de clustering spatialles
