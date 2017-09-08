@@ -12192,7 +12192,8 @@ cite:Raj_2014 C'est le papier de FastStructure
  :END:
 
 cite:Engelhardt_2010 C'est modèle d'estimation de la structure basé avec des
-méthode stat moderne (cad basé sur une fonction d'optim:D)
+méthode stat moderne (cad basé sur une fonction d'optim:D) MDRRRR c'est de la
+que vient la décomposition matricielle de G !!!
 
 ** TODO 2014 - A Novel and Fast Approach for Population Structure Inference  Using Kernel-PCA and Optimization :2Article:
  :PROPERTIES:
@@ -12223,3 +12224,45 @@ baricentrique... En tout cas le kernel c'est de la poudre au yeux :D
  :END:
 
 cite:FRAN_OIS_2010 C'est une review des méthodes de clustering spatialles
+
+** TODO 1999 - Learning the parts of objects by non-negative matrix factorization
+ :PROPERTIES:
+  :Custom_ID: lee1999learning
+  :AUTHOR: Lee \& Seung
+  :JOURNAL: Nature
+  :YEAR: 1999
+  :VOLUME: 401
+  :PAGES: 788
+  :DOI: 
+  :URL: https://www.ncbi.nlm.nih.gov/pubmed/10548103
+ :END:
+
+cite:lee1999learning C'est le papier d'origine de NMF
+
+** TODO 2009 - Nonnegative Matrix and Tensor Factorizations: Applications to Exploratory Multi-Way Data Analysis and Blind Source Separation
+ :PROPERTIES:
+  :Custom_ID: Cichocki2009
+  :AUTHOR: Cichocki, Zdunek, Phan \& Amari
+  :JOURNAL: 
+  :YEAR: 2009
+  :VOLUME: 
+  :PAGES: 1--477
+  :DOI: 10.1002/9780470747278
+  :URL: http://doi.wiley.com/10.1002/9780470747278
+ :END:
+
+cite:Cichocki2009 C'est un livre sur la NMF
+
+** TODO 2011 - Graph Regularized Nonnegative Matrix Factorization for Data Representation
+ :PROPERTIES:
+  :Custom_ID: DengCai2011
+  :AUTHOR: Cai, He, Han \& Huang
+  :JOURNAL: IEEE Transactions on Pattern Analysis and Machine Intelligence
+  :YEAR: 2011
+  :VOLUME: 33
+  :PAGES: 1548--1560
+  :DOI: 10.1109/TPAMI.2010.231
+  :URL: http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5674058
+ :END:
+
+cite:DengCai2011 C'est le papier de NMF avec graphe :D
