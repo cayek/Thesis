@@ -12266,3 +12266,59 @@ cite:Cichocki2009 C'est un livre sur la NMF
  :END:
 
 cite:DengCai2011 C'est le papier de NMF avec graphe :D
+
+** TODO 1993 - Statistics for Spatial Data
+ :PROPERTIES:
+  :Custom_ID: Cressie1993
+  :AUTHOR: Cressie
+  :JOURNAL: 
+  :YEAR: 1993
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 10.1002/9781119115151
+  :URL: http://doi.wiley.com/10.1002/9781119115151
+ :END:
+
+cite:Cressie1993 Utiliser pour citer le variogramme spatiale
+
+** TODO 1978 - Cross-Validatory Estimation of the Number of Components in  Factor and Principal Components Models
+ :PROPERTIES:
+  :Custom_ID: Wold_1978
+  :AUTHOR: Wold
+  :JOURNAL: Technometrics
+  :YEAR: 1978
+  :VOLUME: 20
+  :PAGES: 397–405
+  :DOI: 10.1080/00401706.1978.10489693
+  :URL: http://dx.doi.org/10.1080/00401706.1978.10489693
+ :END:
+
+cite:Wold_1978 Hoooo faudrait que je lise celui la...
+
+** TODO 1982 - Cross-Validatory Choice of the Number of Components From a  Principal Component Analysis
+ :PROPERTIES:
+  :Custom_ID: Eastment_1982
+  :AUTHOR: Eastment \& Krzanowski
+  :JOURNAL: Technometrics
+  :YEAR: 1982
+  :VOLUME: 24
+  :PAGES: 73–77
+  :DOI: 10.1080/00401706.1982.10487712
+  :URL: http://dx.doi.org/10.1080/00401706.1982.10487712
+ :END:
+
+cite:Eastment_1982 A merde celui la aussi faut que je le lise....
+
+** TODO 2016 - Identifying outlier loci in admixed and in continuous  populations using ancestral population differentiation  statistics
+ :PROPERTIES:
+  :Custom_ID: Martins_2016
+  :AUTHOR: Martins, Caye, Luu, Blum, Michael \& François
+  :JOURNAL: Molecular Ecology
+  :YEAR: 2016
+  :VOLUME: 25
+  :PAGES: 5029–5042
+  :DOI: 10.1111/mec.13822
+  :URL: http://dx.doi.org/10.1111/mec.13822
+ :END:
+
+cite:Martins_2016 C'est le papier de la stat Fst à partir des coéficients de métissage.
