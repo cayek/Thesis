@@ -1,0 +1,42 @@
+
+     
+  \section{Introduction}
+
+
+Since the early developments of population genetics, geography has been recognized as one of the major determinants of genetic variation in natural populations~\citep{wright1943isolation,malecot1948mathematics,kimura1964stepping,cavalli1994history,
+epperson2003geographical}. For these populations, spatial patterns of genetic variation can be influenced by landscape barriers, geographical distances and by the processes of divergence and admixture resulting from the colonization of new areas. In addition, analyzing spatial patterns of genetic variation has been a long-standing goal of evolutionary biogeography, molecular ecology, landscape genetics, and conservation biology~\citep{segelbacher2010applications,manel2010perspectives}.
+
+
+Statistical approaches to analyze spatial patterns of genetic variation often rely on the inference of population genetic structure from multi-locus genotype data, which is commonly performed using the Bayesian approach implemented in the computer program {\tt STRUCTURE}~\citep{pritchard2000inference}.  Assuming $K$ unobserved ancestral gene pools, {\tt STRUCTURE} computes allele frequencies in each pool, and estimates individual {\it ancestry coefficients} representing the proportion of an individual genome that originates from each pool. Using {\tt STRUCTURE}, ancestry coefficients are estimated without prior knowledge on geographic proximity among individuals. 
+
+The approach implemented in {\tt STRUCTURE} has been substantially improved by a number of approaches that include spatial proximity information based on individual geographic coordinates (reviewed by~\cite{franccois2010spatially}). Among those spatially explicit approaches, the computer program {\tt TESS} is one of the most frequently used algorithms~\citep{chen2007bayesian,franccois2006bayesian}. In the {\tt TESS} model, ancestry proportions are continuously distributed over geographic space, and the parameters that specify the shape of the clines are estimated from the genetic and the geographic data. Using geographic information, {\tt TESS} provides better estimates of ancestry coefficients than {\tt STRUCTURE} when the levels of ancestral population divergence are low (Durand et al. 2009).  
+
+The Bayesian approaches implemented in {\tt STRUCTURE} and {\tt TESS} rely on Markov Chain Monte Carlo algorithms. Monte Carlo algorithms are based on computer intensive stochastic simulations, and have the advantage of sampling the posterior distribution of the model parameters. However the application of stochastic algorithms can be difficult when the data include more than a few hundreds of individuals or a few thousands of allelic markers. With the availability of next generation sequencing data, there is a need to analyze genotypic matrices that represent thousands of individuals and hundreds of thousands of markers. While fast versions of {\tt STRUCTURE} have already been proposed~\citep{raj2014faststructure, frichot2014fast, alexander2011linking, wollstein2015detecting}, developing fast and accurate estimation algorithms for ancestry coefficients in a geographic framework remains an important computational challenge.
+
+In this study, we present a spatially explicit algorithm that provides fast estimation of ancestry coefficients with accuracy comparable to {\tt TESS} 2.3~\citep{durand2009spatial}. The new algorithms are based on least-squares optimization and on geographically constrained non-negative matrix factorization~\citep{cai2011graph,frichot2014fast}. These improvements of {\tt TESS} are implemented in the computer program {\tt TESS3}. We show that {\tt TESS3} is substantially faster than {\tt TESS} 2.3, with an increase in computational speed of one or two orders of magnitude. In addition, we show that ancestral allele frequencies are correctly estimated, and we illustrate the use of the {\tt TESS3} program to perform genome scans for selection based on ancestral allele frequency differentiation. To illustrate our approach, {\tt TESS3} was applied to genomic data from European lines of the model species {\it Arabidopsis thaliana} for which an individual-based sampling design was available~\citep{atwell2010genome}.
+
+
+%Cavalli-Sforza, L. L., Menozzi, P., Piazza, A. (1994). The history and geography of human genes. Princeton university press.
+
+
+
+%Epperson, B. K. (2003). Geographical Genetics. Princeton University Press.
+
+
+
+%Kimura, M.,  Weiss, G. H. (1964). The stepping stone model of population structure and the decrease of genetic correlation with distance. Genetics, 49(4), 561.
+
+
+
+%Wright, S. (1943). Isolation by distance. Genetics, 28(2), 114.
+
+
+
+%Segelbacher, G., Cushman, S. A., Epperson, B. K., Fortin, M. J., Francois, O., et al. (2010). Applications of landscape genetics in conservation biology: concepts and challenges. Conservation Genetics, 11(2), 375-385.
+
+
+
+%Raj A, Stephens M, Pritchard JK: fastSTRUCTURE: Variational Inference of Population Structure in Large SNP Data Sets. Genetics 2014, 197:573-589.
+
+
+

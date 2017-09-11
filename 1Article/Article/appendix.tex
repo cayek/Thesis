@@ -1,0 +1,57 @@
+\section*{Appendix}
+
+This section provides a detailed description of the {\tt TESS3} algorithm.  The first step of the algorithm builds a nearest-neighbor graph based on the geographic coordinates of the sampling sites. The number of neighbors in the graph was set to represent $5\%$ of total connections. Then, the program runs a least-squares minimization algorithm.  In this approach, the estimates of $Q$ and $G$ are obtained after solving the following constrained least-squares problem~\citep{cai2011graph}
+
+$$
+(\hat Q, \hat G) = \arg \min {\rm LS}(Q, G) \, ,
+$$
+
+\noindent where
+
+\begin{equation}\label{eq:LS}
+{\rm LS}(Q, G) =  \|  \tilde{X} - QG \|^2_{\rm F}   +   \alpha   \sum_{s_i \sim s_j}   w_{ij} \|  Q_{i.}  - Q_{j.} \|^2   \, , 
+\end{equation}
+
+\noindent and $Q$ and $G$ are non-negative matrices such that, for all $i$ and $\ell$, we have  
+
+$$
+\sum_{k=1}^K Q_{ik} = 1  \qquad \sum_{j=0}^{p} G_{i\ell}(j) = 1 \, .
+$$
+
+\noindent In this equation, $\| M \|_{\rm F}$ denotes the Frobenius norm of a matrix $M$,  $\| V \|$ is the Euclidean norm of a vector $V$, $\alpha$ is a non-negative {\it regularization parameter}. The summation on the right-hand side of the second term runs over all pairs of sites, $s_i \sim s_j$ , sharing an edge in the nearest-neighbor graph. The quantity $w_{ij}$ is a weight that decreases with geographic distance between sampling sites as follows
+
+\begin{equation} 
+w_{ij} =\exp( -  d(s_i, s_j)^2 / \bar{d^2}  ) \, ,  
+\end{equation}
+
+\noindent where $d$ is the Euclidean distance, and $\bar{d}$ is the average distance computed over the neighboring sites in the sample. More specifically, the weight of an edge in the nearest-neighbor graph is related to the Laplace-Beltrami operator on a manifold~\citep{belkin2003laplacian}. In the algorithm, the regularization parameter $\alpha$ is equal to $c \times nL(p+1) / \sum w_{ij}$. The default value of $c$ is $0.1\%$.
+
+
+Least squares minimization is performed using the Alternating Non-negativity-constrained Least Squares (ANLS) algorithm with the active set (AS) method following the approach used in the computer program {\tt sNMF}~\citep{frichot2014fast,kim2011fast}. The ANLS-AS algorithm starts with the initialization of the $Q$ matrix, and then computes a non-negative matrix $G$ that minimizes the quantity 
+
+$${\rm LS}_1(G) = \|X - QG \|_F^2 \, .
+$$
+
+
+\noindent The obtained solution is normalized so that its entries satisfy the probabilistic constraints for genotypic frequencies. Given $G$, the $Q$-matrix is computed after minimizing the following quantity 
+ 
+$${\rm LS}_2(Q) = 
+\left|\left|
+\left(
+    \begin{array}{c}
+      {\rm Vec}(\tilde{X}^T) \\
+      0
+    \end{array}
+  \right)
+   -  
+   \left(
+   \begin{array}{c}
+      {\rm Id} \otimes G^T \\
+      \sqrt{\alpha} ~ \Gamma \otimes {\rm Id}
+    \end{array}
+  \right) {\rm Vec}(Q^T)  
+   \right|\right|_F^2
+   \, ,
+$$
+
+\noindent where ${\rm Vec}(\tilde{X})$ denotes the vectorization of the matrix $\tilde{X}$ formed by stacking the columns of $\tilde{X}$ into a single column vector, $\Gamma$ is the Cholesky decomposition of the graph Laplacian associated with the weights of the graph~\citep{chung1997spectral}, Id is the identity matrix, and $\otimes$ is a symbol for the Kronecker product. Iterations are stopped when the relative difference between two successive values of ${\rm LS}(Q,G)$  is lower than a tolerance threshold of $\epsilon$. The default value for $\epsilon$ equals $10^{-7}$.

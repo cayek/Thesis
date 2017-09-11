@@ -1,0 +1,45 @@
+Remark : local adaptation test on chrm 5
+
+recalubration : adj.p.values = pf( (t.scores)^2/30.0 , df1 = 2, df2 = n-3, lower = FALSE )
+
+expected Fdr : alpha = 1e-170
+
+--------------------------------------------------------------------------------
+Result : 
+
+"Chr5:8509701..8509701"
+"Chr5:8509949..8509949"
+-> Chr5:8,507,325..8,512,324 : (5kbp) we find 2 genes including 1 involved in defense response and response to jasmonic acid (https://www.arabidopsis.org/servlets/TairObject?name=AT5G24780&type=locus)
+
+
+"Chr5:6944857..6944857"
+-> Chr5:6,944,857..6,944,857 : gene involved in photoperiodism, flowering, root development (https://www.arabidopsis.org/servlets/TairObject?name=AT5G20520&type=locus) (see The Arabidopsis WAVY GROWTH 2 Protein Modulates Root Bending in Response to Environmental Stimuli)
+
+"Chr5:6964997..6964997"
+"Chr5:6969518..6969518"
+"Chr5:6970075..6970075"
+"Chr5:6970748..6970748"
+"Chr5:6971030..6971030"
+"Chr5:6971692..6971692"
+"Chr5:6972031..6972031"
+"Chr5:6972976..6972976"
+"Chr5:6974166..6974166"
+-> Chr5:6,964,997..6,974,166 : (~10kbp) 4 genes
+
+
+"Chr5:26155352..26155352"
+-> Chr5:26,155,352..26,155,352 : (1bp) 1 gene
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+expected Fdr : alpha = 1e-170
+--------------------------------------------------------------------------------
+Result : aditionnal genes
+
+"Chr5:8525216..8525216"
+"Chr5:8540225..8540225"
+"Chr5:8541998..8541998"
+"Chr5:8542422..8542422"
+"Chr5:8545284..8545284"
+"Chr5:8546785..8546785"

@@ -1,0 +1,18 @@
+# query reference
+- 1: OK
+- 2: Il est cité mais dans l'appendix page 9 ligne 16
+- 3: publisher location -> Princeton, New Jersey
+- 4: publisher location -> Providence, Rhode Island
+- 5: publisher location -> Princeton, New Jersey
+- 6: Il est cité mais dans l'appendix page 9 ligne 1
+
+- 8: Bold value are power of the test on data after admixture.
+- 9: 
+# En plus
+
+- changer : 
+	"This work was supported by a grant from the Laboratoire d’Ex-
+	cellence Labex Persyval-lab to Kevin Caye" 
+	-> 
+	This work has been partially supported by the LabEx PERSYVAL-Lab 
+   (ANR-11-LABX-0025-01) funded by the French program Investissement d’avenir

@@ -1,0 +1,82 @@
+
+
+\section{Materials and Methods}
+\label{sec:MM}
+% introduction
+
+The computer program {\tt TESS3} computes ancestry estimates for large genotypic matrices using the geographic coordinates of sampled individuals. The program also returns locus-specific estimates of ancestral genotypic frequencies, and computes locus-specific estimates of a population-based differentiation statistic that can be used in genome scans for adaptive alleles. The {\tt TESS3} program is particularly suited to the analysis of large genomic data sets, for which the number of loci ($L$) ranges between thousands to hundreds of thousands genetic polymorphisms and the number of individuals ($n$) ranges between hundreds to thousands individuals.
+
+
+\paragraph{Input data.} 
+{\tt TESS3} requires  that the data consists of $n$ multi-locus genotypes and two geographic coordinates for each genotype. A genotypic matrix, $X$, records allelic data for each individual ($i$) and each locus ($\ell$).  With data representing single nucleotide polymorphisms (SNPs), the genotypic matrix records the number of derived or mutant alleles at each locus. Considering autosomes in a diploid organism, the genotype at locus $\ell$ corresponds to the number of derived alleles at this locus, which is encoded as an integer number 0, 1 or 2. For SNPs, the {\tt geno} format is accepted by the program, which can also process other types of allelic data, such as short tandem repeats or amplified fragment length polymorphisms.  Geographic coordinates can be expressed using several coordinate systems, for example longitude and latitude, and they are provided to the software in a separate input file.
+
+
+\paragraph{Geographically constrained least-squares estimates of ancestry coefficients.} 
+
+Similarly to {\tt TESS} 2.3 or {\tt STRUCTURE}, {\tt TESS3} supposes that the genetic data originate from the admixture of $K$ ancestral populations, where $K$ is unknown. {\tt TESS3} estimates a $Q$-matrix, $Q = (Q_{ik}) $, which represents the individual ancestry coefficients ($n\times K$ dimensions), and a $G$-matrix, $G= (G_{k\ell}(j))$, which represents the ancestral genotypic frequencies. The dimension of $G$ is equal to $K\times (p+1) L$ where $p$ is the ploidy of the studied organism genome. The ancestry coefficient $Q_{ik}$ is the fraction of individual $i$'s genome that originates from the ancestral population $k$, and the coefficient $G_{k\ell}(j)$ represents the frequency of genotype $j$ at locus $\ell$ in population $k$. 
+
+The principle underlying the {\tt TESS3} algorithm differs from the likelihood methods implemented in {\tt STRUCTURE}  or in  {\tt TESS} 2.3, and it can be considered to be model-free. The main idea is that the probability that an individual $i$ carries the genotype $j$ at locus $\ell$ is determined by the {\it law of total probability}
+
+$$
+P(X_{i\ell} = j) = \sum_{k = 1}^K Q_{ik}  G_{k\ell}(j)  \,. 
+$$
+
+
+The above formula establishes that each individual genotype is sampled from $K$ pools of ancestral genotypes, and that the sampling probabilities correspond to their admixture coefficients. The formula is equivalent to the factorization of the genotypic probability matrix, $P$, using the matrices $Q$ and $G$ as factors~\citep{frichot2014fast}. In the {\tt TESS3} algorithm, probabilities are replaced by zero/one values depending on the absence or the presence of each genotype at each locus, and the resulting matrix is denoted by $\tilde{X}$. Estimates of $Q$ and $G$ are obtained by factorizing $\tilde{X}$  as follows $\tilde{X} = \hat Q \hat G$. Matrix factorization is performed according to a least-squares minimization algorithm (see Appendix). During the miminization process, spatial constraints are introduced  to ensure that individuals that are geographically close to each other are more likely to share the same ancestral genotypes than individuals that are far apart. A regularization parameter, $\alpha$, controls the regularity of ancestry estimates over the geographic space. Large values of $\alpha$ imply that ancestry coefficients have similar values for nearby individuals, whereas small values produce results close to {\tt STRUCTURE}. The least-squares method leads to algorithms that are substantially faster than the Bayesian algorithms implemented in other programs.  In addition, the approach makes no assumptions about linkage or Hardy-Weinberg equilibrium (HWE). The above framework is thus appropriate to deal with departures from HWE created by inbreeding or geographically restricted mating. 
+
+  
+
+\paragraph{Number of populations.} 
+
+In {\tt TESS3}, the number of ancestral populations, $K$, is chosen after the evaluation of a cross-entropy criterion for each $K$~\citep{frichot2014fast}. The choice of $K$ is then based on a cross-validation method that  partitions the genotypic matrix entries into a training set and a test set in which 5$\%$ of all entries are masked to the algorithm. The  cross-entropy criterion compares the genotypic frequencies predicted from the training set to those computed from the test set at each locus. Smaller values of the criterion often indicate better estimates for {\tt TESS3}. In practice, the best choice for $K$ corresponds to a plateau in the cross-entropy plot~\citep{frichot2015lea}..  
+
+\paragraph{Outlier locus tests.} 
+
+In addition to the inference of spatial population structure, {\tt TESS3} can perform genome scans for selection when the program is applied to large genomic data sets. More specifically, {\tt TESS3} uses the ancestral genotype frequency matrix, $G$, to derive the allele frequencies in the $K$ ancestral populations. Then the algorithm evaluates a locus-specific $F_{\rm ST}$-statistic based on the estimated ancestral allele frequencies. Using standard population genetic theory, $F_{\rm ST}$-statistics can be transformed into squared $z$-scores, and $p$-values can be computed using a chi-square distribution with $K-1$ degrees of freedom~\citep{weir1990genetic}. To correct for the test inflation statistic due to neutral population structure, the $z$-scores were recalibrated using estimates of the inflation factor. Here, inflation factors were determined using an ``empirical-null hypothesis\rq\rq{} approach. The values of the inflation factor were determined graphically on the basis on quantile-quantile plots of $p$-values. This approach is less conservative than the method based on the median of the chi-square distribution with $K-1$ degrees of freedom~\citep{devlin1999genomic, frichot2015lea}. Multiple testing issues were addressed by applying the Benjamini-Hochberg algorithm to the recalibrated $p$-values~\citep{benjamini1995controlling}.  
+
+\paragraph{Simulated data sets and program runs.} 
+
+
+We created simulated data sets containing 200 admixed genotypes with levels of ancestry that varied continuously across geographic space. To generate the data,  we used the computer program {\tt MS} to perform coalescent simulations of neutral and outlier SNPs under island models with two populations~\citep{hudson2002generating}. One hundred genotypes were sampled from each source population, and admixed genotypes were created according to a longitudinal gradient of ancestry~\citep{durand2009spatial,franccois2010spatially}. Individuals at each extreme of the longitunal range were representative of ancestral populations, while individuals at the center of the range shared intermediate levels of ancestry in the two source populations. The number of loci was varied in the range $L = 1$k-$50$k SNPs.
+
+Our first series of simulations considered selectively neutral SNPs and used migration parameters, $M = 4mN_{e}$, between $M = 0.01$ and $M = 10$. The population differentiation statistic, $F_{\rm ST}$, ranged from $0.007$ to $0.42$. Our second series of simulations included a proportion of outlier SNPs equal to $5\%$. Outlier loci were generated using two values of the effective migration rate $4m_{\rm s} N = 0.1$ and $4m_{\rm s} N = 1$. In simulations with outlier loci, the neutral migration rate was set to the value $4m N = 20$. The justification for using neutral migration-drift equilibrium models for simulating selection is that loci with selection have an effectively reduced migration rate, as compared to the neutral migration $m$ in migration-selection-drift equilibrium models~\citep{bazin2010likelihood}.
+
+ 
+ The simulated data were used to compare {\tt TESS3} estimates to those of {\tt TESS} 2.3~\citep{durand2009spatial}. The number of ancestral populations ranged from $K=1$ to $K=6$.  Each run was replicated five times for each computer program.  The number of cycles in the Markov chain Monte Carlo algorithm of {\tt TESS} 2.3 was set to 1,000, and the optimal number of ancestral population was determined using the deviance information criterion. All other parameters were set to their default values. Statistical errors were measured as root mean squared errors (RMSE) between the estimated $Q$-matrix and the matrix of coefficients ($Q^0$) that were used to generate the data
+   
+$$
+{\rm RMSE} =  \left(    \frac{1}{nK} \sum_{i =1}^n \sum_{k=1}^K   (Q_{ik} - Q_{ik}^{0})^2   \right)^{1/2} \, .
+$$ 
+   
+\noindent A similar RMSE criterion was defined for comparing the estimates of $G$ matrices obtained from {\tt TESS3} or {\tt TESS} 2.3 to the estimates of the ancestral genotypic frequency matrix resulting from the coalescent simulations.
+
+
+\paragraph{{\it Arabidopsis thaliana} data.} 
+
+
+We applied {\tt TESS3} to genomic data from 170 European lines of the model plant {\it Arabidopsis thaliana} genotyped for 216k SNPs~\citep{atwell2010genome}. For these data, we determined the number of ancestral populations using the cross-entropy criterion, and we computed ancestry estimates for the sample. The results were projected onto a map of the European continent using a raster file and {\tt R} graphic functions~\citep{jay2012forecasting}.  We also used {\tt TESS3} to perform  a genome scan for selection on chromosome 5 using $K = 3$ ancestral populations (54k SNPs).
+
+
+
+  
+
+\section{Results}
+
+\paragraph{Comparison of ancestry estimates.}
+We used computer simulations of admixed populations to evaluate the ability of {\tt TESS3} to reproduce the ancestry estimates of {\tt TESS} 2.3 using known individual ancestry proportions from two ancestral gene pools. Simulating 2k unlinked SNPs, we varied the level of ancestral population differentiation, measured by $F_{\rm ST}$, to create difficult as well as easier data sets.  For all data sets, the information criterion of each version of {\tt TESS} led to $K = 2$ clusters. Statistical errors, measured by RMSEs for estimated $Q$ and $G$ matrices, ranged between $0.02$ and $0.15$ (Figure 1). Statistical errors increased as the levels of differentiation between the two source populations decreased, but they remained in an acceptable range for values of $F_{\rm ST}$ greater than $0.016$. Overall, the statistical performances were of the same order for both versions of {\tt TESS}. 
+
+\paragraph{Run-time analysis.}
+Next we compared the run-times of {\tt TESS3} and {\tt TESS 2.3} for increasing values of the number of ancestral populations and increasing numbers of loci. For {\tt TESS 2.3} the total number of cycles in the MCMC algorithm was set to 1,000, a value for which the Monte-Carlo sampler reached its equilibrium state. Run-times were averaged over distinct random seed values for each $K$ and number of loci. For both algorithms, the run-times increased with the number of loci and with the number of ancestral populations (Figure 2). For $L = 10$k loci, {\tt TESS3} and {\tt TESS 2.3} runs took less than 6 minutes on an Intel Xeon 2.40 GHz CPU. With $L = 50$k loci and $K = 5$ ancestral populations, {\tt TESS 2.3} took on average 30 minutes to complete a single run, whereas the {\tt TESS3} average run-time was about 4 minutes.
+  
+
+\paragraph{Outlier locus tests.}
+
+We evaluated the capacity of {\tt TESS3} to detect outlier loci on simulated data containing $5\%$ of outlier loci. For each locus, we performed a population differentiation test based on the estimated ancestral allele frequencies. Although the ratios $m_{\rm s}/m$ took large values, the probability distributions of $F_{\rm ST}$ statistics computed from neutral and selected ancestral allele frequencies overlapped substantially. Thus the power of neutrality tests were expected to be low.  For a data set with $m_{\rm s}/m = 0.005$, the estimate of the genomic inflation factor was equal to $\lambda = 4.4$. For a data set with $m_{\rm s}/m = 0.05$ this value was equal to $\lambda = 10.0$. After correction of the test statistic, the observed levels of the false discovery rate were close to their expected values. The power to reject the null hypothesis was lower when the intensity of selection was low (Table 1). For an expected FDR of $q=0.1$, the power of the test was approximately equal to $60\%$ for the higher selection rate and it was equal to $30\%$ for the lower selection rate. The power values were close to those obtained when we applied outlier tests to the data before admixture. This experiment showed that the power to reject neutrality in continuous populations was similar to the power of traditional population differentiation tests applied to the discrete (ancestral) population data.  
+
+
+
+
+\paragraph{Biological data analysis.}
+We applied {\tt TESS3} to a genomic data set of 170 European lines of {\it Arabidopsis thaliana} (216k SNPs). The cross-entropy curve exhibited a change in curvature for $K = 3$-4 clusters. For $K = 3$, the western cluster grouped all lines from the British Isles, France and Iberia. The eastern cluster grouped all lines from Central, Eastern Europe and Southern Sweden. Fourteen northern Scandinavian accessions were grouped into a separate population (Figure 3A). Those results were consistent with those obtained with {\tt TESS 2.3}. The average run-time of {\tt TESS3} was about 5 minutes whereas each {\tt TESS 2.3} run took about 2 hours. Then we performed a genome scan for selection based on population differentiation in the three ancestral populations detected by {\tt TESS3}. The genomic inflation factor was equal to $\lambda = 15.0$. The histogram of corrected $p$-values provided evidence that confounding errors were correctly removed (Figure 4A).  The Manhattan plot exhibited islands of strong differentiation around positions 8,510 kb, 6,944 kb, 6,969 kb and 26,155 kb in the chromosome 5 (Figure 3B). The top hits in the candidate list corresponded to genic SNPs. In particular, we discovered genes involved in defense response ({\it VSP1}), and in photoperiodism, flowering and root development ({\it WAV2})~\citep{mochizuki2005arabidopsis}. The derived allele in the {\it VSP1} gene was present at high frequency in Eastern Europe and it was almost absent from Western Europe and Northern Scandinavia. The derived allele in the {\it WAV2} gene was present at high frequency in the Iberian peninsula and at low frequency in Eastern Europe and Northern Scandinavia (Figure 4B). 
+
+

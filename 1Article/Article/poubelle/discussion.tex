@@ -1,0 +1,29 @@
+
+
+
+
+\section{Discussion}
+
+
+A fundamental objective of evolutionary biology is the evaluation of the distribution of genetic variation among populations in geographic space. During the last few years, high-throughput sequencing technologies have allowed population geneticists to make fast progress in this direction. The access to extensive data have opened the door to a deeper understanding of the spatial distribution of adaptive and nonadaptive genetic variation in model and non-model organisms~\citep{manel2010perspectives}. This transition from population genetics to population and ecological genomics is accompanied by a revolution of the principles and methods used to analyze the influence of landscape features on genetic variation. This revolution is made possible thanks to the availability of fast computing programs than can deal with high dimension and heterogeneity in the data. 
+
+
+ By combining machine learning and spatial statistical methods, the computer program {\tt TESS3} enabled fast analysis of geographic and genome-wide patterns of genetic variation from large genomic data sets. In coalescent simulations of individuals with known ancestry, {\tt TESS3} produced accurate estimates of ancestry coefficients and ancestral allele frequencies. {\tt TESS3} results were statistically similar to those obtained with the Bayesian clustering program {\tt TESS} 2.3, but {\tt TESS3} was about 30 times faster than {\tt TESS} 2.3 when used with $K = 5$ ancestral populations and 50k binary loci. Though Bayesian approaches might be preferable for genotypic matrices of moderate dimensions, {\tt TESS3} generally outperformed {\tt TESS} 2.3 when more than a few thousands of markers were used.
+
+A novelty of {\tt TESS3} is the identification of outlier loci from the genotypic matrix. Based on the estimations of the ancestral allele frequency matrix, the {\tt TESS3} algorithm computes a population differentiation statistic estimating a fixation index for each locus. If local adaptation favours a particular allele in some ancestral populations, the population differentiation statistic  at that locus will be larger than at loci which are selectively neutral. Outliers in the distribution of the population differentiation statistic are usually considered as loci potentially targeted by local selection~\citep{holsinger2009genetics}. The program output allows population geneticists to determine candidate loci based on FDR control algorithms, as for example implemented in the  {\tt R} package {\tt LEA}~\citep{frichot2015lea}. 
+
+The study of European lines of {\it A. thaliana} illustrated the main step of analysis using {\tt TESS3}. These steps can be summarized as follows: 1) Identifying the number of clusters using the cross-validation criterion, by launching multiple runs of the program for each value of $K$, 2) Displaying maps of ancestry coefficients using {\tt R} scripts provided with {\tt TESS} 2.3 or {\tt POPS}~\citep{jay2012forecasting}, 3) Performing a genome scan for selection based on ancestral allele frequency differentiation statistics. Results for {\it A. thaliana} suggested that clinal variation occurs along an east-west gradient separating two ancestral populations in Central Europe. Those results were in very good agreement with previous findings using {\tt TESS} 2.3, although these findings were obtained with a different data set~\citep{franccois2008demographic}. The genome scan for selection revealed contrasted patterns  among European lines of {\it A. thaliana} and provided evidence of a substantial role for selection in shaping the genome-wide variation of the species in Europe.
+
+To conclude,  the computer program {\tt TESS3} provides a major update of the {\tt TESS} program  enabling rapid ancestry coefficient estimation and genome scans for adaptive alleles. While preserving the accuracy of {\tt TESS} 2.3, the least-squares algorithms of {\tt TESS3} ran substantially faster than the Bayesian algorithms of {\tt TESS} when analyzing large population genomic data sets.
+
+
+\paragraph{Installing {\tt TESS3}.} Source codes, installation files and program documentation are available from the following link: 
+
+{\tt https://github.com/cayek/TESS3}
+
+\section*{Acknowledgments}
+This work was supported by a grant from the Laboratoire d\rq{}Excellence Labex Persyval-lab to Kevin Caye and Olivier Fran\c{c}ois. Olivier Fran\c{c}ois acknowledges support from Grenoble INP, and from the ``Agence Nationale de la Recherche\rq\rq{} (project AFRICROP ANR-13-BSV7-0017). 
+
+\section*{Data Accessibility} The Atwell et al. (2010) data used in this study are publicly available from the following link:\par
+ {\tt https://github.com/Gregor-Mendel-Institute/atpolydb}
+
