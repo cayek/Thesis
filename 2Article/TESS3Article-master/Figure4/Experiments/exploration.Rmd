@@ -1,0 +1,78 @@
+---
+layout: post
+title:  "Figure 4"
+date: 2016-05-19
+published: true
+tags: [TESS3, phd]
+---
+
+
+```{r include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, error = FALSE, results = "hide")
+```
+
+
+```{r init}
+library(raster)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+library(tikzDevice)
+library(gridExtra)
+library(cowplot)
+
+
+g_legend <- function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
+
+
+res.dir <- "/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/Figure4.res/"
+fig.dir <- "/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/Figures/"
+
+source("/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/functions.R")
+
+```
+
+# Data sampler
+
+```{r sampler, dependson=c("init")}
+data.pipe <- pipe('ssh cayek@patator.imag.fr "cat /home/cayek/Data/AthalianaGegMapLines/call_method_75/call_method_75_TAIR8.RData"')
+load(data.pipe)
+
+sample.data.at <- sampler.from.data(call_method_75_TAIR8.europe$X, call_method_75_TAIR8.europe$coord)
+
+data.list <- sample.data.at(50, 5000)
+```
+
+
+```{r run.test, dependson=c("sampler"), eval=FALSE, include=FALSE}
+tess3old.run <- tess3old.wrapper(data.list, 3, alpha = 0.03)
+tess3.run <- tess3.wrapper(data.list, 3, method = "MCPA")
+tess3.run.oqa <- tess3.wrapper(data.list, 3, method = "OQA")
+
+tess3r::ComputeRmseWithBestPermutation(tess3.run$Q, tess3old.run$Q)
+tess3r::ComputeRmseWithBestPermutation(tess3.run$G, tess3old.run$G)
+tess3r::ComputeRmseWithBestPermutation(tess3.run.oqa$Q, tess3old.run$Q)
+tess3old.run$times
+tess3.run$times
+tess3.run.oqa$times
+```
+
+
+```{r exp.measure, dependson=c("exp")}
+load(paste0(res.dir,"df.n.res"))
+load(paste0(res.dir,"df.L.res"))
+
+df.L %>% filter(n == 150, L == 100e3) %>%
+  mutate(time = it * time.per.it.mean) %>%
+  group_by(method) %>% summarise(average.time.min = mean(time) / 60)
+
+df.n %>% filter(n == 600, L == 50e3) %>%
+  mutate(time = it * time.per.it.mean) %>%
+  group_by(method) %>% summarise(average.time.min = mean(time) / 60)
+
+
+```

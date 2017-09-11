@@ -1,0 +1,58 @@
+# overleaf
+ArticleOverleaf/
+*.tdo
+
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.RData
+*.res
+
+.DS_Store
+
+# emacs
+*~
+\#*\#
+
+# At
+Data/AthalianaGegMapLines/call_method_75/*
+Data/AthalianaGegMapLines/ancestral_alleles.txt
+
+# vep file
+*.fas
+*.fas.index
+*.gff
+Data/vep/arabidopsis_thaliana/
+
+# latex
+*.pdf
+*.aux
+*.log
+Figure*/Figures/*.tex
+*.dvi
+*.ok
+*.notok
+*.out
+*.auxlock
+*.synctex.gz
+*.tex.backup
+*.fdb_latexmk
+*.fls
+Article/diff.tex
+Article/OldVersion/
+Article/GSA-journal-template.tex
+Article/example-bibliography.bib
+
+# Rmd
+*.html
+
+# fig
+*.png
+
+# others
+*.zip
+CopyOfArticle2_TESS3/
+DockerTest/
+panther_fdr.txt
+panther_top.txt

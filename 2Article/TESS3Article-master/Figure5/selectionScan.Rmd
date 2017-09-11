@@ -1,0 +1,193 @@
+---
+title: "Selection Scan"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("setup.R")
+library(dplyr)
+library(ggplot2)
+library(qvalue)
+library(tess3r)
+data.file <-
+  paste0(data.dir, "AthalianaGegMapLines/call_method_75/call_method_75_TAIR9.RData")
+load(data.file)
+K <- 6
+n <- nrow(call_method_75_TAIR9.europe$X)
+fdr.level <- 1e-10
+```
+
+## With TESS3
+
+```{r tess3.res}
+res.file <- paste0(res.dir, "tess3K6.sigmaHeat1.5.RData")
+load(res.file)
+```
+
+```{r tess3.pvalue, dependson=c("tess3.res")}
+tess3.scan <- data.frame(fst = tess3Main.obj$Fst)
+
+# compute score
+tess3.scan <- tess3.scan %>% mutate(z.score = sqrt(fst*(n-K)/(1-fst)))
+
+# compute gif
+lambda <- median(tess3.scan$z.score^2)/qchisq(1/2, df = K-1)
+print(paste0("gif = ", lambda))
+
+# compute pvalue
+tess3.scan <- tess3.scan %>% mutate(p.value = pchisq(z.score ^ 2 / lambda, 
+                                                     df = K-1, 
+                                                     lower = FALSE),
+                                    log.p.value = pchisq(z.score ^ 2 / lambda, 
+                                                     df = K-1, 
+                                                     lower = FALSE, 
+                                                     log.p = TRUE))
+hist(tess3.scan$p.value)
+```
+
+### Manhattanplot 
+
+```{r tess3.man, dependson = c("tess3.pvalue")}
+ggplot(tess3.scan, aes(x = seq_along(fst), y = - log.p.value)) + 
+  geom_point() + 
+  scale_y_continuous(limits = c(0,600))
+```
+
+### FDR 
+
+```{r tess3.fdr, dependson=c("tess3.pvalue")}
+qvals <- qvalue(tess3.scan$p.value, fdr.level = fdr.level)
+plot(qvals)
+cat("proportion of significant SNPs = ",sum(qvals$significant) / length(tess3.scan$p.value),"\n")
+cat("number of significant SNPs = ",sum(qvals$significant) ,"\n")
+tess3.scan <- tess3.scan %>% mutate(q.value = qvals$qvalues)
+```
+
+## With sNMF
+
+```{r snmf.res}
+res.file <- paste0(res.dir, "snmfK6.RData")
+load(res.file)
+```
+
+```{r snmf.pvalue, dependson=c("snmf.res")}
+snmf.scan <- data.frame(fst = ComputeFst(snmf.obj$Q, 
+                                   snmf.obj$G,
+                                   2))
+snmf.scan$fst[snmf.scan$fst<0] <- 0 # TO avoid numerical issue
+
+# compute score
+snmf.scan <- snmf.scan %>% mutate(z.score = sqrt(fst*(n-K)/(1-fst)))
+
+# compute gif
+lambda <- median(snmf.scan$z.score^2)/qchisq(1/2, df = K-1)
+print(paste0("gif = ", lambda))
+
+# compute pvalue
+snmf.scan <- snmf.scan %>% mutate(p.value = pchisq(z.score ^ 2 / lambda, 
+                                                     df = K-1, 
+                                                     lower = FALSE),
+                                    log.p.value = pchisq(z.score ^ 2 / lambda, 
+                                                     df = K-1, 
+                                                     lower = FALSE, 
+                                                     log.p = TRUE))
+hist(snmf.scan$p.value)
+```
+
+### Manhattanplot 
+
+```{r snmf.man, dependson = c("snmf.pvalue")}
+ggplot(snmf.scan, aes(x = seq_along(fst), y = - log.p.value)) + 
+  geom_point() + 
+  scale_y_continuous(limits = c(0,600))
+```
+
+### FDR 
+
+```{r snmf.fdr, dependson=c("snmf.pvalue")}
+qvals <- qvalue(snmf.scan$p.value, fdr.level = fdr.level)
+plot(qvals)
+cat("proportion of significant SNPs = ",sum(qvals$significant) / length(snmf.scan$p.value),"\n")
+cat("number of significant SNPs = ",sum(qvals$significant) ,"\n")
+snmf.scan <- snmf.scan %>% mutate(q.value = qvals$qvalues)
+```
+
+## Comparison between sNMF and TESS3
+### Comparing  locus list
+
+```{r comp, dependson=c("snmf.fdr, tess3.fdr")}
+print(paste0("fst rmse = ", sqrt(mean((snmf.scan$fst - tess3.scan$fst) ^ 2))))
+snmf.cand <- which(snmf.scan$q.value <= fdr.level)
+tess3.cand <- which(tess3.scan$q.value <= fdr.level)
+prop <- mean(snmf.cand %in% tess3.cand)
+print(paste0("prop of snmf cand in tess3 cand = ",prop))
+```
+
+#### Top
+
+```{r}
+# top 100 
+id.max <- 100
+snmf.cand <- sort(snmf.scan$q.value, index.return = TRUE)$ix[1:id.max]
+tess3.cand <- sort(tess3.scan$q.value, index.return = TRUE)$ix[1:id.max]
+prop <- mean(snmf.cand %in% tess3.cand)
+print(paste0("prop of snmf cand in tess3 cand = ",prop))
+
+# top 20
+id.max <- 50
+snmf.cand <- sort(snmf.scan$q.value, index.return = TRUE)$ix[1:id.max]
+tess3.cand <- sort(tess3.scan$q.value, index.return = TRUE)$ix[1:id.max]
+prop <- mean(snmf.cand %in% tess3.cand)
+print(paste0("prop of snmf cand in tess3 cand = ",prop))
+```
+
+### Comparing gene list
+
+```{r }
+res.file <- paste0(res.dir, "snpsTAIR9vepTAIR10.RData")
+load(res.file)
+# snmf
+snmf.scan.annotation <- cbind(snmf.scan, call_method_75_TAIR9.europe$locus.coord)
+snmf.scan.annotation <- snmf.scan.annotation %>% mutate(Location = paste0(Chromosome,":",Positions),
+                                  index = seq_along(fst)) 
+snmf.scan.annotation <- merge(snmf.scan.annotation, vep.res, by = c("Location")) %>%
+  arrange(q.value)
+
+# tess3
+tess3.scan.annotation <- cbind(tess3.scan, call_method_75_TAIR9.europe$locus.coord)
+tess3.scan.annotation <- tess3.scan.annotation %>% mutate(Location = paste0(Chromosome,":",Positions),
+                                  index = seq_along(fst)) 
+tess3.scan.annotation <- merge(tess3.scan.annotation, vep.res, by = c("Location")) %>%
+  arrange(q.value)
+
+```
+
+#### fdr.level
+```{r}
+snmf.cand <- snmf.scan.annotation %>% 
+  filter(q.value <= fdr.level) %>% dplyr::select(Gene)
+
+tess3.cand <- tess3.scan.annotation %>% 
+  filter(q.value <= fdr.level) %>% dplyr::select(Gene)
+prop <- mean(snmf.cand$Gene %in% tess3.cand$Gene)
+print(paste0("prop of snmf cand in tess3 cand = ",prop))
+```
+
+#### Top
+
+```{r}
+# top 1000
+id.max <- 1000
+snmf.cand <- unique(snmf.scan.annotation$Gene)[1:id.max]
+tess3.cand <- unique(tess3.scan.annotation$Gene)[1:id.max]
+prop <- mean(snmf.cand %in% tess3.cand)
+print(paste0("prop of snmf cand in tess3 cand = ",prop))
+
+# top 20
+id.max <- 20
+snmf.cand <- unique(snmf.scan.annotation$Gene)[1:id.max]
+tess3.cand <- unique(tess3.scan.annotation$Gene)[1:id.max]
+prop <- mean(snmf.cand %in% tess3.cand)
+print(paste0("prop of snmf cand in tess3 cand = ",prop))
+```

@@ -1,0 +1,92 @@
+---
+layout: post
+title:  "Figure 3"
+date: 2016-05-18
+published: true
+tags: [TESS3, phd]
+---
+
+
+```{r include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, error = FALSE, results = "hide")
+```
+
+
+```{r init}
+library(raster)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+library(tikzDevice)
+library(gridExtra)
+library(cowplot)
+
+
+res.dir <- "/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/Figure3.res/"
+fig.dir <- "/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/Figures/"
+
+source("/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/functions.R")
+
+```
+
+
+# Data param
+
+```{r param, dependson=c("init")}
+simu.param <- list(n = 100, 
+                   nsites.neutral = 1 * 1e5,
+                   nsites.selected = 1 * 1e2,
+                   crossover.proba = 0.25 * 1e-8,
+                   m.neutral = 0.25 * 10 * 1e-6,
+                   m.selected = 0.25 * 0.1 * 1e-6,
+                   mutation.rate.per.site = 0.25 * 1e-7,
+                   N0 = 1e6,
+                   k = 0.5,
+                   min.maf = 0.05)
+
+under.selection.prop <- 0.05 # 5 % sous selection
+m.ms <- 50 # m / ms
+simu.param$nsites.neutral <- 3 * 1e4
+simu.param$n = 100
+simu.param$nsites.selected <- simu.param$nsites.neutral * under.selection.prop
+simu.param$m.selected <- simu.param$m.neutral / m.ms
+
+data.list <- sample.data(simu.param)
+
+plot(data.list$coord, col = rep(rainbow(2),each = data.list$n / 2))
+mean(data.list$Fst)
+dim(data.list$admixed.genotype)
+message("prop outlier : ", length(data.list$selected.locus.index) / data.list$L * 100, " %")
+
+```
+
+
+```{r tess3.run, dependson=c("param")}
+# data.list$W <- NULL
+tess3.run <- tess3.wrapper(data.list, K = 2, method = "MCPA")
+ggplot(data.frame(fst = tess3.run$Fst, index = seq_along(tess3.run$Fst))) + geom_point(aes(x = index, y = -log(1 - fst)))
+barplot(t(tess3.run$Q), col = rainbow(2))
+tess3.run$precision.recall <- AUC.precision.recall(tess3.run$Fst, data.list$selected.locus.index)
+ggplot(tess3.run$precision.recall$df) + geom_point(aes(x = power, y = 1 - fdr))
+tess3.run$precision.recall$auc
+
+snmf.run <- snmf.wrapper(data.list, K = 2)
+ggplot(data.frame(fst = snmf.run$Fst, index = seq_along(tess3.run$Fst))) + geom_point(aes(x = index, y = -log(1 - fst)))
+barplot(t(snmf.run$Q), col = rainbow(2))
+snmf.run$precision.recall <- AUC.precision.recall(snmf.run$Fst, data.list$selected.locus.index)
+ggplot(snmf.run$precision.recall$df) + geom_point(aes(x = power, y = 1 - fdr))
+snmf.run$precision.recall$auc
+
+beforeadmixture.run <- beforeadmixture.wrapper(data.list)
+ggplot(data.frame(fst = beforeadmixture.run$Fst, index = seq_along(tess3.run$Fst))) + geom_point(aes(x = index, y = -log(1 - fst)))
+barplot(t(data.list$Q), col = rainbow(2))
+beforeadmixture.run$precision.recall <- AUC.precision.recall(beforeadmixture.run$Fst, data.list$selected.locus.index)
+ggplot(beforeadmixture.run$precision.recall$df) + geom_point(aes(x = power, y = 1 - fdr))
+beforeadmixture.run$precision.recall$auc
+
+cor(tess3.run$Fst, beforeadmixture.run$Fst)
+cor(snmf.run$Fst, beforeadmixture.run$Fst)
+
+mean(abs(snmf.run$Fst - beforeadmixture.run$Fst))
+mean(abs(beforeadmixture.run$Fst - tess3.run$Fst))
+```

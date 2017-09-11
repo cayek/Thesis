@@ -1,0 +1,81 @@
+require 'colorize'
+
+namespace :latex do
+
+  latex = 'latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode"'
+
+
+  src = ["appendix.tex", "draft.tex", "intro.tex", "results.tex", "method.tex",
+    "tables_figures.tex", "discussion.tex", "references.tex"]
+
+  main = "draft"
+
+  desc "Copy the biblio from Biblio project"
+  task :bib do
+    if ENV['USER'] == "cayek"
+      puts "== Copy of draft.bib from the Biblio project !!!".green
+      sh "cp -f ../../Biblio/TESS3_article2/draft.bib draft.bib"
+    end
+  end
+
+  desc "Compile draf.pdf"
+  task :draft => src + ["bib"] do
+    file = "draft.tex"
+    pdf = file.ext(".pdf")
+    puts "==Compilling #{pdf}".green
+    output = `#{latex} #{file}`
+    output = output.gsub(/[Ee]rror/, "ERROR".red)
+    output = output.gsub(/[Ww]arning/, "WARNING".yellow)
+    puts output
+  end
+
+  desc "Compile draf.pdf"
+  task :view => src do
+    sh "evince draft.pdf&"
+  end
+
+  desc "Clean draf.pdf"
+  task :clean do
+    sh "latexmk -pdf -C #{main}"
+  	sh "rm -f #{main}.pdfsync"
+  	sh "rm -rf *~ *.tmp"
+  	sh "rm -f *.bbl *.blg *.aux *.end *.fls *.log *.out *.fdb_latexmk"
+  end
+
+  namespace :revision do
+    tag = "v0.2.1"
+
+    desc "Clean latex files"
+    task :clean do
+      sh "rm -f diff.*"
+    end
+
+    desc "Retrieve old draft version"
+    task :OldVersion do
+      sh "mkdir OldVersion"
+      sh "git --work-tree=./OldVersion/ checkout #{tag} -- ./Article"
+    end
+
+    rule "diff.tex" => src do |t|
+      puts "== Creating diff.tex".green
+      output = `latexdiff --math-markup=0 OldVersion/Article/draft.tex draft.tex --flatten > diff.tex`
+      output = output.gsub(/[Ee]rror/, "ERROR".red)
+      output = output.gsub(/[Ww]arning/, "WARNING".yellow)
+      puts output
+    end
+
+    desc "Make the diff with old draft version"
+    task :diff => "diff.tex" do
+      file = "diff.tex"
+      pdf = file.ext(".pdf")
+      puts "==Compilling #{pdf}".green
+      output = `#{latex} #{file}`
+      output = output.gsub(/[Ee]rror/, "ERROR".red)
+      output = output.gsub(/[Ww]arning/, "WARNING".yellow)
+      puts output
+    end
+
+  end
+
+
+end

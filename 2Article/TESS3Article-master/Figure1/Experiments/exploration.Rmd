@@ -1,0 +1,78 @@
+---
+layout: post
+title:  "Figure 1"
+date: 2016-05-11
+published: true
+tags: [TESS3, phd]
+---
+
+
+```{r include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, error = FALSE, results = "hide")
+```
+
+
+```{r init}
+library(raster)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+library(tikzDevice)
+library(gridExtra)
+library(cowplot)
+
+
+res.dir <- "/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/Figure1.res/"
+fig.dir <- "/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/Figures/"
+
+source("/home/cayek/KrakenatorHomeDir/Notebook/Article2_TESS3/functions.R")
+```
+
+# Data param
+
+```{r param, dependson=c("init")}
+  simu.param <- list(n = 100,
+                     nsites.neutral = 1e4,
+                     nsites.selected = 0,
+                     crossover.proba = 0.25 * 10 ^ -8,
+                     m.neutral = 0.25 * 10 ^ -6,
+                     m.selected = NULL,
+                     mutation.rate.per.site = 0.25 * 10 ^ -7,
+                     N0 = 10 ^ 6,
+                     k = 0.5,
+                     min.maf = 0.05)
+  data.list <- sample.data(simu.param)
+
+  plot(data.list$coord, col = rep(rainbow(2),each = data.list$n / 2))
+
+  em.vario <- CalculateEmpiricalGenSemivariogram(X = data.list$admixed.genotype,
+                                                 ploidy = data.list$ploidy,
+                                                 coord = data.list$coord,
+                                                 breaks = "FD",
+                                                 na.rm = TRUE)
+  ggplot2::ggplot(em.vario, ggplot2::aes(x = h, y = semi.variance, size = size)) +
+                 ggplot2::geom_point()
+
+  data.list$W <- ComputeHeatKernelWeight(data.list$coord, 0.2)
+  plot(raster(data.list$W))
+```
+
+```{r tess3.run, dependson=c("init, funct")}
+barplot(t(data.list$Q), col = rainbow(2))
+# data.list$W <- NULL
+tess3.run <- tess3.wrapper(data.list, K = 2, method = "MCPA")
+barplot(t(tess3.run$Q), col = rainbow(2))
+
+tess3.run <- tess3.wrapper(data.list, K = 2, method = "OQA")
+barplot(t(tess3.run$Q), col = rainbow(2))
+
+tess3Old.run <- tess3old.wrapper(data.list, K = 2, alpha = 0.05)
+barplot(t(tess3Old.run$Q), col = rainbow(2))
+
+ComputeRmseWithBestPermutation(tess3Old.run$Q, data.list$Q)
+ComputeRmseWithBestPermutation(tess3.run$Q, data.list$Q)
+
+ComputeRmseWithBestPermutation(GtoFreq(tess3Old.run$G,1), data.list$Freq)
+ComputeRmseWithBestPermutation(GtoFreq(tess3.run$G,1), data.list$Freq)
+
+```
