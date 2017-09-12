@@ -10982,7 +10982,7 @@ de risque). Dans ce modèle il y a de l'orde du millier de SNIPs causaux !
   :VOLUME: 42
   :PAGES: 295--302
   :DOI: 
-  :URL: 
+  :URL:https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847618/ 
  :END:
 
 cite:dubois2010multiple C'est l'article du dataset Celiac
