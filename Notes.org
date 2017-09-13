@@ -12322,3 +12322,17 @@ cite:Eastment_1982 A merde celui la aussi faut que je le lise....
  :END:
 
 cite:Martins_2016 C'est le papier de la stat Fst à partir des coéficients de métissage.
+
+** TODO 2003 - Inference of Population Structure Using Multilocus Genotype Dat a: Linked Loci and Correlated Allele Frequencies
+ :PROPERTIES:
+  :Custom_ID: Falush1567
+  :AUTHOR: Falush, Stephens, Pritchard \& .
+  :JOURNAL: Genetics
+  :YEAR: 2003
+  :VOLUME: 164
+  :PAGES: 1567--1587
+  :DOI: 
+  :URL: http://www.genetics.org/content/164/4/1567
+ :END:
+
+cite:Falush1567 C'est une extenssion du papier de cite:Pritchard2000
