@@ -12336,3 +12336,32 @@ cite:Martins_2016 C'est le papier de la stat Fst à partir des coéficients de m
  :END:
 
 cite:Falush1567 C'est une extenssion du papier de cite:Pritchard2000
+
+** TODO 2015 - Clustering and Assignment Methods in Landscape Genetics
+ :PROPERTIES:
+  :Custom_ID: Fran_ois_2015
+  :AUTHOR: François \& Waits
+  :JOURNAL: Landscape Genetics
+  :YEAR: 2015
+  :VOLUME: 
+  :PAGES: 114–128
+  :DOI: 10.1002/9781118525258.ch07
+  :URL: http://dx.doi.org/10.1002/9781118525258.ch07
+ :END:
+
+cite:Fran_ois_2015 C'est un article de review sur les méthode de clustering pour
+la landscape genetic. Il est dans le livre Landscape Genetics : Concept ...
+
+** TODO 2012 - Genome-wide patterns of genetic variation in worldwide  Arabidopsis thaliana accessions from the RegMap panel
+ :PROPERTIES:
+  :Custom_ID: Horton_2012
+  :AUTHOR: Horton {\it et al.}
+  :JOURNAL: Nature Genetics
+  :YEAR: 2012
+  :VOLUME: 44
+  :PAGES: 212–216
+  :DOI: 10.1038/ng.1042
+  :URL: http://dx.doi.org/10.1038/ng.1042
+ :END:
+
+cite:Horton_2012 Pour parler du data set d'arabidopsis thaliana RegMap.
