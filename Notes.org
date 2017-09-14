@@ -10149,6 +10149,10 @@ Cité dans [[ref:Cule_2011]] pour justifier le test d'hypothèse.
 cite:Fran_ois_2016
 Il faudrat que je comprenne bien cette article pour ma thèse !! 
 
+Mouais... en faite c'est juste comment trouver un niveau moyen pour les stats
+utilisé pour detecter la selection, ce niveau moyen est celui attendu pour les
+locus neutre.
+
 ** 2011 - Parameter estimation and inference in the linear mixed model :LFMM:HypothesisTesting:
 :PROPERTIES:
 :Custom_ID: Gumedze_2011
@@ -12365,3 +12369,61 @@ la landscape genetic. Il est dans le livre Landscape Genetics : Concept ...
  :END:
 
 cite:Horton_2012 Pour parler du data set d'arabidopsis thaliana RegMap.
+
+** TODO 1973 - DISTRIBUTION OF GENE FREQUENCY AS A TEST OF THE THEORY OF THE S ELECTIVE NEUTRALITY OF POLYMORPHISMS
+ :PROPERTIES:
+  :Custom_ID: Lewontin175
+  :AUTHOR: Lewontin \& Krakauer
+  :JOURNAL: Genetics
+  :YEAR: 1973
+  :VOLUME: 74
+  :PAGES: 175--195
+  :DOI: 
+  :URL: http://www.genetics.org/content/74/1/175
+ :END:
+
+cite:Lewontin175 Article qui a introduit l'approche Fst outlier pour detecter
+l'adaptation local.
+
+** TODO 2002 - Generating samples under a Wright-Fisher neutral model of  genetic variation
+ :PROPERTIES:
+  :Custom_ID: Hudson_2002
+  :AUTHOR: Hudson
+  :JOURNAL: Bioinformatics
+  :YEAR: 2002
+  :VOLUME: 18
+  :PAGES: 337–338
+  :DOI: 10.1093/bioinformatics/18.2.337
+  :URL: http://dx.doi.org/10.1093/bioinformatics/18.2.337
+ :END:
+
+cite:Hudson_2002 Papier du logiciel =ms=
+
+** TODO 2015 - LEA: AnRpackage for landscape and ecological association  studies
+ :PROPERTIES:
+  :Custom_ID: Frichot_2015
+  :AUTHOR: Frichot \& François
+  :JOURNAL: Methods in Ecology and Evolution
+  :YEAR: 2015
+  :VOLUME: 6
+  :PAGES: 925–929
+  :DOI: 10.1111/2041-210x.12382
+  :URL: http://dx.doi.org/10.1111/2041-210x.12382
+ :END:
+
+cite:Frichot_2015 C'est le papier du package LEA.
+
+** TODO 2008 - AmiGO: online access to ontology and annotation data
+ :PROPERTIES:
+  :Custom_ID: Carbon_2008
+  :AUTHOR: Carbon, Ireland, Mungall, , Shu, Marshall \& Lewis
+  :JOURNAL: Bioinformatics
+  :YEAR: 2008
+  :VOLUME: 25
+  :PAGES: 288–289
+  :DOI: 10.1093/bioinformatics/btn615
+  :URL: http://dx.doi.org/10.1093/bioinformatics/btn615
+ :END:
+
+cite:Carbon_2008 Citation pour l'outils AMIGO :
+http://www.geneontology.org/page/go-citation-policy
