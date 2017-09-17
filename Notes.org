@@ -10391,7 +10391,7 @@ de thèse.
 cite:rubin1981bayesian Papier trouvé dans la biblio que OF m'a donnée en début
 de thèse.
 
- 
+C'est le papier sur le bootstrap bayesien utilisé par lfmm pour estimer la variance.
 
 ** TODO 2005 - Structural equation models: a review with applications to environmental epidemiology :LFMM:
 :PROPERTIES:
@@ -12427,3 +12427,46 @@ cite:Frichot_2015 C'est le papier du package LEA.
 
 cite:Carbon_2008 Citation pour l'outils AMIGO :
 http://www.geneontology.org/page/go-citation-policy
+
+** TODO 1948 - Les mathématiques de l'hérédité
+ :PROPERTIES:
+  :Custom_ID: Malecot1948
+  :AUTHOR: Mal\'ecot
+  :JOURNAL: 
+  :YEAR: 1948
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:Malecot1948 C'est un livre en francais sur la genet des pops.
+
+** TODO 1994 - The History and Geography of Human Genes
+ :PROPERTIES:
+  :Custom_ID: Cavalli-Sforza1994
+  :AUTHOR: Cavalli, Menozzi \& Piazza
+  :JOURNAL: 
+  :YEAR: 1994
+  :VOLUME: 
+  :PAGES: 1059
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:Cavalli-Sforza1994 Un livre classic sur le genet des pops (c'est le livre
+que keurcien lisait ?)
+
+** TODO 2015 - Detecting individual ancestry in the human genome.
+ :PROPERTIES:
+  :Custom_ID: Wollstein2015
+  :AUTHOR: Wollstein \& Lao
+  :JOURNAL: Investigative genetics
+  :YEAR: 2015
+  :VOLUME: 6
+  :PAGES: 7
+  :DOI: 10.1186/s13323-015-0019-x
+  :URL: http://www.ncbi.nlm.nih.gov/pubmed/25937887 http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC4416275
+ :END:
+
+cite:Wollstein2015 Je pense que c'est une review des méthode d'estimation de la structure.
