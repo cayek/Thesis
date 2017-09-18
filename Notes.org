@@ -12470,3 +12470,31 @@ que keurcien lisait ?)
  :END:
 
 cite:Wollstein2015 Je pense que c'est une review des méthode d'estimation de la structure.
+
+** TODO 2011 - Adaptation to climate across the Arabidopsis thaliana genome.
+ :PROPERTIES:
+  :Custom_ID: Hancock2011
+  :AUTHOR: Hancock, Brachi, Faure, Horton, Jarymowycz, Sperone, Toomajian, Roux \& Bergelson
+  :JOURNAL: Science (New York, N.Y.)
+  :YEAR: 2011
+  :VOLUME: 334
+  :PAGES: 83--86
+  :DOI: 10.1126/science.1209244
+  :URL: http://www.ncbi.nlm.nih.gov/pubmed/21980108
+ :END:
+
+cite:Hancock2011 C'est un exemple de scan à la selection dans Arabidopsis Thaliana.
+
+** TODO 2011 - A map of local adaptation in Arabidopsis thaliana
+ :PROPERTIES:
+  :Custom_ID: Fournier-Level2011
+  :AUTHOR: Fournier-Level, Korte, Cooper, Nordborg, Schmitt \& Wilczek
+  :JOURNAL: Science (New York, N.Y.)
+  :YEAR: 2011
+  :VOLUME: 334
+  :PAGES: 86--89
+  :DOI: 10.1126/science.1209271
+  :URL: http://www.ncbi.nlm.nih.gov/pubmed/21980109
+ :END:
+
+cite:Fournier-Level2011 encore un exemple de scan à la selection dans A thaliana
