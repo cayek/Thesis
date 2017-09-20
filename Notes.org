@@ -11850,6 +11850,8 @@ pour des dataset type poolseq.
 Dans la vigentte il parle de 4 model. Celui qui pourrait être comme tess3 c'est
 le 4.
 
+Je suis pas sur a 100% mais j'ai l'impression que c'est des indiv en pop dans
+les données !!
 
 ** DONE 2015 - TESS3: fast inference of spatial population structure and  genome scans for selection
 CLOSED: [2017-09-06 mer. 13:30]
@@ -12498,3 +12500,35 @@ cite:Hancock2011 C'est un exemple de scan à la selection dans Arabidopsis Thali
  :END:
 
 cite:Fournier-Level2011 encore un exemple de scan à la selection dans A thaliana
+
+** TODO 2017 - Inferring Continuous and Discrete Population Genetic Structure Across Space
+ :PROPERTIES:
+  :Custom_ID: Bradburd189688
+  :AUTHOR: Bradburd, Coop \& Ralph
+  :JOURNAL: bioRxiv
+  :YEAR: 2017
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 10.1101/189688
+  :URL: http://www.biorxiv.org/content/early/2017/09/15/189688
+ :END:
+
+cite:Bradburd189688 Le dernier papier de bradburg, là ok la méthode a l'aire
+très comparable à tess3 :D il faudrait voir.
+
+** TODO 2010 - FunctSNP: an R package to link SNPs to functional knowledge and dbAutoMaker: a suite of Perl scripts to build SNP databases
+ :PROPERTIES:
+  :Custom_ID: Goodswen2010
+  :AUTHOR: Goodswen, , Gondro, , Watson-Haigh, \& Kadarmideen
+  :JOURNAL: BMC Bioinformatics
+  :YEAR: 2010
+  :VOLUME: 11
+  :PAGES: 311
+  :DOI: 10.1186/1471-2105-11-311
+  :URL: https://doi.org/10.1186/1471-2105-11-311
+ :END:
+
+cite:Goodswen2010 tout est dans le tire mais ce qi est intéressant c'est de
+considération sur que faire avec une liste de SNPs.
+
+Je pense que le pkg est plus maintenu ...
