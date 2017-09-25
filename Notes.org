@@ -7018,6 +7018,18 @@ venn.plot <- draw.quintuple.venn(
   plot(1:1000, -log10(emma.res$ps))
 #+end_src
 Ca marche pas :(
+** 1000genome pour keurcien
+#+begin_src R :results output :exports both
+  library(bigsnpr)
+  setwd("~/Projects/Thesis/MaThese/Data/1000Genomes/Phase3/")
+
+  ## SNPs matrix and meta info
+  G <- snp_attach("bigsnpr_G/G.rds")
+
+  ## indiv meta info
+  indif.df <- readRDS("indiv_df.rds")
+#+end_src
+
 * Archive
 ** Epigenome challenge
 *** Mike data
@@ -12532,3 +12544,18 @@ cite:Goodswen2010 tout est dans le tire mais ce qi est intéressant c'est de
 considération sur que faire avec une liste de SNPs.
 
 Je pense que le pkg est plus maintenu ...
+
+** TODO 2016 - 1,135 genomes reveal the global pattern of polymorphism in Arabidopsis thaliana
+ :PROPERTIES:
+  :Custom_ID: 1001Athaliana
+  :AUTHOR: 1001 Genomes Consortium \& others
+  :JOURNAL: Cell
+  :YEAR: 2016
+  :VOLUME: 166
+  :PAGES: 481--491
+  :DOI: 
+  :URL: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4949382/
+ :END:
+
+cite:1001Athaliana C'est la papier d'étude du 1001 génome pour Arabidopsis
+thaliana. L'étudier pour ma thèse ?
