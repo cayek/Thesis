@@ -12559,3 +12559,17 @@ Je pense que le pkg est plus maintenu ...
 
 cite:1001Athaliana C'est la papier d'étude du 1001 génome pour Arabidopsis
 thaliana. L'étudier pour ma thèse ?
+
+** TODO 2010 - Correlated z-Values and the Accuracy of Large-Scale Statistical  Estimates
+ :PROPERTIES:
+  :Custom_ID: Efron_2010
+  :AUTHOR: Efron
+  :JOURNAL: Journal of the American Statistical Association
+  :YEAR: 2010
+  :VOLUME: 105
+  :PAGES: 1042–1055
+  :DOI: 10.1198/jasa.2010.tm09129
+  :URL: http://dx.doi.org/10.1198/jasa.2010.tm09129
+ :END:
+
+cite:Efron_2010 un autre papier théorique d'efron...
