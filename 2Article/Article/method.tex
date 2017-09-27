@@ -18,7 +18,7 @@ values for $p$ are $p = 1,2$). For autosomal SNPs in a diploid organism, the
 genotype at locus $\ell$ is an integer number, 0, 1 or 2, corresponding to the
 number of reference alleles at this locus. In our algorithms, disjunctive forms
 are used to encode each genotypic value as the indicator of a heterozygote or a
-homozygote locus (Frichot et al. 2014). For a diploid organism each genotypic
+homozygote locus~/citep{Frichot2014}. For a diploid organism each genotypic
 value $0,1,2$ is encoded as $100$, $010$ and $001$. For $p$-ploid organisms,
 there are $(p+1)$ possible genotypic values at each locus, and each value
 corresponds to a unique disjunctive form. While our focus is on SNPs, the
@@ -352,7 +352,7 @@ Using $K = 2$ ancestral populations, we computed the root mean squared error
 estimated and known values of the $G$-matrix. To evaluate the benefit of spatial
 algorithms, we compared the statistical errors of APLS algorithms to the errors
 obtained with the {\tt snmf} method that reproduces the outputs of the {\tt
-  structure} program accurately~\citep{Frichot2014,Frichot2015}. To quantify the
+  structure} program accurately~\citep{Frichot2014}~\citep{Frichot2015}. To quantify the
 performances of neutrality tests as a function of ancestral and observed levels
 of $F_{\rm ST}$, we used the area under the precision-recall curve (AUC) for
 several values of the selection rate. Subsamples from a real data set were used
