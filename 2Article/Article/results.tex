@@ -24,11 +24,12 @@ to converge mathematically.
 \paragraph{The benefit of including spatial information in algorithms} Using
 neutral coalescent simulations of spatial admixture, we compared the statistical
 estimates obtained from a spatial algorithm (APLS) and a non-spatial algorithm
-(sNMF, Frichot et al. 2014). For various levels of ancestral population
+(snmf,~/ref{Frichot2014}). For various levels of ancestral population
 differentiation, estimates obtained from the spatial algorithm were more
-accurate than for those obtained using non-spatial approaches (Figure~\ref{fig:fig2}). For
-the larger samples, much finer population structure was detected with the
-spatial method than with the non-spatial algorithm (Figure~\ref{fig:fig2}).
+accurate than for those obtained using non-spatial approaches
+(Figure~\ref{fig:fig2}). For the larger samples, much finer population structure
+was detected with the spatial method than with the non-spatial algorithm
+(Figure~\ref{fig:fig2}).
 
 In simulations of outlier loci, we used the area under the precision-recall
 curve (AUC) for quantifying the performances of tests based on the estimates of
@@ -46,7 +47,7 @@ including spatial information in ancestry estimation algorithms improves the
 detection of signatures of hard selective sweeps having occurred in unknown
 ancestral populations.
 
-\paragraph{Sensitivity of estimates to spatial measurements.} Next, we used the
+\paragraph{Sensitivity of estimates to spatial measurements} Next, we used the
 simulated data sets to evaluate the robustness of APLS estimates to inaccurate
 measurements of spatial coordinates. To this aim, Gaussian noise was added to
 truly observed geographic coordinates by considering values of the
@@ -58,10 +59,10 @@ the relative error of APLS $Q$-matrix estimates to those obtained from an
 non-spatial method ({\tt snmf}). For small levels of uncertainty in spatial
 coordinates the errors of APLS estimates were lower than those of {\tt snmf}
 (Figure~\ref{fig:fig2_5}). For simulations with $n = 500$ individuals and $L =
-1O^5$ loci, a larger noise-to-signal ratio increased statistical errors in the
-$Q$-matrix estimates from the APLS algorithm. For smaller noise-to-signal ratio,
+10^5$ loci, a larger noise-to-signal ratio increased statistical errors in the
+$Q$-matrix estimates from the APLS algorithm. For smaller noise-to-signal ratios,
 RMSEs remained generally lower for the APLS algorithm than for methods without
-spatial coordinates. For simulations with $n = 50$ individuals and $L = 1O^4$
+spatial coordinates. For simulations with $n = 50$ individuals and $L = 10^4$
 loci, the APLS estimates were more accurate than the non-spatial estimates. This
 unexpected result could be explained by subtle algorithmic differences in tested
 programs. To a large extent, estimates from the APLS algorithm were robust to
@@ -106,7 +107,7 @@ results obtained with our spatial method for African Americans were similar to
 those obtained with {\tt snmf}. The main difference between APLS and {\tt snmf}
 estimates were for African populations. For Africans, {\tt snmf} detected two
 distinct genetic clusters whereas APLS detected a larger proportion of shared
-ancestry between eastern and western populations.
+ancestry between Eastern and Western populations.
 
 
 \paragraph{Application to European ecotypes of {\it Arabidopsis thaliana}} We

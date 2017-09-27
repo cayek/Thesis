@@ -50,18 +50,18 @@
 \begin{algorithm}[H]
  \KwIn{ the data matrix ${\bf Y} \in \{0,1\}^{n \times (p+1) L}$, the Laplacian matrix  ${\bf \Lambda} \in \mathbb{R}^{n \times n}$, the number of ancestral populations $K$, the regularization coefficient  $\alpha$, the maximum number of iteration $itMax$}
  
- \KwOut{the admixture coefficients matrix ${\bf Q} \in \mathbb{R}^{n \times K}$, the ancestral genotype frequencies matrix ${\bf G} \in \mathbb{R}^{K \times (p+1) L}$ }
+ \KwOut{the admixture matrix ${\bf Q} \in \mathbb{R}^{n \times K}$, the ancestral genotype frequency matrix ${\bf G} \in \mathbb{R}^{K \times (p+1) L}$ }
  
  \BlankLine
   
- Initialize ${\bf Q}$ at random \;
+ Initialize ${\bf Q}$ at random\;
 	
  \For{$it = 1..itMax$}{
 	 \BlankLine
 	 // G optimization step
 	
       \For{$l = 1..L$}{
-			$Y^l \leftarrow {\bf Y}_{., (p+1)l..(p+1)l + d}$ \;
+			$Y^l \leftarrow {\bf Y}_{., (p+1)l..(p+1)l + d}$\;
 		    $ {\bf D}_Q \leftarrow {\bf I}_{p+1} \otimes {\bf Q}^T {\bf Q}$\;
 	
 			$ v_Q \leftarrow Vec({\bf Q}^T Y^l)$\;
@@ -71,16 +71,16 @@
 	          g \in \Delta_G
 	       }
 	     } 
-              - 2 v_Q^T g + g^T {\bf D}_Q g$ \;
+              - 2 v_Q^T g + g^T {\bf D}_Q g$\;
 	
-	$Vec({\bf G}_{(p+1)l..(p+1)l + d,.}) \leftarrow g^\star$ \;
+	$Vec({\bf G}_{(p+1)l..(p+1)l + d,.}) \leftarrow g^\star$\;
 	 }
 	 \BlankLine
 	// Q optimization step
 	
 	$ {\bf D}_G \leftarrow Id_{n} \otimes {\bf G}^T {\bf G} + \alpha {\bf \Lambda} \otimes {\bf I}_{K}$ \;
 	
-	 $ v_G \leftarrow Vec({\bf G}^T {\bf Y}^T)$ \;
+	 $ v_G \leftarrow Vec({\bf G}^T {\bf Y}^T)$\;
 	
       $Vec({\bf Q}^T) \in \argmin_{%
 	       \substack{%
@@ -97,15 +97,19 @@
 APLS algorithm pseudo code. To solve the optimization problem~\eqref{eq:LS}.
 
 \begin{algorithm}[H]
-\KwIn{ the data matrix ${\bf Y} \in \{0,1\}^{n \times (d+1) L}$, the eigen values and vectors matrices ${\bf U}$ and ${\bf \Delta}$ such that ${\bf \Lambda} = {\bf U}^T {\bf \Delta} {\bf U}$, the number of ancestral populations $K$, the regularization coefficient  $\alpha$, the maximum number of iteration $itMax$}
+  \KwIn{ the data matrix ${\bf Y} \in \{0,1\}^{n \times (d+1) L}$, the
+    eigenvalues matrix ${\bf \Delta}$ and eigenvectors matrices ${\bf U}$ such
+    that ${\bf \Lambda} = {\bf U}^T {\bf \Delta} {\bf U}$, the number of
+    ancestral populations $K$, the regularization coefficient $\alpha$, the
+    maximum number of iteration $itMax$}
 
-\KwOut{the admixture coefficients matrix ${\bf Q} \in \mathbb{R}^{n \times K}$, the ancestral genotype frequencies matrix ${\bf G} \in \mathbb{R}^{K \times (d+1) L}$ }
+\KwOut{the admixture matrix ${\bf Q} \in \mathbb{R}^{n \times K}$, the ancestral genotype frequency matrix ${\bf G} \in \mathbb{R}^{K \times (d+1) L}$ }
 
  \BlankLine
  
- Initialize ${\bf Q}$ at random \;
+ Initialize ${\bf Q}$ at random\;
 
- $proj({\bf Y}) \leftarrow {\bf R} {\bf Y}$ \;
+ $proj({\bf Y}) \leftarrow {\bf R} {\bf Y}$\;
 
  \For{$it = 1..itMax$}{	 
  	\BlankLine
@@ -123,7 +127,7 @@ APLS algorithm pseudo code. To solve the optimization problem~\eqref{eq:LS}.
  ${\bf G}_{j,.} \leftarrow g^\star $\;
  }
 
- Project ${\bf G}$ such that ${\bf G} \in \Delta_G$ \;
+ Project ${\bf G}$ such that ${\bf G} \in \Delta_G$\;
  	\BlankLine
 	 // Q optimization step
 
@@ -140,7 +144,7 @@ APLS algorithm pseudo code. To solve the optimization problem~\eqref{eq:LS}.
 
  ${\bf Q} \leftarrow {\bf U}^T proj({\bf Q})$\;
 
-Project ${\bf Q}$ such that ${\bf Q} \in \Delta_Q$ \;
+Project ${\bf Q}$ such that ${\bf Q} \in \Delta_Q$\;
  }
 
 

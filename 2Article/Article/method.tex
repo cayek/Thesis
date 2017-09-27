@@ -19,7 +19,7 @@ genotype at locus $\ell$ is an integer number, 0, 1 or 2, corresponding to the
 number of reference alleles at this locus. In our algorithms, disjunctive forms
 are used to encode each genotypic value as the indicator of a heterozygote or a
 homozygote locus (Frichot et al. 2014). For a diploid organism each genotypic
-value $,0,1,2$ is encoded as $100$, $010$ and $001$. For $p$-ploid organisms,
+value $0,1,2$ is encoded as $100$, $010$ and $001$. For $p$-ploid organisms,
 there are $(p+1)$ possible genotypic values at each locus, and each value
 corresponds to a unique disjunctive form. While our focus is on SNPs, the
 algorithms presented in this section extend to multi-allelic loci without loss
@@ -186,7 +186,7 @@ q_i^\star = \arg \min  \|  {\rm proj} ({\bf Y})_i  - {\bf G} q \|^2 + \alpha \la
 \end{equation}
 \noindent where proj({\bf Y}$)_i$ is the $i$th row of the projected data matrix,
 proj({\bf Y}), and $\lambda_i$ is the $i$th eigenvalue of ${\bf \Lambda}$. The
-solutions, $q_i$, are then concatenated into a matrix, ${\rm conc}(q)$, and
+solutions, $q_i^\star$, are then concatenated into a matrix, ${\rm conc}(q)$, and
 ${\bf Q}$ is defined as the projection of the matrix ${\bf U}^T {\rm conc}(q)$
 on the polyedron $\Delta_Q$. The complexity of step~\eqref{eq:APSLq} grows
 linearly with $n$, the number of individuals. While the theoretical convergence
@@ -195,11 +195,10 @@ are expected to be good approximations of AQP algorithms. The APLS algorithm is
 described in details in Appendix~\ref{algo:apls}.
 
 
-\paragraph{Choice of hyper-parameters.} In ancestry estimation programs, a
+\paragraph{Choice of hyper-parameters} In ancestry estimation programs, a
 number of practices have evolved in order to set the model hyper-parameters.
-
 Those practices rely on heuristics or empirical rules for determining the prior
-parameters. For example, the program structure implements weakly informative
+parameters. For example, the program {\tt structure} implements weakly informative
 prior distributions for ancestry proportions~\citep{wang2017}, the program {\tt
   admixture} has a set of regularization parameters that encourages shrinkage
 and “aggressive” parsimony on ancestry estimates~\citep{Alexander2011}, and so
@@ -215,7 +214,7 @@ heuristics. Less advanced users could use the default values of the
 hyper-parameters evaluated in our simulation study.
  
 
-\paragraph{Range parameter.} Testing correlations between genetic and geographic
+\paragraph{Range parameter} Testing correlations between genetic and geographic data
 has a long tradition in population genetics. Popular approaches are based on
 Mantel tests~\citep{mantel1967} and spatial autocorrelation
 measures~\citep{hardy1999, epperson1996}. Prior to the application of our spatial ancestry
@@ -231,30 +230,30 @@ extended to genotypic data as follows
 where $N(h)$ is defined as the set of individuals separated by geographic
 distance $h$. Visualizing the variogram provides useful information on the level
 of spatial autocorrelation in the data, and yields empirical estimates of the
-range parameter. More naïve estimates such as an average geodesic distance
+range parameter. More naive estimates such as an average geodesic distance
 computed over a fraction of neighboring sites in the sample also performed well
 in simulations, and they are also proposed to the program users.
 
-\paragraph{Regularization parameter.} A default value for the regularization
+\paragraph{Regularization parameter} A default value for the regularization
 parameter $\alpha$ was set so that the weights for the loss function and for
 the penalty term ${\cal C}({\bf Q})$ are of similar order. We proposed to divide
-each term by its maximum value. This amount to consider $\alpha$ equal to $L /
+each term by its maximum value. This amounts to consider $\alpha$ equal to $L /
 \lambda_\max$, where $\lambda_\max$ is the largest eigenvalue of the Laplacian
 matrix (The Laplacian matrix has nonnegative eigenvalues).
 
-\paragraph{Number of factors.} The number of ancestral populations, $K$, can be
+\paragraph{Number of factors} The number of ancestral populations, $K$, can be
 evaluated by using a cross-validation technique based on imputation of masked
 genotypes~\citep{wold1978,eastment1982, Alexander2011, Frichot2014}. The
 cross-validation procedure partitions the genotypic matrix entries into a
 learning set and a test set in which 5\% of all genotypes are tagged as masked
 entries. The genotype probabilities for the masked entries are predicted from
-the factor estimates obtained from unmasked entries. Then, a cross-entropy
+the factor estimates obtained from unmasked entries. Then, the error
 between the predicted and truly observed genotype frequencies is computed, and
 smaller values of that criterion indicate better choices.
 
 \paragraph{Comparison with {\tt tess3}} The algorithm implemented in a previous
-version of {\tt tess3} also provides another approximation of the solution
-of problem~\eqref{eq:LS}. The {\tt tess3} algorithm first computes a Cholesky
+version of {\tt tess3} also provides another approximation of the solution of
+problem~\eqref{eq:LS}. The {\tt tess3} algorithm first computes a Cholesky
 decomposition of the Laplacian matrix. Then, by a change of variables, the
 least-squares problem is transformed into a sparse nonnegative matrix
 factorization problem~\citep{Caye2016}. Solving the sparse non-negative matrix
@@ -263,7 +262,7 @@ methods~\citep{Kim2011, Frichot2014}. The methods implemented in {\tt tess3}
 have an algorithmic complexity that increases linearly with the number of loci
 and the number of clusters. They lead to estimates that accurately reproduce
 those of the Monte Carlo algorithms implemented in the Bayesian method {\tt
-  tess} 2.3~\citep{Caye2016}. Like for the AQP method, the {\tt tess3} previous
+  tess} 2.3~\citep{Caye2016}. Like for the AQP method, the {\tt tess3}
 algorithms have an algorithmic complexity that increases quadratically with the
 sample size.
 
@@ -333,7 +332,7 @@ Neutrally evolving ancestral chromosomal segments were generated by simulating
 DNA sequences with an effective population size $N_0 = 10^6$ for each ancestral
 population. The mutation rate per bp and generation was set to $\mu = 0.25
 \times 10^{-7}$, the recombination rate per generation was set to $r = 0.25
-\times 10^{-8}$, and the parameter $m$ was set to obtained neutral levels of
+\times 10^{-8}$, and the parameter $m$ was set to obtain neutral levels of
 $F_{\rm ST}$ ranging between values of $0.005$ and $0.10$. The number of base
 pairs for each DNA sequence was varied between 10k to 300k to obtain numbers of
 polymorphic loci ranging between 1k and 200k after filtering out SNPs with
@@ -352,7 +351,7 @@ Using $K = 2$ ancestral populations, we computed the root mean squared error
 (RMSE) between the estimated and known values of the $Q$-matrix, and between the
 estimated and known values of the $G$-matrix. To evaluate the benefit of spatial
 algorithms, we compared the statistical errors of APLS algorithms to the errors
-obtained with {\tt snmf} method that reproduces the outputs of the {\tt
+obtained with the {\tt snmf} method that reproduces the outputs of the {\tt
   structure} program accurately~\citep{Frichot2014,Frichot2015}. To quantify the
 performances of neutrality tests as a function of ancestral and observed levels
 of $F_{\rm ST}$, we used the area under the precision-recall curve (AUC) for
