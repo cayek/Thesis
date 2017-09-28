@@ -12573,3 +12573,18 @@ thaliana. L'étudier pour ma thèse ?
  :END:
 
 cite:Efron_2010 un autre papier théorique d'efron...
+
+** TODO 2012 - Fast and accurate genotype imputation in genome-wide  association studies through pre-phasing
+ :PROPERTIES:
+  :Custom_ID: Howie_2012
+  :AUTHOR: Howie, Fuchsberger, Stephens, , Marchini \& Abecasis
+  :JOURNAL: Nature Genetics
+  :YEAR: 2012
+  :VOLUME: 44
+  :PAGES: 955–959
+  :DOI: 10.1038/ng.2354
+  :URL: http://dx.doi.org/10.1038/ng.2354
+ :END:
+
+cite:Howie_2012 C'est la référence pour ShapeIt Impute2 je crois. L'idée c'est
+si on a des données phasé de référence l'imputation c'est facile :D
