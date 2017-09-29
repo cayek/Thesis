@@ -12588,3 +12588,31 @@ cite:Efron_2010 un autre papier théorique d'efron...
 
 cite:Howie_2012 C'est la référence pour ShapeIt Impute2 je crois. L'idée c'est
 si on a des données phasé de référence l'imputation c'est facile :D
+
+** TODO 2015 - Probabilistic models of genetic variation in structured  populations applied to global human studies
+ :PROPERTIES:
+  :Custom_ID: Hao_2015
+  :AUTHOR: Hao, Song \& Storey
+  :JOURNAL: Bioinformatics
+  :YEAR: 2015
+  :VOLUME: 32
+  :PAGES: 713–721
+  :DOI: 10.1093/bioinformatics/btv641
+  :URL: http://dx.doi.org/10.1093/bioinformatics/btv641
+ :END:
+
+cite:Hao_2015 c'est le papier de [[https://github.com/StoreyLab/lfa][lfa]] = logistic factor analysis
+
+** TODO 2017 - Mixed model association for biobank-scale data sets
+ :PROPERTIES:
+  :Custom_ID: Loh194944
+  :AUTHOR: Loh, Kichaev, Gazal, Schoech \& Price
+  :JOURNAL: bioRxiv
+  :YEAR: 2017
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 10.1101/194944
+  :URL: https://www.biorxiv.org/content/early/2017/09/27/194944
+ :END:
+
+cite:Loh194944 il parrait il ont lancé un modèle mixe sur UK biobank
