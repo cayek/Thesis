@@ -12616,3 +12616,21 @@ cite:Hao_2015 c'est le papier de [[https://github.com/StoreyLab/lfa][lfa]] = log
  :END:
 
 cite:Loh194944 il parrait il ont lancé un modèle mixe sur UK biobank
+
+** TODO 2017 - Empirical Bayes Shrinkage and False Discovery Rate Estimation, Allowing For Unwanted Variation
+ :PROPERTIES:
+  :Custom_ID: gerard2017empirical
+  :AUTHOR: Gerard \& Stephens
+  :JOURNAL: arXiv preprint arXiv:1709.10066
+  :YEAR: 2017
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:gerard2017empirical Papier qui vient de sortir qui fait comme lfmm sauf que
+c'est stephens. Je l'ai pas encore lu mais je pense qu'il calcule dirrectement
+le fdr local avec un modèle bayesien. C'eest de l'empirical bayes encore !!
+
+
