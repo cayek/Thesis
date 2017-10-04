@@ -12638,10 +12638,25 @@ qu'il faut K - 1 axes pour représenter K pops.
   :AUTHOR: Tishkoff {\it et al.}
   :JOURNAL: science
   :YEAR: 2009
-  :VOLUME: 324
-  :PAGES: 1035--1044
+  :VOLUME:   324
+  :PAGES:    1035--1044
+ :END:
+
+cite:tishkoff2009genetic Pour parler de l'histoire démographique des afro américain
+** TODO 2017 - Empirical Bayes Shrinkage and False Discovery Rate Estimation, Allowing For Unwanted Variation
+ :PROPERTIES:
+  :Custom_ID: gerard2017empirical
+  :AUTHOR: Gerard \& Stephens
+  :JOURNAL: arXiv preprint arXiv:1709.10066
+  :YEAR: 2017
+  :VOLUME: 
+  :PAGES: 
   :DOI: 
   :URL: 
  :END:
 
-cite:tishkoff2009genetic Pour parler de l'histoire démographique des afro américain
+cite:gerard2017empirical Papier qui vient de sortir qui fait comme lfmm sauf que
+c'est stephens. Je l'ai pas encore lu mais je pense qu'il calcule dirrectement
+le fdr local avec un modèle bayesien. C'eest de l'empirical bayes encore !!
+
+
