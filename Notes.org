@@ -12660,3 +12660,17 @@ c'est stephens. Je l'ai pas encore lu mais je pense qu'il calcule dirrectement
 le fdr local avec un modèle bayesien. C'eest de l'empirical bayes encore !!
 
 
+
+** TODO 2017 - Simulation biomécanique sous- contraintes du cerveau pour la  compensation per-opératoire du brain-shift
+ :PROPERTIES:
+  :Custom_ID: fanny_these
+  :AUTHOR: Morin
+  :JOURNAL: 
+  :YEAR: 2017
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:fanny_these
