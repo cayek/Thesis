@@ -12137,7 +12137,7 @@ papier ils disent que c'est important de prendre en compte la structure de pop !
   :URL: http://www.ncbi.nlm.nih.gov/pubmed/10835412 http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC1461096
  :END:
 
-cite:Pritchard2000
+cite:Pritchard2000 c'est le modèle de structure
 
 ** TODO 2005 - Estimation of individual admixture: Analytical and study  design considerations :2Article:
  :PROPERTIES:
@@ -12353,7 +12353,7 @@ cite:Martins_2016 C'est le papier de la stat Fst à partir des coéficients de m
   :URL: http://www.genetics.org/content/164/4/1567
  :END:
 
-cite:Falush1567 C'est une extenssion du papier de cite:Pritchard2000
+cite:Falush1567 C'est une extenssion du papier de cite:Pritchard2000. Papier qui 
 
 ** TODO 2015 - Clustering and Assignment Methods in Landscape Genetics
  :PROPERTIES:
@@ -12616,3 +12616,32 @@ cite:Hao_2015 c'est le papier de [[https://github.com/StoreyLab/lfa][lfa]] = log
  :END:
 
 cite:Loh194944 il parrait il ont lancé un modèle mixe sur UK biobank
+
+** TODO 2006 - Population Structure and Eigenanalysis
+ :PROPERTIES:
+  :Custom_ID: Patterson_2006
+  :AUTHOR: Patterson, Price \& Reich
+  :JOURNAL: PLoS Genetics
+  :YEAR: 2006
+  :VOLUME: 2
+  :PAGES: e190
+  :DOI: 10.1371/journal.pgen.0020190
+  :URL: http://dx.doi.org/10.1371/journal.pgen.0020190
+ :END:
+
+cite:Patterson_2006 L'acp pour les données génétiques et la théorie qui dit
+qu'il faut K - 1 axes pour représenter K pops.
+
+** TODO 2009 - The genetic structure and history of Africans and African Americans
+ :PROPERTIES:
+  :Custom_ID: tishkoff2009genetic
+  :AUTHOR: Tishkoff {\it et al.}
+  :JOURNAL: science
+  :YEAR: 2009
+  :VOLUME: 324
+  :PAGES: 1035--1044
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:tishkoff2009genetic Pour parler de l'histoire démographique des afro américain
