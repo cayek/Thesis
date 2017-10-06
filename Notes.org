@@ -5,7 +5,8 @@
 #+AUTHOR:      Kevin Caye
 #+LANGUAGE:    en
 #+TAGS: noexport(n)
-#+TAGS: 1Article(1) 2Article(2) 3Article(3) Thesis(T)
+#+TAGS: 1Article(1) 2Article(2) 3Article(3) Thesis(T) 
+#+TAGS: EtatArtTess3(t) EtatArtLfmm(l)
 #+EXPORT_SELECT_TAGS: Blog
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
@@ -11865,6 +11866,15 @@ le 4.
 Je suis pas sur a 100% mais j'ai l'impression que c'est des indiv en pop dans
 les données !!
 
+En faite si il estime des coeficients d'admixtures.. c'est vraiment pas claire
+dans leur vignette...
+
+Bon ca estime un une propotion d'admixture mais il font pas de barplot ... et je
+peux pas récupéré de coef d'ancestry individuel !!!! Du coup je peux pas me
+comparer ! 
+
+L'algo est un MCMC
+
 ** DONE 2015 - TESS3: fast inference of spatial population structure and  genome scans for selection
 CLOSED: [2017-09-06 mer. 13:30]
  :PROPERTIES:
@@ -11883,7 +11893,7 @@ CLOSED: [2017-09-06 mer. 13:30]
 
 cite:Caye_2015 C'est le premier papier sur TESS3
 
-** TODO 2007 - Bayesian clustering algorithms ascertaining spatial population  structure: a new computer program and a comparison study :2Article:
+** TODO 2007 - Bayesian clustering algorithms ascertaining spatial population  structure: a new computer program and a comparison study :2Article:EtatArtTess3:
  :PROPERTIES:
   :Custom_ID: CHEN_2007
   :AUTHOR: CHEN, DURAND, FORBES, \& FRANÇOIS
@@ -11897,7 +11907,7 @@ cite:Caye_2015 C'est le premier papier sur TESS3
 
 cite:CHEN_2007 C'est un des papier de tess.
 
-** TODO 2008 - Bayesian spatial modeling of genetic population structure :2Article:
+** TODO 2008 - Bayesian spatial modeling of genetic population structure :2Article:EtatArtTess3:
  :PROPERTIES:
   :Custom_ID: Corander2008
   :AUTHOR: Corander, Sir\'en \& Arjas
@@ -11909,7 +11919,15 @@ cite:CHEN_2007 C'est un des papier de tess.
   :URL: http://link.springer.com/10.1007/s00180-007-0072-x
  :END:
 
-cite:Corander2008 Je crois que c'est un concurent à tess3.
+ cite:Corander2008 Je crois que c'est un concurent à tess3. 
+
+La méthodes c'est BAPS : [[http://www.helsinki.fi/bsg/software/BAPS/macSnow/BAPS6manual.pdf][manuel]]
+
+Ca estime bien les prop d'admixture. 
+
+L'algo je dirais que c'est de la stocastique optimisation cf cite:FRAN_OIS_2010.
+Mais il ne dit pas la même chose le chap du livre cite:Fran_ois_2015. A voir
+avec of.
 
 ** TODO 2009 - Spatial Inference of Admixture Proportions and Secondary  Contact Zones :2Article:
  :PROPERTIES:
@@ -11998,6 +12016,9 @@ MAIS on n'utilise pas les position géographiques pour faire fitter le modèle !
 On apprend les position géographique juste  partir des données génétique. C'est
 une projection en 2D des données génétique.
 
+On pourrait estimer des coeficient d'admixture avec leur modèle mais ils le font
+pas ... donc je me compare pas !
+
 ** DONE 2008 - Genes mirror geography within Europe               :2Article:
 CLOSED: [2017-09-06 mer. 18:18]
  :PROPERTIES:
@@ -12040,6 +12061,9 @@ cite:Bhaskar_2016
 Leur méthode s'appel GAP. Ce que je comprends : la méthode trouve des
 coordonnées a partir des données génétique. C'est pas pareil que d'utiliser les
 données spatial pour trouver la structure de population....
+
+Ils disent dans la discussion qu'on POURRAIT inferer les coéficient de
+métissage. Je comprend qu'il le font pas.
 
 ** TODO 2014 - Fast spatial ancestry via flexible allele frequency surfaces :2Article:
  :PROPERTIES:
@@ -12152,7 +12176,9 @@ cite:Pritchard2000 c'est le modèle de structure
  :END:
 
 cite:Tang_2005 C'est une amélioration de structure avec un EM (d'après l'intro
-de l'article 2 :D)
+de l'article 2 :D) 
+
+
 
 ** TODO 2011 - Enhancements to the ADMIXTURE algorithm for individual  ancestry estimation
  :PROPERTIES:
@@ -12167,7 +12193,7 @@ de l'article 2 :D)
  :END:
 
 cite:Alexander_2011 Une amélioration de l'algorithme de structure avec kenneth
-Lange :D C'est le logiciel admixture.
+Lange :D C'est le logiciel admixture. Deuxieme papier pour admixture
 
 ** TODO 2014 - Fast and Efficient Estimation of Individual Ancestry  Coefficients :2Article:
  :PROPERTIES:
@@ -12195,7 +12221,7 @@ cite:Frichot_2014a C'est le papier de sNMF.
   :URL: http://dx.doi.org/10.1534/genetics.114.164350
  :END:
 
-cite:Raj_2014 C'est le papier de FastStructure
+cite:Raj_2014 C'est le papier de FastStructure. 
 
 ** TODO 2010 - Analysis of Population Structure: A Unifying Framework and  Novel Methods Based on Sparse Factor Analysis :2Article:
  :PROPERTIES:
@@ -12241,7 +12267,9 @@ baricentrique... En tout cas le kernel c'est de la poudre au yeux :D
   :URL: http://dx.doi.org/10.1111/j.1755-0998.2010.02868.x
  :END:
 
-cite:FRAN_OIS_2010 C'est une review des méthodes de clustering spatialles
+cite:FRAN_OIS_2010 C'est une review des méthodes de clustering spatialles.
+
+Il dit que BAPS cite:Corander2008 c'est du stocastic optimisation ??
 
 ** TODO 1999 - Learning the parts of objects by non-negative matrix factorization
  :PROPERTIES:
@@ -12513,7 +12541,7 @@ cite:Hancock2011 C'est un exemple de scan à la selection dans Arabidopsis Thali
 
 cite:Fournier-Level2011 encore un exemple de scan à la selection dans A thaliana
 
-** TODO 2017 - Inferring Continuous and Discrete Population Genetic Structure Across Space
+** TODO 2017 - Inferring Continuous and Discrete Population Genetic Structure Across Space :EtatArtTess3:
  :PROPERTIES:
   :Custom_ID: Bradburd189688
   :AUTHOR: Bradburd, Coop \& Ralph
@@ -12527,6 +12555,11 @@ cite:Fournier-Level2011 encore un exemple de scan à la selection dans A thalian
 
 cite:Bradburd189688 Le dernier papier de bradburg, là ok la méthode a l'aire
 très comparable à tess3 :D il faudrait voir.
+
+Le nom de la méthode conStruct : le pkg R [[https://github.com/gbradburd/conStruct][gbradburd/conStruct]] 
+
+L'algo : c'est un Hamiltonian Monte Carlo, c'est un MCMC d'après [[https://en.wikipedia.org/wiki/Hybrid_Monte_Carlo][wiki]]. Il l'on
+implémenté avec STAN
 
 ** TODO 2010 - FunctSNP: an R package to link SNPs to functional knowledge and dbAutoMaker: a suite of Perl scripts to build SNP databases
  :PROPERTIES:
@@ -12674,3 +12707,38 @@ le fdr local avec un modèle bayesien. C'eest de l'empirical bayes encore !!
  :END:
 
 cite:fanny_these
+
+** TODO 2009 - Fast model-based estimation of ancestry in unrelated individuals
+ :PROPERTIES:
+  :Custom_ID: alexander2009admixture
+  :AUTHOR: Alexander, Novembre \& Lange
+  :JOURNAL: Genome Research
+  :YEAR: 2009
+  :VOLUME: 19
+  :PAGES: 1655--1664
+  :DOI: 10.1101/gr.094052.109
+  :URL: 
+ :END:
+
+cite:alexander2009admixture premier papier a citer pour admixture. 
+
+D'après d'éric frichot c'est il utilise un algorithm de descente par bloc de
+coordonnées. Il appel ca bloc relaxation mais c'est la même chose que bloc de
+coordonnées. Les état c'est du quasi newton (donc approximation de la hessien
+plutot que de la calculer)
+
+** TODO 2011 - Estimating the location and shape of hybrid zones
+ :PROPERTIES:
+  :Custom_ID: GUEDJ_2011
+  :AUTHOR: GUEDJ \& GUILLOT
+  :JOURNAL: Molecular Ecology Resources
+  :YEAR: 2011
+  :VOLUME: 11
+  :PAGES: 1119–1123
+  :DOI: 10.1111/j.1755-0998.2011.03045.x
+  :URL: http://dx.doi.org/10.1111/j.1755-0998.2011.03045.x
+ :END:
+
+cite:GUEDJ_2011 logiciel GENELAND, si je comprends bien GENELAND prend en compte
+les admixé a partir de cette version. Et c'est un MCMC. D'apres OF c'est une
+copie de TESS
