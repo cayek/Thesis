@@ -12741,3 +12741,17 @@ plutot que de la calculer)
 cite:GUEDJ_2011 logiciel GENELAND, si je comprends bien GENELAND prend en compte
 les admixé a partir de cette version. Et c'est un MCMC. D'apres OF c'est une
 copie de TESS
+
+** TODO 2011 - Bayesian methods for population genetics : relationships between genetic population structure and environment.
+ :PROPERTIES:
+  :Custom_ID: flora_thesis
+  :AUTHOR: Jay
+  :JOURNAL: 
+  :YEAR: 2011
+  :VOLUME: 
+  :PAGES: 
+  :DOI: 
+  :URL: https://tel.archives-ouvertes.fr/tel-00648601
+ :END:
+
+cite:flora_thesis
