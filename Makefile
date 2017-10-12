@@ -106,7 +106,7 @@ GO: biblio_sync krakenator_mount_OUTPUT krakenator_mount_data
 
 ## backup
 backup_to_password:
-	 echo `date -u` >> backup.log
+	echo `date -u` >> backup.log
 	rsync -aP --delete ./ /run/media/cayek/My\ Passport/Thesis
 
 ## All
