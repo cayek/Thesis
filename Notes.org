@@ -6721,6 +6721,30 @@ va lancer tout ca sur krakenator !!!
 #+end_src
 
 CCl: avec le scale de X ca plante plus... bug dans lfmm ?
+
+** Données charlotte
+Le [2017-11-06 lun.].
+
+Problème : lfmm ne se lance pas !! 
+
+#+NAME: code:
+#+CAPTION: Dépend de 
+#+begin_src R :session *krakR* :dir /scp:cayek@krakenator:~/Projects/Thesis/
+  library(lfmm)
+
+  X <- readRDS("./Data/Charlotte/X.rds")
+  Y <- readRDS("./Data/Charlotte/Y.rds")
+
+  lfmm.res <- lfmm_ridge(Y = Y, X = X, K = 3, lambda = 1e-5, algorithm = "alternated")
+#+end_src
+
+Car la matrice de projection est trop grosse (1022787 * 1022787 byte...)
+
+Solutions : 
+- un algo de completion de la base online
+- lfmm alterné
+
+
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both
