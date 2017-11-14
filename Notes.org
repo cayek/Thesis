@@ -6744,7 +6744,6 @@ Solutions :
 - un algo de completion de la base online
 - lfmm alterné
 
-
 * Sandbox
 ** Test of bigsnpr
 #+begin_src R :results output :exports both
