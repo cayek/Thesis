@@ -1,0 +1,1181 @@
+# -*- coding: utf-8 -*-
+# -*- mode: org -*-
+
+#+TITLE: Figures Article lfmm
+#+AUTHOR: Kévin CAYE
+#+LANGUAGE: en
+#+STARTUP: overview indent inlineimages logdrawer
+#+OPTIONS: H:0 email:nil creator:nil timestamp:nil skip:nil toc:nil ^:nil
+#+TAGS: noexport(n) deprecated(d)
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
+#+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) RUNNING(r!) DEBUG(g!) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
+#+LaTeX_CLASS: article
+#+LATEX_HEADER: \usepackage[textheight=9.033757in,textwidth=6.022505in]{geometry}
+#+LATEX_HEADER: \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+
+
+#+PROPERTY: header-args :exports none :eval no-export :session *R* :dir ~/Projects/Thesis/3Article/
+
+
+#+BEGIN_EXPORT latex
+% \begin{tabular}{ll}
+  % textwidth in pt: \the\textwidth \\
+  % textheight in pt: \the\textheight \\
+% \end{tabular}
+#+END_EXPORT
+* Setup                                                            :noexport:
+#+NAME: code:setup
+#+begin_src R 
+  ## pkg
+  require(MaTheseR)
+  library(gridExtra)
+  library(forcats)
+  library(tidyverse)
+  library(latex2exp)
+  library(scales)
+  library(cowplot)
+
+  ## setup
+  MaTheseR.params <- get_MaTheseRparams()
+  MaTheseR.params$fig.dir <- "~/Projects/Thesis/3Article/Article/Figs/"
+  method.ordered <- c("lm", "pca", "sva1", "sva2",
+                      "lfmm1", "cate", "lfmm2", "oracle")
+  color.values <- MaTheseR.params$color.values
+  names(color.values) <- c("lm", "sva1", "oracle", "lfmm1",
+                           "pca", "lfmm2", "sva2", "cate")
+  gtheme <- MaTheseR.params$gtheme
+
+
+  ## helpers
+  method_name <- function (method) 
+  {
+    aux <- function(m) {
+      if (m == "sva_irw") {
+        "sva2"
+      } else if (m == "sva_two-step") {
+        "sva1"
+      } else if (m == "sva-irw") {
+        "sva2"
+      } else if (m == "PCAlm") {
+        "pca"
+      } else if (m == "lassoLFMM") {
+        "lfmm1"
+      } else if (m == "ridgeLFMM") {
+        "lfmm2"
+      } else {
+        m
+      }
+    }
+    sapply(method, aux)
+  }
+
+
+  latex_percent <- function (x) {
+    x <- plyr::round_any(x, scales:::precision(x)/100)
+    stringr::str_c(comma(x * 100), "\\%")
+  }
+
+  ## https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+  ## extract legend
+  g_legend<-function(a.gplot){
+    tmp <- ggplot_gtable(ggplot_build(a.gplot))
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+    legend <- tmp$grobs[[leg]]
+    return(legend)}
+#+end_src
+
+#+RESULTS: code:setup
+
+* Figures
+** DONE FigureS1 : SIMULATIONS
+CLOSED: [2017-11-15 mer. 18:45]
+:LOGBOOK:
+- State "DONE"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 15:08] \\
+  Figure 3.2 -> Figure Supp. 1
+  
+  - [X] Legendes et axes en anglais
+  - [X] inclure les noms de méthodes dans les figures (couleur en haut, en ligne)
+  - [X] renommer tout en minuscule et noms courts : PCAlm -> pca, lassoLFMM ->
+  lfmm1, ridgeLFMM -> lfmm2, sva-two-step -> sva1, sva-irw -> sva2
+  - [X] mettre des pourcentages pour les proportions 0.01 -> 1%, etc.
+:END:
+
+#+NAME: code:simu
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:num_val_plot][code:num_val_plot]]
+#+begin_src R 
+  ## data
+  auc.df <- readRDS("../MaThese/OUTPUT/Expr/auc.df.rds") 
+  gif.df <- readRDS("../MaThese/OUTPUT/Expr/gif.df.rds") 
+
+  ## filter and order method
+  auc.df <- auc.df %>%
+    dplyr::mutate(method = factor(method_name(method), method.ordered))
+  auc.df$method %>% unique()
+  gif.df <- gif.df %>%
+    dplyr::mutate(method = factor(method_name(method), method.ordered))
+  gif.df$method %>% unique()
+
+  #################
+  ## by prop outlier
+
+  ## auc
+  toplot <- auc.df %>%
+    group_by(method, prop.outlier) %>%
+    summarise(auc.mean = mean(auc), N = length(auc), sd = sd(auc), se = sd / sqrt(N)) %>%
+    mutate(prop.outlier = latex_percent(prop.outlier))
+  auc.prop.pl <- ggplot(toplot, aes(x = as.factor(prop.outlier), y = auc.mean, fill = method)) +
+    geom_bar(position = "dodge", stat = "identity") +
+    geom_errorbar(aes(ymin = auc.mean - se,
+                      ymax = auc.mean + se),
+                  width = 0.9,
+                  position = "dodge") +
+    scale_fill_manual(values = color.values) +
+    gtheme
+
+  ## gif
+  toplot <- gif.df %>%
+    group_by(method, prop.outlier) %>%
+    summarise(gif.mean = median(gif), N = length(gif), sd = mad(gif), se = sd / sqrt(N)) %>%
+    mutate(prop.outlier = latex_percent(prop.outlier))
+  gif.prop.pl <- ggplot(toplot, aes(x = as.factor(prop.outlier), y = gif.mean, fill = method)) +
+    geom_bar(position = "dodge", stat = "identity") +
+    geom_errorbar(aes(ymin = gif.mean - se,
+                      ymax = gif.mean + se),
+                  width = 0.9,
+                  position = "dodge") +
+    scale_fill_manual(values = color.values) +
+    gtheme
+
+  #################
+  ## by rho
+
+  ## auc
+  toplot <- auc.df %>%
+    group_by(method, rho.c) %>%
+    summarise(auc.mean = mean(auc), N = length(auc), sd = sd(auc), se = sd / sqrt(N))
+  auc.rho.pl <- ggplot(toplot, aes(x = as.factor(rho.c), y = auc.mean, fill = method)) +
+    geom_bar(position = "dodge", stat = "identity") +
+    geom_errorbar(aes(ymin = auc.mean - se,
+                      ymax = auc.mean + se),
+                  width = 0.9,
+                  position = "dodge") +
+    scale_fill_manual(values = color.values) +
+    gtheme
+
+  ## gif
+  toplot <- gif.df %>%
+    group_by(method, rho.c) %>%
+    summarise(gif.mean = median(gif), N = length(gif), sd = mad(gif), se = sd / sqrt(N))
+  gif.rho.pl <- ggplot(toplot, aes(x = as.factor(rho.c), y = gif.mean, fill = method)) +
+    geom_bar(position = "dodge", stat = "identity") +
+    geom_errorbar(aes(ymin = gif.mean - se,
+                      ymax = gif.mean + se),
+                  width = 0.9,
+                  position = "dodge") +
+    scale_fill_manual(values = color.values) +
+    gtheme
+
+  ## plot for pdf
+
+  ## C
+  C.pl <- C.pl +
+    theme(legend.position = "none") +
+    xlab("Proportion of true association") +
+    ylab("Inflation factor")
+  ## A
+  A.pl <- auc.prop.pl +
+    MaTheseR.params$gtheme +
+    theme(legend.position = "none") +
+    xlab("") +
+    ylab("AUC")
+  ## D
+  D.pl <- gif.rho.pl +
+    MaTheseR.params$gtheme +
+    theme(legend.position = c(0.3,0.65)) +
+    guides(fill = guide_legend(ncol = 3)) +
+    xlab("Correlation parameter between $\\mathbf{U}$ and $\\mathbf{X}$ ($\\rho$)") +
+    ylab("") 
+  ## B
+  B.pl <- auc.rho.pl +
+    MaTheseR.params$gtheme +
+    theme(legend.position = "none") +
+    xlab("") +
+    ylab("")
+
+  pl <- cowplot::plot_grid(A.pl,B.pl,C.pl,D.pl,
+                           ncol = 2, labels = c("A", "B", "C", "D"))
+
+  save_expr(pl, "3Article_lfmm_comp_all_toprint.rds")
+
+  ThesisRpackage::Plots_export_tikz_pdf(pl,
+                                        basename.output = "FigureS1",
+                                        env = MaTheseR.params,
+                                        width = MaTheseR.params$textheightinch,
+                                        height = 0.75 * MaTheseR.params$textwidthinch)
+
+
+#+end_src
+
+#+BEGIN_EXPORT latex
+\begin{sidewaysfigure}
+\centering
+\includegraphics{./Figs/FigureS1.pdf}
+\caption{{\bf FigureS1}}
+\end{sidewaysfigure}
+#+END_EXPORT
+** DONE FigureS2 : EWAS
+CLOSED: [2017-11-15 mer. 18:45]
+:LOGBOOK:
+- State "DONE"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 15:56] \\
+  Figure 3.3
+  - [X] Legendes et axes en anglais
+  - [X] Dans B), indiquer : regularization parameter
+  - [X] Dans C), indiquer : number of latent factors
+:END:
+
+#+NAME: code:ewas_params
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:ewas_screeplot_CV][code:ewas_screeplot_CV]]
+#+begin_src R 
+
+  ## screeplot
+  df.res <- readRDS("../MaThese/OUTPUT/Expr/ewas_screeplot_expr.rds")
+  plA <- ggplot(df.res, aes(x = index, y = var.expl)) +
+    geom_point() +
+    coord_cartesian(xlim = c(1,30)) +
+    xlab("Number of latent factors ($K$)") +
+    ylab("Explained\nvariance") +
+    MaTheseR.params$gtheme +
+    scale_y_continuous(labels=latex_percent) +
+    geom_vline(xintercept = 10, linetype = "dashed") +
+    theme(legend.position=c(0.8, 0.6))
+
+  ## cross validation K
+  expr <- readRDS("../MaThese/OUTPUT/Expr/ewas_CV_lfmm_encore_encore.rds")
+  toplot <- expr$errs %>%
+    dplyr::mutate(lambda = as.factor(lambda)) %>%
+    dplyr::group_by(lambda, K) %>%
+    dplyr::summarise(err.mean = mean(err), N = length(err), sd = sd(err), se = sd / sqrt(N)) %>%
+    dplyr::ungroup()
+  plB <- ggplot(toplot, aes(x = K, y = err.mean, color = lambda)) +
+    geom_point() + 
+    geom_errorbar(aes(ymin = err.mean - se,
+                      ymax = err.mean + se,
+                      width = 0.4)) +
+    geom_line() +
+    xlab("Number of latent factors ($K$)") +
+    ylab("Prediction\nerror") +
+    MaTheseR.params$gtheme +
+    scale_color_discrete(name = "Regularization parameter ($\\lambda$)") + 
+    geom_vline(xintercept = 10, linetype = "dashed") +
+    coord_cartesian(xlim = c(1,30)) +
+    theme(legend.position=c(0.7, 0.6))
+
+  ## cross validation lambda
+  expr <- readRDS("../MaThese/OUTPUT/Expr/ewas_CV_lambda_lfmm.rds")
+  toplot <- expr$errs %>%
+    dplyr::mutate(K = as.factor(K)) %>%
+    dplyr::group_by(lambda, K) %>%
+    dplyr::summarise(err.mean = mean(err), N = length(err), sd = sd(err), se = sd / sqrt(N)) %>%
+    dplyr::ungroup()
+  plC <- ggplot(toplot, aes(x = lambda, y = err.mean, color = K)) +
+    geom_point() + 
+    geom_errorbar(aes(ymin = err.mean - se,
+                      ymax = err.mean + se,
+                      width = 0.5)) +
+    geom_line() +
+    xlab("Regularization parameter ($\\lambda$)") +
+    scale_x_log10() +
+    ylab("Prediction\nerror") +
+    geom_vline(xintercept = 1e-5, linetype = "dashed") +
+    MaTheseR.params$gtheme +
+    scale_color_discrete(name = "Number of latent factors ($K$)") +
+    guides(color = guide_legend(ncol = 3)) +
+    theme(legend.position=c(0.7, 0.8)) +
+    coord_cartesian(ylim = c(0.66,0.73)) 
+
+  ## gather plot
+  pl <- cowplot::plot_grid(plA, plB, plC, ncol = 1, labels = c("A", "B", "C"))
+
+  save_expr(pl, "3Article_ewas_param_toplot.rds")
+
+  ThesisRpackage::Plots_export_tikz_pdf(pl,
+                                        basename.output = "FigureS2",
+                                        env = MaTheseR.params,
+                                        height = 0.7 * MaTheseR.params$textheightinch,
+                                        width = MaTheseR.params$textwidthinch)
+#+end_src
+
+
+#+BEGIN_EXPORT latex
+\begin{figure}
+\centering
+\includegraphics{./Figs/FigureS2.pdf}
+\caption{{\bf FigureS2}}
+\end{figure}
+#+END_EXPORT
+** DONE FigureS3 : EWAS
+CLOSED: [2017-11-15 mer. 18:45]
+:LOGBOOK:
+- State "DONE"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 16:12] \\
+  - [X] Legendes et axes en anglais
+  - [X] Inclure les noms de méthodes dans les figures
+  - [ ] Dans B), épaissir le trait et utiliser des types de trait différents
+  pour les méthodes (imagine une impression en noir et blanc)
+  - [X] renommer les méthodes en minuscule et noms courts : PCAlm -> pca,
+  lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2, sva-two-step -> sva1, sva-irw ->
+  sva2
+:END:
+
+#+NAME: code:eas_qq_top
+#+CAPTION: copy of [[file:~/Projects/Thesis/MaThese/main.org::code:ewas_qqplot_top][code:ewas_qqplot_top]]
+#+begin_src R 
+  expr <- readRDS("../MaThese/OUTPUT/Expr/EWAS_all.rds")
+  candidates <- readRDS("../Data/ThesisDataset/3Article/GSE42861/candidates.rds")
+  m1 <- length(candidates)
+
+  ## filter and order method
+  expr$df.res$method %>% unique()
+  df.res <- expr$df.res %>%
+    dplyr::filter(!(method %in% c("famt", "lm"))) %>%
+    transmute(method = factor(method_name(method), method.ordered),
+              index = index,
+              pvalue = pvalue,
+              calibrated.pvalue = calibrated.pvalue,
+              outlier = index %in% candidates)
+  df.res$method %>% unique()
+
+  ## qqplot
+  pl.qq <- ggplot(df.res, aes(sample = -log10(pvalue), color = method)) +
+    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
+    geom_abline(slope = 1, intercept = 0) +
+    gtheme +
+    scale_color_manual(name = "Method", values = color.values) + 
+    theme(legend.position="none") +
+    xlab("Theorical quantiles") + 
+    ylab("Observed quantiles")
+
+  ## top * power plot
+  toplot <-  df.res %>%
+    group_by(method) %>%
+    arrange(method, pvalue) %>%
+    mutate(power = cumsum(outlier) / m1,
+           count = cumsum(outlier),
+           top = seq_along(pvalue)) %>%
+    ungroup() 
+  toplot <- toplot  %>%
+    add_row(method = unique(toplot$method), top = 0, power = 0, count = 0)
+  pl.top <- ggplot(toplot, aes(x = top, y = count, color = method)) +
+    geom_line(size = 2) +
+    coord_cartesian(xlim = c(0,50)) +
+    scale_color_manual(values = color.values) +
+    gtheme +
+    theme(legend.position=c(0.7,0.5)) + 
+    guides(color = guide_legend(ncol = 2)) +
+    xlab("Rank") + 
+    ylab("Retrieved candidates")
+
+  ## gather plot
+  pl <- cowplot::plot_grid(pl.qq, pl.top, ncol = 1, labels = c("A", "B"))
+
+  save_expr(pl.leg, "Artile3_ewas_qqplot_top_toplot.rds")
+
+  ThesisRpackage::Plots_export_png(pl,
+                                   basename.output = "FigureS3",
+                                   env = MaTheseR.params,
+                                   height = 0.6 * MaTheseR.params$textheightinch,
+                                   width = MaTheseR.params$textwidthinch)
+
+#+end_src
+
+#+BEGIN_EXPORT latex
+\begin{figure}[!h]
+\centering
+\includegraphics{./Figs/FigureS3.png}
+\caption{{\bf FigureS3}}
+\end{figure}
+#+END_EXPORT
+** TODO Figure1 : EWAS
+:LOGBOOK:
+- State "TODO"       from              [2017-11-15 mer. 17:50]
+- Note taken on [2017-11-15 mer. 17:49] \\
+  TODO : add top form table
+:END:
+#+NAME: code:ewas
+#+CAPTION: Depend on [[file:~/Projects/Thesis/MaThese/main.org::code:ewas_qqplot_top][code:ewas_qqplot_top]] and [[file:~/Projects/Thesis/MaThese/main.org::code:ewas_venn][code:ewas_venn]]
+#+begin_src R 
+  ## results
+  expr <- readRDS("../MaThese/OUTPUT/Expr/EWAS_all.rds")
+  candidates <- readRDS("../Data/ThesisDataset/3Article/GSE42861/candidates.rds")
+  m1 <- length(candidates)
+  ## filter and order method
+  expr$df.res$method %>% unique()
+  df.res <- expr$df.res %>%
+    dplyr::filter(!(method %in% c("famt", "lm", "sva-irw"))) %>%
+    transmute(method = factor(method_name(method), method.ordered),
+                index = index,
+              pvalue = pvalue,
+              calibrated.pvalue = calibrated.pvalue,
+              outlier = index %in% candidates)
+  df.res$method %>% unique()
+  ## we calibrate sva-two-step with gif ! 
+  calibrate <- function(p) {
+    score2 <- qchisq(p, df = 1, lower.tail = FALSE)
+    gif <- median(score2) / qchisq(0.5, df = 1)
+    score2 <- score2 / gif
+    pchisq(score2, lower.tail = FALSE, df = 1)
+  }
+  p <- df.res$pvalue[df.res$method == "sva1"]
+  hist(p)
+  p.calibrated <- calibrate(p)
+  hist(p.calibrated)
+  df.res$calibrated.pvalue[df.res$method == "sva1"] <- p.calibrated
+
+  ########################################
+  ## A
+  pl.A <- ggplot(df.res, aes(sample = -log10(calibrated.pvalue), color = method)) +
+    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
+    geom_abline(slope = 1, intercept = 0) +
+    gtheme +
+    scale_color_manual(name = "Method", values = color.values) + 
+    theme(legend.position="none") +
+    xlab("Theorical quantiles") + 
+    ylab("Observed quantiles")
+
+  ########################################
+  ## B
+  toplot <-  df.res %>%
+    group_by(method) %>%
+    arrange(method, pvalue) %>%
+    mutate(power = cumsum(outlier) / m1,
+           count = cumsum(outlier),
+           top = seq_along(pvalue)) %>%
+    ungroup() 
+  toplot <- toplot  %>%
+    add_row(method = unique(toplot$method), top = 0, power = 0, count = 0)
+  pl.B <- ggplot(toplot, aes(x = top, y = count, color = method)) +
+    geom_line(size = 2) +
+    coord_cartesian(xlim = c(0,50)) +
+    scale_color_manual(values = color.values) +
+    gtheme +
+    theme(legend.position="none") + 
+    xlab("Rank") + 
+    ylab("Retrieved candidates")
+
+  ########################################
+  ## C
+  toplot <- df.res %>%
+    dplyr::mutate(pvalue = calibrated.pvalue) %>%
+    group_by(method) %>%
+    filter_candidates_threshold(0.01) %>%
+    ungroup()
+  sets <- list(cate = toplot$index[toplot$method == "cate"],
+               lfmm1 = toplot$index[toplot$method == "lfmm1"],
+               lfmm2 = toplot$index[toplot$method == "lfmm2"],
+               pca = toplot$index[toplot$method == "pca"],
+               sva1 = toplot$index[toplot$method == "sva1"]
+               )
+
+  ## VennDiagram
+  inter <- function(...) {
+    id <- list(...)
+    res <- sets[[id[[1]]]]
+    for (i in id) {
+      res <- base::intersect(res, sets[[i]])
+    }
+    length(res)
+  }
+
+  venn <- VennDiagram::draw.quintuple.venn(
+                         area1 = inter(1),
+                         area2 = inter(2),
+                         area3 = inter(3),
+                         area4 = inter(4),
+                         area5 = inter(5),
+                         n12 = inter(1,2),
+                         n13 = inter(1,3),
+                         n14 = inter(1,4),
+                         n15 = inter(1,5),
+                         n23 = inter(2,3),
+                         n24 = inter(2,4),
+                         n25 = inter(2,5),
+                         n34 = inter(3,4),
+                         n35 = inter(3,5),
+                         n45 = inter(4,5),
+                         n123 = inter(1,2,3),
+                         n124 = inter(1,2,4),
+                         n125 = inter(1,2,5),
+                         n134 = inter(1,3,4),
+                         n135 = inter(1,3,5),
+                         n145 = inter(1,4,5),
+                         n234 = inter(2,3,4),
+                         n235 = inter(2,3,5),
+                         n245 = inter(2,4,5),
+                         n345 = inter(3,4,5),
+                         n1234 = inter(1,2,3,4),
+                         n1235 = inter(1,2,3,5),
+                         n1245 = inter(1,2,4,5),
+                         n1345 = inter(1,3,4,5),
+                         n2345 = inter(2,3,4,5),
+                         n12345 = inter(1,2,3,4,5),
+                         category = names(sets),
+                         fill = color.values[names(sets)],
+                         cat.col = color.values[names(sets)],
+                         cat.cex = 1.2,
+                         cat.pos = c(0.0, -30, 180, 180, 30),
+                         cat.dist = c(0.2,0.25,0.2,0.2,0.25),
+                         margin = 0.07,
+                         ind = TRUE
+                       )
+  ## https://stackoverflow.com/questions/22992476/how-to-print-three-venn-diagrams-in-the-same-window
+  pl.C <- grid::gTree(children = venn)
+
+  ########################################
+  ## D
+  toplot <- df.res %>%
+    dplyr::filter(method == "lfmm1")
+  p <- nrow(toplot)
+  toplot <- toplot %>%
+    dplyr::filter(calibrated.pvalue < 0.05)
+  pl.D <- ggplot(toplot, aes(x = index, y = -log10(calibrated.pvalue))) +
+    geom_point() +
+    geom_hline(yintercept = -log10(0.05 / p)) +
+    xlab("Indices") +
+    ylab("-log10(p-value)") +
+    gtheme
+
+
+  ########################################
+  ## all
+  gridExtra::grid.arrange(pl.A, pl.B, pl.C, pl.D,
+                          ncol = 2)
+  pl <- recordPlot()
+
+  ThesisRpackage::Plots_export_png(pl,
+                                   basename.output = "Figure1",
+                                   env = MaTheseR.params,
+                                   width = MaTheseR.params$textheightinch,
+                                   height = 0.7 * MaTheseR.params$textwidthinch)
+#+end_src
+
+#+BEGIN_EXPORT latex
+\begin{sidewaysfigure}
+\centering
+\includegraphics{./Figs/Figure1.png}
+\caption{{\bf Figure1}}
+\end{sidewaysfigure}
+#+END_EXPORT
+** DONE FigureS4 : GWAS
+CLOSED: [2017-11-15 mer. 18:45]
+:LOGBOOK:
+- State "DONE"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:44] \\
+  Figure 3.6 -> Figure Supp. 4
+  
+  - Legendes et axes en anglais
+  - Dans B), virer lambda
+  - Dans C), virer K
+:END:
+
+#+NAME: code:GWAS_param
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:gwas_screeplot_CV][code:gwas_screeplot_CV]] 
+#+begin_src R 
+  ## screeplot
+  df.res <- readRDS("../MaThese/OUTPUT/Expr/gwas_screeplot_expr.rds")
+  plA <- ggplot(df.res, aes(x = index, y = var.expl)) +
+    geom_point() +
+    coord_cartesian(xlim = c(1,50)) +
+    xlab("Number of latent factors ($K$)") +
+    ylab("Explained\nvariance") +
+    MaTheseR.params$gtheme +
+    scale_color_discrete(name = "$\\lambda$") +
+    scale_y_continuous(labels=latex_percent) +
+    geom_vline(xintercept = 9, linetype = "dashed") +
+    theme(legend.position="none")
+
+  ## cross validation K
+  expr <- readRDS("../MaThese/OUTPUT/Expr/gwas_CV_lfmm_encore_encore_encore.rds")
+  toplot <- expr$errs %>%
+    mutate(lambda = as.factor(lambda)) %>%
+    group_by(lambda, K) %>%
+    summarise(err.mean = mean(err), N = length(err), sd = sd(err), se = sd / sqrt(N)) %>%
+    ungroup()
+  plB <- ggplot(toplot, aes(x = K, y = err.mean, color = lambda)) +
+    geom_point() + 
+    geom_errorbar(aes(ymin = err.mean - se,
+                      ymax = err.mean + se,
+                      width = 1)) +
+    geom_line() +
+    xlab("Number of latent factors ($K$)") +
+    ylab("Prediction\nerror") +
+    MaTheseR.params$gtheme +
+    scale_color_discrete(name = "$\\lambda$") + 
+    geom_vline(xintercept = 9, linetype = "dashed") +
+    theme(legend.position="none")
+
+  ## cross validation lambda
+  expr <- readRDS("../MaThese/OUTPUT/Expr/gwas_CV_lambda_lfmm_round2_encore.rds")
+  toplot <- expr$errs %>%
+    mutate(K = as.factor(K)) %>%
+    group_by(lambda, K) %>%
+    summarise(err.mean = mean(err), N = length(err), sd = sd(err), se = sd / sqrt(N)) %>%
+    ungroup()
+  plC <- ggplot(toplot, aes(x = lambda, y = err.mean, color = K)) +
+    geom_point() +
+    geom_errorbar(aes(ymin = err.mean - se,
+                      ymax = err.mean + se,
+                      width = 1)) +
+    geom_line() +
+    xlab("Regularization parameter ($\\lambda$)") +
+    scale_x_log10() +
+    geom_vline(xintercept = 1e3, linetype = "dashed") +
+    ylab("Prediction\nerror") +
+    MaTheseR.params$gtheme +
+    theme(legend.position="none")
+
+  ## gather plot
+  pl <- plot_grid(plA, plB, plC, ncol = 1, labels = c("A", "B", "C"))
+
+  ThesisRpackage::Plots_export_tikz_pdf(pl,
+                                        basename.output = "FigureS4",
+                                        env = MaTheseR.params,
+                                        height = 0.7 * MaTheseR.params$textheightinch,
+                                        width = MaTheseR.params$textwidthinch)
+
+#+end_src
+
+#+BEGIN_EXPORT latex
+\begin{figure}[!h]
+\centering
+\includegraphics{./Figs/FigureS4.pdf}
+\caption{{\bf FigureS4}}
+\end{figure}
+#+END_EXPORT
+** TODO FigureS6 : GWAS
+:LOGBOOK:
+- State "TODO"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:45] \\
+  Figure 3.8 -> Figure Supp. 6
+  
+  - Legendes et axes en anglais
+  - virer lm. renommer les méthodes en minuscule et noms courts : PCAlm ->
+    pca, lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2,
+:END:
+** TODO FigureS5 : GWAS
+:LOGBOOK:
+- State "TODO"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:44] \\
+  Figure 3.7 A) -> Figure Supp. 5
+  
+  - Legendes et axes en anglais
+  - Inclure les noms de méthodes dans les figures
+  - les tests doivent être recalibrés pour le QQ-plots (trop d'inflation...)
+  - renommer les méthodes en minuscule et noms courts : PCAlm -> pca,
+  lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2, sva-two-step -> sva1, sva-irw ->
+  sva2
+:END:
+** TODO Figure2 : GWAS
+:LOGBOOK:
+- State "TODO"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:45] \\
+  FIGURE 2. Figure à 4 panels:
+  
+  A) Idem à la Figure Supp 5A mais uniquement pca et lasso. les tests
+  doivent être recalibrés pour le QQ-plots (trop d'inflation...), reporter
+  quelques noms des top-hits de la Table 3.2
+  B) Idem à la Figure Supp 5B, chromosome 6. Utiliser des types de trait
+  différents pour les méthodes
+  C) Idem à la Figure Supp 5B, autres chromosomes. Utiliser des types de
+  trait différents pour les méthodes
+  D) Manhattan plot pour lfmm1, avec seuil de bonferroni, et report des
+  noms de quelques top-hits de la Table 3.2.
+:END:
+** DONE FigureS7 : GEAS
+CLOSED: [2017-11-15 mer. 18:45]
+:LOGBOOK:
+- State "DONE"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:46] \\
+  Figure 3.9 -> Figure Supp. 7
+  
+  - Legendes et axes en anglais
+  - Legendes et axes en anglais
+  - Dans B), indiquer : regularization parameter
+  - Dans C), indiquer : number of latent factors
+:END:
+#+NAME: code:geas_param
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:eas_screeplot_CV][code:eas_screeplot_CV]]
+#+begin_src R 
+  ## screeplot
+  expr <- readRDS("../MaThese/OUTPUT/Expr/geas_screeplot_expr.rds")
+  plA <- ggplot(expr, aes(x = index, y = var.expl)) +
+    geom_point() +
+    coord_cartesian(xlim = c(1,15)) +
+    xlab("Number of latent factors ($K$)") +
+    ylab("Explained\nvariance") +
+    MaTheseR.params$gtheme +
+    scale_color_discrete(name = "$\\lambda$") +
+    scale_y_continuous(labels=latex_percent) +
+    geom_vline(xintercept = 9, linetype = "dashed") +
+    theme(legend.position=c(0.8, 0.6))
+
+  ## cross validation K
+  expr <- readRDS("../MaThese/OUTPUT/Expr/geas_CV_lfmm_encore.rds")
+  toplot <- expr$errs %>%
+    mutate(lambda = as.factor(lambda)) %>%
+    group_by(lambda, K) %>%
+    summarise(err.mean = mean(err), N = length(err), sd = sd(err), se = sd / sqrt(N)) %>%
+    ungroup()
+  plB <- ggplot(toplot, aes(x = K, y = err.mean, color = lambda)) +
+    geom_point() + 
+    geom_errorbar(aes(ymin = err.mean - se,
+                      ymax = err.mean + se,
+                      width = 0.5)) +
+    geom_line() +
+    xlab("Number of latent factors ($K$)") +
+    ylab("Prediction\nerror") +
+    MaTheseR.params$gtheme +
+    scale_color_discrete(name = "Regularization parameter ($\\lambda$)") + 
+    geom_vline(xintercept = 9, linetype = "dashed") +
+    theme(legend.position=c(0.75, 0.75)) +
+    coord_cartesian(ylim = c(0.918,0.950))
+
+  ## cross validation lambda
+  expr <- readRDS("../MaThese/OUTPUT/Expr/eas_CV_lambda_lfmm.rds")
+  toplot <- expr$errs %>%
+    mutate(K = as.factor(K)) %>%
+    group_by(lambda, K) %>%
+    summarise(err.mean = mean(err), N = length(err), sd = sd(err), se = sd / sqrt(N)) %>%
+    ungroup()
+  plC <- ggplot(toplot, aes(x = lambda, y = err.mean, color = K)) +
+    geom_point() + 
+    geom_errorbar(aes(ymin = err.mean - se,
+                      ymax = err.mean + se,
+                        width = 1)) +
+    geom_line() +
+    xlab("Regularization parameter ($\\lambda$)") +
+    scale_x_log10() +
+    geom_vline(xintercept = 1e-5, linetype = "dashed") +
+    ylab("Prediction\nerror") +
+    MaTheseR.params$gtheme +
+    scale_color_discrete(name = "Number of latent factors ($K$)") +
+    theme(legend.position=c(0.8, 0.2)) + 
+    guides(color = guide_legend(ncol = 3)) +
+    theme(legend.position=c(0.75, 0.19)) +
+    coord_cartesian(ylim = c(0.918,0.930))
+
+
+  ## gather plot
+  pl <- plot_grid(plA, plB, plC, ncol = 1, labels = c("A", "B", "C"))
+
+
+
+  ThesisRpackage::Plots_export_tikz_pdf(pl,
+                                         basename.output = "FigureS7",
+                                         env = MaTheseR.params,
+                                         height = 0.7 * MaTheseR.params$textheightinch,
+                                         width = MaTheseR.params$textwidthinch)
+
+#+end_src
+
+#+BEGIN_EXPORT latex
+\begin{figure}[!h]
+\centering
+\includegraphics{./Figs/FigureS7.pdf}
+\caption{{\bf FigureS7}}
+\end{figure}
+#+END_EXPORT
+
+** TODO FigureS8 : GEAS
+:LOGBOOK:
+- State "TODO"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:46] \\
+  Figure 3.10 -> Figure Supp. 8
+  
+  - Legendes et axes en anglais
+:END:
+** TODO FigureS9
+:LOGBOOK:
+- State "TODO"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:47] \\
+  Figure 3.11 -> Figure Supp. 9
+  
+  - Legendes et axes en anglais
+  - virer lm. renommer les méthodes en minuscule et noms courts : PCAlm ->
+    pca, lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2,
+:END:
+** TODO Figure3
+:LOGBOOK:
+- State "TODO"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:47] \\
+  FIGURE 3. Figure à 4 panels:
+  
+  - Legendes et axes en anglais
+  A) Figure 3.10 A
+  B) Figure 3.11, virer lm, renommer les méthodes en minuscule et noms
+  courts : PCAlm -> pca, lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2,
+  C) Idem à la Figure 3.12 renommer les méthodes en minuscule et noms
+  courts : PCAlm -> pca, lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2
+  D) Manhattan plot pour lfmm2, avec seuil de bonferroni, et report des
+  noms de quelques top-hits a ressortir de la Table 3.3.
+:END:
+
+#+NAME: code:geas_fig3
+#+CAPTION: Long !! Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:eas_ggplot_venn][code:eas_ggplot_venn]] [[file:~/Projects/Thesis/MaThese/main.org::code:eas_PCs][code:eas_PCs]]
+#+begin_src R :session *krakR* :dir /scp:cayek@krakenator:~/Projects/Thesis/3Article/
+  ## results
+  res.df <- readRDS("../MaThese/OUTPUT/Expr/eas_all_qvalue_df.rds")
+  ## filter and order method
+  res.df <- res.df %>%
+    dplyr::filter(method != "lm") %>%
+    transmute(method = factor(method_name(method), method.ordered),
+              index = index,
+              pvalue = pvalue,
+              calibrated.pvalue = calibrated.pvalue,
+              qvalue = qvalue)
+  res.df$method %>% unique()
+  ## PCs
+  ## get res
+  rownames.Y <- readRDS("../Data/ThesisDataset/3Article/1000GenomesPhase3/EAS_G_noNA_scaled.rownames.rds")
+  expr <- readRDS("../MaThese/OUTPUT/Expr/Eas_U_ridgeLFMM_K14.rds")
+  ## get indiv information
+  indiv.df <- readRDS("../Data/ThesisDataset/3Article/1000GenomesPhase3/EAS_indiv_df.rds")
+
+
+  ###############################
+  ## A
+  ## plot
+  U.df <- as_tibble(expr$U) 
+  colnames(U.df) <- paste0("PC",1:14)
+  U.df <- U.df %>% cbind(indiv.df) %>% as_tibble() %>%
+      mutate(Population = pop)
+  pl.A <- ggplot(U.df, aes(x = PC4, PC5, color = Population)) +
+    geom_point() +
+    xlab("Latent factor 4") +
+    ylab("Latent factor 5") +
+    MaTheseR.params$gtheme +
+    theme(legend.position = "none")
+
+  ###############################
+  ## B
+  pl.B <- ggplot(res.df, aes(sample = -log10(calibrated.pvalue), color = method)) +
+    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
+    geom_abline(slope = 1, intercept = 0) +
+    gtheme +
+    scale_color_manual(name = "Méthodes", values = color.values) + 
+    theme(legend.position="bottom") +
+    xlab("Quantiles théoriques") +
+    ylab("Quantiles observés")
+
+  ###############################
+  ## C
+  toplot <- res.df %>%
+    dplyr::filter(qvalue <= 0.01)
+  sets <- list(cate = toplot$index[toplot$method == "cate"],
+               lfmm1 = toplot$index[toplot$method == "lfmm1"],
+               lfmm2 = toplot$index[toplot$method == "lfmm2"],
+               pca = toplot$index[toplot$method == "pca"])
+  ## VennDiagram
+  inter <- function(...) {
+    id <- list(...)
+    res <- sets[[id[[1]]]]
+    for (i in id) {
+      res <- base::intersect(res, sets[[i]])
+    }
+    length(res)
+  }
+  venn <- VennDiagram::draw.quad.venn(
+                         area1 = inter(1),
+                         area2 = inter(2),
+                         area3 = inter(3),
+                         area4 = inter(4),
+                         n12 = inter(1,2),
+                         n13 = inter(1,3),
+                         n14 = inter(1,4),
+                         n23 = inter(2,3),
+                         n24 = inter(2,4),
+                         n25 = inter(2,5),
+                         n34 = inter(3,4),
+                         n123 = inter(1,2,3),
+                         n124 = inter(1,2,4),
+                         n134 = inter(1,3,4),
+                         n234 = inter(2,3,4),
+                         n245 = inter(2,4,5),
+                         n1234 = inter(1,2,3,4),
+                         category = names(sets),
+                         fill = color.values[names(sets)],
+                         cat.col = color.values[names(sets)],
+                         cat.cex = 1.2,
+                         margin = 0.07,
+                         ind = TRUE
+                       )
+  ## https://stackoverflow.com/questions/22992476/how-to-print-three-venn-diagrams-in-the-same-window
+  pl.C <- grid::gTree(children = venn)
+
+  ###############################
+  ## D
+  toplot <- res.df %>%
+    dplyr::filter(method == "lfmm2")
+  p <- nrow(toplot)
+  toplot <- toplot %>%
+    dplyr::filter(calibrated.pvalue < 0.001)
+  pl.D <- ggplot(toplot, aes(x = index, y = -log10(calibrated.pvalue))) +
+    geom_point() +
+    geom_hline(yintercept = -log10(0.05 / p)) +
+    xlab("Indices") +
+    ylab("-log10(p-value)") +
+    gtheme
+
+
+  ########################################
+  ## all
+  gridExtra::grid.arrange(pl.A, pl.B, pl.C, pl.D,
+                          ncol = 2)
+  pl <- recordPlot()
+
+  env <- MaTheseR.params
+  env$fig.dir <- "~/Projects/Thesis/MaThese/OUTPUT/Rplots/" ## because this chunk is ran on krak
+  ThesisRpackage::Plots_export_png(pl,
+                                   basename.output = "Figure3",
+                                   env = env,
+                                   width = MaTheseR.params$textheightinch,
+                                   height = 0.7 * MaTheseR.params$textwidthinch)
+#+end_src
+
+#+BEGIN_EXPORT latex
+\begin{sidewaysfigure}
+\centering
+\includegraphics{./Figs/Figure3.pdf}
+\caption{{\bf Figure3}}
+\end{sidewaysfigure}
+#+END_EXPORT
+
+* Tables
+** DONE Table1
+CLOSED: [2017-11-15 mer. 18:45]
+:LOGBOOK:
+- State "DONE"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:47] \\
+  - Legendes en anglais
+  
+  Table 3.1 -> Table 1
+:END:
+
+#+LATEX: \rowcolors{2}{gray!25}{white}
+#+NAME: code:table1
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:ewas_table_print][code:ewas_table_print]]
+#+begin_src R  :results output latex :exports results
+  library(xtable) ## https://cran.r-project.org/web/packages/xtable/vignettes/xtableGallery.pdf
+
+  ewas.table <- readRDS("../MaThese/OUTPUT/Expr/ewas_table_toprint.rds")
+  names(ewas.table) <- method_name(names(ewas.table))
+
+  ewas.table %>%
+    xtable(align = "lllllcccc",
+           digits = -2, type = "latex",
+           caption = "{\\bf Table1}",
+           label = "table:ewas") %>%
+    print(include.rownames=FALSE,
+          sanitize.text.function=identity,
+          floating.environment = "sidewaystable")
+
+#+end_src
+
+#+RESULTS: code:table1
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.4.0 by xtable 1.8-2 package
+% Wed Nov 15 18:00:05 2017
+\begin{sidewaystable}[ht]
+\centering
+\begin{tabular}{llllcccc}
+  \hline
+ID & Chr & Position & Gene & pca & lfmm1 & cate & lfmm2 \\ 
+  \hline
+\textbf{cg16411857} & \textbf{16} & \textbf{57023191} & \textbf{NLRC5} & \textbf{9.2e-13} & \textbf{2.4e-12} & \textbf{6.6e-12} & \textbf{5.3e-12} \\ 
+  \textbf{cg07839457} & \textbf{16} & \textbf{57023022} & \textbf{NLRC5} & \textbf{1.9e-11} & \textbf{4.5e-11} & \textbf{1.1e-10} & \textbf{9.7e-11} \\ 
+  \textbf{cg05428452} & \textbf{6} & \textbf{32712979} & \textbf{HLA-DQA2} & \textbf{5.4e-11} & \textbf{4.6e-11} & \textbf{8.5e-11} & \textbf{8.8e-11} \\ 
+  cg02508743 & 8 & 56903623 & LYN & 2.9e-08 & 2.7e-08 & 2.7e-08 & 2.8e-08 \\ 
+  \textbf{cg20821042} & \textbf{6} & \textbf{32709158} & \textbf{HLA-DQA2} & \textbf{6.5e-08} & \textbf{6.1e-08} & \textbf{9.6e-08} & \textbf{1.0e-07} \\ 
+  cg13081526 & 6 & 32449961 &  & 1.5e-07 & 1.2e-07 & 2.0e-07 & 2.2e-07 \\ 
+  cg18052547 & 6 & 32552547 & HLA-DRB1 & 1.8e-07 & 1.8e-07 & 3.0e-07 & 3.1e-07 \\ 
+  \textbf{cg25372449} & \textbf{6} & \textbf{32490350} & \textbf{HLA-DRB5} & \textbf{2.5e-07} & \textbf{2.6e-07} & \textbf{4.5e-07} & \textbf{4.6e-07} \\ 
+  cg02030958 & 13 & 110386267 &  & 4.0e-07 & 7.8e-08 & 6.0e-08 & 1.1e-07 \\ 
+  cg16171858 & 3 & 58472734 &  & 4.6e-07 & 1.6e-07 & 2.7e-08 & 3.8e-08 \\ 
+  cg03280622 & 8 & 145023013 & PLEC1 & 4.7e-07 & 5.0e-09 & 5.8e-09 & 3.8e-08 \\ 
+  cg24150157 & 19 & 51891210 & LIM2 & 6.2e-07 & 3.1e-07 & 1.6e-07 & 2.1e-07 \\ 
+  cg26244575 & 12 & 76354015 &  & 6.9e-07 & 2.7e-09 & 5.0e-10 & 4.2e-09 \\ 
+  cg05370853 & 6 & 32606634 & HLA-DQA1 & 7.1e-07 & 3.0e-07 & 3.3e-07 & 4.4e-07 \\ 
+  cg14989316 & 10 & 80757927 & LOC283050 & 7.3e-07 & 6.1e-08 & 7.8e-08 & 2.1e-07 \\ 
+  cg17360552 & 6 & 32725332 & HLA-DQB2 & 8.1e-07 & 6.1e-07 & 1.1e-06 & 1.2e-06 \\ 
+  cg01373248 & 3 & 18480297 & SATB1 & 8.1e-07 & 1.4e-07 & 1.1e-07 & 2.5e-07 \\ 
+  cg26164488 & 2 & 64440295 &  & 9.3e-07 & 3.5e-09 & 1.6e-09 & 1.4e-08 \\ 
+  cg05874806 & 2 & 102350276 & MAP4K4 & 1.1e-06 & 1.1e-06 & 4.7e-07 & 5.6e-07 \\ 
+   \hline
+\end{tabular}
+\caption{{\bf Table1}} 
+\label{table:ewas}
+\end{sidewaystable}
+#+END_EXPORT
+
+#+LATEX:\rowcolors{2}{}{}
+
+** DONE Table2
+CLOSED: [2017-11-15 mer. 18:45]
+:LOGBOOK:
+- State "DONE"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:48] \\
+  - Legendes en anglais
+  
+  Table 3.2 -> Table 2
+:END:
+
+#+LATEX: \rowcolors{2}{gray!25}{white}
+#+NAME: code:table2
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:gwas_table_print][code:gwas_table_print]] 
+#+begin_src R :results output latex :exports results
+  library(xtable)
+  library(knitr)
+  library(kableExtra)
+
+  table.df <- readRDS("../MaThese/OUTPUT/Expr/gwas_table_toprint.rds")
+
+  ## table.df %>% names() %>% paste0(collapse = "|")
+  names(table.df)[5] <- "Odds ratio [$95\\%$ CI]"
+  names(table.df)[6] <- "$p\\text{-value}$"
+  names(table.df)[7] <- "$q\\text{-value}$"
+  names(table.df)[8] <- "Gene"
+
+  table.df %>%
+    head(20) %>%
+    dplyr::select(- `Position (pb)`) %>%
+    xtable(align = "lllllccp{6cm}",
+           type = "latex",
+           label = "table:gwas_table",
+           caption = "{\\bf Table2}") %>%
+    print(include.rownames=FALSE,
+          sanitize.colnames.function=identity,
+          sanitize.text.function=identity,
+          floating = TRUE,
+          floating.environment = "sidewaystable"
+          )
+#+end_src
+
+#+RESULTS: code:table2
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.4.0 by xtable 1.8-2 package
+% Wed Nov 15 18:07:27 2017
+\begin{sidewaystable}[ht]
+\centering
+\begin{tabular}{llllccp{6cm}}
+  \hline
+Chr & Snp & LD block (Mb) & Odds ratio [$95\%$ CI] & $p\text{-value}$ & $q\text{-value}$ & Gene \\ 
+  \hline
+\textbf{3} & \textbf{rs1464510} & \textbf{189.56-189.61} & \textbf{1.30 [1.24-1.36]} & \textbf{3.8e-23} & \textbf{1.5e-20} & \textbf{LPP} \\ 
+  \textbf{3} & \textbf{rs17810546} & \textbf{160.99-161.32} & \textbf{1.35 [1.26-1.45]} & \textbf{1.8e-16} & \textbf{6.1e-14} & \textbf{IQCJ-SCHIP1, IL12A-AS1, IL12A} \\ 
+  \textbf{4} & \textbf{rs13151961} & \textbf{123.19-123.56} & \textbf{0.73 [0.68-0.78]} & \textbf{1.7e-14} & \textbf{5.3e-12} & \textbf{KIAA1109, ADAD1} \\ 
+  \textbf{12} & \textbf{rs653178} & \textbf{110.25-110.49} & \textbf{1.22 [1.16-1.28]} & \textbf{6.8e-13} & \textbf{2.1e-10} & \textbf{CUX2, LINC02356, SH2B3, ATXN2} \\ 
+  \textbf{2} & \textbf{rs917997} & \textbf{102.26-102.61} & \textbf{1.27 [1.20-1.35]} & \textbf{1.5e-12} & \textbf{4.6e-10} & \textbf{IL1RL1, IL18R1, IL18RAP, MIR4772, SLC9A4, SLC9A2} \\ 
+  4 & rs6840978 & 123.73-123.77 & 0.77 [0.72-0.82] & 1.2e-11 & 3.5e-09 & IL21-AS1 \\ 
+  3 & rs9811792 & 161.12-161.18 & 1.18 [1.12-1.24] & 6.6e-11 & 1.9e-08 & IL12A-AS1 \\ 
+  \textbf{3} & \textbf{rs13098911} & \textbf{45.98-46.21} & \textbf{1.32 [1.22-1.43]} & \textbf{2.1e-10} & \textbf{5.8e-08} & \textbf{FYCO1, FLT1P1, CCR3} \\ 
+  \textbf{1} & \textbf{rs2816316} & \textbf{190.77-190.80} & \textbf{0.78 [0.72-0.83]} & \textbf{2.2e-10} & \textbf{6.2e-08} & \textbf{} \\ 
+  \textbf{3} & \textbf{rs6441961} & \textbf{46.26-46.33} & \textbf{1.21 [1.15-1.27]} & \textbf{1.7e-08} & \textbf{4.6e-06} & \textbf{CCR3, UQCRC2P1} \\ 
+  \textbf{2} & \textbf{rs4675374} & \textbf{204.29-204.52} & \textbf{1.23 [1.16-1.31]} & \textbf{2.1e-07} & \textbf{5.4e-05} & \textbf{CD28, ICOS} \\ 
+  2 & rs1018326 & 181.54-181.78 & 1.15 [1.10-1.21] & 4.4e-07 & 1.1e-04 & UBE2E3, LINC01934 \\ 
+  3 & rs7648827 & 46.56-46.56 & 1.22 [1.12-1.33] & 4.6e-07 & 1.2e-04 & LRRC2 \\ 
+  \textbf{2} & \textbf{rs13003464} & \textbf{60.95-61.24} & \textbf{1.19 [1.13-1.25]} & \textbf{5.0e-07} & \textbf{1.3e-04} & \textbf{LINC01185, REL, PUS10, RNA5SP95, KIAA1841, C2orf74} \\ 
+  \textbf{10} & \textbf{rs1250552} & \textbf{80.71-80.74} & \textbf{0.84 [0.80-0.88]} & \textbf{5.2e-07} & \textbf{1.3e-04} & \textbf{ZMIZ1} \\ 
+  3 & rs7629708 & 189.56-189.62 & 1.17 [1.11-1.24] & 1.0e-06 & 2.5e-04 & LPP \\ 
+  \textbf{22} & \textbf{rs2298428} & \textbf{20.13-20.31} & \textbf{1.17 [1.10-1.24]} & \textbf{1.3e-06} & \textbf{3.3e-04} & \textbf{HIC2, UBE2L3, YDJC, CCDC116} \\ 
+  18 & rs1394466 & 48.93-49.30 & 1.14 [1.08-1.20] & 1.5e-06 & 3.6e-04 & DCC \\ 
+  \textbf{18} & \textbf{rs1893217} & \textbf{12.80-12.84} & \textbf{1.16 [1.08-1.23]} & \textbf{1.6e-06} & \textbf{4.0e-04} & \textbf{PTPN2} \\ 
+  \textbf{1} & \textbf{rs864537} & \textbf{165.66-165.70} & \textbf{0.87 [0.83-0.92]} & \textbf{1.7e-06} & \textbf{4.2e-04} & \textbf{POU2F1, CD247} \\ 
+   \hline
+\end{tabular}
+\caption{{\bf Table2}} 
+\label{table:gwas_table}
+\end{sidewaystable}
+#+END_EXPORT
+
+#+LATEX:\rowcolors{2}{}{}
+
+** DONE TableS1
+CLOSED: [2017-11-15 mer. 18:45]
+:LOGBOOK:
+- State "DONE"       from              [2017-11-15 mer. 18:45]
+- Note taken on [2017-11-15 mer. 17:48] \\
+  - Legendes en anglais
+  
+  Table 3.3 -> Table Sup 1
+:END:
+
+#+LATEX: \rowcolors{2}{gray!25}{white}
+#+NAME: code:tableS1
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:geas_table_print][code:geas_table_print]]
+#+begin_src R :results output latex :exports results
+  library(xtable)
+  library(knitr)
+  library(kableExtra)
+  library(stringr)
+
+  table.df <- readRDS("../MaThese/OUTPUT/Expr/geas_table_toprint.rds")
+  m <- table.df[,2]
+  for (i in 1:nrow(m)) {
+    m[i,1] <- sub(m[i, 1], pattern = "ridgeLFMM", replacement = "lfmm2")
+    m[i,1] <- sub(m[i, 1], pattern = "lassoLFMM", replacement = "lfmm1")
+  }
+  table.df[,2] <- m
+  names(table.df)[2] <- "Detected by methods"
+  names(table.df)[3] <- "Phenotype description"
+
+
+
+  ## table.df %>% names() %>% paste0(collapse = "|")
+  table.df %>%
+    xtable(align = "lp{4cm}ll", type = "latex", label = "table:geas",
+           caption = "{\\bf TableS1}") %>%
+    print(include.rownames=FALSE,
+          sanitize.colnames.function=identity,
+          sanitize.text.function=identity,
+          floating = TRUE,
+          floating.environment = "sidewaystable",
+          )
+#+end_src
+
+#+RESULTS: code:tableS1
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.4.0 by xtable 1.8-2 package
+% Wed Nov 15 18:18:31 2017
+\begin{sidewaystable}[ht]
+\centering
+\begin{tabular}{p{4cm}ll}
+  \hline
+SNPs & Detected by methods & Phenotype description \\ 
+  \hline
+rs10908907 & lfmm2, cate & Alcoholism (heaviness of drinking) \\ 
+  rs10496731 & lfmm1 & Body Height \\ 
+  rs2472297 & lfmm2, cate, lfmm1 & Caffeine metabolism \\ 
+  rs2256175 & lfmm2, cate, lfmm1 & Cholesterol total \\ 
+  rs2472297 & lfmm2, cate, lfmm1 & Coffee consumption (cups per day) \\ 
+  rs2278544, rs2322659 & lfmm1 & Congenital lactase deficiency \\ 
+  rs4954218 & lfmm2, cate, lfmm1 & Corneal structure \\ 
+  rs882300 & lfmm2, cate, lfmm1 & Electrocardiographic traits \\ 
+  rs882300 & lfmm2, cate, lfmm1 & Electrocardiography \\ 
+  rs2256175 & lfmm2, cate, lfmm1 & Giant cell arteritis \\ 
+  rs2256175, rs6085576, rs2104012, rs1983716, rs2853977 & lfmm2, cate, lfmm1 & Height \\ 
+  rs6430549 & lfmm2, cate, lfmm1 & Hematocrit \\ 
+  rs2278544, rs2322659 & lfmm1 & Lactose intolerance \\ 
+  rs882300 & lfmm2, cate, lfmm1 & Multiple sclerosis \\ 
+  rs1123848 & lfmm2, cate, lfmm1 & Neuroblastoma \\ 
+  rs17158483 & lfmm1 & Obesity-related traits \\ 
+   \hline
+\end{tabular}
+\caption{{\bf TableS1}} 
+\label{table:geas}
+\end{sidewaystable}
+#+END_EXPORT
+
+#+LATEX:\rowcolors{2}{}{}
