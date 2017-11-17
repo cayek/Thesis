@@ -417,7 +417,8 @@ CLOSED: [2017-11-15 mer. 18:45]
   df.res <- expr$df.res %>%
     dplyr::filter(!(method %in% c("famt", "lm", "sva-irw"))) %>%
     transmute(method = factor(method_name(method), method.ordered),
-                index = index,
+              index = index,
+              name = colname,
               pvalue = pvalue,
               calibrated.pvalue = calibrated.pvalue,
               outlier = index %in% candidates)
@@ -435,16 +436,33 @@ CLOSED: [2017-11-15 mer. 18:45]
   hist(p.calibrated)
   df.res$calibrated.pvalue[df.res$method == "sva1"] <- p.calibrated
 
+
   ########################################
-  ## A
-  pl.A <- ggplot(df.res, aes(sample = -log10(calibrated.pvalue), color = method)) +
-    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
-    geom_abline(slope = 1, intercept = 0) +
-    gtheme +
-    scale_color_manual(name = "Method", values = color.values) + 
-    theme(legend.position="none") +
-    xlab("Theorical quantiles") + 
-    ylab("Observed quantiles")
+  ## calibrate
+  ## dd <- expr$df.res %>%
+  ##   dplyr::filter(method == "PCAlm")
+  ## score <- dd$score
+  ## (dd$calibrated.pvalue < 1e-2) %>% sum()
+  ## score2 <- score ^ 2
+  ## g <- median(score2) / qchisq(0.5, df = 1)
+  ## p <- pchisq(score2 / 1.8, lower.tail = FALSE, 
+  ##             df = 1)
+  ## dd <- dd %>%
+  ##   mutate(cal.p = p)
+  ## ggplot(dd, aes(sample = -log10(cal.p), color = method)) +
+  ##   stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
+  ##   geom_abline(slope = 1, intercept = 0)
+
+  ########################################
+  ## A, removed because not very well calibrated
+  ## pl.A <- ggplot(df.res, aes(sample = -log10(calibrated.pvalue), color = method)) +
+  ##   stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
+  ##   geom_abline(slope = 1, intercept = 0) +
+  ##   gtheme +
+  ##   scale_color_manual(name = "Method", values = color.values) + 
+  ##   theme(legend.position="none") +
+  ##   xlab("Theorical quantiles") + 
+  ##   ylab("Observed quantiles")
 
   ########################################
   ## B
@@ -539,16 +557,44 @@ CLOSED: [2017-11-15 mer. 18:45]
   toplot <- df.res %>%
     dplyr::filter(method == "lfmm1")
   p <- nrow(toplot)
+  bonf.t <- 0.05 / p
   toplot <- toplot %>%
     dplyr::filter(calibrated.pvalue < 0.05)
-  pl.D <- ggplot(toplot, aes(x = index, y = -log10(calibrated.pvalue))) +
+
+  ## annotation
+  ## to keep only fist term
+  auxf <- function(s) {
+    stringr::str_split(s, ";") %>%
+      sapply(function(s) s[1])
+  }
+  cpG.df <- meffil::meffil.get.features("450k")
+  toplot <- toplot %>%
+    left_join(cpG.df, by = "name") %>%
+    mutate(Chr = sub("chr","",chromosome),
+           Gene = gene.symbol,
+           )
+
+  ## arrange
+  toplot$Chr <- as.factor(toplot$Chr)
+  levels(toplot$Chr) <- levels(toplot$Chr)[c(1,12,16:22,2:11,13:15,23,24)]
+  toplot <- toplot %>%
+    arrange(Chr) %>%
+    mutate(index = 1:nrow(toplot))
+
+  pl.D <- ggplot(toplot, aes(x = id, y = -log10(calibrated.pvalue), color = Chr)) +
     geom_point() +
-    geom_hline(yintercept = -log10(0.05 / p)) +
+    geom_hline(yintercept = -log10(bonf.t)) +
     xlab("Indices") +
     ylab("-log10(p-value)") +
     gtheme
 
-
+  ## anntotion
+  over.bonf.df <- toplot %>%
+    dplyr::filter(calibrated.pvalue <= bonf.t)
+  ## adding annotation
+  pl.D + geom_text(data = over.bonf.df,
+                   check_overlap = TRUE,
+                   mapping = aes(x = index, y = -log10(pvalue) + 1, label = Gene))
   ########################################
   ## all
   gridExtra::grid.arrange(pl.A, pl.B, pl.C, pl.D,
@@ -665,6 +711,12 @@ CLOSED: [2017-11-15 mer. 18:45]
   - virer lm. renommer les méthodes en minuscule et noms courts : PCAlm ->
     pca, lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2,
 :END:
+#+NAME: code:
+#+CAPTION: Dépend de 
+#+begin_src R 
+
+#+end_src
+
 ** TODO FigureS5 : GWAS
 :LOGBOOK:
 - State "TODO"       from              [2017-11-15 mer. 18:45]
@@ -678,6 +730,12 @@ CLOSED: [2017-11-15 mer. 18:45]
   lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2, sva-two-step -> sva1, sva-irw ->
   sva2
 :END:
+
+#+NAME: code:
+#+CAPTION: Dépend de 
+#+begin_src R 
+
+#+end_src
 ** TODO Figure2 : GWAS
 :LOGBOOK:
 - State "TODO"       from              [2017-11-15 mer. 18:45]
@@ -789,16 +847,98 @@ CLOSED: [2017-11-15 mer. 18:45]
 \end{figure}
 #+END_EXPORT
 
-** TODO FigureS8 : GEAS
+** DONE FigureS8 : GEAS
+CLOSED: [2017-11-17 ven. 13:44]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-11-17 ven. 13:44]
 - State "TODO"       from              [2017-11-15 mer. 18:45]
 - Note taken on [2017-11-15 mer. 17:46] \\
   Figure 3.10 -> Figure Supp. 8
   
   - Legendes et axes en anglais
 :END:
-** TODO FigureS9
+
+#+NAME: code:
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:eas_PCs][code:eas_PCs]]
+#+begin_src R 
+  library(MaTheseR)
+  library(cowplot)
+  MaTheseR.params <- get_MaTheseRparams()
+
+  ## get res
+  rownames.Y <- readRDS("../Data/ThesisDataset/3Article/1000GenomesPhase3/EAS_G_noNA_scaled.rownames.rds")
+  expr <- readRDS("../MaThese/OUTPUT/Expr/Eas_U_ridgeLFMM_K14.rds")
+
+  ## get indiv information
+  indiv.df <- readRDS("../Data/ThesisDataset/3Article/1000GenomesPhase3/EAS_indiv_df.rds")
+
+  ## plot
+  U.df <- as_tibble(expr$U) 
+  colnames(U.df) <- paste0("PC",1:14)
+  U.df <- U.df %>% cbind(indiv.df) %>% as_tibble() %>%
+    mutate(Population = pop)
+
+  pl2 <- ggplot(U.df, aes(x = PC4, PC5, color = Population)) +
+    geom_point() +
+    xlab("Latent factor 4") +
+    ylab("Latent factor 5") +
+    MaTheseR.params$gtheme +
+    theme(legend.position = "none")
+  pl3 <- ggplot(U.df, aes(x = PC6, PC7, color = Population)) +
+    geom_point() +
+    xlab("Latent factor 6") +
+    ylab("Latent factor 7") +
+    MaTheseR.params$gtheme+
+    theme(legend.position = "none")
+  pl4 <- ggplot(U.df, aes(x = PC8, PC9, color = Population)) +
+    geom_point() +
+    xlab("Latent factor 8") +
+    ylab("Latent factor 9") +
+    MaTheseR.params$gtheme+
+    theme(legend.position = "none")
+  pl5 <- ggplot(U.df, aes(x = PC10, PC11, color = Population)) +
+    geom_point() +
+    xlab("Latent factor 10") +
+    ylab("Latent factor 11") +
+    MaTheseR.params$gtheme+
+    theme(legend.position = "none")
+
+
+  ## plot for thesis
+  mylegend <- g_legend(pl2 + theme(legend.position = "bottom") +
+                       guides(color = guide_legend(nrow = 2)))
+  pl <- plot_grid(pl2,
+                  pl3,
+                  pl4,
+                  pl5,
+                  nrow = 2,
+                  labels = c("A","B", "C", "D"))
+  pl.leg <- drawable(function() {
+    gridExtra::grid.arrange(pl,
+                            mylegend, nrow=2, heights=c(10, 2))
+  })
+
+  ThesisRpackage::Plots_export_tikz_pdf(pl.leg,
+                                        basename.output = "FigureS8",
+                                        env = MaTheseR.params,
+                                        height = 0.7 * MaTheseR.params$textheightinch,
+                                        width = MaTheseR.params$textwidthinch)
+
+#+end_src
+
+#+BEGIN_EXPORT latex
+\begin{figure}[!h]
+\centering
+\includegraphics{./Figs/FigureS8.pdf}
+\caption{{\bf FigureS8}}
+\end{figure}
+#+END_EXPORT
+
+
+** DONE FigureS9
+CLOSED: [2017-11-17 ven. 15:47]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-11-17 ven. 15:47]
 - State "TODO"       from              [2017-11-15 mer. 18:45]
 - Note taken on [2017-11-15 mer. 17:47] \\
   Figure 3.11 -> Figure Supp. 9
@@ -807,6 +947,52 @@ CLOSED: [2017-11-15 mer. 18:45]
   - virer lm. renommer les méthodes en minuscule et noms courts : PCAlm ->
     pca, lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2,
 :END:
+
+#+NAME: code:
+#+CAPTION: Very long !! Dépend de Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:eas_ggplot_venn][code:eas_ggplot_venn]] 
+#+begin_src R :session *krakR* :dir /scp:cayek@krakenator:~/Projects/Thesis/3Article/
+  ## results
+  res.df <- readRDS("../MaThese/OUTPUT/Expr/eas_all_qvalue_df.rds")
+
+  ## filter and order method
+  res.df <- res.df %>%
+    dplyr::filter(method != "lm") %>%
+    transmute(method = factor(method_name(method), method.ordered),
+              index = index,
+              pvalue = pvalue,
+              calibrated.pvalue = calibrated.pvalue,
+              qvalue = qvalue)
+  res.df$method %>% unique()
+  pl.qq <- ggplot(res.df, aes(sample = -log10(calibrated.pvalue), color = method)) +
+    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
+    geom_abline(slope = 1, intercept = 0) +
+    gtheme +
+    scale_color_manual(name = "Method", values = color.values) + 
+    theme(legend.position="bottom") +
+    xlab("Theorical quantiles") + 
+    ylab("Observed quantiles")
+
+
+
+  env <- MaTheseR.params
+  ThesisRpackage::Plots_export_png(pl.qq,
+                                   basename.output = "FigureS9",
+                                   env = MaTheseR.params,
+                                   height = 0.5 * MaTheseR.params$textheightinch,
+                                   width = MaTheseR.params$textwidthinch,
+                                   res = 600)
+#+end_src
+
+#+BEGIN_EXPORT latex
+\begin{figure}[!h]
+\centering
+\includegraphics[width = \textwidth]{./Figs/FigureS9.png}
+\caption{{\bf FigureS9}}
+\label{fig:geas_qqplot}
+\end{figure}
+#+END_EXPORT
+
+
 ** TODO Figure3
 :LOGBOOK:
 - State "TODO"       from              [2017-11-15 mer. 18:45]
@@ -948,7 +1134,7 @@ CLOSED: [2017-11-15 mer. 18:45]
 #+BEGIN_EXPORT latex
 \begin{sidewaysfigure}
 \centering
-\includegraphics{./Figs/Figure3.pdf}
+\includegraphics{../MaThese/OUTPUT/Rplots/Figure3.pdf}
 \caption{{\bf Figure3}}
 \end{sidewaysfigure}
 #+END_EXPORT

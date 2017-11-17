@@ -12777,3 +12777,31 @@ copie de TESS
  :END:
 
 cite:flora_thesis
+
+** TODO 2014 - Defining the role of common variation in the genomic and biological architecture of adult human height
+ :PROPERTIES:
+  :Custom_ID: wood2014defining
+  :AUTHOR: Wood {\it et al.}
+  :JOURNAL: Nature genetics
+  :YEAR: 2014
+  :VOLUME: 46
+  :PAGES: 1173--1186
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:wood2014defining C'est un exemple de GWAS avec la taille
+
+** TODO 2003 - Statistical significance for genomewide studies
+ :PROPERTIES:
+  :Custom_ID: storey2003statistical
+  :AUTHOR: Storey \& Tibshirani
+  :JOURNAL: Proceedings of the National Academy of Sciences
+  :YEAR: 2003
+  :VOLUME: 100
+  :PAGES: 9440--9445
+  :DOI: 
+  :URL: 
+ :END:
+
+cite:storey2003statistical L'article qui introduit la qvalue
