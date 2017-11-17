@@ -399,8 +399,9 @@ CLOSED: [2017-11-15 mer. 18:45]
 \caption{{\bf FigureS3}}
 \end{figure}
 #+END_EXPORT
-** TODO Figure1 : EWAS
+** STARTED Figure1 : EWAS
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-11-17 ven. 17:23]
 - State "TODO"       from              [2017-11-15 mer. 17:50]
 - Note taken on [2017-11-15 mer. 17:49] \\
   TODO : add top form table
@@ -456,13 +457,13 @@ CLOSED: [2017-11-15 mer. 18:45]
   ########################################
   ## A, removed because not very well calibrated
   ## pl.A <- ggplot(df.res, aes(sample = -log10(calibrated.pvalue), color = method)) +
-  ##   stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
-  ##   geom_abline(slope = 1, intercept = 0) +
-  ##   gtheme +
-  ##   scale_color_manual(name = "Method", values = color.values) + 
-  ##   theme(legend.position="none") +
-  ##   xlab("Theorical quantiles") + 
-  ##   ylab("Observed quantiles")
+    ## stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
+    ## geom_abline(slope = 1, intercept = 0) +
+    ## gtheme +
+    ## scale_color_manual(name = "Method", values = color.values) + 
+    ## theme(legend.position="none") +
+    ## xlab("Theorical quantiles") + 
+    ## ylab("Observed quantiles")
 
   ########################################
   ## B
@@ -571,7 +572,7 @@ CLOSED: [2017-11-15 mer. 18:45]
   toplot <- toplot %>%
     left_join(cpG.df, by = "name") %>%
     mutate(Chr = sub("chr","",chromosome),
-           Gene = gene.symbol,
+           Gene = auxf(gene.symbol),
            )
 
   ## arrange
@@ -586,35 +587,38 @@ CLOSED: [2017-11-15 mer. 18:45]
     geom_hline(yintercept = -log10(bonf.t)) +
     xlab("Indices") +
     ylab("-log10(p-value)") +
-    gtheme
-
+    gtheme 
   ## anntotion
   over.bonf.df <- toplot %>%
     dplyr::filter(calibrated.pvalue <= bonf.t)
   ## adding annotation
-  pl.D + geom_text(data = over.bonf.df,
-                   check_overlap = TRUE,
-                   mapping = aes(x = index, y = -log10(pvalue) + 1, label = Gene))
+  pl.D <- pl.D + geom_text(data = over.bonf.df,
+                           check_overlap = FALSE,
+                           mapping = aes(x = index, y = -log10(pvalue) + runif(nrow(over.bonf.df),0,1),
+                                         label = Gene)) +
+    theme(legend.position = "none")
+
   ########################################
   ## all
-  gridExtra::grid.arrange(pl.A, pl.B, pl.C, pl.D,
-                          ncol = 2)
+  gridExtra::grid.arrange(pl.B, pl.C, pl.D,
+                          layout_matrix = matrix(c(1,3,2,3), 2, 2))
   pl <- recordPlot()
 
   ThesisRpackage::Plots_export_png(pl,
                                    basename.output = "Figure1",
                                    env = MaTheseR.params,
-                                   width = MaTheseR.params$textheightinch,
-                                   height = 0.7 * MaTheseR.params$textwidthinch)
+                                   width = MaTheseR.params$textwidthinch,
+                                   height = 0.7 * MaTheseR.params$textheightinch)
 #+end_src
 
 #+BEGIN_EXPORT latex
-\begin{sidewaysfigure}
+\begin{figure}[!h]
 \centering
 \includegraphics{./Figs/Figure1.png}
 \caption{{\bf Figure1}}
-\end{sidewaysfigure}
+\end{figure}
 #+END_EXPORT
+
 ** DONE FigureS4 : GWAS
 CLOSED: [2017-11-15 mer. 18:45]
 :LOGBOOK:
@@ -701,8 +705,10 @@ CLOSED: [2017-11-15 mer. 18:45]
 \caption{{\bf FigureS4}}
 \end{figure}
 #+END_EXPORT
-** TODO FigureS6 : GWAS
+** DONE FigureS6 : GWAS
+CLOSED: [2017-11-17 ven. 18:12]
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2017-11-17 ven. 18:12]
 - State "TODO"       from              [2017-11-15 mer. 18:45]
 - Note taken on [2017-11-15 mer. 17:45] \\
   Figure 3.8 -> Figure Supp. 6
@@ -711,14 +717,96 @@ CLOSED: [2017-11-15 mer. 18:45]
   - virer lm. renommer les méthodes en minuscule et noms courts : PCAlm ->
     pca, lassoLFMM -> lfmm1, ridgeLFMM -> lfmm2,
 :END:
-#+NAME: code:
-#+CAPTION: Dépend de 
+#+NAME: code:gwas_venn
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:gwas_venn][code:gwas_venn]] 
 #+begin_src R 
+  celiac.df <- readRDS("./OUTPUT/Expr/celiac_all_df.rds")
 
+  ## filter and order method
+  ## celiac.df$method %>% unique()
+  df.res <- celiac.df %>%
+    dplyr::filter(method != "lm") %>%
+    transmute(method = factor(method_name(method), method.ordered),
+              index = index,
+              pvalue = pvalue,
+              calibrated.pvalue = calibrated.pvalue,
+              outlier = index %in% candidates)
+  df.res$method %>% unique()
+  #############################################################################
+  ## venn
+
+  toplot <- df.res %>%
+    dplyr::mutate(pvalue = calibrated.pvalue) %>%
+    group_by(method) %>%
+    filter_candidates_threshold(0.01) %>%
+    ungroup()
+
+  sets <- list(cate = toplot$index[toplot$method == "cate"],
+               lfmm1 = toplot$index[toplot$method == "lfmm1"],
+               lfmm2 = toplot$index[toplot$method == "lfmm2"],
+               pca = toplot$index[toplot$method == "pca"]
+               )
+
+  ## VennDiagram
+  inter <- function(...) {
+    id <- list(...)
+    res <- sets[[id[[1]]]]
+    for (i in id) {
+      res <- base::intersect(res, sets[[i]])
+    }
+    length(res)
+  }
+
+  venn <- VennDiagram::draw.quad.venn(
+                         area1 = inter(1),
+                         area2 = inter(2),
+                         area3 = inter(3),
+                         area4 = inter(4),
+                         n12 = inter(1,2),
+                         n13 = inter(1,3),
+                         n14 = inter(1,4),
+                         n23 = inter(2,3),
+                         n24 = inter(2,4),
+                         n25 = inter(2,5),
+                         n34 = inter(3,4),
+                         n45 = inter(4,5),
+                         n123 = inter(1,2,3),
+                         n124 = inter(1,2,4),
+                         n134 = inter(1,3,4),
+                         n234 = inter(2,3,4),
+                         n235 = inter(2,3,5),
+                         n1234 = inter(1,2,3,4),
+                         category = names(sets),
+                         fill = color.values[names(sets)],
+                         cat.col = color.values[names(sets)],
+                         cat.cex = 1.2,
+                         margin = 0.07,
+                         ind = TRUE
+                       )
+  pl <- grid::gTree(children = venn)
+  save_expr(pl, "Figures_gwas_venn.rds")
+
+  ThesisRpackage::Plots_export_png(pl,
+                                   basename.output = "FigureS6",
+                                   env = MaTheseR.params,
+                                   width = MaTheseR.params$textwidthinch,
+                                   height = 0.4 * MaTheseR.params$textheightinch)
 #+end_src
 
-** TODO FigureS5 : GWAS
+
+#+BEGIN_EXPORT latex
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{./Figs/FigureS6.png}
+\caption{{\bf FigureS6 }}
+\end{figure}
+#+END_EXPORT
+
+** DONE FigureS5 : GWAS
+CLOSED: [2017-11-17 ven. 18:15]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2017-11-17 ven. 18:15]
+- State "STARTED"    from "TODO"       [2017-11-17 ven. 18:04]
 - State "TODO"       from              [2017-11-15 mer. 18:45]
 - Note taken on [2017-11-15 mer. 17:44] \\
   Figure 3.7 A) -> Figure Supp. 5
@@ -731,13 +819,56 @@ CLOSED: [2017-11-15 mer. 18:45]
   sva2
 :END:
 
-#+NAME: code:
-#+CAPTION: Dépend de 
+#+NAME: code:gwas_qq
+#+CAPTION: Copy of [[file:~/Projects/Thesis/MaThese/main.org::code:gwas_qqplot][code:gwas_qqplot]]
 #+begin_src R 
+  ## res
+  celiac.df <- readRDS("../MaThese/OUTPUT/Expr/celiac_all_df.rds")
+
+  ## filter and order method
+  ## celiac.df$method %>% unique()
+  df.res <- celiac.df %>%
+    dplyr::filter(method != "lm") %>%
+    transmute(method = factor(method_name(method), method.ordered),
+              index = index,
+              pvalue = pvalue,
+              calibrated.pvalue = calibrated.pvalue,
+              outlier = index %in% candidates)
+  df.res$method %>% unique()
+
+  ## qqplot
+  pl.qq <- ggplot(df.res, aes(sample = -log10(calibrated.pvalue), color = method)) +
+    stat_qq(distribution = stats::qexp, dparams = list(rate = log(10))) +
+    geom_abline(slope = 1, intercept = 0) +
+    gtheme +
+    scale_color_manual(name = "Method", values = color.values) +
+    theme(legend.position=c(0.2, 0.8)) +
+    guides(color = guide_legend(ncol = 2)) +
+    xlab("Theorical quantiles") +
+    ylab("Observed quantiles")
+
+  ThesisRpackage::Plots_export_png(pl.qq,
+                                   basename.output = "FigureS5",
+                                   env = MaTheseR.params,
+                                   height = 0.5 * MaTheseR.params$textheightinch,
+                                   width = MaTheseR.params$textwidthinch,
+                                   res = 600)
+
 
 #+end_src
-** TODO Figure2 : GWAS
+
+#+BEGIN_EXPORT latex
+\begin{figure}[!h]
+\centering
+\includegraphics[width = \textwidth]{./Figs/FigureS5.png}
+\caption{{\bf FigureS5}}
+\end{figure}
+#+END_EXPORT
+
+** STARTED Figure2 : GWAS
 :LOGBOOK:
+- State "STARTED"    from "DONE"       [2017-11-17 ven. 18:43]
+- State "DONE"       from "TODO"       [2017-11-17 ven. 18:43]
 - State "TODO"       from              [2017-11-15 mer. 18:45]
 - Note taken on [2017-11-15 mer. 17:45] \\
   FIGURE 2. Figure à 4 panels:
@@ -752,6 +883,100 @@ CLOSED: [2017-11-15 mer. 18:45]
   D) Manhattan plot pour lfmm1, avec seuil de bonferroni, et report des
   noms de quelques top-hits de la Table 3.2.
 :END:
+#+NAME: code:gwas_fig2
+#+CAPTION: Depend on [[code:gwas_venn]] and copy from [[file:~/Projects/Thesis/MaThese/main.org::code:gwas_qqplot][code:gwas_qqplot]]
+#+begin_src R 
+  ## results
+  celiac.df <- readRDS("../MaThese/OUTPUT/Expr/celiac_all_df.rds")
+  top.df <- readRDS("../MaThese/OUTPUT/Expr/gwas_top_clumped_chrm6_toplot.rds")
+
+  ## filter and order method
+  ## celiac.df$method %>% unique()
+  df.res <- celiac.df %>%
+    dplyr::filter(method != "lm") %>%
+    transmute(method = factor(method_name(method), method.ordered),
+              index = index,
+              pvalue = pvalue,
+                snp = colname,
+              calibrated.pvalue = calibrated.pvalue,
+              outlier = index %in% candidates)
+  df.res$method %>% unique()
+
+  top.toplot <- top.df %>%
+    dplyr::filter(method != "manhalanobis") %>%
+    dplyr::filter(method != "lm") %>%
+    mutate(method = factor(method_name(method), method.ordered),
+           chromosome6 = factor(chromosome6, levels = c(TRUE, FALSE), label = c("Chromosome 6", "Autres chromosomes")))
+  top.toplot$method %>% unique()
+  top.toplot$chromosome6 %>% unique()
+
+  ###########################################
+  ## venn
+  pl.A <- readRDS("../MaThese/OUTPUT/Expr/Figures_gwas_venn.rds")
+
+  ###########################################
+  ## top
+  pl.B <- ggplot(top.toplot, aes(x = clumped.top, y = candidate, color = method)) +
+    geom_line(size = 2) +
+    coord_cartesian(xlim = c(0,300)) +
+    facet_grid(chromosome6~., scales = "free") +
+    scale_color_manual(values = color.values) +
+    gtheme +
+    theme(legend.position="none") +
+    xlab("Rank") +
+    ylab("Retrieved candidates")
+
+  ###########################################
+  ## manhattan
+  ## retrieve chrm
+  bim.df <- readr::read_delim("../Data/Celiac/dubois_2010/FinnuncorrNLITUK1UK3hap300_CQ_norel.bim",
+                              delim="\t", col_names = FALSE) %>%
+    mutate(chrm = X1,
+           snp = X2)
+
+  toplot <- df.res %>%
+      dplyr::filter(method == "lfmm1")
+  p <- nrow(toplot)
+  bonf.t <- 0.05 / p
+  toplot <- toplot %>%
+    dplyr::filter(calibrated.pvalue < 0.005)
+
+  ## adding chrm
+  toplot <- toplot %>%
+    left_join(bim.df, by = c("snp"))
+
+  pl.C <- ggplot(toplot, aes(x = index, y = -log10(calibrated.pvalue), color = as.factor(chrm))) +
+    geom_point() +
+    geom_hline(yintercept = -log10(bonf.t)) +
+    xlab("Indices") +
+    ylab("-log10(p-value)") +
+    gtheme +
+    theme(legend.position = "none")
+
+  ###########################################
+  ## all
+  gridExtra::grid.arrange(pl.A, pl.B, pl.C,
+                          layout_matrix = matrix(c(1,3,2,3), 2, 2))
+  pl <- recordPlot()
+
+
+  ThesisRpackage::Plots_export_png(pl,
+                                   basename.output = "Figure2",
+                                   env = MaTheseR.params,
+                                   height = 0.6 * MaTheseR.params$textheightinch,
+                                   width = MaTheseR.params$textwidthinch)
+
+#+end_src
+
+
+#+BEGIN_EXPORT latex
+\begin{figure}[!h]
+\centering
+\includegraphics[width = \textwidth]{./Figs/Figure2.png}
+\caption{{\bf Figure2}}
+\end{figure}
+#+END_EXPORT
+
 ** DONE FigureS7 : GEAS
 CLOSED: [2017-11-15 mer. 18:45]
 :LOGBOOK:
@@ -934,7 +1159,6 @@ CLOSED: [2017-11-17 ven. 13:44]
 \end{figure}
 #+END_EXPORT
 
-
 ** DONE FigureS9
 CLOSED: [2017-11-17 ven. 15:47]
 :LOGBOOK:
@@ -992,9 +1216,9 @@ CLOSED: [2017-11-17 ven. 15:47]
 \end{figure}
 #+END_EXPORT
 
-
-** TODO Figure3
+** STARTED Figure3
 :LOGBOOK:
+- State "STARTED"    from "TODO"       [2017-11-17 ven. 18:04]
 - State "TODO"       from              [2017-11-15 mer. 18:45]
 - Note taken on [2017-11-15 mer. 17:47] \\
   FIGURE 3. Figure à 4 panels:
@@ -1020,6 +1244,7 @@ CLOSED: [2017-11-17 ven. 15:47]
     transmute(method = factor(method_name(method), method.ordered),
               index = index,
               pvalue = pvalue,
+              snp = colname,
               calibrated.pvalue = calibrated.pvalue,
               qvalue = qvalue)
   res.df$method %>% unique()
@@ -1103,17 +1328,30 @@ CLOSED: [2017-11-17 ven. 15:47]
 
   ###############################
   ## D
+  ## retrieve chrm
+  bim.df <- readr::read_delim("../Data/1000Genomes/Phase3/1000GenomePhase3_CQ_norel.bim",
+                              delim="\t", col_names = FALSE) %>%
+    mutate(chrm = X1,
+           snp = X2)
+
   toplot <- res.df %>%
     dplyr::filter(method == "lfmm2")
   p <- nrow(toplot)
+  bonf.t <- 0.05 / p
   toplot <- toplot %>%
     dplyr::filter(calibrated.pvalue < 0.001)
-  pl.D <- ggplot(toplot, aes(x = index, y = -log10(calibrated.pvalue))) +
+
+  ## adding chrm
+  toplot <- toplot %>%
+    left_join(bim.df, by = c("snp"))
+
+  pl.D <- ggplot(toplot, aes(x = index, y = -log10(calibrated.pvalue), color = as.factor(chrm))) +
     geom_point() +
-    geom_hline(yintercept = -log10(0.05 / p)) +
+    geom_hline(yintercept = -log10(bonf.t)) +
     xlab("Indices") +
     ylab("-log10(p-value)") +
-    gtheme
+    gtheme +
+    theme(legend.position = "none")
 
 
   ########################################
@@ -1122,19 +1360,17 @@ CLOSED: [2017-11-17 ven. 15:47]
                           ncol = 2)
   pl <- recordPlot()
 
-  env <- MaTheseR.params
-  env$fig.dir <- "~/Projects/Thesis/MaThese/OUTPUT/Rplots/" ## because this chunk is ran on krak
   ThesisRpackage::Plots_export_png(pl,
                                    basename.output = "Figure3",
-                                   env = env,
-                                   width = MaTheseR.params$textheightinch,
-                                   height = 0.7 * MaTheseR.params$textwidthinch)
+                                   env = MaTheseR.params,
+                                   width = MaTheseR.params$textwidthinch,
+                                   height = 0.7 * MaTheseR.params$textheightinch)
 #+end_src
 
 #+BEGIN_EXPORT latex
 \begin{sidewaysfigure}
 \centering
-\includegraphics{../MaThese/OUTPUT/Rplots/Figure3.pdf}
+\includegraphics{./Figs/Figure3.pdf}
 \caption{{\bf Figure3}}
 \end{sidewaysfigure}
 #+END_EXPORT
