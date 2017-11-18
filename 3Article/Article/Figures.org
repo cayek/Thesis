@@ -1368,11 +1368,11 @@ CLOSED: [2017-11-17 ven. 15:47]
 #+end_src
 
 #+BEGIN_EXPORT latex
-\begin{sidewaysfigure}
+\begin{figure}[!h]
 \centering
-\includegraphics{./Figs/Figure3.pdf}
+\includegraphics[width = \textwidth]{./Figs/Figure3.png}
 \caption{{\bf Figure3}}
-\end{sidewaysfigure}
+\end{figure}
 #+END_EXPORT
 
 * Tables
